@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <string-array name="common_yesno">
+        <item>否</item>
+        <item>是</item>
+    </string-array>
+
+    <string-array name="drawing_damage_type" tools:ignore="ExtraTranslation">
+        <item>结构构件损伤</item>
+        <item>耐久性损伤</item>
+        <item>渗漏水</item>
+        <item>填充墙斜裂缝</item>
+        <item>高坠隐患</item>
+        <item>附属构件损坏</item>
+        <item>其它/不稳定</item>
+        <item>裂缝监测点</item>
+    </string-array>
+</resources>

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:paddingHorizontal="@dimen/house_damage_normal_margin"
+    >
+
+    <include
+        android:id="@+id/view1"
+        layout="@layout/layout_damage_edit1"
+        android:layout_marginTop="@dimen/house_damage_normal_margin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        />
+
+    <include
+        android:id="@+id/view2"
+        layout="@layout/layout_damage_edit2"
+        android:layout_marginTop="@dimen/_20sdp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        />
+
+    <Space
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/_17sdp">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/damage_edit_del"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/common_btn_height"
+            android:layout_weight="1"
+            app:rippleColor="@color/rippleColor"
+            app:cornerRadius="@dimen/_2sdp"
+            app:backgroundTint="@color/white"
+            app:strokeColor="@color/red_500"
+            android:textColor="@color/red_500"
+            android:text="删除"
+            android:textSize="@dimen/common_text_title"
+            app:strokeWidth="@dimen/_1sdp"
+            android:paddingTop="0dp"
+            android:paddingBottom="0dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:theme="@style/Widget.MaterialComponents.Button.OutlinedButton"
+
+
+            />
+        <Space
+            android:layout_width="@dimen/_19sdp"
+            android:layout_height="0dp"/>
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/damage_edit_cancel"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/common_btn_height"
+            android:layout_weight="1"
+            app:rippleColor="@color/rippleColor"
+            app:cornerRadius="@dimen/_2sdp"
+            app:backgroundTint="@color/white"
+            app:strokeWidth="@dimen/_1sdp"
+            app:strokeColor="@color/blue_800"
+            android:textColor="@color/blue_800"
+            android:text="取消"
+            android:textSize="@dimen/common_text_title"
+            android:paddingTop="0dp"
+            android:paddingBottom="0dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:theme="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            />
+        <Space
+            android:layout_width="@dimen/_19sdp"
+            android:layout_height="0dp"/>
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/damage_edit_confirm"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/common_btn_height"
+            android:layout_weight="1"
+            app:rippleColor="@color/rippleColor"
+            app:cornerRadius="@dimen/_2sdp"
+            app:backgroundTint="@color/blue_800"
+            android:textColor="@color/white"
+            android:text="确定"
+            android:textSize="@dimen/common_text_title"
+            android:paddingTop="0dp"
+            android:paddingBottom="0dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:theme="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            />
+
+    </LinearLayout>
+
+</androidx.appcompat.widget.LinearLayoutCompat>

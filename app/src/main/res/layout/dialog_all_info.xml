@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="@dimen/common_dialog_width"
+        android:layout_height="@dimen/_138sdp"
+        android:background="@drawable/common_shape_white_2">
+
+
+        <ImageView
+            android:id="@+id/dialog_close"
+            android:layout_width="@dimen/_14sdp"
+            android:layout_height="@dimen/_14sdp"
+            android:src="@mipmap/icon_dialog_close"
+            android:scaleType="fitXY"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_margin="@dimen/_6sdp"
+            />
+
+        <TextView
+            android:id="@+id/dialog_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="记录汇总"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:textSize="@dimen/common_text_big"
+            android:textColor="@color/black_800"
+            android:textStyle="bold"
+            android:layout_marginTop="@dimen/_17sdp"
+            />
+
+        <LinearLayout
+            android:id="@+id/dialog_all_house_ll"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_vertical"
+            app:layout_constraintTop_toBottomOf="@id/dialog_title"
+            app:layout_constraintBottom_toTopOf="@id/dialog_all_per_tv"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/dialog_all_finish_ll"
+
+            >
+            <TextView
+                android:id="@+id/dialog_all_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/green_400"
+                android:textSize="@dimen/_11sdp"
+                android:layout_marginBottom="@dimen/_5sdp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/blue_800"
+                android:textSize="@dimen/common_text_title"
+                android:layout_marginBottom="@dimen/_5sdp"
+                android:drawableTop="@mipmap/icon_dialog_all_house"
+                android:drawablePadding="@dimen/_6sdp"
+                android:text="总户数"
+                android:layout_gravity="center"
+                android:gravity="center"
+                />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/dialog_all_finish_ll"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_vertical"
+            app:layout_constraintTop_toBottomOf="@id/dialog_title"
+            app:layout_constraintBottom_toTopOf="@id/dialog_all_per_tv"
+            app:layout_constraintLeft_toRightOf="@id/dialog_all_house_ll"
+            app:layout_constraintRight_toLeftOf="@id/dialog_all_inaccess_ll"
+            >
+            <TextView
+                android:id="@+id/dialog_finish_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/green_400"
+                android:textSize="@dimen/_11sdp"
+                android:layout_marginBottom="@dimen/_5sdp"
+                android:layout_gravity="center"
+                android:gravity="center"
+
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/blue_800"
+                android:textSize="@dimen/common_text_title"
+                android:layout_marginBottom="@dimen/_5sdp"
+                android:drawableTop="@mipmap/icon_dialog_all_finish"
+                android:drawablePadding="@dimen/_6sdp"
+                android:text="已完成"
+                android:layout_gravity="center"
+                android:gravity="center"
+                />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/dialog_all_inaccess_ll"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_vertical"
+            app:layout_constraintTop_toBottomOf="@id/dialog_title"
+            app:layout_constraintBottom_toTopOf="@id/dialog_all_per_tv"
+            app:layout_constraintLeft_toRightOf="@id/dialog_all_finish_ll"
+            app:layout_constraintRight_toLeftOf="@id/dialog_all_nobody_ll"
+            >
+            <TextView
+                android:id="@+id/dialog_inasscee_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/green_400"
+                android:textSize="@dimen/_11sdp"
+                android:layout_marginBottom="@dimen/_5sdp"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/blue_800"
+                android:textSize="@dimen/common_text_title"
+                android:layout_marginBottom="@dimen/_5sdp"
+                android:drawableTop="@mipmap/icon_dialog_all_inaccessible"
+                android:drawablePadding="@dimen/_6sdp"
+                android:text="不让进"
+                android:layout_gravity="center"
+                android:gravity="center"
+                />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/dialog_all_nobody_ll"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_vertical"
+            app:layout_constraintTop_toBottomOf="@id/dialog_title"
+            app:layout_constraintLeft_toRightOf="@id/dialog_all_inaccess_ll"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/dialog_all_per_tv"
+            >
+            <TextView
+                android:id="@+id/dialog_nobody_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/green_400"
+                android:textSize="@dimen/_11sdp"
+                android:layout_marginBottom="@dimen/_5sdp"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/blue_800"
+                android:textSize="@dimen/common_text_title"
+                android:layout_marginBottom="@dimen/_5sdp"
+                android:drawableTop="@mipmap/icon_dialog_all_nobody"
+                android:drawablePadding="@dimen/_6sdp"
+                android:text="无人"
+                android:layout_gravity="center"
+                android:gravity="center"
+                />
+
+
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/dialog_all_per_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginRight="@dimen/_20sdp"
+            android:layout_marginBottom="@dimen/_12sdp"
+            android:textColor="@color/green_400"
+            android:textSize="@dimen/common_text_content"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintRight_toLeftOf="@id/dialog_all_per_tv"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="@dimen/_12sdp"
+            android:textSize="@dimen/common_text_content"
+            android:textColor="@color/black_800"
+            android:text="入户率："
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</FrameLayout>

@@ -1,0 +1,560 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:ignore="MissingConstraints,MissingDefaultResource"
+    >
+
+       <TextView
+           android:id="@+id/tv_axis"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:text="轴线"
+           android:layout_marginTop="@dimen/_15sdp"
+           android:layout_marginLeft="@dimen/_15sdp"
+           android:textSize="@dimen/_9ssp"
+           android:textColor="@color/black"
+           app:layout_constraintTop_toTopOf="parent"
+           app:layout_constraintLeft_toLeftOf="parent"/>
+
+        <EditText
+            android:id="@+id/et_axis"
+            android:layout_width="@dimen/_150sdp"
+            android:layout_height="@dimen/common_input_height"
+            android:layout_marginLeft="@dimen/_12sdp"
+            android:layout_marginTop="@dimen/_15sdp"
+            android:textSize="@dimen/_7ssp"
+            android:layout_gravity="center_vertical"
+            android:textColor="@color/black_800"
+            android:paddingLeft="@dimen/_8sdp"
+            android:hint="请输入"
+            android:gravity="center_vertical"
+            android:background="@drawable/common_et_border_bk"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toRightOf="@+id/tv_axis"
+            app:layout_constraintWidth_percent="0.4"
+            />
+
+        <TextView
+            android:id="@+id/tv_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="损伤\n描述"
+
+            android:textColor="@color/black"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:layout_marginLeft="@dimen/_15sdp"
+            android:textSize="@dimen/_9ssp"
+            app:layout_constraintTop_toBottomOf="@+id/et_axis"
+            app:layout_constraintLeft_toLeftOf="parent"/>
+
+        <EditText
+            android:id="@+id/et_desc"
+            android:layout_width="@dimen/_150sdp"
+            android:layout_height="@dimen/_73sdp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/_9sdp"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:background="@drawable/common_et_border_bk"
+            android:gravity="center_vertical"
+            android:hint="请输入"
+            android:paddingHorizontal="@dimen/_8sdp"
+            android:paddingVertical="@dimen/_6sdp"
+            android:textColor="@color/black_800"
+            android:textColorHint="@color/gray_600"
+            android:textSize="@dimen/_7ssp"
+
+            app:layout_constraintLeft_toRightOf="@+id/tv_desc"
+            app:layout_constraintTop_toBottomOf="@+id/et_axis"
+            app:layout_constraintWidth_percent="0.4" />
+
+    <LinearLayout
+        android:id="@+id/lv_photo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="@dimen/_0sdp"
+        android:gravity="top"
+        android:clipChildren="false"
+        app:layout_constraintTop_toBottomOf="@+id/et_desc"
+        app:layout_constraintLeft_toLeftOf="parent"
+        >
+
+        <TextView
+            android:id="@+id/tv_photo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="照片"
+            android:layout_marginLeft="@dimen/_15sdp"
+            android:textSize="@dimen/_9ssp"
+            android:textColor="@color/black_800"
+            android:gravity="right"
+            android:layout_gravity="top"
+            android:layout_marginTop="@dimen/_6sdp"
+            app:layout_constraintTop_toBottomOf="@+id/et_desc"
+            app:layout_constraintLeft_toLeftOf="parent"
+            />
+
+        <FrameLayout
+            android:id="@+id/frl_photo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_9sdp"
+            android:clipChildren="false"
+            android:layout_marginTop="@dimen/_5sdp"
+            app:layout_constraintTop_toBottomOf="@+id/et_desc"
+            app:layout_constraintLeft_toRightOf="@+id/tv_photo"
+        >
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="@dimen/_50sdp"
+                android:layout_height="@dimen/_50sdp"
+                app:cardCornerRadius="@dimen/house_damage_edit_photo_btn_margin"
+                android:layout_marginLeft="@dimen/house_damage_edit_photo_btn_margin"
+                app:cardBackgroundColor="@android:color/transparent"
+                android:clickable="true"
+                android:layout_marginTop="@dimen/house_damage_edit_photo_btn_margin"
+                android:layout_marginRight="@dimen/house_damage_edit_photo_btn_margin"
+                android:layout_marginBottom="@dimen/house_damage_edit_photo_btn_margin"
+            >
+
+                <FrameLayout
+                    android:id="@+id/damage_pic_add_btn"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:clickable="true">
+
+                    <TextView
+                        android:layout_width="@dimen/_50sdp"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/gray_600"
+                        android:textSize="@dimen/_9ssp"
+                        android:text="添加照片"
+
+                        android:textColorHint="@color/gray_600"
+                        android:gravity="center"
+                        android:layout_gravity="center"
+                        android:drawableTop="@mipmap/icon_photo_add"
+                    />
+                </FrameLayout>
+
+                <ImageView
+                    android:id="@+id/damage_photo"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    />
+
+            </androidx.cardview.widget.CardView>
+
+            <ImageView
+                android:id="@+id/damage_photo_del_btn"
+                android:layout_width="@dimen/_12sdp"
+                android:layout_height="@dimen/_12sdp"
+                android:src="@drawable/ic_common_del"
+                android:scaleType="fitXY"
+                android:layout_gravity="right|top"
+                android:layout_marginTop="@dimen/_minus4sdp"
+                android:layout_marginRight="@dimen/_minus4sdp"
+                android:elevation="10dp"
+                android:visibility="gone"
+            />
+
+        </FrameLayout>
+
+    </LinearLayout>
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_ok"
+        android:layout_width="@dimen/_70sdp"
+        android:layout_height="@dimen/common_btn_height"
+        app:rippleColor="@color/rippleColor"
+        app:cornerRadius="@dimen/_2sdp"
+        app:backgroundTint="@color/blue_800"
+        android:textColor="@color/white"
+        android:text="确定"
+        android:textSize="@dimen/_9ssp"
+        android:paddingTop="0dp"
+        android:layout_marginTop="@dimen/_35sdp"
+        android:layout_marginLeft="@dimen/_10sdp"
+        android:paddingBottom="0dp"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        app:layout_constraintTop_toBottomOf="@+id/lv_photo"
+        app:layout_constraintLeft_toRightOf="@+id/btn_cancel"
+        android:theme="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_cancel"
+        android:layout_width="@dimen/_70sdp"
+        android:layout_height="@dimen/common_btn_height"
+        app:rippleColor="@color/rippleColor"
+        app:cornerRadius="@dimen/_2sdp"
+        app:backgroundTint="@color/white"
+        app:strokeWidth="@dimen/_1sdp"
+        app:strokeColor="@color/blue_800"
+        android:textColor="@color/blue_800"
+        android:text="取消"
+        android:textSize="@dimen/_9ssp"
+        android:paddingTop="0dp"
+        android:paddingBottom="0dp"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        android:layout_marginTop="@dimen/_35sdp"
+        android:layout_marginLeft="@dimen/_45sdp"
+        app:layout_constraintTop_toBottomOf="@+id/lv_photo"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:theme="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        />
+
+        <androidx.appcompat.widget.AppCompatCheckBox
+            android:id="@+id/cbx_crack_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="裂缝信息"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:layout_marginLeft="@dimen/_20sdp"
+            android:textColor="@color/black_800"
+            android:textSize="@dimen/_9ssp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toRightOf="@+id/et_axis"
+        />
+
+        <TextView
+            android:id="@+id/tv_crack_width"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="裂缝宽度"
+            android:layout_marginRight="@dimen/_12sdp"
+            android:layout_marginTop="@dimen/_3sdp"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_9ssp"
+            app:layout_constraintTop_toBottomOf="@+id/cbx_crack_info"
+            app:layout_constraintRight_toLeftOf="@+id/et_crack_width"/>
+
+        <EditText
+            android:id="@+id/et_crack_width"
+            android:layout_width="@dimen/_100sdp"
+            android:layout_height="@dimen/common_input_height"
+            android:layout_marginLeft="@dimen/_100sdp"
+            android:paddingLeft="@dimen/_8sdp"
+            android:layout_marginTop="@dimen/_0sdp"
+            android:textSize="@dimen/_7ssp"
+            android:textColor="@color/black_800"
+            android:gravity="center_vertical"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/common_et_border_bk"
+            app:layout_constraintTop_toBottomOf="@+id/cbx_crack_info"
+            app:layout_constraintLeft_toRightOf="@+id/et_axis"
+            android:inputType="numberDecimal"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="mm"
+            android:layout_marginLeft="@dimen/_1sdp"
+            android:layout_marginTop="@dimen/_1sdp"
+            android:textSize="@dimen/_9ssp"
+            android:textColor="@color/black"
+            app:layout_constraintTop_toBottomOf="@+id/cbx_crack_info"
+            app:layout_constraintLeft_toRightOf="@+id/et_crack_width"/>
+
+        <TextView
+            android:id="@+id/tv_crack_length"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="裂缝长度"
+            android:layout_marginRight="@dimen/_12sdp"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_9ssp"
+            app:layout_constraintTop_toBottomOf="@+id/et_crack_width"
+            app:layout_constraintRight_toLeftOf="@+id/et_crack_width"/>
+
+        <EditText
+            android:id="@+id/et_crack_length"
+            android:layout_width="@dimen/_100sdp"
+            android:layout_height="@dimen/common_input_height"
+            android:layout_marginLeft="@dimen/_100sdp"
+            android:layout_marginTop="@dimen/_3sdp"
+            android:paddingLeft="@dimen/_8sdp"
+            android:textSize="@dimen/_7ssp"
+            android:textColor="@color/black_800"
+            android:gravity="center_vertical"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/common_et_border_bk"
+            app:layout_constraintTop_toBottomOf="@+id/et_crack_width"
+            app:layout_constraintLeft_toRightOf="@+id/et_axis"
+            android:inputType="numberDecimal"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_1sdp"
+            android:layout_marginTop="@dimen/_3sdp"
+            android:text="m"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_9ssp"
+            app:layout_constraintLeft_toRightOf="@+id/et_crack_length"
+            app:layout_constraintTop_toBottomOf="@+id/et_crack_width" />
+
+        <androidx.appcompat.widget.AppCompatCheckBox
+            android:id="@+id/cbx_leak_monitor_info"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/_20sdp"
+            android:text="裂缝监测点信息"
+            android:layout_marginTop="@dimen/_0sdp"
+            android:layout_marginLeft="@dimen/_20sdp"
+            android:textColor="@color/black_800"
+            android:textSize="@dimen/_9ssp"
+            app:layout_constraintTop_toBottomOf="@+id/et_crack_length"
+            app:layout_constraintLeft_toRightOf="@+id/et_axis"
+            />
+
+        <TextView
+            android:id="@+id/tv_monitor_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="监测点编号"
+            android:textSize="@dimen/_9ssp"
+            android:layout_marginRight="@dimen/_12sdp"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:textColor="@color/black"
+            app:layout_constraintTop_toBottomOf="@+id/cbx_leak_monitor_info"
+            app:layout_constraintRight_toLeftOf="@+id/et_crack_width"/>
+
+        <EditText
+            android:id="@+id/et_monitor_id"
+            android:layout_width="@dimen/_100sdp"
+            android:layout_height="@dimen/common_input_height"
+            android:layout_marginLeft="@dimen/_100sdp"
+            android:layout_marginTop="@dimen/_0sdp"
+            android:paddingLeft="@dimen/_8sdp"
+            android:textSize="@dimen/_7ssp"
+            android:textColor="@color/black_800"
+            android:gravity="center_vertical"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/common_et_border_bk"
+            app:layout_constraintTop_toBottomOf="@+id/cbx_leak_monitor_info"
+            app:layout_constraintLeft_toRightOf="@+id/et_axis"
+            />
+
+    <TextView
+        android:id="@+id/tv_monitor_way"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="监测方法"
+        android:textSize="@dimen/_9ssp"
+        android:layout_marginRight="@dimen/_12sdp"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:textColor="@color/black"
+
+        app:layout_constraintTop_toBottomOf="@+id/et_monitor_id"
+        app:layout_constraintRight_toLeftOf="@+id/et_crack_width"/>
+
+        <Spinner
+            android:id="@+id/spn_monitor_way"
+            android:layout_width="@dimen/_100sdp"
+            android:layout_height="@dimen/_20sdp"
+            android:spinnerMode="dropdown"
+            android:layout_alignParentRight="true"
+            android:layout_marginLeft="@dimen/_100sdp"
+            android:layout_marginRight="@dimen/_20sdp"
+            android:layout_marginTop="@dimen/_3sdp"
+            android:background="@drawable/spinner_background"
+            android:clickable="true"
+            android:focusable="true"
+            app:layout_constraintTop_toBottomOf="@+id/et_monitor_id"
+            app:layout_constraintLeft_toRightOf="@+id/et_axis"
+
+        />
+
+        <TextView
+            android:id="@+id/tv_nick_length"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="刻痕长度"
+            android:textSize="@dimen/_9ssp"
+            android:layout_marginRight="@dimen/_12sdp"
+
+            android:layout_marginTop="@dimen/_5sdp"
+            android:textColor="@color/black"
+            app:layout_constraintTop_toBottomOf="@+id/spn_monitor_way"
+            app:layout_constraintRight_toLeftOf="@+id/et_crack_width"/>
+
+        <EditText
+            android:id="@+id/et_nick_length"
+            android:layout_width="@dimen/_100sdp"
+            android:layout_height="@dimen/common_input_height"
+            android:layout_marginLeft="@dimen/_100sdp"
+            android:layout_marginTop="@dimen/_3sdp"
+            android:paddingLeft="@dimen/_8sdp"
+            android:textSize="@dimen/_7ssp"
+            android:textColor="@color/black_800"
+            android:gravity="center_vertical"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/common_et_border_bk"
+            app:layout_constraintTop_toBottomOf="@+id/spn_monitor_way"
+            app:layout_constraintLeft_toRightOf="@+id/et_axis"
+            android:inputType="numberDecimal"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="mm"
+            android:layout_marginLeft="@dimen/_1sdp"
+            android:layout_marginTop="@dimen/_3sdp"
+            android:textSize="@dimen/_9ssp"
+            android:textColor="@color/black"
+            app:layout_constraintTop_toBottomOf="@+id/spn_monitor_way"
+            app:layout_constraintLeft_toRightOf="@+id/et_nick_length"/>
+
+        <TextView
+            android:id="@+id/tv_nick_width"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="刻痕宽度"
+            android:textSize="@dimen/_9ssp"
+            android:layout_marginRight="@dimen/_12sdp"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:textColor="@color/black"
+            app:layout_constraintTop_toBottomOf="@+id/et_nick_length"
+            app:layout_constraintRight_toLeftOf="@+id/et_crack_width"/>
+
+        <EditText
+            android:id="@+id/et_nick_width"
+            android:layout_width="@dimen/_100sdp"
+            android:layout_height="@dimen/common_input_height"
+            android:layout_marginLeft="@dimen/_100sdp"
+            android:layout_marginTop="@dimen/_3sdp"
+            android:textSize="@dimen/_7ssp"
+            android:textColor="@color/black_800"
+            android:gravity="center_vertical"
+            android:layout_gravity="center_vertical"
+            android:paddingLeft="@dimen/_8sdp"
+            android:background="@drawable/common_et_border_bk"
+            app:layout_constraintTop_toBottomOf="@+id/et_nick_length"
+            app:layout_constraintLeft_toRightOf="@+id/et_axis"
+            android:inputType="numberDecimal"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="mm"
+            android:layout_marginLeft="@dimen/_1sdp"
+            android:layout_marginTop="@dimen/_3sdp"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_9ssp"
+            app:layout_constraintTop_toBottomOf="@+id/et_nick_length"
+            app:layout_constraintLeft_toRightOf="@+id/et_nick_width"/>
+
+
+
+        <TextView
+            android:id="@+id/tv_monitor_photo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="照片"
+            android:layout_marginRight="@dimen/_12sdp"
+            android:textColor="@color/black_800"
+            android:textSize="@dimen/_9ssp"
+            android:gravity="right"
+            android:layout_gravity="top"
+            android:layout_marginTop="@dimen/_6sdp"
+            app:layout_constraintTop_toBottomOf="@+id/et_nick_width"
+            app:layout_constraintRight_toLeftOf="@+id/et_crack_width"
+            />
+
+    <LinearLayout
+        android:id="@+id/lv_monitor_photo"
+        android:layout_width="@dimen/_80sdp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="@dimen/_0sdp"
+        android:layout_marginLeft="@dimen/_10sdp"
+        android:gravity="top"
+        android:clipChildren="false"
+        app:layout_constraintTop_toBottomOf="@+id/et_nick_width"
+        app:layout_constraintLeft_toRightOf="@+id/tv_monitor_photo"
+        >
+        <FrameLayout
+            android:id="@+id/frl_monitor_photo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clipChildren="false"
+            android:layout_marginLeft="@dimen/_0sdp"
+            android:layout_marginTop="@dimen/_3sdp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            >
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="@dimen/_50sdp"
+            android:layout_height="@dimen/_50sdp"
+            app:cardCornerRadius="@dimen/house_damage_edit_photo_btn_margin"
+            android:layout_marginLeft="5dp"
+            android:foreground="@drawable/ic_click_card_unsel"
+            android:clickable="true"
+            android:layout_marginTop="@dimen/_0sdp"
+            android:layout_marginRight="@dimen/house_damage_edit_photo_btn_margin"
+            android:layout_marginBottom="@dimen/house_damage_edit_photo_btn_margin"
+            >
+
+            <FrameLayout
+                android:id="@+id/damage_monitor_pic_add_btn"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:foreground="?attr/selectableItemBackground"
+                android:clickable="true">
+
+                <TextView
+
+                    android:layout_width="@dimen/_50sdp"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/gray_600"
+                    android:textSize="@dimen/_9ssp"
+                    android:text="添加照片"
+
+                    android:textColorHint="@color/gray_600"
+                    android:gravity="center"
+                    android:layout_gravity="center"
+                    android:drawableTop="@mipmap/icon_photo_add"
+
+                    />
+
+
+            </FrameLayout>
+            <ImageView
+                android:id="@+id/damage_monitor_photo"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                />
+
+
+        </androidx.cardview.widget.CardView>
+
+        <ImageView
+            android:id="@+id/damage_monitor_photo_del_btn"
+            android:layout_width="@dimen/_12sdp"
+            android:layout_height="@dimen/_12sdp"
+            android:src="@drawable/ic_common_del"
+            android:scaleType="fitXY"
+            android:layout_gravity="right|top"
+            android:layout_marginTop="@dimen/_minus4sdp"
+            android:layout_marginRight="@dimen/_minus4sdp"
+            android:elevation="10dp"
+            android:visibility="gone"
+            />
+
+    </FrameLayout>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

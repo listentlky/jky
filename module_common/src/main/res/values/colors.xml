@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="transparent">@android:color/transparent</color>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="black_30">#4D000000</color>
+    <color name="text_black">#666666</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="rippleColor">#88ffffff</color>
+    <color name="rippleColorDark">#4d000000</color>
+
+    <color name="black_800">#FF323334</color>
+    <color name="black_800_80">#CC323334</color>
+    <color name="black_800_65">#A6323334</color>
+    <color name="blue_10">#F5F9FA</color>
+    <color name="blue_800_10">#0A005B82</color>
+    <color name="blue_800_25">#1F005B82</color>
+    <color name="blue_800">#FF005B82</color>
+
+    <color name="red_500">#FFF23030</color>
+
+
+
+    <color name="gray_600">#FFC2C2C2</color>
+    <color name="gray_500">#FFE0E0E0</color>
+    <color name="gray_450">#E6E6E6</color>
+    <color name="gray_400">#f0f0f0</color>
+    <color name="black_500">#FF6E7173</color>
+    <color name="black_600_4">#0A191F25</color>
+    <color name="black_600_2">#05191F25</color>
+
+    <color name="yellow_500">#FFE2A10D</color>
+
+    <color name="green_400">#FF02A47D</color>
+
+</resources>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/_32sdp"
+    android:orientation="horizontal"
+    android:background="@drawable/unit_table_border_1"
+    android:id="@+id/item_report_ll">
+
+    <TextView
+        android:id="@+id/item_report_pos_tv"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:textSize="@dimen/_7sdp"
+        android:textColor="@color/black_800_65"
+        android:background="@drawable/unit_table_border_1"
+        />
+
+    <TextView
+        android:id="@+id/item_report_des_tv"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:textSize="@dimen/_7sdp"
+        android:textColor="@color/black_800_65"
+        android:background="@drawable/unit_table_border_1"
+        />
+
+
+</androidx.appcompat.widget.LinearLayoutCompat>

@@ -1,0 +1,67 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+
+
+    <style name="AppTheme.Login" >
+        <item name="colorPrimaryVariant">@color/blue_800_10</item>
+        <item name="colorPrimaryDark">@color/blue_800_10</item>
+        <item name="actionBarStyle">@style/CustomActionBar</item>
+    </style>
+
+    <style name="CustomActionBar" parent="@style/Widget.AppCompat.ActionBar.Solid">
+        <item name="titleTextStyle">@style/CustomActionBarTitle</item>
+    </style>
+
+    <!-- ActionBar title text -->
+    <style name="CustomActionBarTitle" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+
+    <style name="AppTheme.Main">
+        <item name="colorOnSecondary">@color/white</item>
+        <item name="actionOverflowMenuStyle">@style/OverflowMenuStyle</item>
+<!--        <item name="android:actionOverflowButtonStyle">@style/MyActionButtonStyle</item>-->
+        <item name="android:actionButtonStyle">@style/MyActionButtonStyle</item>
+    </style>
+
+    <style name="transDialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
+    <style name="transDialog_animation" parent="android:Animation">
+        <item name="android:windowEnterAnimation">@anim/dialog_left_in</item>
+        <item name="android:windowExitAnimation">@anim/dialog_left_out</item>
+    </style>
+
+    <style name="AppTheme.ProjectCreate">
+<!--        <item name="android:windowAnimationStyle">@null</item>-->
+<!--        <item name="android:windowBackground">@android:color/transparent</item>-->
+<!--        <item name="android:colorBackgroundCacheHint">@null</item>-->
+<!--        <item name="android:windowIsTranslucent">true</item>-->
+    </style>
+
+    <style name="AppTheme.ModuleList" parent="Theme.MaterialComponents.DayNight.NoActionBar.Bridge">
+        <!--        <item name="android:windowAnimationStyle">@null</item>-->
+        <!--        <item name="android:windowBackground">@android:color/transparent</item>-->
+        <!--        <item name="android:colorBackgroundCacheHint">@null</item>-->
+        <!--        <item name="android:windowIsTranslucent">true</item>-->
+    </style>
+
+    <style name="PositiveButtonStyle" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textColor">#d81b60</item>
+        <item name="rippleColor">#ad1457</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="AlertDialogTheme" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+        <item name="colorSurface">#212121</item>
+<!--        <item name="materialAlertDialogTitleTextStyle">@style/TitleTextStyle</item>-->
+<!--        <item name="materialAlertDialogBodyTextStyle">@style/BodyTextStyle</item>-->
+<!--        <item name="buttonBarPositiveButtonStyle">@style/PositiveButtonStyle</item>-->
+<!--        <item name="buttonBarNegativeButtonStyle">@style/NegativeButtonStyle</item>-->
+    </style>
+
+
+</resources>

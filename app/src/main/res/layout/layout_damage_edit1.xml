@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:clipChildren="false">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="@dimen/_9sdp"
+        android:gravity="top"
+     >
+
+
+        <LinearLayout
+            android:layout_width="@dimen/project_unit_config_tag_width"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="top"
+            android:layout_marginTop="@dimen/_6sdp"
+            android:gravity="right|center_vertical"
+            android:paddingRight="@dimen/project_unit_margin">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="*"
+                android:textColor="@color/red_500"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="损伤描述"
+                android:textSize="@dimen/_9sdp"
+                android:textColor="@color/black_800"
+                android:gravity="right"
+                />
+        </LinearLayout>
+
+
+        <EditText
+            android:id="@+id/damage_et"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_73sdp"
+            android:textColor="@color/black_800"
+            android:textSize="@dimen/common_text_content"
+            android:hint="请输入"
+            android:textColorHint="@color/gray_600"
+            android:gravity="top"
+            android:background="@drawable/common_et_border_bk"
+            android:paddingHorizontal="@dimen/_8sdp"
+            android:layout_gravity="center_vertical"
+            android:paddingVertical="@dimen/_6sdp"
+            />
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="@dimen/_9sdp"
+        android:gravity="top"
+        android:clipChildren="false"
+       >
+
+        <TextView
+            android:layout_width="@dimen/project_unit_config_tag_width"
+            android:layout_height="wrap_content"
+            android:text="照片"
+            android:textSize="@dimen/_9sdp"
+            android:textColor="@color/black_800"
+            android:paddingRight="@dimen/project_unit_margin"
+            android:gravity="right"
+            android:layout_gravity="top"
+            android:layout_marginTop="@dimen/_6sdp"
+            />
+
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clipChildren="false">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="@dimen/_40sdp"
+                android:layout_height="@dimen/_40sdp"
+                app:cardCornerRadius="@dimen/house_damage_edit_photo_btn_margin"
+                android:foreground="@drawable/ic_click_card_unsel"
+                android:clickable="true"
+                android:layout_marginTop="@dimen/house_damage_edit_photo_btn_margin"
+                android:layout_marginRight="@dimen/house_damage_edit_photo_btn_margin"
+                android:layout_marginBottom="@dimen/house_damage_edit_photo_btn_margin"
+                >
+
+
+                <FrameLayout
+                    android:id="@+id/damage_pic_add_btn"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:clickable="true">
+
+                    <TextView
+
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/gray_600"
+                        android:textSize="@dimen/common_text_content"
+                        android:text="添加照片"
+                        android:textColorHint="@color/gray_600"
+                        android:gravity="center"
+                        android:layout_gravity="center"
+                        android:drawableTop="@mipmap/icon_photo_add"
+
+                        />
+
+
+                </FrameLayout>
+                <ImageView
+                    android:id="@+id/damage_photo"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    />
+
+
+            </androidx.cardview.widget.CardView>
+
+            <ImageView
+                android:id="@+id/damage_photo_del_btn"
+                android:layout_width="@dimen/_12sdp"
+                android:layout_height="@dimen/_12sdp"
+                android:src="@drawable/ic_common_del"
+                android:scaleType="fitXY"
+                android:layout_gravity="right|top"
+                android:layout_marginTop="@dimen/_minus4sdp"
+                android:layout_marginRight="@dimen/_minus4sdp"
+                android:elevation="10dp"
+                android:visibility="gone"
+                />
+
+        </FrameLayout>
+
+
+
+
+
+
+    </LinearLayout>
+
+
+</androidx.appcompat.widget.LinearLayoutCompat>

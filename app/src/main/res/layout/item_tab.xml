@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/_67sdp"
+    android:layout_height="@dimen/_20sdp"
+    android:textColor="@color/sel_common_btn_text"
+    android:background="@drawable/sel_common_tab_bk"
+    android:id="@+id/tab_tv"
+    android:gravity="center"
+    android:textSize="@dimen/common_text_content"
+    android:layout_gravity="center"
+    >
+
+
+
+</TextView>

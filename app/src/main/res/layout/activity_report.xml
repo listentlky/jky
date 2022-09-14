@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="@color/blue_800_10"
+    >
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/blue_800">
+        <include layout="@layout/layout_common_toolbar"
+            android:id="@+id/tb"
+            />
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <com.sribs.common.ui.widget.NoScrollableNestedScrollView
+        android:id="@+id/report_nsv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/report_margin">
+
+            <LinearLayout
+                android:id="@+id/report_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="@dimen/report_margin"/>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.checkbox.MaterialCheckBox
+                    android:id="@+id/report_cb"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="居民反映记录"
+                    android:textSize="@dimen/common_text_tag"
+                    android:textColor="@color/black_800"
+                    style="?attr/checkboxStyle"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    />
+
+                <EditText
+                    android:id="@+id/report_et"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/_73sdp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintLeft_toRightOf="@id/report_cb"
+                    app:layout_constraintRight_toRightOf="parent"
+                    android:layout_marginLeft="@dimen/_15sdp"
+                    android:background="@drawable/common_et_border_bk"
+                    android:hint="请输入"
+                    android:textColorHint="@color/gray_600"
+                    android:textSize="@dimen/common_text_content"
+                    android:paddingHorizontal="@dimen/_8sdp"
+                    android:paddingVertical="@dimen/_6sdp"
+                    android:textColor="@color/black_800"
+                    android:gravity="left|top"
+
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black_800"
+                    android:textSize="@dimen/common_text_content"
+                    android:text="居民签证"
+                    app:layout_constraintTop_toBottomOf="@id/report_et"
+                    app:layout_constraintRight_toRightOf="@id/report_cb"
+                    android:layout_marginTop="@dimen/_17sdp"
+                    />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/report_sign_ll"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/report_et"
+                    app:layout_constraintLeft_toRightOf="@id/report_cb"
+                    app:layout_constraintRight_toRightOf="parent"
+                    android:layout_marginTop="@dimen/report_margin"
+                    android:layout_marginLeft="@dimen/_15sdp"
+                    android:background="@drawable/common_et_border_bk_blue_10"
+                    android:padding="@dimen/_9sdp"
+                    >
+
+
+                    <com.sribs.common.ui.widget.LinePathView
+                        android:id="@+id/report_sign"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_128sdp"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:background="@drawable/common_et_border_bk"
+                        android:hint="手写签名"
+                        android:textColorHint="@color/gray_600"
+                        android:textSize="@dimen/common_text_content"
+                        android:gravity="left|top"
+                        android:paddingHorizontal="@dimen/_8sdp"
+                        android:paddingVertical="@dimen/_6sdp"
+                        />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/report_sign"
+                        android:layout_marginTop="@dimen/report_margin"
+                        >
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/report_clean_sign_btn"
+                            android:layout_width="0dp"
+                            android:layout_height="@dimen/common_btn_height"
+                            android:layout_weight="1"
+                            app:rippleColor="@color/rippleColor"
+                            app:cornerRadius="@dimen/_2sdp"
+                            app:backgroundTint="@color/white"
+                            app:strokeWidth="@dimen/_1sdp"
+                            app:strokeColor="@color/blue_800"
+                            android:textColor="@color/blue_800"
+                            android:text="清除图像"
+                            android:textSize="@dimen/common_text_title"
+                            android:paddingTop="0dp"
+                            android:paddingBottom="0dp"
+                            android:insetTop="0dp"
+                            android:insetBottom="0dp"
+                            android:theme="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                            />
+                        <Space
+                            android:layout_width="@dimen/_19sdp"
+                            android:layout_height="0dp"/>
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/report_save_sign_btn"
+                            android:layout_width="0dp"
+                            android:layout_height="@dimen/common_btn_height"
+                            android:layout_weight="1"
+                            app:rippleColor="@color/rippleColor"
+                            app:cornerRadius="@dimen/_2sdp"
+                            app:backgroundTint="@color/blue_800"
+                            android:textColor="@color/white"
+                            android:text="保存图片"
+                            android:textSize="@dimen/common_text_title"
+                            android:paddingTop="0dp"
+                            android:paddingBottom="0dp"
+                            android:insetTop="0dp"
+                            android:insetBottom="0dp"
+                            android:theme="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                            />
+                    </LinearLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
+
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+    </com.sribs.common.ui.widget.NoScrollableNestedScrollView>
+
+
+</androidx.appcompat.widget.LinearLayoutCompat>

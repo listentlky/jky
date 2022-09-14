@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginLeft="@dimen/_10sdp"
+    android:layout_marginRight="@dimen/_10sdp"
+    android:layout_marginBottom="@dimen/_5sdp"
+    app:cardElevation="@dimen/_2sdp"
+    app:layout_constraintLeft_toLeftOf="parent"
+    app:layout_constraintTop_toTopOf="parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <include
+            android:id="@+id/check_cpd_left_menu"
+            layout="@layout/item_component_detection_menu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/check_cpd_left_real_design_tv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_15sdp"
+            android:layout_marginTop="@dimen/_3sdp"
+            android:text="实测纵筋"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_6ssp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/check_cpd_left_menu"></TextView>
+
+        <Spinner
+            android:id="@+id/check_cpd_left_real_spinner_1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_5sdp"
+            android:background="@drawable/check_gray_stroke_bg"
+            android:dropDownVerticalOffset="@dimen/_10sdp"
+            android:spinnerMode="dropdown"
+            app:layout_constraintBottom_toBottomOf="@id/check_cpd_left_real_design_tv"
+            app:layout_constraintLeft_toRightOf="@id/check_cpd_left_real_design_tv"
+            app:layout_constraintTop_toTopOf="@id/check_cpd_left_real_design_tv"></Spinner>
+
+        <include
+            android:id="@+id/check_cpd_beam_right_real_single"
+            layout="@layout/item_component_detection_beam_right_real_single_row_steel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_15sdp"
+            android:layout_marginTop="@dimen/_3sdp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/check_cpd_left_real_design_tv" />
+
+
+        <View
+            android:id="@+id/first_line"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="@dimen/_15sdp"
+            android:layout_marginTop="@dimen/_3sdp"
+            android:layout_marginRight="@dimen/_15sdp"
+            android:background="@color/gray_400"
+            app:layout_constraintTop_toBottomOf="@id/check_cpd_beam_right_real_single" />
+
+        <include
+            android:id="@+id/check_cpd_beam_right_real_measured"
+            layout="@layout/item_component_detection_beam_right_real_measured_stirrups_edit"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_15sdp"
+            android:layout_marginTop="@dimen/_3sdp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/first_line" />
+
+        <include
+            android:id="@+id/check_cpd_beam_right_real_encrypted"
+            layout="@layout/item_component_detection_beam_right_real_encrypted_edit"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_15sdp"
+            android:layout_marginTop="@dimen/_3sdp"
+
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/check_cpd_beam_right_real_measured" />
+
+        <TextView
+            android:id="@+id/check_cpd_beam_right_real_encrypted_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_15sdp"
+            android:layout_marginTop="@dimen/_3sdp"
+            android:text="长度 / 档数 = 间距"
+            android:textColor="@color/blue"
+            android:textSize="@dimen/_5ssp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/check_cpd_beam_right_real_encrypted">
+
+        </TextView>
+
+        <include
+            android:id="@+id/check_cpd_beam_right_real_non_encrypted"
+            layout="@layout/item_component_detection_beam_right_real_non_encrypted_edit"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_15sdp"
+            android:layout_marginTop="@dimen/_3sdp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/check_cpd_beam_right_real_encrypted_text" />
+
+
+        <TextView
+            android:id="@+id/check_cpd_beam_right_real_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_15sdp"
+            android:layout_marginTop="@dimen/_3sdp"
+            android:text="长度 / 档数 = 间距"
+            android:textColor="@color/blue"
+            android:textSize="@dimen/_5ssp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/check_cpd_beam_right_real_non_encrypted">
+
+        </TextView>
+
+
+        <View
+            android:id="@+id/second_line"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="@dimen/_15sdp"
+            android:layout_marginTop="@dimen/_3sdp"
+            android:layout_marginRight="@dimen/_15sdp"
+            android:background="@color/gray_400"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/check_cpd_beam_right_real_text" />
+
+        <include
+            android:id="@+id/check_cpd_beam_right_real_protect"
+            layout="@layout/item_component_detection_beam_right_real_protect_edit"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_15sdp"
+            android:layout_marginTop="@dimen/_3sdp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/second_line" />
+
+        <View
+            android:id="@+id/third_line"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="@dimen/_15sdp"
+            android:layout_marginTop="@dimen/_3sdp"
+            android:layout_marginRight="@dimen/_15sdp"
+            android:background="@color/gray_400"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/check_cpd_beam_right_real_protect" />
+
+
+        <TextView
+            android:id="@+id/check_cpd_beam_right_remark"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_15sdp"
+            android:layout_marginTop="@dimen/_3sdp"
+            android:text="备注"
+
+            android:textColor="@color/black"
+            android:textSize="@dimen/_6ssp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/third_line"></TextView>
+
+        <ScrollView
+
+            android:id="@+id/check_cpd_beam_right_scroll_view"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginLeft="@dimen/_13sdp"
+            android:layout_marginTop="@dimen/_2sdp"
+            android:layout_marginBottom="@dimen/_10sdp"
+            android:background="@drawable/check_gray_stroke_bg"
+            android:scrollbars="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_weight="2.5"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/check_cpd_beam_pic"
+            app:layout_constraintTop_toBottomOf="@id/check_cpd_beam_right_remark">
+
+            <EditText
+                android:id="@+id/check_cpd_left_real_remark_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@null"
+                android:gravity="start"
+                android:hint="请输入内容"
+                android:textSize="@dimen/_7ssp">
+
+            </EditText>
+
+        </ScrollView>
+
+
+        <ImageView
+            android:id="@+id/check_cpd_beam_pic"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginLeft="@dimen/_10sdp"
+            android:layout_marginRight="@dimen/_10sdp"
+            android:background="@mipmap/ic_launcher"
+            app:layout_constraintBottom_toBottomOf="@id/check_cpd_beam_right_scroll_view"
+            app:layout_constraintDimensionRatio="1"
+            app:layout_constraintHorizontal_weight="0.6"
+            app:layout_constraintLeft_toRightOf="@id/check_cpd_beam_right_scroll_view"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/check_cpd_beam_right_scroll_view"
+            app:layout_constraintVertical_weight="1">
+
+        </ImageView>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_2sdp"
+            android:text="图片"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_6ssp"
+            app:layout_constraintLeft_toLeftOf="@id/check_cpd_beam_pic"
+            app:layout_constraintTop_toTopOf="@id/check_cpd_beam_right_remark"></TextView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.cardview.widget.CardView>
+
+
+

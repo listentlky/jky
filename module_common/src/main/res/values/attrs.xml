@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="TagEditView">
+        <attr name="TagText" format="string"/>
+        <attr name="TagPadding" format="dimension"/>
+        <attr name="TagMust" format="boolean"/>
+        <attr name="TagWidth" format="dimension"/>
+        <attr name="EditText" format="string"/>
+        <attr name="EditHint" format="string"/>
+        <attr name="EditEnable" format="boolean"/>
+        <attr name="EditWidth" format="dimension"/>
+        <attr name="EditBtnEnable" format="boolean"/>
+        <attr name="EditBtnBackground" format="reference"/>
+        <attr name="EditBtnSize" format="dimension"/>
+        <attr name="EditIsSpinner" format="boolean"/>
+        <attr name="EditIsEditSpinner" format="boolean"/>
+        <attr name="EditIsDate" format="boolean"/>
+        <attr name="android:inputType"/>
+        <attr name="android:maxLength"/>
+        <attr name="android:gravity"/>
+    </declare-styleable>
+
+
+    <declare-styleable name="TagRadioView">
+        <attr name="RadioTagText" format="string"/>
+        <attr name="RadioTagPadding" format="dimension"/>
+        <attr name="RadioTagMust" format="boolean"/>
+        <attr name="RadioTagWidth" format="dimension"/>
+        <attr name="RadioArr" format="reference"/>
+        <attr name="RadioMargin" format="dimension"/>
+        <attr name="RadioCheckedIdx" format="integer"/><!-- 1,2 -->
+        <attr name="RadioGroupWidth" format="dimension"/>
+        <attr name="android:gravity"/>
+    </declare-styleable>
+
+
+    <declare-styleable name="TagCheckView">
+        <attr name="CheckTagText" format="string"></attr>
+        <attr name="CheckTagPadding" format="dimension"></attr>
+        <attr name="CheckTagMust" format="boolean"></attr>
+        <attr name="CheckTagWidth" format="dimension"></attr>
+        <attr name="CheckArr" format="reference"></attr>
+        <attr name="CheckArrMargin" format="dimension"></attr>
+        <attr name="CheckArrSpan" format="integer"></attr>
+        <attr name="android:gravity"/>
+        <attr name="CheckCustomEnable" format="boolean"></attr>
+    </declare-styleable>
+
+    <attr name="attr_primaryTextColor" format="reference|color" />
+    <attr name="attr_accentColor" format="reference|color" />
+
+    <declare-styleable name="DropDownList">
+        <attr name="attr_primaryTextColor" />
+        <attr name="attr_accentColor" />
+        <attr name="attr_showAllExpanded" format="boolean"/>
+        <attr name="attr_keepSpaceIfEmpty" format="boolean"/>
+    </declare-styleable>
+
+</resources>

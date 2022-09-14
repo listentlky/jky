@@ -1,0 +1,8 @@
+rootProject.name = "bdd"
+include ':app'
+include ':module_common'
+include ':module_db'
+include ':lib_pdf'
+include ':lib_opensource'
+include ':lib_recycle'
+include ':whiteboardlib'

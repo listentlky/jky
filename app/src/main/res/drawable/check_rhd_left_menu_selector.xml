@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:state_selected="false" android:drawable="@mipmap/icon_relative_h_diff_menu"/>
+    <item android:state_selected="true" android:drawable="@mipmap/icon_relative_h_diff_open_menu"/>
+</selector>

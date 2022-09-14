@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:dist="http://schemas.android.com/apk/distribution"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.sribs.bdd">
+    <!-- 用于进行网络定位 -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- 用于访问GPS定位 -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> <!-- 用于获取运营商信息，用于支持提供运营商信息相关的接口 -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- 用于访问wifi网络信息，wifi信息会用于进行网络定位 -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- 用于访问网络，网络定位需要上网 -->
+    <uses-permission android:name="android.permission.INTERNET" /> <!-- 用于读取手机当前的状态 -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" /> <!-- 用于写入缓存数据到扩展存储卡 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- 用于申请调用A-GPS模块 -->
+    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <dist:module dist:instant="true" />
+
+    <application
+        android:name=".APP"
+        android:allowBackup="true"
+        android:icon="${app_icon}"
+        android:label="${app_name}"
+        android:networkSecurityConfig="@xml/network_security_config"
+        android:requestLegacyExternalStorage="true"
+        android:roundIcon="${app_icon}"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Bdd"
+        tools:replace="label,theme,networkSecurityConfig">
+        <meta-data
+            android:name="build_flavor"
+            android:value="${build_flavor}" />
+        <meta-data
+            android:name="PGYER_API_KEY"
+            android:value="58bbea8aac1c8e5498a542bf3c8c8b70" />
+        <meta-data
+            android:name="PGYER_FRONTJS_KEY"
+            android:value="d76332e668a52ea853aa436e788168d1" />
+        <meta-data
+            android:name="PGYER_CHALNNEL_KEY"
+            android:value="" />
+        <meta-data
+            android:name="PGYER_FEATURE_CHECK_UNPDATE"
+            android:value="false" />
+        <meta-data
+            android:name="PGYER_FPS_THRESHOLD"
+            android:value="10" />
+
+        <activity
+            android:name=".ui.login.LoginActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme.Login">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.main.MainActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme.Main" />
+        <activity
+            android:name=".ui.project.ProjectCreateActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme.ProjectCreate" />
+        <activity
+            android:name=".ui.project.ProjectCreateByTypeActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme.ProjectCreate" />
+        <activity
+            android:name=".ui.project.ProjectConfigActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme.ProjectCreate" />
+        <activity
+            android:name=".ui.project.ProjectCopyActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme.ProjectCreate" />
+        <activity
+            android:name=".ui.house.HouseListActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme.Main" />
+        <activity
+            android:name=".ui.house.HouseDamageListActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme.Main" />
+        <activity
+            android:name=".ui.house.HouseStatusActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme.Main" />
+        <activity
+            android:name=".ui.house.HouseDamageDescriptionActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme.Main" /> <!-- android:screenOrientation="landscape" -->
+        <activity
+            android:name=".ui.house.UnitListActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme.Main" />
+        <activity
+            android:name=".ui.house.ReportActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme.Main" />
+        <activity
+            android:name=".ui.main.SettingActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme.Main" />
+        <activity
+            android:name=".ui.main.DamageMainActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme.Main" />
+        <activity
+            android:name=".ui.building.BuildingFloorCopyActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme.Main" />
+        <activity
+            android:name=".ui.building.BuildingDamageActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme.Main" />
+        <activity
+            android:name=".ui.building.DrawWhiteActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme.Main" />
+        <activity
+            android:name=".ui.project.ProjectFloorActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme.Main" />
+        <activity
+            android:name=".ui.project.ProjectFloorItemActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme.Main" />
+        <activity
+            android:name="com.donkingliang.imageselector.ImageSelectorActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name="com.donkingliang.imageselector.PreviewActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="landscape"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name="com.donkingliang.imageselector.ClipImageActivity"
+            android:screenOrientation="landscape"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".v3.ui.check.obd.CheckObliqueDeformationActivity"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme.Main" />
+        <activity
+            android:name=".v3.ui.check.bs.CheckBuildStructureActivity"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme.Main" />
+        <activity
+            android:name=".v3.ui.floor.FloorActivity"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme.Main" />
+        <activity
+            android:name=".v3.ui.check.rhd.RelativeHDiffActivity"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme.Main"  />
+        <activity
+            android:name=".v3.ui.check.cd.CheckComponentDetectionActivity"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme.Main"  />
+        <receiver
+            android:name=".receiver.NetworkReceiver"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="android.Net.wifi.WIFI_STATE_CHANGED" />
+                <action android:name="android.net.wifi.STATE_CHANGE" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name="com.baidu.location.f"
+            android:enabled="true"
+            android:process=":remote" />
+
+        <meta-data
+            android:name="com.baidu.lbsapi.API_KEY"
+            android:value="DRPXIof5aYH4sMM0VRnuU1OzeCRGxo2v" />
+    </application>
+
+</manifest>

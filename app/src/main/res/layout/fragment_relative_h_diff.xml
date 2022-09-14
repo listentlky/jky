@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <View
+        android:id="@+id/right_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintHorizontal_weight="0.45"
+        app:layout_constraintLeft_toRightOf="@id/check_left_layout"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.radaee.reader.PDFLayoutView
+        android:id="@+id/pdf_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/check_fab"
+        android:layout_width="@dimen/_30sdp"
+        android:layout_height="@dimen/_30sdp"
+        android:layout_marginRight="@dimen/_10sdp"
+        android:layout_marginBottom="@dimen/_20sdp"
+        android:clickable="true"
+        android:contentDescription="main_fab"
+        android:scaleType="fitXY"
+        android:src="@mipmap/icon_white_pen"
+        app:backgroundTint="@color/blue_800"
+        app:fabCustomSize="@dimen/_30sdp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:rippleColor="@color/rippleColor" />
+
+
+    <TextView
+        android:id="@+id/check_select_index"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_30sdp"
+        android:layout_marginRight="@dimen/_20sdp"
+        android:background="@drawable/round_blue_bg"
+        android:clickable="true"
+        android:paddingTop="@dimen/_6sdp"
+        android:paddingBottom="@dimen/_6sdp"
+        android:text="第一张"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_8ssp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/check_left_layout"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:visibility="gone"
+        app:layout_constraintHorizontal_weight="0.55"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/right_view">
+
+        <include
+            android:id="@+id/check_table_title"
+            layout="@layout/check_rhd_table_title"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_30sdp" />
+
+        <ScrollView
+            android:id="@+id/check_scrollview"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:fillViewport="true"
+            app:layout_constraintBottom_toTopOf="@id/check_line1"
+            app:layout_constraintTop_toBottomOf="@id/check_table_title"
+            app:layout_constraintVertical_weight="1">
+
+            <com.sribs.bdd.v3.view.CheckHTableView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+
+            </com.sribs.bdd.v3.view.CheckHTableView>
+
+           <!--  <LinearLayout
+                 android:layout_width="match_parent"
+                 android:layout_height="match_parent">
+
+                 <include
+                     layout="@layout/check_table_item"
+                     android:layout_width="match_parent"
+                     android:layout_height="@dimen/_15sdp" />
+
+             </LinearLayout>-->
+
+
+        </ScrollView>
+
+        <View
+            android:id="@+id/check_line1"
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/grayAAABAD"
+            app:layout_constraintBottom_toTopOf="@id/check_but_tjcd"
+            app:layout_constraintTop_toBottomOf="@id/check_scrollview" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/check_but_js"
+            android:layout_width="@dimen/_30sdp"
+            android:layout_height="@dimen/_14sdp"
+            android:layout_marginRight="@dimen/_10sdp"
+            android:background="@drawable/round_blue_bg"
+            android:gravity="center"
+            android:text="计算"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_7ssp"
+            app:layout_constraintRight_toLeftOf="@id/check_but_tjcd"
+            app:layout_constraintTop_toTopOf="@id/check_but_tjcd" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/check_but_tjcd"
+            android:layout_width="@dimen/_40sdp"
+            android:layout_height="@dimen/_14sdp"
+            android:layout_marginTop="@dimen/_6ssp"
+            android:layout_marginRight="@dimen/_4sdp"
+            android:background="@drawable/round_blue_bg"
+            android:gravity="center"
+            android:text="添加测点"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_7ssp"
+            app:layout_constraintBottom_toTopOf="@id/check_line2"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/check_line1" />
+
+        <View
+            android:id="@+id/check_line2"
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginTop="@dimen/_6sdp"
+            android:background="@color/grayAAABAD"
+            app:layout_constraintBottom_toTopOf="@id/check_bz"
+            app:layout_constraintTop_toBottomOf="@id/check_but_tjcd" />
+
+        <TextView
+            android:id="@+id/check_bz"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_6sdp"
+            android:layout_marginTop="@dimen/_2sdp"
+            android:text="备注:"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_7ssp"
+            app:layout_constraintBottom_toTopOf="@id/check_bz_edit"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/check_line2" />
+
+        <EditText
+            android:id="@+id/check_bz_edit"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_70sdp"
+            android:layout_marginLeft="@dimen/_6sdp"
+            android:layout_marginTop="@dimen/_2sdp"
+            android:layout_marginRight="@dimen/_6sdp"
+            android:layout_marginBottom="@dimen/_6sdp"
+            android:background="@drawable/check_gray_stroke_bg"
+            android:gravity="start"
+            android:hint="请输入备注"
+            android:padding="@dimen/_4sdp"
+            android:textColor="@color/black"
+            android:textColorHint="@color/gray_600"
+            android:textSize="@dimen/_6ssp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/check_bz"
+            app:layout_constraintVertical_weight="1" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ImageView
+        android:id="@+id/check_left_menu"
+        android:layout_width="@dimen/_20sdp"
+        android:layout_height="@dimen/_20sdp"
+        android:layout_marginLeft="@dimen/_4sdp"
+        android:layout_marginBottom="@dimen/_16sdp"
+        android:src="@drawable/check_rhd_left_menu_selector"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/check_left_layout" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

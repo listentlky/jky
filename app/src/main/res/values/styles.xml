@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="OverflowMenuStyle" parent="Widget.AppCompat.PopupMenu.Overflow">
+        <item name="overlapAnchor">false</item>
+        <item name="android:dropDownWidth">wrap_content</item>
+        <item name="android:dropDownHeight">@dimen/_250sdp</item>
+
+<!--        <item name="android:popupBackground">@drawable/ic_main_menu_bk</item>-->
+<!--        <item name="android:dropDownVerticalOffset">-17dp</item>-->
+        <item name="android:dropDownHorizontalOffset">-25dp</item>
+
+        <item name="android:textSize">@dimen/_8sdp</item>
+        <item name="android:textColor">@color/black_800</item>
+        <item name="android:drawablePadding">0dp</item>
+<!--        <item name="android:actionOverflowButtonStyle">@style/MyActionButtonStyle</item>-->
+    </style>
+
+    <style name="TextMenuStyle" parent="@style/ThemeOverlay.AppCompat.ActionBar">
+        <item name="android:textSize">@dimen/_8sdp</item>
+        <item name="actionMenuTextColor">@color/white</item>
+    </style>
+
+    <style name="MyActionButtonStyle" parent="Widget.AppCompat.ActionButton.Overflow">
+<!--    <style name="MyActionButtonStyle" parent="AppTheme">-->
+        <item name="android:height">@dimen/_10sdp</item>
+        <item name="android:drawablePadding">@dimen/_8sdp</item>
+    </style>
+
+    <style name="TableText">
+        <item name="android:textSize">@dimen/_7sdp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:drawablePadding">@dimen/_5sdp</item>
+        <item name="android:textColor">@color/project_unit_table_text</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_height">@dimen/_32sdp</item>
+        <item name="android:background">@drawable/unit_table_border_1</item>
+    </style>
+
+    <style name="PicPoint">
+        <item name="android:layout_width">@dimen/house_damage_pic_point_size</item>
+        <item name="android:layout_height">@dimen/house_damage_pic_point_size</item>
+        <item name="android:src">@drawable/ic_bk_damage_point_gray</item>
+        <item name="layout_constraintLeft_toLeftOf">parent</item>
+        <item name="layout_constraintRight_toRightOf">parent</item>
+        <item name="layout_constraintTop_toTopOf">parent</item>
+        <item name="layout_constraintBottom_toBottomOf">parent</item>
+    </style>
+
+</resources>

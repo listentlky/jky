@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/gray_400"
+    android:clickable="true"
+    android:focusable="true">
+
+
+    <TextView
+        android:id="@+id/check_cpd_left_menu_1"
+        android:layout_width="@dimen/_60sdp"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:gravity="center"
+        android:padding="@dimen/_2sdp"
+        android:text="实测截面尺寸"
+        android:textColor="@color/blue"
+        android:textSize="@dimen/_6ssp" />
+
+    <TextView
+        android:id="@+id/check_cpd_left_menu_2"
+        android:layout_width="@dimen/_60sdp"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/check_cpd_left_menu_1"
+        android:gravity="center"
+        android:padding="@dimen/_2sdp"
+        android:text="设计截面尺寸"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_6ssp" />
+
+</RelativeLayout>

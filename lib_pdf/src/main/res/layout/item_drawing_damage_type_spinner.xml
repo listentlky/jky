@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="120dp"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+    <androidx.appcompat.widget.AppCompatCheckedTextView
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/cbx_type_item"
+        android:checkMark="?android:attr/listChoiceIndicatorMultiple"
+        android:orientation="horizontal"
+        android:textSize="14dp"
+        android:textColor="@color/black_800"
+        android:gravity="center_vertical"
+        android:paddingVertical="@dimen/list_item_padding"
+        >
+
+    </androidx.appcompat.widget.AppCompatCheckedTextView>
+
+
+</LinearLayout>

@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        android:orientation="vertical"
+        android:background="@color/white"
+        android:padding="@dimen/project_unit_padding">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.sribs.common.ui.widget.TagEditView
+                android:id="@+id/unit_number"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="@dimen/common_input_height"
+                app:TagMust="true"
+                app:TagText="单元号"
+                app:TagPadding="@dimen/project_unit_margin"
+                app:EditEnable="true"
+                app:EditHint="请输入"
+
+                />
+
+            <Space
+                android:layout_width="@dimen/project_unit_padding"
+                android:layout_height="0dp"/>
+
+            <com.sribs.common.ui.widget.TagEditView
+                android:id="@+id/unit_builder_total_floor"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="@dimen/common_input_height"
+                app:TagMust="true"
+                app:TagText="楼层总数"
+                app:TagPadding="@dimen/project_unit_margin"
+                app:EditEnable="true"
+                app:EditHint="请输入"
+                android:inputType="number"
+                />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="@dimen/project_unit_padding">
+
+            <com.sribs.common.ui.widget.TagEditView
+                android:id="@+id/unit_max_neighbor"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="@dimen/common_input_height"
+                app:TagMust="true"
+                app:TagText="每层最大户数"
+                app:TagPadding="@dimen/project_unit_margin"
+                app:EditEnable="true"
+                app:EditHint="请输入"
+                android:inputType="number"
+                />
+
+            <Space
+                android:layout_width="@dimen/project_unit_padding"
+                android:layout_height="0dp"/>
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="0dp"/>
+
+        </LinearLayout>
+
+        <com.sribs.common.ui.widget.TagRadioView
+            android:id="@+id/unit_floor_type"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/common_input_height"
+            android:layout_marginTop="@dimen/project_unit_padding"
+            app:RadioTagMust="true"
+            app:RadioTagText="楼梯间"
+            app:RadioTagPadding="@dimen/project_unit_margin"
+            app:RadioArr="@array/project_floor_type"
+            app:RadioMargin="@dimen/project_unit_margin"
+            app:RadioCheckedIdx="1"
+            />
+
+
+        <LinearLayout
+            android:id="@+id/unit_table"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/unit_table_border_1"
+            android:layout_marginTop="@dimen/_17sdp"
+            android:layout_marginBottom="@dimen/_17sdp"
+            android:padding="2px">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/common_input_height"
+                android:orientation="horizontal"
+                android:background="@color/black_600_4">
+                <TextView
+                    style="@style/TableText"
+                    android:layout_height="@dimen/common_input_height"
+                    android:text="层号"
+                    />
+                <TextView
+                    style="@style/TableText"
+                    android:layout_height="@dimen/common_input_height"
+                    android:text="楼层"
+                    />
+                <TextView
+                    style="@style/TableText"
+                    android:layout_height="@dimen/common_input_height"
+                    android:text="室"
+                    />
+                <TextView
+                    style="@style/TableText"
+                    android:layout_height="@dimen/common_input_height"
+                    android:text="操作"
+                    />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/unit_floor_ll"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/_5sdp">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/unit_del_btn"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/common_btn_height"
+                android:layout_weight="1"
+                app:rippleColor="@color/rippleColorDark"
+                app:cornerRadius="@dimen/_2sdp"
+                app:backgroundTint="@color/white"
+                app:strokeColor="@color/red_500"
+                android:textColor="@color/red_500"
+                android:text="删除单元"
+                android:textSize="@dimen/common_text_title"
+                app:strokeWidth="@dimen/_1sdp"
+                android:paddingTop="0dp"
+                android:paddingBottom="0dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:theme="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_marginRight="@dimen/_19sdp"
+                android:visibility="gone"
+                />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/unit_upload_btn"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/common_btn_height"
+                android:layout_weight="1"
+                app:rippleColor="@color/rippleColor"
+                app:cornerRadius="@dimen/_2sdp"
+                app:backgroundTint="@color/blue_800"
+                android:textColor="@color/white"
+                android:text="保存并上传"
+                android:textSize="@dimen/common_text_title"
+                android:paddingTop="0dp"
+                android:paddingBottom="0dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:theme="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                />
+            <Space
+                android:layout_width="@dimen/_19sdp"
+                android:layout_height="0dp"/>
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/unit_copy_unit_btn"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/common_btn_height"
+                android:layout_weight="1"
+                app:rippleColor="@color/rippleColor"
+                app:cornerRadius="@dimen/_2sdp"
+                app:backgroundTint="@color/blue_800"
+                android:textColor="@color/white"
+                android:text="复制单元"
+                android:textSize="@dimen/common_text_title"
+                android:paddingTop="0dp"
+                android:paddingBottom="0dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:theme="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                />
+
+        </LinearLayout>
+
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

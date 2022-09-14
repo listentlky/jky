@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/blue_800">
+        <include layout="@layout/layout_common_toolbar"
+            android:id="@+id/toolbar"
+            />
+    </com.google.android.material.appbar.AppBarLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingHorizontal="@dimen/_32sdp"
+        android:paddingVertical="@dimen/_14sdp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingHorizontal="@dimen/_25sdp">
+
+            <com.sribs.common.ui.widget.TagCheckView
+                android:id="@+id/house_now_status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:CheckTagMust="true"
+                app:CheckTagText="房屋现状"
+                app:CheckTagPadding="@dimen/project_unit_margin"
+                app:CheckTagWidth="@dimen/project_unit_config_tag_width"
+                app:CheckCustomEnable="false"
+                app:CheckArr="@array/unit_config_floor_bottom"
+                app:CheckArrMargin="@dimen/project_unit_check_margin"
+                app:CheckArrSpan="5"
+                android:gravity="right"
+                android:layout_marginTop="@dimen/_9sdp"
+                android:layout_marginBottom="@dimen/_minus4sdp"
+                />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="@dimen/_9sdp">
+
+                <com.sribs.common.ui.widget.TagEditView
+                    android:id="@+id/house_decoration_date"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/common_input_height"
+                    android:layout_weight="1"
+                    app:TagMust="false"
+                    app:TagText="新装修时间"
+                    app:TagPadding="@dimen/project_unit_margin"
+                    app:TagWidth="@dimen/project_unit_config_tag_width"
+                    app:EditBtnBackground="@mipmap/icon_date"
+                    app:EditBtnSize="@dimen/_7sdp"
+                    app:EditEnable="true"
+                    app:EditBtnEnable="true"
+                    app:EditIsDate="true"
+                    app:EditHint="请选择"
+                    android:gravity="right"
+
+                    />
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="@dimen/_9sdp"
+                android:gravity="top"
+                android:id="@+id/house_used_ll">
+
+                <TextView
+                    android:layout_width="@dimen/project_unit_config_tag_width"
+                    android:layout_height="wrap_content"
+                    android:text="房间实际用途"
+                    android:textSize="@dimen/_9sdp"
+                    android:textColor="@color/black_800"
+                    android:paddingRight="@dimen/project_unit_margin"
+                    android:gravity="right"
+                    android:layout_gravity="top"
+                    android:layout_marginTop="@dimen/_6sdp"
+                    />
+
+                <EditText
+                    android:id="@+id/house_used"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_73sdp"
+                    android:textColor="@color/black_800"
+                    android:textSize="@dimen/common_text_content"
+                    android:hint="请输入"
+                    android:textColorHint="@color/gray_600"
+                    android:gravity="top"
+                    android:background="@drawable/common_et_border_bk"
+                    android:paddingHorizontal="@dimen/_8sdp"
+                    android:layout_gravity="center_vertical"
+                    android:paddingVertical="@dimen/_6sdp"
+                    />
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</androidx.appcompat.widget.LinearLayoutCompat>

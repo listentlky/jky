@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/gray_400">
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="@dimen/_10sdp"
+        android:text="绘制图纸"
+        android:textSize="@dimen/common_text_title"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_line"
+        android:layout_width="@dimen/_35sdp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_10sdp"
+
+        android:drawableTop="@mipmap/btn_line"
+        android:drawablePadding="@dimen/_2sdp"
+        android:gravity="center"
+        android:text="直线"
+        android:textColor="@color/gray_600"
+        android:background="@drawable/ic_sel_drawing_pen"
+        android:textSize="@dimen/_8sdp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title" />
+
+    <TextView
+        android:id="@+id/tv_rect"
+        android:layout_width="@dimen/_35sdp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/ic_sel_drawing_pen"
+        android:text="矩形"
+        android:textColor="@color/gray_600"
+        android:textSize="@dimen/_8sdp"
+        android:gravity="center"
+        android:drawablePadding="@dimen/_2sdp"
+        android:drawableTop="@mipmap/btn_rect"
+
+        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_gravity="center"
+        app:layout_constraintTop_toBottomOf="@+id/title"
+        app:layout_constraintLeft_toRightOf="@+id/tv_line"
+        />
+
+    <TextView
+        android:id="@+id/tv_circle"
+        android:layout_width="@dimen/_35sdp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/ic_sel_drawing_pen"
+        android:text="圆形"
+        android:textColor="@color/gray_600"
+        android:textSize="@dimen/_8sdp"
+        android:gravity="center"
+        android:drawablePadding="@dimen/_2sdp"
+        android:drawableTop="@mipmap/btn_circle"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_gravity="center"
+        app:layout_constraintTop_toBottomOf="@+id/title"
+        app:layout_constraintLeft_toRightOf="@+id/tv_rect"
+        />
+
+    <TextView
+        android:id="@+id/tv_text"
+        android:layout_width="@dimen/_35sdp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/ic_sel_drawing_pen"
+        android:text="文本"
+        android:textColor="@color/gray_600"
+        android:textSize="@dimen/_8sdp"
+        android:gravity="center"
+        android:drawablePadding="@dimen/_2sdp"
+        android:drawableTop="@mipmap/btn_text"
+        android:layout_marginLeft="@dimen/_10sdp"
+        android:layout_gravity="center"
+        app:layout_constraintTop_toBottomOf="@+id/tv_rect"
+        app:layout_constraintLeft_toLeftOf="parent"
+        />
+
+    <TextView
+        android:id="@+id/tv_manual"
+        android:layout_width="@dimen/_35sdp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/ic_sel_drawing_pen"
+        android:text="手绘"
+        android:textColor="@color/gray_600"
+        android:textSize="@dimen/_8sdp"
+        android:gravity="center"
+        android:drawablePadding="@dimen/_2sdp"
+        android:drawableTop="@mipmap/btn_manual"
+        android:layout_gravity="center"
+        app:layout_constraintTop_toBottomOf="@+id/tv_rect"
+        app:layout_constraintLeft_toRightOf="@+id/tv_text"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

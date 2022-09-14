@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/_15sdp"
+    android:background="@color/grayF5F7FA">
+
+    <TextView
+        android:id="@+id/table_dh_text"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:paddingLeft="@dimen/_4sdp"
+        android:text="BM1"
+        android:textColor="@drawable/table_first_textcolor_selector"
+        android:textSize="@dimen/_6ssp"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/table_hs"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/line_1"
+        android:layout_width="1px"
+        android:layout_height="match_parent"
+        android:background="@color/grayAAABAD"
+        app:layout_constraintLeft_toRightOf="@id/table_dh_text"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/table_hs"
+        android:layout_width="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintLeft_toRightOf="@id/table_dh_text"
+        app:layout_constraintRight_toLeftOf="@id/table_qs"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_height="0dp">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/_4sdp"
+            android:layout_marginTop="@dimen/_2sdp"
+            android:layout_marginRight="@dimen/_4sdp"
+            android:layout_marginBottom="@dimen/_2sdp"
+            android:gravity="center"
+            android:paddingLeft="@dimen/_4sdp"
+            android:textColor="@color/gray_666"
+            android:textSize="@dimen/_6ssp"
+            android:background="@drawable/table_item_edit_bg" />
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/line_2"
+        android:layout_width="1px"
+        android:layout_height="match_parent"
+        android:background="@color/grayAAABAD"
+        app:layout_constraintLeft_toRightOf="@id/table_hs" />
+
+    <LinearLayout
+        android:id="@+id/table_qs"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintLeft_toRightOf="@id/table_hs"
+        app:layout_constraintRight_toLeftOf="@id/table_qhsgc"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="0dp"
+        android:layout_height="0dp">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/_4sdp"
+            android:layout_marginTop="@dimen/_2sdp"
+            android:layout_marginRight="@dimen/_4sdp"
+            android:layout_marginBottom="@dimen/_2sdp"
+            android:gravity="center"
+            android:paddingLeft="@dimen/_4sdp"
+            android:textColor="@color/gray_666"
+            android:textSize="@dimen/_6ssp"
+            android:background="@drawable/table_item_edit_bg" />
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/line_3"
+        android:layout_width="1px"
+        android:layout_height="match_parent"
+        android:background="@color/grayAAABAD"
+        app:layout_constraintLeft_toRightOf="@id/table_qs" />
+
+    <LinearLayout
+        android:id="@+id/table_qhsgc"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintLeft_toRightOf="@id/table_qs"
+        app:layout_constraintRight_toLeftOf="@id/table_gc"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="0dp"
+        android:layout_height="0dp">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/_4sdp"
+            android:layout_marginTop="@dimen/_2sdp"
+            android:layout_marginRight="@dimen/_4sdp"
+            android:layout_marginBottom="@dimen/_2sdp"
+            android:gravity="center"
+            android:paddingLeft="@dimen/_4sdp"
+            android:paddingRight="@dimen/_4sdp"
+            android:textColor="@color/gray_666"
+            android:textSize="@dimen/_6ssp"
+            android:background="@drawable/table_item_edit_bg" />
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/line_4"
+        android:layout_width="1px"
+        android:layout_height="match_parent"
+        android:background="@color/grayAAABAD"
+        app:layout_constraintLeft_toRightOf="@id/table_qhsgc" />
+
+    <LinearLayout
+        android:id="@+id/table_gc"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintLeft_toRightOf="@id/table_qhsgc"
+        app:layout_constraintRight_toLeftOf="@id/table_cdxdgc"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="0dp"
+        android:layout_height="0dp">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/_4sdp"
+            android:layout_marginTop="@dimen/_2sdp"
+            android:layout_marginRight="@dimen/_4sdp"
+            android:layout_marginBottom="@dimen/_2sdp"
+            android:gravity="center"
+            android:paddingLeft="@dimen/_4sdp"
+            android:paddingRight="@dimen/_4sdp"
+            android:textColor="@color/gray_666"
+            android:textSize="@dimen/_6ssp"
+            android:background="@drawable/table_item_edit_bg" />
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/line_5"
+        android:layout_width="1px"
+        android:layout_height="match_parent"
+        android:background="@color/grayAAABAD"
+        app:layout_constraintLeft_toRightOf="@id/table_gc" />
+
+    <LinearLayout
+        android:id="@+id/table_cdxdgc"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintLeft_toRightOf="@id/table_gc"
+        app:layout_constraintRight_toLeftOf="@id/table_cz"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="0dp"
+        android:layout_height="0dp">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/_4sdp"
+            android:layout_marginTop="@dimen/_2sdp"
+            android:layout_marginRight="@dimen/_4sdp"
+            android:layout_marginBottom="@dimen/_2sdp"
+            android:gravity="center"
+            android:paddingLeft="@dimen/_4sdp"
+            android:paddingRight="@dimen/_4sdp"
+            android:textColor="@color/gray_666"
+            android:textSize="@dimen/_6ssp"
+            android:background="@drawable/table_item_edit_bg" />
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/line_6"
+        android:layout_width="1px"
+        android:layout_height="match_parent"
+        android:background="@color/grayAAABAD"
+        app:layout_constraintLeft_toRightOf="@id/table_cdxdgc" />
+
+    <LinearLayout
+        android:id="@+id/table_cz"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:paddingTop="@dimen/_2sdp"
+        android:paddingBottom="@dimen/_2sdp"
+        android:paddingLeft="@dimen/_4sdp"
+        android:paddingRight="@dimen/_4sdp"
+        android:orientation="horizontal"
+        app:layout_constraintHorizontal_weight="1.5"
+        app:layout_constraintLeft_toRightOf="@id/table_cdxdgc"
+        app:layout_constraintRight_toRightOf="parent">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/check_but_zd"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/_10sdp"
+            android:layout_weight="1"
+            android:background="@drawable/round_blue_bg"
+            android:gravity="center"
+            android:text="转点"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_4ssp" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/check_but_delete"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/_10sdp"
+            android:layout_marginLeft="@dimen/_2sdp"
+            android:layout_weight="1"
+            android:background="@drawable/round_red_table_menu_seletor"
+            android:gravity="center"
+            android:text="删除"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_4ssp" />
+
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/line_7"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:background="@color/grayAAABAD"
+        android:layout_width="match_parent"
+        android:layout_height="1px"/>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

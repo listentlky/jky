@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/blue_800_10">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/toolbarLayout"
+        android:orientation="vertical"
+        android:background="@color/blue_800"
+        app:layout_constraintTop_toTopOf="parent"
+        >
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:theme="@style/OverflowMenuStyle">
+
+            <TextView
+                android:id="@+id/toolbar_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:singleLine="true"
+                android:textColor="@color/white"
+                android:textSize="@dimen/common_text_title"
+                android:textStyle="bold"
+
+                />
+
+        </androidx.appcompat.widget.Toolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <android.widget.Button
+        android:id="@+id/inhabit"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/main_activity_button_height"
+        android:layout_marginStart="@dimen/_11sdp"
+        android:layout_marginTop="@dimen/main_activity_button_margin"
+        android:background="@drawable/main_button_inhabit_click"
+        android:drawableLeft="@mipmap/icon_jzlss"
+        android:paddingLeft="@dimen/_20sdp"
+        app:layout_constraintTop_toBottomOf="@id/toolbarLayout"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:cardCornerRadius="@dimen/_2sdp"
+        android:focusable="true"
+        android:clickable="true"
+        android:text="居民入户损伤"
+        android:textSize="@dimen/_18sdp"
+        app:layout_constraintWidth_percent="0.465"
+        android:theme="@style/Theme.MaterialComponents.Light"/>
+    />
+
+    <android.widget.Button
+        android:id="@+id/noInhabit"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/main_activity_button_height"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginEnd="@dimen/_8sdp"
+        android:layout_marginTop="@dimen/main_activity_button_margin"
+        android:layout_marginLeft="@dimen/_8sdp"
+        android:background="@drawable/main_button_noinhabit_click"
+        android:drawableLeft="@mipmap/icon_fjzlss"
+        app:layout_constraintTop_toBottomOf="@id/toolbarLayout"
+        app:layout_constraintLeft_toRightOf="@+id/inhabit"
+        android:paddingLeft="@dimen/_20sdp"
+        android:focusable="true"
+        android:clickable="true"
+        android:text="非居民入户损伤"
+        android:textSize="@dimen/_18sdp"
+        app:layout_constraintWidth_percent="0.465"
+        android:theme="@style/Theme.MaterialComponents.Light"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

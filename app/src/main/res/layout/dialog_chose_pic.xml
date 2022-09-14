@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="@dimen/_288sdp"
+        android:layout_height="@dimen/_178sdp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:cardCornerRadius="@dimen/_2sdp"
+        android:background="@null"
+        app:cardBackgroundColor="@color/white">
+
+        <LinearLayout
+            android:paddingVertical="@dimen/_10sdp"
+            android:paddingHorizontal="@dimen/_10sdp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/text"
+            android:text="选择图纸"
+            android:textColor="@color/text_black"
+            android:textSize="@dimen/_12ssp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+            <LinearLayout
+                android:layout_marginTop="@dimen/_20sdp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+              <androidx.appcompat.widget.AppCompatCheckBox
+                  android:id="@+id/chose_all"
+                  android:background="?android:attr/listChoiceIndicatorMultiple"
+                  android:button="@null"
+                  android:layout_width="@dimen/_20sdp"
+                  android:layout_height="@dimen/_20sdp"/>
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_marginLeft="@dimen/_20sdp"
+                    android:textColor="@color/text_black"
+                    android:textSize="@dimen/_9ssp"
+                    android:text="图片名"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/pic_recycleview"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_75sdp"/>
+
+
+            <LinearLayout
+                android:layout_marginTop="@dimen/_5sdp"
+                android:gravity="right"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <androidx.appcompat.widget.AppCompatButton
+                    android:textSize="@dimen/_8ssp"
+                    android:id="@+id/cancel_button"
+                    android:background="@drawable/grey_line_back"
+                    android:text="取消"
+                    android:layout_width="@dimen/_40sdp"
+                    android:layout_height="@dimen/_20sdp"/>
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:textSize="@dimen/_8ssp"
+                    android:id="@+id/confirm_btn"
+                    android:background="@drawable/blue_line_back"
+                    android:textColor="#6699FF"
+                    android:layout_marginLeft="@dimen/_10sdp"
+                    android:text="确定"
+                    android:layout_width="@dimen/_40sdp"
+                    android:layout_height="@dimen/_20sdp"/>
+
+
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

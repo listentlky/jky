@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:paddingHorizontal="@dimen/_25sdp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <com.sribs.common.ui.widget.TagEditView
+            android:id="@+id/unit_floor_num"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/common_input_height"
+            android:layout_weight="1"
+            app:TagMust="true"
+            app:TagText="底层层号"
+            app:TagPadding="@dimen/project_unit_margin"
+            app:TagWidth="@dimen/project_unit_config_tag_width"
+            app:EditEnable="true"
+            app:EditBtnEnable="false"
+            app:EditHint="请输入层号"
+            android:gravity="right"
+            android:inputType="number"
+            />
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+    </LinearLayout>
+
+
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <com.sribs.common.ui.widget.TagEditView
+            android:id="@+id/unit_corridor_num"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/common_input_height"
+            android:layout_weight="1"
+            app:TagMust="false"
+            app:TagText="楼梯间"
+            app:TagPadding="@dimen/project_unit_margin"
+            app:TagWidth="@dimen/project_unit_config_tag_width"
+            app:EditEnable="true"
+            app:EditBtnEnable="false"
+            android:layout_marginTop="@dimen/_9sdp"
+            app:EditHint="请输入楼梯间号"
+            android:gravity="right"
+            android:inputType="number"
+            />
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            />
+
+    </LinearLayout>
+    <com.sribs.common.ui.widget.TagCheckView
+        android:id="@+id/unit_corridor_config"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:CheckTagMust="false"
+        app:CheckTagText="配置楼梯间"
+        app:CheckTagPadding="@dimen/project_unit_margin"
+        app:CheckTagWidth="@dimen/project_unit_config_tag_width"
+        app:CheckCustomEnable="true"
+        app:CheckArr="@array/unit_config_floor_bottom"
+        app:CheckArrMargin="@dimen/project_unit_check_margin"
+        app:CheckArrSpan="5"
+        android:gravity="right"
+        android:layout_marginTop="@dimen/_9sdp"
+        android:layout_marginBottom="@dimen/_minus4sdp"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <com.sribs.common.ui.widget.TagEditView
+            android:id="@+id/unit_platform_num"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="@dimen/common_input_height"
+            app:TagMust="false"
+            app:TagText="休息平台"
+            app:TagPadding="@dimen/project_unit_margin"
+            app:TagWidth="@dimen/project_unit_config_tag_width"
+            app:EditEnable="true"
+            app:EditBtnEnable="false"
+            android:layout_marginTop="@dimen/_9sdp"
+            app:EditHint="请输入休息平台"
+
+            android:gravity="right"
+            android:inputType="number"
+            />
+        <TextView
+            android:id="@+id/unit_platform_num_next"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/common_input_height"
+            android:layout_weight="1"
+            android:gravity="left|center_vertical"
+            android:layout_gravity="bottom"
+            android:paddingLeft="@dimen/_5sdp"
+            android:textSize="@dimen/_8sdp"
+            android:textColor="@color/gray_600"
+            />
+
+    </LinearLayout>
+
+    <com.sribs.common.ui.widget.TagCheckView
+        android:id="@+id/unit_platform_config"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:CheckTagMust="false"
+        app:CheckTagText="配置休息平台"
+        app:CheckTagPadding="@dimen/project_unit_margin"
+        app:CheckTagWidth="@dimen/project_unit_config_tag_width"
+        app:CheckCustomEnable="true"
+        app:CheckArr="@array/unit_config_floor_bottom"
+        app:CheckArrMargin="@dimen/project_unit_check_margin"
+        app:CheckArrSpan="5"
+        android:gravity="right"
+        android:layout_marginTop="@dimen/_9sdp"
+        android:layout_marginBottom="@dimen/_minus4sdp"
+        />
+</LinearLayout>

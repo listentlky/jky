@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingTop="@dimen/_8sdp"
+    android:paddingLeft="@dimen/_12sdp">
+
+    <TextView
+        android:id="@+id/damage_pic_tag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="图形描述"
+        android:textSize="@dimen/common_text_content"
+        android:textColor="@color/blue_800"
+        android:drawableLeft="@mipmap/icon_pic_des"
+        android:drawablePadding="@dimen/_5sdp"
+        android:gravity="center_vertical"
+        />
+
+    <com.cbj.sdk.libui.widget.NoScrollViewPager
+        android:id="@+id/damage_vp"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_128sdp"
+        android:layout_marginVertical="@dimen/_8sdp"
+        android:layout_marginRight="@dimen/_12sdp"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="照片记录"
+        android:textSize="@dimen/common_text_content"
+        android:textColor="@color/blue_800"
+        android:layout_marginBottom="@dimen/_8sdp"
+        android:drawableLeft="@mipmap/icon_photo_des"
+        android:drawablePadding="@dimen/_5sdp"
+        android:gravity="center_vertical"
+        />
+
+    <TextView
+        android:id="@+id/damage_no_pic_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/gray_600"
+        android:textSize="@dimen/_7sdp"
+        android:text="暂无数据"
+        />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/damage_rv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+
+
+
+</androidx.appcompat.widget.LinearLayoutCompat>

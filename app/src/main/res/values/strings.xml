@@ -1,0 +1,32 @@
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+    <string name="app_name">建筑损伤记录</string>
+    <string name="app_name_test">SRIBS</string>
+    <string name="login_title">建筑损伤记录数字化协同平台</string>
+    <string name="upload_overall_drawing">上传底层/总平面图纸</string>
+
+    <string name="save_pdf_message" tools:ignore="ExtraTranslation">图纸已修改，要保存修改吗？</string>
+    <string name="inhab_damage" tools:ignore="ExtraTranslation">居民入户损伤</string>
+    <string name="noninhab_damage" tools:ignore="ExtraTranslation">非居民入户损伤</string>
+    <string name="select_admage_type" translatable="false">选择损伤类型</string>
+    <string name="element_admage" tools:ignore="ExtraTranslation">结构构件损伤</string>
+    <string name="durablity_damage" tools:ignore="ExtraTranslation">耐久性损伤</string>
+    <string name="leak_damage" tools:ignore="ExtraTranslation">渗漏水</string>
+    <string name="crack_lean_damage" tools:ignore="ExtraTranslation">填充墙斜裂缝</string>
+    <string name="falling_damage" tools:ignore="ExtraTranslation">高坠隐患</string>
+    <string name="attached_damage" tools:ignore="ExtraTranslation">附属构件损坏</string>
+    <string name="others_damage" tools:ignore="ExtraTranslation">其它/不稳定</string>
+    <string name="crack_monitor_damage" tools:ignore="ExtraTranslation">裂缝监测点</string>
+    <string name="damage_type_crack" tools:ignore="ExtraTranslation">crack</string>
+    <string name="damage_type_common" tools:ignore="ExtraTranslation">common</string>
+    <string name="drawing_title" tools:ignore="ExtraTranslation">绘制图纸</string>
+    <string name="drawing_edit_exit_dialog_title" tools:ignore="ExtraTranslation">将要退出</string>
+    <string name="dialog_ok" tools:ignore="ExtraTranslation">确认</string>
+    <string name="dialog_cancel" tools:ignore="ExtraTranslation">取消</string>
+
+    <string name="dialog_need_config_title" tools:ignore="ExtraTranslation">配置提示</string>
+    <string name="dialog_need_config_inhab_content" tools:ignore="ExtraTranslation">尚未配置居民类损伤，需要配置吗？</string>
+    <string name="dialog_need_config_non_inhab_content" tools:ignore="ExtraTranslation">尚未配置非居民类损伤，需要配置吗？</string>
+    <string name="dialog_create_unit_hint_content" tools:ignore="ExtraTranslation">尚未创建单元，前往创建！</string>
+    <string name="pdf_damage_miss_axis_desc" tools:ignore="ExtraTranslation">未输入轴线或损伤描述，确定退出吗？</string>
+
+</resources>

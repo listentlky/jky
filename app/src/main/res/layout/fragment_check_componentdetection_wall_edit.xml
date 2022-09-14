@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/check_obd_menu_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_12sdp"
+        android:layout_marginTop="1dp"
+        android:background="@color/blue_800"
+        android:paddingTop="@dimen/_1sdp"
+        android:paddingBottom="@dimen/_1sdp"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/check_obd_menu_scale"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginRight="@dimen/_10sdp"
+            android:background="@drawable/round_white_stroke_bg"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:text="-"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_6ssp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintRight_toLeftOf="@id/check_obd_menu_close"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/check_obd_menu_close"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginRight="@dimen/_10sdp"
+            android:background="@drawable/round_white_stroke_bg"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:text="x"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_6ssp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/check_obd_menu_layout">
+
+
+        <include
+            android:id="@+id/check_cpd_subtitle1"
+            layout="@layout/check_edit_item"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_10sdp"
+            android:layout_marginTop="@dimen/_20sdp"
+            android:layout_marginBottom="@dimen/_5sdp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <include
+            android:id="@+id/check_cpd_subtitle2"
+            layout="@layout/check_component_detection_beam_subtitle_item"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_10sdp"
+            android:layout_marginTop="@dimen/_20sdp"
+            android:layout_marginBottom="@dimen/_5sdp"
+            app:layout_constraintLeft_toRightOf="@id/check_cpd_subtitle1"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/check_cpd_subtitle_change"
+            android:layout_width="@dimen/_40sdp"
+            android:layout_height="@dimen/_12sdp"
+            android:layout_marginLeft="@dimen/_3sdp"
+            android:layout_marginTop="@dimen/_20sdp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:padding="0dp"
+            android:text="切换"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_5sdp"
+            android:theme="@style/Theme.MaterialComponents.Light"
+            app:backgroundTint="@color/blue_800"
+            app:cornerRadius="@dimen/_2sdp"
+            app:layout_constraintLeft_toRightOf="@id/check_cpd_subtitle2"
+            app:layout_constraintTop_toTopOf="parent"
+            app:rippleColor="@color/rippleColor" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/check_cpd_subtitle_confirm"
+            android:layout_width="@dimen/_40sdp"
+            android:layout_height="@dimen/_12sdp"
+            android:layout_marginLeft="@dimen/_5sdp"
+            android:layout_marginTop="@dimen/_20sdp"
+            android:layout_marginRight="@dimen/_10sdp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:padding="0dp"
+            android:text="完成"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_5sdp"
+            android:theme="@style/Theme.MaterialComponents.Light"
+            app:backgroundTint="@color/blue_800"
+            app:cornerRadius="@dimen/_2sdp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:rippleColor="@color/rippleColor" />
+
+        <include
+            android:id="@+id/check_cpd_beam_left_real_ui"
+            layout="@layout/fragment_check_componentdetection_wall_left_real_edit"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/_7sdp"
+            android:layout_marginBottom="@dimen/_5sdp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1.05:1"
+
+            app:layout_constraintEnd_toStartOf="@+id/check_cpd_beam_right_real_ui"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/check_cpd_subtitle1" />
+
+        <include
+            android:id="@+id/check_cpd_beam_left_design_ui"
+            layout="@layout/fragment_check_componentdetection_wall_left_design_edit"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/_7sdp"
+            android:layout_marginBottom="@dimen/_5sdp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1.05:1"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toStartOf="@+id/check_cpd_beam_right_real_ui"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/check_cpd_subtitle1" />
+
+
+        <include
+            android:id="@+id/check_cpd_beam_right_real_ui"
+            layout="@layout/fragment_check_componentdetection_wall_right_real_edit"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginLeft="@dimen/_10sdp"
+            android:layout_marginRight="@dimen/_10sdp"
+            android:layout_marginBottom="@dimen/_5sdp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1.05:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/check_cpd_beam_left_real_ui"
+            app:layout_constraintTop_toTopOf="@id/check_cpd_beam_left_real_ui" />
+
+        <include
+            android:id="@+id/check_cpd_plate_right_design_ui"
+            layout="@layout/fragment_check_componentdetection_wall_right_design_edit"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginLeft="@dimen/_10sdp"
+            android:layout_marginRight="@dimen/_10sdp"
+            android:layout_marginBottom="@dimen/_5sdp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1.05:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:visibility="invisible"
+
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/check_cpd_beam_left_real_ui"
+            app:layout_constraintTop_toTopOf="@id/check_cpd_beam_left_real_ui" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

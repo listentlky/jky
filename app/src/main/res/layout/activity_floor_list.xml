@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/blue_800">
+
+
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/layout_common_toolbar"/>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="@dimen/_7sdp"
+            android:paddingHorizontal="@dimen/_12sdp"
+            android:gravity="center_vertical">
+
+            <androidx.appcompat.widget.SearchView
+                android:id="@+id/main_search_view"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_18sdp"
+                android:layout_weight="1"
+                app:iconifiedByDefault="false"
+                android:background="@drawable/common_et_search_bk"
+                app:queryBackground="@color/transparent"
+                app:searchIcon="@mipmap/icon_search"
+                app:queryHint="请输入楼栋名称" />
+            <ImageView
+                android:id="@+id/main_drawer_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/icon_drawer"
+                android:background="@null"
+                android:layout_marginLeft="@dimen/_8sdp" />
+        </LinearLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/match_main_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_anchorGravity="bottom|right|end"
+            android:clickable="true"
+            android:layout_marginRight="@dimen/_10sdp"
+            android:layout_marginBottom="@dimen/_10sdp"
+            android:src="@mipmap/icon_add"
+            app:rippleColor="@color/rippleColor"
+            app:backgroundTint="@color/blue_800"
+            android:scaleType="fitXY"
+            android:contentDescription="main_fab"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"/>
+
+    </RelativeLayout>
+
+
+
+
+
+</androidx.appcompat.widget.LinearLayoutCompat >

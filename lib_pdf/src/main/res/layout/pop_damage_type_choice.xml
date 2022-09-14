@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/_130sdp"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:layout_marginLeft="5dp"
+        android:text="选择损伤类型"
+        />
+
+    <RelativeLayout
+        android:id="@+id/view_01"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginLeft="10dp"
+        android:clickable="true" >
+        <ImageView
+            android:id="@+id/btn_01"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/circle_red" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="20dp"
+            android:text="结构构件损伤" />
+        <CheckBox
+            android:id="@+id/cbx_01"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_marginRight="@dimen/damage_type_choice_right_margin"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/view_02"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginLeft="10dp"
+        android:clickable="true" >
+        <ImageView
+            android:id="@+id/btn_02"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/circle_orange"  />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="20dp"
+            android:text="耐久性" />
+        <CheckBox
+            android:id="@+id/cbx_02"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_marginRight="@dimen/damage_type_choice_right_margin"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/view_03"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginLeft="10dp"
+        android:clickable="true" >
+        <ImageView
+            android:id="@+id/btn_03"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/circle_yellow"  />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="20dp"
+            android:text="渗漏水" />
+        <CheckBox
+            android:id="@+id/cbx_03"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_marginRight="@dimen/damage_type_choice_right_margin"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/view_04"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginLeft="10dp"
+        android:clickable="true" >
+        <ImageView
+            android:id="@+id/btn_04"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/circle_green"  />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="20dp"
+            android:text="填充墙斜裂缝" />
+        <CheckBox
+            android:id="@+id/cbx_04"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_marginRight="@dimen/damage_type_choice_right_margin"
+            />
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/view_05"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginLeft="10dp"
+        android:clickable="true" >
+        <ImageView
+            android:id="@+id/btn_05"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/circle_blue"  />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="20dp"
+            android:text="高坠隐患" />
+
+        <CheckBox
+            android:id="@+id/cbx_05"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/damage_type_choice_right_margin"
+            android:clickable="true"
+            android:focusable="true" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/view_06"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginLeft="10dp"
+        android:clickable="true" >
+        <ImageView
+            android:id="@+id/btn_06"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/circle_pink"  />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="20dp"
+            android:text="附属构件损坏" />
+        <CheckBox
+            android:id="@+id/cbx_06"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_marginRight="@dimen/damage_type_choice_right_margin"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/view_07"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginLeft="10dp"
+        android:clickable="true" >
+        <ImageView
+            android:id="@+id/btn_07"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/circle_indigo" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="20dp"
+            android:text="其它/不稳定" />
+        <CheckBox
+            android:id="@+id/cbx_07"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_marginRight="@dimen/damage_type_choice_right_margin"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/view_08"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginLeft="10dp"
+        android:clickable="true" >
+        <ImageView
+            android:id="@+id/btn_08"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/circle_black" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="20dp"
+            android:text="裂缝监测点" />
+        <CheckBox
+            android:id="@+id/cbx_08"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_marginRight="@dimen/damage_type_choice_right_margin"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/view_ok"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:clickable="true" >
+
+        <Button
+            android:id="@+id/btn_ok"
+            android:layout_width="@dimen/damage_type_choice_button_width"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/damage_type_choice_button_margin"
+
+            android:text="确定" />
+        <Button
+            android:id="@+id/btn_cancel"
+            android:layout_width="@dimen/damage_type_choice_button_width"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/damage_type_choice_button_margin"
+            android:layout_toLeftOf="@+id/btn_ok"
+            android:text="取消"
+            />
+    </RelativeLayout>
+
+</LinearLayout>

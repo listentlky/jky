@@ -1,0 +1,64 @@
+ext {
+    PUBLISH_GROUP_ID = 'io.github.luizgrp.sectionedrecyclerviewadapter'
+    PUBLISH_ARTIFACT_ID = 'sectionedrecyclerviewadapter'
+    PUBLISH_VERSION = '3.2.0'
+}
+
+ext.versions = [
+        'compileSdk'                : 30,
+        'buildTools'                : '30.0.3',
+        'targetSdk'                 : 30,
+        'minSdk'                    : 14,
+
+        'androidx_appcompat'        : '1.1.0',
+        'androidx_recyclerview'     : '1.1.0',
+        'apache_commons_collections': '4.3',
+
+        'junit'                     : '4.12',
+        'mockito_core'              : '3.0.0',
+
+        'jacoco'                    : '0.8.5',
+        'checkstyle'                : '8.22'
+]
+
+apply plugin: 'com.android.library'
+apply from: "build_files/static-code-analysis.gradle"
+apply from: "build_files/jacoco.gradle"
+
+android {
+    compileSdkVersion versions.compileSdk
+    buildToolsVersion versions.buildTools
+
+    defaultConfig {
+        minSdkVersion versions.minSdk
+        targetSdkVersion versions.targetSdk
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    lintOptions {
+        abortOnError true
+        ignoreWarnings false
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "androidx.appcompat:appcompat:${versions.androidx_appcompat}"
+    implementation "androidx.recyclerview:recyclerview:${versions.androidx_recyclerview}"
+    //implementation "org.apache.commons:commons-collections4:${versions.apache_commons_collections}"
+
+    testImplementation "junit:junit:${versions.junit}"
+    testImplementation "org.mockito:mockito-core:${versions.mockito_core}"
+}
+
+apply from: "build_files/android-release-aar.gradle"

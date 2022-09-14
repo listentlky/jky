@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/black_800"
+    android:orientation="vertical"
+    android:alpha="0.5">
+
+
+
+    <ImageView
+        android:id="@+id/btn_line"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_toLeftOf="@+id/btn_rect"
+        android:clickable="true"
+        android:src="@drawable/btn_line" />
+
+    <ImageView
+        android:id="@+id/btn_rect"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_toLeftOf="@+id/btn_circle"
+        android:clickable="true"
+        android:src="@drawable/btn_rect" />
+
+    <ImageView
+        android:id="@+id/btn_circle"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_toLeftOf="@+id/btn_text"
+        android:clickable="true"
+        android:src="@drawable/btn_circle" />
+
+    <ImageView
+        android:id="@+id/btn_text"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_centerHorizontal="true"
+        android:clickable="true"
+        android:src="@drawable/btn_text" />
+
+    <ImageView
+        android:id="@+id/btn_manual"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_toRightOf="@+id/btn_text"
+        android:clickable="true"
+        android:src="@drawable/btn_manual" />
+
+    <ImageView
+        android:id="@+id/btn_undo"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true"
+        android:layout_margin="10dp"
+        android:layout_toRightOf="@+id/btn_manual"
+        android:clickable="true"
+        android:src="@drawable/icon_undo" />
+
+    <ImageView
+        android:id="@+id/btn_redo"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true"
+        android:layout_margin="10dp"
+        android:layout_toRightOf="@+id/btn_undo"
+        android:clickable="true"
+        android:src="@drawable/icon_redo" />
+
+    <ImageView
+        android:id="@+id/btn_next"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true"
+        android:layout_margin="10dp"
+        android:layout_toRightOf="@+id/btn_redo"
+        android:clickable="true"
+        android:src="@drawable/btn_next" />
+
+</RelativeLayout>

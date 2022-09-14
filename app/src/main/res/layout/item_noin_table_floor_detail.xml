@@ -1,0 +1,72 @@
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/blue_800_10">
+
+    <TextView
+        android:id="@+id/floor_id"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/_32sdp"
+        android:layout_gravity="center_vertical|right"
+        android:clickable="true"
+        android:paddingRight="10dp"
+        style="@style/TableText"
+        android:foreground="?attr/selectableItemBackground"
+        android:textColor="@color/green_400"
+        android:textSize="@dimen/_7sdp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_percent="0.05"/>
+
+    <TextView
+        android:id="@+id/tv_drawings"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/_32sdp"
+        android:layout_gravity="top"
+        style="@style/TableText"
+        android:text=""
+        app:layout_constraintLeft_toRightOf="@+id/floor_id"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_percent="0.75"
+        android:textSize="@dimen/_7sdp" />
+
+    <LinearLayout
+        style="@style/TableText"
+        android:orientation="horizontal"
+        app:layout_constraintLeft_toRightOf="@+id/tv_drawings"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_percent="0.2">
+        <TextView
+            android:id="@+id/tv_upload_drawing"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:clickable="true"
+            android:drawableLeft="@mipmap/icon_unit_config"
+            android:foreground="?attr/selectableItemBackground"
+            android:text="上传图纸"
+            android:paddingLeft="10dp"
+            android:textColor="@color/green_400"
+            android:textSize="@dimen/_7sdp"/>
+
+        <TextView
+            android:id="@+id/tv_floor_copy"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:layout_weight="1"
+            android:text="复制本层"
+            android:drawableLeft="@mipmap/icon_unit_floor_copy"
+            android:foreground="?attr/selectableItemBackground"
+            android:textColor="@color/green_400"
+            android:textSize="@dimen/_7sdp"
+            android:gravity="center"
+
+            android:layout_gravity="center"/>
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

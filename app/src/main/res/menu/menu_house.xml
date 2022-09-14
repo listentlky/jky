@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/menu_house_finish"
+        android:title="完成记录"
+        android:orderInCategory="100"
+        app:showAsAction="always"
+        />
+    <item android:id="@+id/menu_house_review"
+        android:title="报告预览"
+        android:orderInCategory="100"
+        app:showAsAction="always"
+        />
+</menu>

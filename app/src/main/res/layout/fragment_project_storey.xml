@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:fadeScrollbars="false">
+
+    <LinearLayout
+        android:id="@+id/project_detail_tab_ll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
+        <TextView
+            android:id="@+id/tv_flat_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="40dp"
+            android:text="平面图纸"
+            android:textColor="@color/black_800"
+            android:textSize="@dimen/common_text_title"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.sribs.common.ui.widget.TagEditView
+            android:id="@+id/tev_total_floor"
+            android:layout_width="@dimen/_280sdp"
+            android:layout_height="@dimen/common_input_height"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="60dp"
+            app:TagMust="true"
+            app:TagPadding="@dimen/project_create_tag_margin"
+            app:TagText="请输入层数"
+            app:EditEnable="true"
+            app:EditHint="请输入项目层数"
+            app:EditWidth="@dimen/project_create_et_width"
+            android:gravity="left"
+            android:inputType="number"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_flat_title"
+            />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/floor_drawings_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:orientation="vertical"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tev_input_floor_num"
+            android:layout_marginBottom="@dimen/report_margin"/>
+
+
+        <TextView
+            android:id="@+id/tv_overall_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="40dp"
+            android:text="总平面图纸"
+            android:textColor="@color/black_800"
+
+            android:textSize="@dimen/common_text_title"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/facade_drawings_list" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/overall_drawings_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:orientation="vertical"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_overall_title"
+            android:layout_marginBottom="@dimen/report_margin"/>
+
+           />
+
+        <TextView
+            android:id="@+id/tv_orient_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="40dp"
+            android:text="立面图纸"
+            android:textColor="@color/black_800"
+            android:textSize="@dimen/common_text_title"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/overall_drawings_list" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/facade_drawings_list"
+            android:scrollbars="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:orientation="vertical"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_orient_title"
+            android:layout_marginBottom="@dimen/report_margin"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="right|bottom"
+            android:layout_marginBottom="@dimen/_10sdp"
+            android:orientation="horizontal"
+            >
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_cancel"
+                android:layout_width="@dimen/_70sdp"
+                android:layout_height="@dimen/common_btn_height"
+                app:rippleColor="@color/rippleColor"
+                app:cornerRadius="@dimen/_2sdp"
+                app:backgroundTint="@color/white"
+                app:strokeWidth="@dimen/_1sdp"
+                app:strokeColor="@color/blue_800"
+                android:textColor="@color/blue_800"
+                android:text="取消"
+                android:textSize="@dimen/_9ssp"
+                android:paddingTop="0dp"
+                android:paddingBottom="0dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:layout_marginRight="@dimen/_20sdp"
+                android:theme="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_ok"
+                android:layout_width="@dimen/_70sdp"
+                android:layout_height="@dimen/common_btn_height"
+                app:rippleColor="@color/rippleColor"
+                app:cornerRadius="@dimen/_2sdp"
+                app:backgroundTint="@color/blue_800"
+                android:textColor="@color/white"
+                android:text="确定"
+                android:textSize="@dimen/_9ssp"
+                android:paddingTop="0dp"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:layout_marginLeft="@dimen/_10sdp"
+                android:paddingBottom="0dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:layout_marginRight="@dimen/_20sdp"
+                android:theme="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                />
+        </LinearLayout>
+    </LinearLayout>
+
+</androidx.core.widget.NestedScrollView>
+

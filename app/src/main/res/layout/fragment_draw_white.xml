@@ -1,0 +1,219 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#FFFFFF">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/control_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:background="@color/gray_600">
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="@dimen/_10sdp"
+            android:layout_marginTop="15dp"
+            android:text="绘制图纸"
+            android:textSize="@dimen/common_text_title"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_line"
+            android:layout_width="@dimen/_35sdp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="@dimen/_10sdp"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:background="@drawable/ic_sel_drawing_pen"
+            android:drawableTop="@mipmap/btn_line"
+            android:drawablePadding="@dimen/_2sdp"
+            android:gravity="center"
+            android:text="直线"
+            android:textColor="@color/gray_600"
+            android:textSize="@dimen/_8sdp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/title" />
+
+        <TextView
+            android:id="@+id/tv_rect"
+            android:layout_width="@dimen/_35sdp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:background="@drawable/ic_sel_drawing_pen"
+            android:drawableTop="@mipmap/btn_rect"
+            android:drawablePadding="@dimen/_2sdp"
+            android:gravity="center"
+            android:text="矩形"
+            android:textColor="@color/gray_600"
+            android:textSize="@dimen/_8sdp"
+            app:layout_constraintLeft_toRightOf="@+id/tv_line"
+            app:layout_constraintTop_toBottomOf="@+id/title" />
+
+        <TextView
+            android:id="@+id/tv_circle"
+            android:layout_width="@dimen/_35sdp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:background="@drawable/ic_sel_drawing_pen"
+            android:drawableTop="@mipmap/btn_circle"
+            android:drawablePadding="@dimen/_2sdp"
+            android:gravity="center"
+            android:text="圆形"
+            android:textColor="@color/gray_600"
+            android:textSize="@dimen/_8sdp"
+            app:layout_constraintLeft_toRightOf="@+id/tv_rect"
+            app:layout_constraintTop_toBottomOf="@+id/title" />
+
+        <TextView
+            android:id="@+id/tv_text"
+            android:layout_width="@dimen/_35sdp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="@dimen/_10sdp"
+            android:background="@drawable/ic_sel_drawing_pen"
+            android:drawableTop="@mipmap/btn_text"
+            android:drawablePadding="@dimen/_2sdp"
+            android:gravity="center"
+            android:text="文本"
+            android:textColor="@color/gray_600"
+            android:textSize="@dimen/_8sdp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_rect" />
+
+        <TextView
+            android:id="@+id/tv_manual"
+            android:layout_width="@dimen/_35sdp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/ic_sel_drawing_pen"
+            android:drawableTop="@mipmap/btn_manual"
+            android:drawablePadding="@dimen/_2sdp"
+            android:gravity="center"
+            android:text="手绘"
+            android:textColor="@color/gray_600"
+            android:textSize="@dimen/_8sdp"
+            app:layout_constraintLeft_toRightOf="@+id/tv_text"
+            app:layout_constraintTop_toBottomOf="@+id/tv_rect" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <FrameLayout
+            android:visibility="gone"
+            android:id="@+id/controlLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:background="@color/gray">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingLeft="@dimen/control_btn_padding"
+                android:paddingRight="@dimen/control_btn_padding"
+                android:paddingTop="@dimen/control_layout_padding"
+                android:paddingBottom="@dimen/control_layout_padding"
+                android:background="@color/gray"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:visibility="gone"
+                    android:id="@+id/btn_add"
+                    style="@style/control_btn"
+                    android:src="@drawable/ic_add_small" />
+
+                <ImageView style="@style/control_btn.space" />
+
+                <ImageView
+                    android:id="@+id/btn_stroke"
+                    style="@style/control_btn"
+                    android:padding="@dimen/control_draw_padding"
+                    android:src="@drawable/stroke_type_rbtn_draw_checked" />
+
+                <ImageView
+                    android:id="@+id/btn_eraser"
+                    style="@style/control_btn"
+                    android:alpha="0.4"
+                    android:src="@drawable/ic_eraser" />
+
+                <ImageView
+                    android:id="@+id/btn_undo"
+                    style="@style/control_btn"
+                    android:alpha="0.4"
+                    android:src="@drawable/ic_undo" />
+
+                <ImageView
+                    android:id="@+id/btn_redo"
+                    style="@style/control_btn"
+                    android:alpha="0.4"
+                    android:src="@drawable/ic_redo" />
+
+                <ImageView style="@style/control_btn.space" />
+
+                <ImageView
+                    android:id="@+id/btn_photo"
+                    style="@style/control_btn"
+                    android:src="@drawable/ic_photo" />
+
+                <ImageView
+                    android:id="@+id/btn_background"
+                    style="@style/control_btn"
+                    android:src="@drawable/ic_background" />
+
+                <ImageView
+                    android:id="@+id/btn_drag"
+                    style="@style/control_btn"
+                    android:alpha="0.4"
+                    android:src="@drawable/ic_drag" />
+
+                <ImageView style="@style/control_btn.space" />
+
+                <ImageView
+                    android:id="@+id/btn_save"
+                    style="@style/control_btn"
+                    android:src="@drawable/ic_file" />
+
+                <ImageView
+                    android:id="@+id/btn_empty"
+                    style="@style/control_btn"
+                    android:src="@drawable/ic_empty" />
+
+                <ImageView
+                    android:id="@+id/btn_send_space"
+                    android:visibility="gone"
+                    tools:visibility="visible"
+                    style="@style/control_btn.space" />
+
+                <ImageView
+                    android:id="@+id/btn_send"
+                    tools:visibility="visible"
+                    android:visibility="gone"
+                    style="@style/control_btn"
+                    android:layout_weight="1"
+                    android:src="@drawable/ic_teacher" />
+
+            </LinearLayout>
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_toLeftOf="@+id/controlLayout"
+            android:layout_toRightOf="@id/control_view"
+            android:background="#efeded">
+            <include layout="@layout/include_draw_content_layout" />
+            <!--<include layout="@layout/include_grid_view_layout" />-->
+        </FrameLayout>
+
+    </RelativeLayout>

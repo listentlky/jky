@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/tv_id"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:textSize="@dimen/_9sdp"
+        android:textColor="@color/red_500"
+        android:text="new!"
+        android:gravity="center"
+        android:visibility="invisible"
+        android:layout_marginHorizontal="@dimen/_5sdp"
+        />
+    <TextView
+        android:id="@+id/tv_name"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:textSize="@dimen/_9sdp"
+        android:textColor="@color/red_500"
+        android:text=""
+        android:gravity="center"
+        android:visibility="invisible"
+        android:layout_marginHorizontal="@dimen/_5sdp"
+        />
+    <androidx.appcompat.widget.AppCompatCheckedTextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/ctv_floor"
+        android:checkMark="?android:attr/listChoiceIndicatorMultiple"
+        android:orientation="horizontal"
+        android:textSize="@dimen/common_text_tag"
+        android:textColor="@color/black_800"
+        android:gravity="center_vertical"
+        android:paddingVertical="@dimen/_3sdp"
+        android:layout_weight="1"
+        >
+
+    </androidx.appcompat.widget.AppCompatCheckedTextView>
+<!--    <TextView-->
+<!--        android:id="@+id/item_new_tv"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:textSize="@dimen/_9sdp"-->
+<!--        android:textColor="@color/red_500"-->
+<!--        android:text="new!"-->
+<!--        android:gravity="center"-->
+<!--        android:visibility="invisible"-->
+<!--        android:layout_marginHorizontal="@dimen/_5sdp"-->
+<!--        />-->
+
+</LinearLayout>

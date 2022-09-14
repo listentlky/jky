@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="@dimen/common_dialog_width"
+        android:layout_height="@dimen/_171sdp"
+        android:background="@drawable/common_shape_white_2">
+
+
+        <TextView
+            android:id="@+id/dialog_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginTop="@dimen/_17sdp"
+            android:text="历史记录"
+            android:textColor="@color/black_800"
+            android:textSize="@dimen/common_text_big"
+            />
+
+
+
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/dialog_cancel_btn"
+            android:layout_width="@dimen/common_btn_width_big"
+            android:layout_height="@dimen/common_btn_height"
+            app:backgroundTint="@color/white"
+            android:text="取消"
+            android:textColor="@color/blue_800"
+            android:textSize="@dimen/common_text_title"
+            app:cornerRadius="@dimen/_2sdp"
+            app:rippleColor="@color/rippleColor"
+            app:strokeColor="@color/blue_800"
+            app:strokeWidth="@dimen/_1sdp"
+            android:theme="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:padding="0dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/dialog_confirm_btn"
+            android:layout_marginBottom="@dimen/_17sdp"
+            />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/dialog_confirm_btn"
+            android:layout_width="@dimen/common_btn_width_big"
+            android:layout_height="@dimen/common_btn_height"
+            app:backgroundTint="@color/blue_800"
+            android:text="确定"
+            android:textColor="@color/white"
+            android:textSize="@dimen/common_text_title"
+            app:cornerRadius="@dimen/_2sdp"
+            app:rippleColor="@color/rippleColor"
+            android:theme="@style/Theme.MaterialComponents.Light"
+            android:padding="0dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/dialog_cancel_btn"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginBottom="@dimen/_17sdp"
+            />
+
+
+        <ListView
+            android:id="@+id/dialog_list"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintLeft_toLeftOf="@id/dialog_cancel_btn"
+            app:layout_constraintRight_toRightOf="@id/dialog_confirm_btn"
+            app:layout_constraintTop_toBottomOf="@id/dialog_title"
+            app:layout_constraintBottom_toTopOf="@id/dialog_confirm_btn"
+            android:layout_marginTop="@dimen/_13sdp"
+            android:layout_marginBottom="@dimen/_13sdp"
+            android:dividerHeight="0dp"
+            android:divider="@color/white"
+            />
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</FrameLayout>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- login -->
+    <dimen name="login_card_width">@dimen/_288sdp</dimen>
+
+    <dimen name="login_padding_h">@dimen/_37sdp</dimen>
+    <dimen name="login_padding_v">@dimen/_22sdp</dimen>
+    <dimen name="login_input_height">@dimen/_20sdp</dimen>
+    <dimen name="login_input_tag_margin">@dimen/_15sdp</dimen>
+    <dimen name="login_item_icon_size">@dimen/_11sdp</dimen>
+
+    <!-- damage main -->
+    <dimen name="main_item_margin">@dimen/_12sdp</dimen>
+    <dimen name="main_item_margin_top">@dimen/_5sdp</dimen>
+    <dimen name="main_drawer_item_H">@dimen/_8sdp</dimen>
+    <dimen name="main_drawer_item_v">@dimen/_8sdp</dimen>
+    <dimen name="main_map_location_size">@dimen/_14sdp</dimen>
+
+    <!--project-->
+    <dimen name="project_create_tag_margin">@dimen/_15sdp</dimen>
+    <dimen name="project_create_et_width">@dimen/_146sdp</dimen>
+    <dimen name="project_create_content_width">@dimen/_215sdp</dimen>
+    <dimen name="project_detail_unit_tag_height">@dimen/_30sdp</dimen>
+    <dimen name="project_unit_padding">@dimen/_12sdp</dimen>
+    <dimen name="project_unit_margin">@dimen/_15sdp</dimen>
+    <dimen name="project_unit_config_tag_width">@dimen/_80sdp</dimen>
+    <dimen name="project_unit_check_margin">@dimen/_8sdp</dimen>
+
+    <!-- house -->
+    <dimen name="house_item_margin">@dimen/_8sdp</dimen>
+    <dimen name="house_damage_edit_photo_btn_margin">@dimen/_2sdp</dimen>
+    <dimen name="house_damage_normal_margin">@dimen/_20sdp</dimen>
+    <dimen name="house_damage_pic_point_size">@dimen/_9sdp</dimen>
+    <dimen name="house_damage_pic_point_size_big">@dimen/_13sdp</dimen>
+
+    <dimen name="report_margin">@dimen/_12sdp</dimen>
+    <dimen name="report_tag_width">@dimen/_67sdp</dimen>
+
+    <dimen name="main_activity_button_width">@dimen/_200sdp</dimen>
+    <dimen name="main_activity_button_height">@dimen/_66sdp</dimen>
+    <dimen name="main_activity_button_margin_left">@dimen/_10sdp</dimen>
+    <dimen name="main_activity_button_noinhabit_margin_left">@dimen/_15sdp</dimen>
+    <dimen name="main_activity_button_margin_top">@dimen/_10sdp</dimen>
+    <dimen name="main_activity_button_margin_right">@dimen/_0sdp</dimen>
+    <dimen name="main_activity_button_padding_left">@dimen/_15sdp</dimen>
+    <dimen name="main_activity_button_noinhabit_padding_left">@dimen/_20sdp</dimen>
+    <dimen name="main_activity_button_margin">@dimen/_10sdp</dimen>
+
+    <dimen name="floor_activity_damage_item_left_margin">@dimen/_5sdp</dimen>
+
+    <dimen name="damage_type_choice_right_margin">@dimen/_0sdp</dimen>
+    <dimen name="damage_type_choice_button_margin">@dimen/_5sdp</dimen>
+    <dimen name="damage_type_choice_button_width">@dimen/_50sdp</dimen>
+
+</resources>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="error_no_local">请先下载至本地</string>
+    <string name="error_no_remote">请先上传</string>
+    <string name="error_no_network">网络连接失败</string>
+    <string name="error_no_history">没有历史数据</string>
+    <string name="x_items"></string>
+</resources>

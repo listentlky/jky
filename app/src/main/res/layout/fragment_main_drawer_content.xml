@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:id="@+id/list_ll"
+        layout="@layout/layout_base_list_mvp"
+        android:layout_weight="1"
+        android:layout_marginTop="@dimen/_11sdp"
+        android:layout_marginLeft="@dimen/_4sdp"
+        android:layout_marginRight="@dimen/_4sdp"
+        />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_60sdp">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/rest_btn"
+            android:layout_width="@dimen/common_btn_width_big"
+            android:layout_height="@dimen/common_btn_height"
+            app:backgroundTint="@color/white"
+            android:text="重置"
+            android:textColor="@color/blue_800"
+            android:textSize="@dimen/common_text_title"
+            app:cornerRadius="@dimen/_2sdp"
+            app:rippleColor="@color/rippleColor"
+            app:strokeColor="@color/blue_800"
+            app:strokeWidth="@dimen/_1sdp"
+            android:theme="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:padding="0dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/confirm_btn"
+            />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/confirm_btn"
+            android:layout_width="@dimen/common_btn_width_big"
+            android:layout_height="@dimen/common_btn_height"
+            app:backgroundTint="@color/blue_800"
+            android:text="确定"
+            android:textColor="@color/white"
+            android:textSize="@dimen/common_text_title"
+            app:cornerRadius="@dimen/_2sdp"
+            app:rippleColor="@color/rippleColor"
+            android:theme="@style/Theme.MaterialComponents.Light"
+            android:padding="0dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/rest_btn"
+            app:layout_constraintRight_toRightOf="parent"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</LinearLayout>

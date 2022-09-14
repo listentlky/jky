@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:id="@+id/layout"
+        app:layout_constraintTop_toTopOf="parent"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <androidx.appcompat.widget.AppCompatCheckBox
+            android:id="@+id/image_check"
+            android:background="?android:attr/listChoiceIndicatorMultiple"
+            android:button="@null"
+            android:checked="true"
+            android:layout_width="@dimen/_20sdp"
+            android:layout_height="@dimen/_20sdp"/>
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/image_name"
+            android:layout_marginLeft="@dimen/_20sdp"
+            android:textColor="@color/text_black"
+            android:textSize="@dimen/_9ssp"
+            android:text="图片名"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+    <View
+        android:background="@color/gray_600"
+        app:layout_constraintTop_toBottomOf="@id/layout"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"/>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

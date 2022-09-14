@@ -1,0 +1,9 @@
+apply plugin: 'com.hiya.jacoco-android'
+
+jacoco {
+    toolVersion = versions.jacoco
+}
+
+tasks.withType(Test) {
+    jacoco.includeNoLocationClasses = true
+}

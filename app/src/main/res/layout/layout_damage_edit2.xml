@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:clipChildren="false">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="@dimen/_9sdp"
+        >
+        <com.sribs.common.ui.widget.TagEditView
+            android:id="@+id/damage_edit_split"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/common_input_height"
+            android:layout_weight="1"
+            app:TagPadding="@dimen/project_unit_margin"
+            app:TagWidth="@dimen/project_unit_config_tag_width"
+            app:TagText="裂缝数量"
+            app:EditEnable="true"
+            app:EditBtnEnable="true"
+            app:EditBtnBackground="@mipmap/icon_arrow_down"
+            app:EditBtnSize="@dimen/_7sdp"
+            app:EditIsEditSpinner="true"
+            app:EditHint="1条"
+
+            android:gravity="right"
+            />
+        <Space
+            android:layout_width="@dimen/_26sdp"
+            android:layout_height="0dp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/damage_edit_width_ll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="@dimen/_9sdp"
+        >
+        <com.sribs.common.ui.widget.TagEditView
+            android:id="@+id/damage_edit_width"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/common_input_height"
+            android:layout_weight="1"
+            app:TagPadding="@dimen/project_unit_margin"
+            app:TagWidth="@dimen/project_unit_config_tag_width"
+            app:TagText="裂缝宽度"
+            app:EditEnable="true"
+            android:gravity="right"
+            android:inputType="numberDecimal"
+            />
+        <TextView
+            android:layout_width="@dimen/_26sdp"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/common_text_title"
+            android:textColor="@color/black_800"
+            android:text="mm"
+            android:gravity="left|bottom"
+            android:layout_gravity="center_vertical"
+            android:paddingLeft="@dimen/_8sdp"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/damage_edit_len_ll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="@dimen/_9sdp"
+        >
+        <com.sribs.common.ui.widget.TagEditView
+            android:id="@+id/damage_edit_len"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/common_input_height"
+            android:layout_weight="1"
+            app:TagPadding="@dimen/project_unit_margin"
+            app:TagWidth="@dimen/project_unit_config_tag_width"
+            app:TagText="裂缝长度"
+            app:EditEnable="true"
+            android:gravity="right"
+            android:inputType="numberDecimal"
+            />
+        <TextView
+            android:layout_width="@dimen/_26sdp"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/common_text_title"
+            android:textColor="@color/black_800"
+            android:text="m"
+            android:gravity="left|bottom"
+            android:layout_gravity="center_vertical"
+            android:paddingLeft="@dimen/_8sdp"
+            />
+
+    </LinearLayout>
+
+    <com.sribs.common.ui.widget.TagRadioView
+        android:id="@+id/damage_split_type"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/common_input_height"
+        android:layout_marginTop="@dimen/project_unit_padding"
+        app:RadioTagWidth="@dimen/project_unit_config_tag_width"
+        app:RadioTagText="裂缝是否贯穿"
+        app:RadioTagPadding="@dimen/project_unit_margin"
+        app:RadioArr="@array/common_yesno"
+        app:RadioMargin="@dimen/project_unit_margin"
+        app:RadioCheckedIdx="1"
+        android:gravity="right"
+        />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="@dimen/_9sdp"
+        android:gravity="top"
+        android:clipChildren="false"
+        >
+
+        <TextView
+            android:layout_width="@dimen/project_unit_config_tag_width"
+            android:layout_height="wrap_content"
+            android:text="照片"
+            android:textSize="@dimen/_9sdp"
+            android:textColor="@color/black_800"
+            android:paddingRight="@dimen/project_unit_margin"
+            android:gravity="right"
+            android:layout_gravity="top"
+            android:layout_marginTop="@dimen/_6sdp"
+            />
+
+
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clipChildren="false">
+            <androidx.cardview.widget.CardView
+
+                android:layout_width="@dimen/_40sdp"
+                android:layout_height="@dimen/_40sdp"
+                app:cardCornerRadius="@dimen/house_damage_edit_photo_btn_margin"
+                android:foreground="@drawable/ic_click_card_unsel"
+                android:clickable="true"
+
+                android:layout_marginTop="@dimen/house_damage_edit_photo_btn_margin"
+                android:layout_marginRight="@dimen/house_damage_edit_photo_btn_margin"
+                android:layout_marginBottom="@dimen/house_damage_edit_photo_btn_margin"
+                >
+
+                <FrameLayout
+                    android:id="@+id/damage_pic_add_btn"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:clickable="true">
+                    <TextView
+
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/gray_600"
+                        android:textSize="@dimen/common_text_content"
+                        android:text="添加照片"
+                        android:textColorHint="@color/gray_600"
+                        android:gravity="center"
+                        android:layout_gravity="center"
+                        android:drawableTop="@mipmap/icon_photo_add"
+
+                        />
+                </FrameLayout>
+
+                <ImageView
+                    android:id="@+id/damage_photo"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    />
+
+
+
+            </androidx.cardview.widget.CardView>
+            <ImageView
+                android:id="@+id/damage_photo_del_btn"
+                android:layout_width="@dimen/_12sdp"
+                android:layout_height="@dimen/_12sdp"
+                android:src="@drawable/ic_common_del"
+                android:scaleType="fitXY"
+                android:layout_gravity="right|top"
+                android:layout_marginTop="@dimen/_minus4sdp"
+                android:layout_marginRight="@dimen/_minus4sdp"
+                android:elevation="10dp"
+                android:visibility="gone"
+                />
+
+        </FrameLayout>
+
+
+    </LinearLayout>
+</androidx.appcompat.widget.LinearLayoutCompat>

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/pdf_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/tb_title_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/blue_800"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true">
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/tb"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:theme="@style/TextMenuStyle">
+
+            <TextView
+                android:id="@+id/tb_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:singleLine="true"
+                android:textColor="@color/white"
+                android:textSize="@dimen/common_text_title"
+                android:textStyle="bold" />
+        </androidx.appcompat.widget.Toolbar>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <com.cbj.sdk.libui.widget.NoScrollViewPager
+        android:id="@+id/bld_damage_detail_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/tb_title_bar"
+        android:layout_alignParentLeft="true"
+        android:layout_weight="1" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/tb_title_bar"
+        android:layout_alignParentLeft="true">
+
+        <com.cbj.sdk.libui.widget.NoScrollViewPager
+            android:id="@+id/bld_left_fragment"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/tb_title_bar"
+            android:layout_alignParentLeft="true"
+            android:layout_weight="1"/>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="3">
+
+            <Spinner
+                android:id="@+id/select_floor"
+                android:layout_width="@dimen/_100sdp"
+                android:layout_height="wrap_content"
+                android:spinnerMode="dropdown"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="@dimen/_20sdp"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:clickable="true"
+                android:focusable="true"
+                android:textSize="@dimen/_9ssp"
+                android:background="@drawable/spinner_background" />
+
+            <com.radaee.reader.PDFLayoutView
+                android:id="@+id/pdf_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:clickable="true">
+
+            </com.radaee.reader.PDFLayoutView>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <com.barnettwong.dragfloatactionbuttonlibrary.view.DragFloatActionButton
+        android:id="@+id/pdf_edit"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="20dp"
+        android:layout_marginRight="20dp"
+        android:clickable="true"
+        android:src="@mipmap/icon_huabi" />
+
+</RelativeLayout>

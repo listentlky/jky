@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/common_tag_radio_root"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:id="@+id/common_tag_radio_ll"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        >
+        <TextView
+            android:id="@+id/common_tag_must"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="*"
+            android:gravity="top"
+            android:textColor="@color/red_500"
+            android:textSize="@dimen/common_text_tag"
+            android:visibility="invisible"
+            android:layout_gravity="center_vertical"
+            />
+        <TextView
+            android:id="@+id/common_tag_tag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minHeight="@dimen/common_input_height"
+            android:gravity="center"
+            android:textSize="@dimen/common_text_tag"
+            android:textColor="@color/black_800"
+            android:layout_gravity="center_vertical"
+            />
+
+    </LinearLayout>
+
+
+
+    <RadioGroup
+        android:id="@+id/tag_radio_group"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:layout_gravity="center_vertical"
+        >
+
+        <androidx.appcompat.widget.AppCompatRadioButton
+            android:id="@+id/tag_radio1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/common_text_tag"
+            app:buttonTint="@color/sel_common_radio"
+            android:textColor="@color/sel_common_radio"
+            />
+
+        <androidx.appcompat.widget.AppCompatRadioButton
+            android:id="@+id/tag_radio2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/common_text_tag"
+            app:buttonTint="@color/sel_common_radio"
+            android:textColor="@color/sel_common_radio"
+            />
+
+    </RadioGroup>
+
+
+
+
+</LinearLayout>

@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/grayF5F7FA"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        android:id="@+id/table_dh"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/table_hs"
+        app:layout_constraintHorizontal_weight="1"
+        android:layout_width="0dp"
+        android:textSize="@dimen/_6ssp"
+        android:textColor="@color/gray_666"
+        android:textStyle="bold"
+        android:text="点号"
+        android:paddingLeft="@dimen/_4sdp"
+        android:gravity="center_vertical"
+        android:layout_height="@dimen/_30sdp"/>
+
+    <View
+        android:id="@+id/line_1"
+        app:layout_constraintLeft_toRightOf="@id/table_dh"
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@color/grayAAABAD"
+        android:layout_width="1px"
+        android:layout_height="@dimen/_30sdp"/>
+
+    <TextView
+        android:id="@+id/table_bsds"
+        android:layout_width="0dp"
+        app:layout_constraintBottom_toTopOf="@id/table_hs"
+        app:layout_constraintLeft_toLeftOf="@id/table_hs"
+        app:layout_constraintRight_toRightOf="@id/table_qs"
+        android:textSize="@dimen/_6ssp"
+        android:textColor="@color/gray_666"
+        android:textStyle="bold"
+        android:text="标尺读数(mm)"
+        android:paddingLeft="@dimen/_4sdp"
+        android:gravity="center_vertical"
+        android:layout_height="@dimen/_15sdp"/>
+
+    <View
+        android:id="@+id/line_2"
+        app:layout_constraintBottom_toTopOf="@id/table_hs"
+        app:layout_constraintLeft_toLeftOf="@id/table_hs"
+        app:layout_constraintRight_toRightOf="@id/table_qs"
+        android:background="@color/grayAAABAD"
+        android:layout_width="0dp"
+        android:layout_height="1px"/>
+
+    <TextView
+        android:id="@+id/table_hs"
+        app:layout_constraintLeft_toRightOf="@id/table_dh"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/table_qs"
+        app:layout_constraintHorizontal_weight="1"
+        android:layout_width="0dp"
+        android:textSize="@dimen/_6ssp"
+        android:textColor="@color/gray_666"
+        android:textStyle="bold"
+        android:text="后视"
+        android:paddingLeft="@dimen/_4sdp"
+        android:gravity="center_vertical"
+        android:layout_height="@dimen/_15sdp"/>
+
+    <View
+        android:id="@+id/line_3"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/table_hs"
+        android:background="@color/grayAAABAD"
+        android:layout_width="1px"
+        android:layout_height="@dimen/_15sdp"/>
+
+    <TextView
+        android:id="@+id/table_qs"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/table_hs"
+        app:layout_constraintRight_toLeftOf="@id/table_qhsgc"
+        app:layout_constraintHorizontal_weight="1"
+        android:layout_width="0dp"
+        android:textSize="@dimen/_6ssp"
+        android:textColor="@color/gray_666"
+        android:textStyle="bold"
+        android:text="前视"
+        android:paddingLeft="@dimen/_4sdp"
+        android:gravity="center_vertical"
+        android:layout_height="@dimen/_15sdp"/>
+
+    <View
+        android:id="@+id/line_4"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/table_qs"
+        android:background="@color/grayAAABAD"
+        android:layout_width="1px"
+        android:layout_height="@dimen/_30sdp"/>
+
+    <TextView
+        android:id="@+id/table_qhsgc"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/table_qs"
+        app:layout_constraintRight_toLeftOf="@id/table_gc"
+        app:layout_constraintHorizontal_weight="1"
+        android:layout_width="0dp"
+        android:textSize="@dimen/_6ssp"
+        android:textColor="@color/gray_666"
+        android:textStyle="bold"
+        android:text="前后视高差(mm)"
+        android:paddingLeft="@dimen/_4sdp"
+        android:paddingRight="@dimen/_4sdp"
+        android:gravity="center_vertical"
+        android:layout_height="@dimen/_30sdp"/>
+
+    <View
+        android:id="@+id/line_5"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/table_qhsgc"
+        android:background="@color/grayAAABAD"
+        android:layout_width="1px"
+        android:layout_height="@dimen/_30sdp"/>
+
+    <TextView
+        android:id="@+id/table_gc"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/table_qhsgc"
+        app:layout_constraintRight_toLeftOf="@id/table_cdxdgc"
+        app:layout_constraintHorizontal_weight="1"
+        android:layout_width="0dp"
+        android:textSize="@dimen/_6ssp"
+        android:textColor="@color/gray_666"
+        android:textStyle="bold"
+        android:text="高程(mm)"
+        android:paddingLeft="@dimen/_4sdp"
+        android:paddingRight="@dimen/_4sdp"
+        android:gravity="center_vertical"
+        android:layout_height="@dimen/_30sdp"/>
+
+    <View
+        android:id="@+id/line_6"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/table_gc"
+        android:background="@color/grayAAABAD"
+        android:layout_width="1px"
+        android:layout_height="@dimen/_30sdp"/>
+
+    <TextView
+        android:id="@+id/table_cdxdgc"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/table_gc"
+        app:layout_constraintRight_toLeftOf="@id/table_cz"
+        app:layout_constraintHorizontal_weight="1"
+        android:layout_width="0dp"
+        android:textSize="@dimen/_6ssp"
+        android:textColor="@color/gray_666"
+        android:textStyle="bold"
+        android:text="测点相对高差(mm)"
+        android:paddingLeft="@dimen/_4sdp"
+        android:paddingRight="@dimen/_4sdp"
+        android:gravity="center_vertical"
+        android:layout_height="@dimen/_30sdp"/>
+
+    <View
+        android:id="@+id/line_7"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/table_cdxdgc"
+        android:background="@color/grayAAABAD"
+        android:layout_width="1px"
+        android:layout_height="@dimen/_30sdp"/>
+
+    <TextView
+        android:id="@+id/table_cz"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/table_cdxdgc"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintHorizontal_weight="1.5"
+        android:layout_width="0dp"
+        android:textSize="@dimen/_6ssp"
+        android:textColor="@color/gray_666"
+        android:textStyle="bold"
+        android:text="操作"
+        android:paddingLeft="@dimen/_4sdp"
+        android:paddingRight="@dimen/_4sdp"
+        android:gravity="center_vertical"
+        android:layout_height="@dimen/_30sdp"/>
+
+    <View
+        android:id="@+id/line_8"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:background="@color/grayAAABAD"
+        android:layout_width="match_parent"
+        android:layout_height="1px"/>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

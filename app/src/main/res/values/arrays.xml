@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string-array name="main_project_status">
+        <item>本地</item>
+        <item>本地已上传</item>
+        <item>云端未下载至本地</item>
+        <item>已下载所有</item>
+        <item>已下载配置</item>
+    </string-array>
+
+    <string-array name="project_floor_type">
+        <item>单楼梯间</item>
+        <item>双楼梯间</item>
+    </string-array>
+
+
+    <string-array name="unit_config_floor_bottom">
+        <item>南墙</item>
+        <item>北墙</item>
+        <item>西墙</item>
+        <item>东墙</item>
+        <item>地坪</item>
+        <item>顶板</item>
+    </string-array>
+
+    <string-array name="unit_config_unit_top_unit_type">
+        <item>非复式</item>
+        <item>复式</item>
+    </string-array>
+
+    <string-array name="unit_config_unit_bottom_unit_config">
+        <item>厨房</item>
+        <item>卫生间</item>
+        <item>主卫</item>
+        <item>客卫</item>
+        <item>盥洗室</item>
+        <item>餐厅</item>
+        <item>客厅</item>
+        <item>起居室</item>
+        <item>储物间</item>
+        <item>玄关</item>
+        <item>过道</item>
+        <item>卧室</item>
+        <item>东卧室</item>
+        <item>南卧室</item>
+        <item>西卧室</item>
+        <item>北卧室</item>
+        <item>东南卧室</item>
+        <item>东北卧室</item>
+        <item>西南卧室</item>
+        <item>西北卧室</item>
+        <item>阳台</item>
+        <item>南阳台</item>
+        <item>北阳台</item>
+        <item>露台</item>
+        <item>南庭院</item>
+        <item>北庭院</item>
+    </string-array>
+    <string-array name="unit_config_unit_normal_unit_config">
+        <item>厨房</item>
+        <item>卫生间</item>
+        <item>主卫</item>
+        <item>客卫</item>
+        <item>盥洗室</item>
+        <item>餐厅</item>
+        <item>客厅</item>
+        <item>起居室</item>
+        <item>储物间</item>
+        <item>玄关</item>
+        <item>过道</item>
+        <item>卧室</item>
+        <item>东卧室</item>
+        <item>南卧室</item>
+        <item>西卧室</item>
+        <item>北卧室</item>
+        <item>东南卧室</item>
+        <item>东北卧室</item>
+        <item>西南卧室</item>
+        <item>西北卧室</item>
+        <item>阳台</item>
+        <item>南阳台</item>
+        <item>北阳台</item>
+        <item>露台</item>
+    </string-array>
+
+    <string-array name="house_house_status">
+        <item>新装修</item>
+        <item>装修中</item>
+        <item>毛坯房</item>
+        <item>无人</item>
+        <item>不让进</item>
+        <item>未发现明显损伤</item>
+    </string-array>
+
+    <string-array name="house_status1_pos">
+        <item>厨房</item>
+        <item>卫生间</item>
+        <item>主卫</item>
+        <item>客卫</item>
+        <item>阳台</item>
+        <item>南阳台</item>
+        <item>北阳台</item>
+        <item>露台</item>
+    </string-array>
+
+    <string-array name="house_position_status1">
+        <item>新装修</item>
+        <item>装修中</item>
+        <item>无法入内</item>
+        <item>不让进</item>
+        <item>门开启不便</item>
+        <item>窗开启不便</item>
+        <item>顶板已吊顶</item>
+        <item>墙面贴瓷砖</item>
+        <item>墙面贴墙纸</item>
+        <item>墙面贴护墙板</item>
+        <item>未发现明显损伤</item>
+    </string-array>
+
+
+
+    <string-array name="house_position_status2">
+        <item>新装修</item>
+        <item>装修中</item>
+        <item>无法入内</item>
+        <item>不让进</item>
+        <item>门开启不便</item>
+        <item>窗开启不便</item>
+        <item>顶板已吊顶</item>
+        <item>墙面贴瓷砖</item>
+        <item>墙面贴墙纸</item>
+        <item>墙面贴护墙板</item>
+        <item>未发现明显损伤</item>
+    </string-array>
+
+    <string-array name="house_damage_split">
+        <item>1条</item>
+        <item>2条</item>
+        <item>多条</item>
+    </string-array>
+
+    <string-array name="house_type">
+        <item>楼梯间</item>
+        <item>休息平台</item>
+        <item>室</item>
+    </string-array>
+
+    <string-array name="facade_drawings_list">
+        <item>上传东立面图纸</item>
+        <item>上传南立面图纸</item>
+        <item>上传西立面图纸</item>
+        <item>上传北立面图纸</item>
+    </string-array>
+
+    <string-array name="other_drawing_type">a
+        <item>东立面</item>
+        <item>南立面</item>
+        <item>西立面</item>
+        <item>北立面</item>
+        <item>底层(总平面层)</item>
+    </string-array>
+
+    <string-array name="other_drawing_type_code">a
+        <item>50000</item>
+        <item>50001</item>
+        <item>50002</item>
+        <item>50003</item>
+        <item>50004</item>
+    </string-array>
+
+    <string-array name="drawings_type">
+        <item>east</item>
+        <item>south</item>
+        <item>west</item>
+        <item>north</item>
+        <item>overall</item>
+        <item>flat</item>
+    </string-array>
+
+    <string-array name="drawing_damage_type_list" tools:ignore="ExtraTranslation">
+        <item>结构构件损伤</item>
+        <item>耐久性损伤</item>
+        <item>渗漏水</item>
+        <item>填充墙斜裂缝</item>
+        <item>高坠隐患</item>
+        <item>附属构件损坏</item>
+        <item>其它/不稳定</item>
+        <item>裂缝监测点</item>
+    </string-array>
+
+    <string-array name="damage_monitor_way">
+        <item>石膏饼</item>
+        <item>刻痕</item>
+    </string-array>
+
+    <declare-styleable name="FilledBoxSpinner">
+        <attr name="hint" format="string"/>
+        <attr name="icon" format="reference"/>
+        <attr name="isSearchable" format="boolean"/>
+        <attr name="iconPosition" format="enum">
+            <enum name="start" value="0"/>
+            <enum name="end" value="1"/>
+        </attr>
+    </declare-styleable>
+
+</resources>

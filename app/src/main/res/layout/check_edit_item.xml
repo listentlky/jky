@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/content"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/check_edit_name"
+        android:textColor="@color/black"
+        android:text="点位名称"
+        android:includeFontPadding="false"
+        android:layout_width="wrap_content"
+        android:textSize="@dimen/_7ssp"
+        android:layout_height="wrap_content"/>
+
+    <EditText
+        android:id="@+id/check_edit"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:textColorHint="@color/gray_600"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_6ssp"
+        android:layout_marginLeft="@dimen/_6sdp"
+        android:hint="请输入点位名称"
+        android:minWidth="@dimen/_90sdp"
+        android:paddingLeft="@dimen/_4sdp"
+        android:paddingRight="@dimen/_4sdp"
+        android:minHeight="@dimen/_14sdp"
+        android:background="@drawable/check_gray_is_edit_selector"
+        android:gravity="center_vertical"
+        android:layout_height="wrap_content"/>
+
+</LinearLayout>

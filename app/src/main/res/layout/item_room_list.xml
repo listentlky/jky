@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/_70sdp"
+    app:cardCornerRadius="@dimen/_2sdp"
+    app:cardBackgroundColor="@color/white"
+    android:foreground="@drawable/ic_sel_card"
+    app:contentPadding="@dimen/_5sdp"
+    android:id="@+id/item_room_card">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/item_room_status_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:gravity="center"
+                android:textSize="@dimen/common_text_small"
+                android:textColor="@color/white"
+                android:background="@drawable/ic_sel_house_list"
+                android:paddingVertical="@dimen/_2sdp"
+                android:paddingHorizontal="@dimen/_6sdp"
+                android:includeFontPadding="false"
+                />
+<!--            android:drawableLeft="@drawable/ic_sel_room_list"-->
+<!--            android:drawablePadding="@dimen/_4sdp"-->
+            <ImageView
+                android:id="@+id/item_room_status_iv"
+                android:layout_width="@dimen/login_item_icon_size"
+                android:layout_height="@dimen/login_item_icon_size"
+                android:scaleType="fitXY"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintRight_toLeftOf="@id/item_room_more_cb"
+                android:layout_marginLeft="@dimen/_5sdp"
+                android:layout_marginRight="@dimen/_8sdp"
+                />
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:id="@+id/item_room_more_cb"
+                android:layout_width="@dimen/login_item_icon_size"
+                android:layout_height="@dimen/login_item_icon_size"
+                android:scaleType="centerInside"
+                android:button="@null"
+                android:checked="false"
+                android:background="@drawable/ic_sel_more"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_1sdp"
+            android:background="@color/gray_600"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:layout_marginBottom="@dimen/_7sdp"
+            />
+
+        <TextView
+            android:id="@+id/item_room_floorneighbor_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="left|center_vertical"
+            android:textColor="@color/black_800"
+            android:textSize="@dimen/common_text_content"
+            />
+        <TextView
+            android:id="@+id/item_room_member_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="left|center_vertical"
+            android:textColor="@color/black_800"
+            android:textSize="@dimen/common_text_content"
+            />
+        <TextView
+            android:id="@+id/item_room_time_tv"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="right|center_vertical"
+            android:textColor="@color/black_800"
+            android:textSize="@dimen/common_text_small"
+            />
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

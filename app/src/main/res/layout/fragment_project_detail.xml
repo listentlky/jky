@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:background="@color/white"
+    >
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="@dimen/_99sdp"
+        android:layout_height="match_parent"
+        android:background="@color/blue_800_10">
+        <LinearLayout
+            android:id="@+id/project_detail_tab_ll"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            >
+            
+            <TextView
+                android:id="@+id/project_detail_tab_add_btn"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/project_detail_unit_tag_height"
+                android:background="@drawable/ic_bk_bottom_border"
+                android:textColor="@color/black_800"
+                android:textSize="@dimen/common_text_content"
+                android:text="新增单元"
+                android:gravity="center"
+                android:clickable="true"
+                android:foreground="?attr/selectableItemBackground"
+                />
+            
+            
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <FrameLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+        <com.cbj.sdk.libui.widget.NoScrollViewPager
+            android:id="@+id/project_detail_vp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
+        <ProgressBar
+            android:id="@+id/pb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            />
+
+    </FrameLayout>
+
+
+</LinearLayout>

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="@dimen/_288sdp"
+        android:layout_height="@dimen/_173sdp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:cardCornerRadius="@dimen/_2sdp"
+        android:background="@null"
+        app:cardBackgroundColor="@color/white"
+        app:contentPaddingTop="@dimen/_22sdp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="right"
+            android:paddingHorizontal="@dimen/_37sdp">
+
+            <com.sribs.common.ui.widget.TagEditView
+                android:id="@+id/project_name"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/common_input_height"
+                app:TagMust="true"
+                app:TagPadding="@dimen/project_create_tag_margin"
+                app:TagText="项目名称"
+                app:EditEnable="true"
+                app:EditHint="请输入项目名称+弄"
+                app:EditWidth="@dimen/project_create_et_width"
+                android:gravity="right"
+                />
+
+            <com.sribs.common.ui.widget.TagEditView
+                android:id="@+id/project_manager"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/common_input_height"
+                app:TagMust="true"
+                app:TagPadding="@dimen/project_create_tag_margin"
+                app:TagText="项目负责人"
+                app:EditEnable="true"
+                app:EditHint="请选择"
+                app:EditWidth="@dimen/project_create_et_width"
+                app:EditBtnEnable="true"
+                app:EditBtnBackground="@mipmap/icon_arrow_down"
+                app:EditBtnSize="@dimen/_7sdp"
+                app:EditIsSpinner="true"
+                android:gravity="right"
+                android:layout_marginTop="@dimen/_13sdp"
+                />
+
+            <com.sribs.common.ui.widget.TagEditView
+                android:id="@+id/project_builder_number"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/common_input_height"
+                app:TagMust="true"
+                app:TagPadding="@dimen/project_create_tag_margin"
+                app:TagText="楼号"
+                app:EditEnable="true"
+                app:EditHint="请输入"
+                app:EditWidth="@dimen/project_create_et_width"
+                android:gravity="right"
+                android:layout_marginTop="@dimen/_13sdp"
+                />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/project_create_btn"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/common_btn_height"
+                android:layout_marginTop="@dimen/_23sdp"
+                app:backgroundTint="@color/blue_800"
+                android:text="下一步"
+                android:textColor="@color/white"
+                android:textSize="@dimen/common_text_title"
+                app:cornerRadius="@dimen/_2sdp"
+                app:rippleColor="@color/rippleColor"
+                android:theme="@style/Theme.MaterialComponents.Light"
+                android:padding="0dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+</androidx.constraintlayout.widget.ConstraintLayout>

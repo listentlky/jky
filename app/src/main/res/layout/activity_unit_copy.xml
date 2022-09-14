@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    tools:ignore="MissingDefaultResource"
+    android:background="@color/white">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/blue_800">
+
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/layout_common_toolbar"/>
+    </com.google.android.material.appbar.AppBarLayout>
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingHorizontal="@dimen/_25sdp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingHorizontal="@dimen/_32sdp"
+            android:paddingVertical="@dimen/_14sdp">
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingHorizontal="@dimen/_32sdp"
+                android:paddingVertical="@dimen/_14sdp"
+                >
+
+
+                <LinearLayout
+                    android:id="@+id/unit_copy_tag_ll"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/common_input_height"
+                    android:orientation="horizontal"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    >
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="*"
+                        android:textSize="@dimen/common_text_tag"
+                        android:textColor="@color/red_500"
+                        />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text="选择复制配置"
+                        android:textColor="@color/black_800"
+                        android:textSize="@dimen/common_text_tag"
+                        android:gravity="center"
+                        />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintLeft_toRightOf="@id/unit_copy_tag_ll"
+                    app:layout_constraintRight_toRightOf="parent"
+                    android:layout_marginLeft="@dimen/project_create_tag_margin"
+
+                    >
+                    <LinearLayout
+                        android:id="@+id/unit_copy_cg_ll"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:background="@drawable/common_et_border_bk"
+                        android:paddingHorizontal="@dimen/_8sdp"
+                        android:minHeight="@dimen/_24sdp"
+                        >
+
+                        <com.google.android.material.chip.ChipGroup
+                            android:id="@+id/unit_copy_cg"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            app:chipSpacingHorizontal="@dimen/_4sdp"
+                            app:chipSpacingVertical="0dp"
+                            app:singleLine="false"
+                            app:singleSelection="false"
+                            android:paddingTop="0dp"
+                            android:paddingBottom="0dp"
+                            android:paddingStart="0dp"
+                            android:paddingEnd="0dp"
+                            app:chipMinTouchTargetSize="0dp"
+                            />
+
+
+                        <androidx.appcompat.widget.AppCompatCheckBox
+                            android:id="@+id/unit_copy_select_cb"
+                            android:layout_width="@dimen/_7sdp"
+                            android:layout_height="@dimen/_7sdp"
+                            android:button="@null"
+                            android:background="@drawable/ic_sel_copy_config"
+                            android:layout_marginLeft="@dimen/_8sdp"
+                            android:layout_marginTop="@dimen/_9sdp"
+                            android:padding="0dp"
+
+                            />
+
+                    </LinearLayout>
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1">
+
+                        <androidx.appcompat.widget.AppCompatCheckBox
+                            android:id="@+id/unit_copy_select_all_cb"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="全选"
+                            android:textColor="@color/black_800"
+                            android:textSize="@dimen/common_text_tag"
+                            />
+
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/unit_copy_select_rv"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:visibility="gone"
+                            android:paddingVertical="@dimen/_8sdp"
+                            android:paddingLeft="@dimen/_8sdp"
+                            android:paddingRight="@dimen/_22sdp"
+                            android:background="@drawable/common_et_border_bk"
+                            android:layout_marginTop="@dimen/_4sdp"
+                            android:overScrollMode="never"
+
+                            />
+                    </FrameLayout>
+
+
+
+
+
+                </LinearLayout>
+
+
+
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+
+
+
+
+
+
+
+</LinearLayout>

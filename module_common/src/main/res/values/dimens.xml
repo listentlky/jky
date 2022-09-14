@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="common_input_height">@dimen/_20sdp</dimen>
+    <dimen name="common_text_title">@dimen/_10sdp</dimen>
+    <dimen name="common_text_content">@dimen/_8sdp</dimen>
+    <dimen name="common_text_tag">@dimen/_9sdp</dimen>
+    <dimen name="common_text_small">@dimen/_7sdp</dimen>
+    <dimen name="common_text_big">@dimen/_12sdp</dimen>
+
+    <dimen name="common_tag_cb">@dimen/_12sdp</dimen>
+
+    <dimen name="common_btn_width">@dimen/_56sdp</dimen>
+    <dimen name="common_btn_width_big">@dimen/_88sdp</dimen>
+    <dimen name="common_btn_height">@dimen/_21sdp</dimen>
+
+    <dimen name="common_dialog_width">@dimen/_254sdp</dimen>
+
+</resources>

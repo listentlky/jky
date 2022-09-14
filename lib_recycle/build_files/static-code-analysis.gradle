@@ -1,0 +1,36 @@
+apply plugin: 'checkstyle'
+apply plugin: 'pmd'
+
+check.dependsOn 'checkstyle', 'pmd'
+
+task checkstyle(type: Checkstyle) {
+    description 'Checks if the code adheres to a coding standard'
+    group 'verification'
+
+    configFile file("${project.rootDir}/config/checkstyle.xml")
+    source 'src'
+    include '**/*.java'
+    exclude '**/gen/**'
+
+    classpath = files()
+}
+
+task pmd(type: Pmd) {
+    description 'Finds common programming flaws'
+    group 'verification'
+
+    ruleSetFiles = files("${project.rootDir}/config/pmd-ruleset.xml")
+    ruleSets = []
+
+    source 'src'
+    include '**/*.java'
+    exclude '**/gen/**'
+
+    reports {
+        html.enabled = true
+    }
+}
+
+dependencies {
+    checkstyle "com.puppycrawl.tools:checkstyle:${project.versions.checkstyle}"
+}

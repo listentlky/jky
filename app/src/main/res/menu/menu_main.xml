@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/menu_main_map"
+        android:title=""
+        android:orderInCategory="100"
+        app:showAsAction="always"
+        android:icon="@mipmap/icon_map"
+        />
+    <item android:id="@+id/menu_main_info"
+        android:title=""
+        android:orderInCategory="100"
+        app:showAsAction="always"
+        android:icon="@mipmap/icon_info"
+        >
+        <menu>
+            <group>
+                <item
+                    android:id="@+id/menu_main_pop_local"
+                    android:title="本地"
+                    android:icon="@drawable/ic_main_local"
+                    />
+                <item
+                    android:id="@+id/menu_main_pop_local_upload"
+                    android:title="本地已上传"
+                    android:icon="@drawable/ic_main_local_upload"
+                    />
+                <item
+                    android:id="@+id/menu_main_pop_cloud"
+                    android:title="云端未下载至本地"
+                    android:icon="@drawable/ic_main_cloud"
+                    />
+                <item
+                    android:id="@+id/menu_main_pop_download_all"
+                    android:title="已下载所有"
+                    android:icon="@drawable/ic_main_download"
+                    />
+                <item
+                    android:id="@+id/menu_main_pop_download_config"
+                    android:title="已下载配置"
+                    android:icon="@drawable/ic_main_download_config"
+                    />
+            </group>
+        </menu>
+    </item>
+</menu>
