@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.Rect;
@@ -967,6 +968,7 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
             {//popup editbox from UI.
                 m_annot_pg.ObjsStart();
                 m_annot = m_annot_pg.GetAnnot(m_annot_pg.GetAnnotCount() - 1);
+                Log.d("bdd","m_annot is null : "+m_annot);
                 m_annot_rect = m_annot.GetRect();
                 float tmp = m_annot_rect[1];
                 m_annot_rect[0] = m_annot_page.GetVX(m_annot_rect[0]) - m_layout.vGetX();
@@ -1455,9 +1457,9 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
                     m_annot_pg = page;
 
                     if(m_annot == null)
-                        Log.i("leon","onTouchNote m_annot is NULL");
+                        Log.d("bdd","onTouchNote m_annot is NULL");
                     else
-                        Log.i("leon","onTouchNote m_annot is NOT NULL ");
+                        Log.d("bdd","onTouchNote m_annot is NOT NULL ");
 
                     m_annot = m_annot_pg.GetAnnot(m_annot_pg.GetAnnotCount() - 1);
                     m_annot_rect = m_annot.GetRect();
@@ -1949,6 +1951,7 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
             m_status = STA_RECT;
         } else if (code == 1)//end
         {
+            Log.d("bdd","m_rects: "+m_rects);
             if (m_rects != null) {
                 int len = m_rects.length;
                 int cur;
@@ -1957,6 +1960,7 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
                     PDFPos pos = m_layout.vGetPos((int) m_rects[cur], (int) m_rects[cur + 1]);
                     VPage vpage = m_layout.vGetPage(pos.pageno);
                     Page page = m_doc.GetPage(vpage.GetPageNo());
+                    Log.d("bdd","page: "+page);
                     if (page != null) {
                         page.ObjsStart();
                         Matrix mat = vpage.CreateInvertMatrix(m_layout.vGetX(), m_layout.vGetY());
@@ -2741,6 +2745,31 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
         if (res) m_layout.vRenderSync(vpage);
     }
     */
+
+    public void addTextBox(float x, float y){
+        float[] rect = new float[4];
+        rect[0] = x;
+        rect[1] = y;
+        rect[2] = x + 300;
+        rect[3] = y + 50;
+
+        VPage vpage = m_layout.vGetPage(m_pageno);
+        if( vpage == null ) return;
+        Page page = m_doc.GetPage(vpage.GetPageNo());
+        if (page == null ) return;
+
+        Matrix mat = vpage.CreateInvertMatrix(m_layout.vGetX(), m_layout.vGetY());
+        mat.TransformRect(rect);
+
+        page.AddAnnotEditbox(rect, Color.TRANSPARENT, 0, Color.WHITE, 13, Color.BLACK);
+        Page.Annotation newAnnot = page.GetAnnot(page.GetAnnotCount() - 1);
+
+        newAnnot.SetEditText("Example Text");
+
+        m_layout.vRenderSync(vpage);
+        invalidate();
+    }
+
     @Override
     public int GetScreenX(float pdfX, int pageno) {
         VPage vPage = m_layout.vGetPage(pageno);

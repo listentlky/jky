@@ -1,5 +1,6 @@
 package com.sribs.db.util
 
+import com.sribs.common.bean.db.v3.project.v3ProjectDbBean
 import com.sribs.common.utils.Util
 import com.sribs.db.house.HouseStatusBean
 import com.sribs.db.house.RoomStatusBean
@@ -15,6 +16,7 @@ import com.sribs.db.project.unit.UnitBean
 import com.sribs.db.project.unit.config.ConfigBean
 import com.sribs.db.report.ReportBean
 import com.sribs.db.user.UserBean
+import com.sribs.db.v3.project.v3ProjectRoom
 import io.reactivex.Flowable
 import io.reactivex.Maybe
 import io.reactivex.Single
@@ -82,6 +84,60 @@ object  ConverterHelper {
             it.createTime = Date(Date().time)
         }
     }
+
+    /**
+     * 3期项目 start
+     */
+    fun convertv3ProjectBean(l: Flowable<List<v3ProjectRoom>>): Flowable<List<v3ProjectDbBean>>
+            =l.map { it.map { b->
+        v3ProjectDbBean(
+            b.id,
+            b.projectName,
+            b.inspectors,
+            b.leaderId,
+            b.leaderName,
+            b.remoteId,
+            b.createTime,
+            b.updateTime,
+            )
+    } }
+
+    fun convertOnlyv3ProjectBean(l: Single<List<v3ProjectRoom>>): Single<List<v3ProjectDbBean>>
+            =l.map { it.map { b->
+        v3ProjectDbBean(
+            b.id,
+            b.projectName,
+            b.inspectors,
+            b.leaderId,
+            b.leaderName,
+            b.remoteId,
+            b.createTime,
+            b.updateTime,
+            )
+    } }
+
+
+    fun convertv3ProjectRoom(b:v3ProjectDbBean):v3ProjectRoom
+            = v3ProjectRoom(
+        projectName = b.projectName,
+        inspectors = b.inspectors,
+        leaderId = b.leaderId,
+        leaderName = b.leaderName,
+        remoteId = b.remoteId
+    ).also {
+        if (b.id?:-1>0){
+            it.id = b.id!!
+        }
+        if (b.createTime!=null){
+            it.createTime = b.createTime
+        }else{
+            it.createTime = Date(Date().time)
+        }
+    }
+
+    /**
+     * 3期项目 end
+     */
 
     fun convertUnitBean(l: Flowable<List<UnitBean>>): Flowable<List<com.sribs.common.bean.db.UnitBean>>
             = l.map { it.map { b->

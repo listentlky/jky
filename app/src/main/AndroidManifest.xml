@@ -201,6 +201,10 @@
             android:name=".v3.ui.check.cd.CheckComponentDetectionActivity"
             android:screenOrientation="landscape"
             android:theme="@style/AppTheme.Main"  />
+        <activity
+            android:name=".v3.ui.draw.DrawPDFActivity"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme.Main" />
         <receiver
             android:name=".receiver.NetworkReceiver"
             android:enabled="true"

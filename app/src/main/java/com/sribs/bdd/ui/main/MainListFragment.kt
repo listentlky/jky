@@ -61,7 +61,12 @@ class MainListFragment :
 
                 ARouter.getInstance().build(com.sribs.common.ARouterPath.PRO_CREATE_ATY_FLOOR_LIST)
                     .withString(com.sribs.common.ARouterPath.VAL_COMMON_TITLE, beanMain.address)
+                    .withLong(com.sribs.common.ARouterPath.VAL_COMMON_LOCAL_ID,
+                        beanMain?.localId!!)
+                    .withString(com.sribs.common.ARouterPath.VAL_COMMON_REMOTE_ID,
+                        beanMain.remoteId)
                     .navigation()
+
 
                 /*
 
@@ -213,7 +218,8 @@ class MainListFragment :
         mAdapter.setData(l)
         refreshFinish()
 
-        l?.run {
+        // 三期居民类与非居民类损伤后置
+       /* l?.run {
             mUnitListInProjects?.clear()
             mDrawingListInProjects?.clear()
             l.forEach {
@@ -223,7 +229,7 @@ class MainListFragment :
             l.forEach {
                 mPresenter.getAllDrawingInProject(it?.localId)
             }
-        }
+        }*/
     }
 
     override fun onAllUnitsInProject(r: ArrayList<UnitBean>) {

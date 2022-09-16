@@ -25,6 +25,9 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 
+/**
+ * 单栋楼下模块界面
+ */
 @Route(path = com.sribs.common.ARouterPath.PRO_ITEM_ATY_FLOOR)
 class ProjectFloorItemActivity :BaseActivity(), IProjectContrast.IProjectFloorDetailView{
 

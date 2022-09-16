@@ -2,6 +2,7 @@ package com.sribs.common.server
 
 import com.alibaba.android.arouter.facade.template.IProvider
 import com.sribs.common.bean.db.*
+import com.sribs.common.bean.db.v3.project.v3ProjectDbBean
 import io.reactivex.Flowable
 import io.reactivex.Maybe
 import io.reactivex.Observable
@@ -27,6 +28,30 @@ interface IDatabaseService:IProvider {
     fun updateProject(b:ProjectBean):Observable<Long>
 
     fun deleteProject(b:ProjectBean):Observable<Int>
+
+    /**
+     * 3期项目start
+     */
+
+    fun getv3AllProject():Flowable<List<v3ProjectDbBean>>
+
+    fun getv3Project(id:Long):Flowable<List<v3ProjectDbBean>>
+
+    fun getv3ProjectOnce(id:Long):Single<List<v3ProjectDbBean>>
+
+    fun getv3ProjectOnce(name:String,buildNo:String):Single<List<v3ProjectDbBean>>
+
+    fun getv3ProjectOnce(name:String):Single<List<v3ProjectDbBean>>
+
+    fun updatev3Project(b:v3ProjectDbBean):Observable<Long>
+
+    fun deletev3Project(b:v3ProjectDbBean):Observable<Int>
+
+    /**
+     * 3期项目end
+     */
+
+
 
     fun getAllUnit(projectId: Long):Flowable<List<UnitBean>>
 

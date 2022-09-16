@@ -22,6 +22,7 @@ import com.sribs.bdd.bean.UploadPicTmpBean
 import com.sribs.bdd.bean.data.DamageDescriptionDataBean
 import com.sribs.bdd.module.BaseUnitConfigPresenter
 import com.sribs.bdd.utils.DescriptionPositionHelper
+import com.sribs.bdd.v3.util.LogUtils
 import com.sribs.common.bean.HistoryBean
 import com.sribs.common.bean.db.*
 import com.sribs.common.bean.net.*
@@ -42,10 +43,10 @@ class UnitListPresenter:BaseUnitConfigPresenter(),IUnitListContrast.IPresenter {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 if (com.sribs.bdd.Config.isNetAvailable){
-                    LOG.E("123","getAllUnit net")
+                    LogUtils.d("network getRemoteUnit()")
                     getRemoteUnit(projectId,1,it)
                 }else{
-                    LOG.E("123","getAllUnit no net")
+                    LogUtils.d("no network callback")
                     mView?.onAllUnit(it)
                 }
             },{
@@ -115,7 +116,8 @@ class UnitListPresenter:BaseUnitConfigPresenter(),IUnitListContrast.IPresenter {
                         createTime = TimeUtil.time2Date(b.createTime),
                         updateTime = TimeUtil.time2Date(b.updateTime),
                         remoteId = b.unitId,
-                        version = b.version
+                        version = b.version,
+
                     )
                 }
                 allList.addAll(localList)

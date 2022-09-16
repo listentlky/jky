@@ -33,6 +33,8 @@ import com.sribs.db.report.ReportBean
 import com.sribs.db.report.ReportDao
 import com.sribs.db.user.UserBean
 import com.sribs.db.user.UserDao
+import com.sribs.db.v3.project.v3ProjectDao
+import com.sribs.db.v3.project.v3ProjectRoom
 
 /**
  * @date 2021/7/8
@@ -82,6 +84,8 @@ import com.sribs.db.user.UserDao
         DrawingBean::class,
         FloorBean::class,
         DamageBean::class,
+        //3期
+        v3ProjectRoom::class
     ],
     version = 1,
     exportSchema = false,
@@ -103,4 +107,6 @@ abstract class DDBDataBase: RoomDatabase() {
     abstract fun floorDao(): FloorDao
     abstract fun drawingDao(): DrawingDao
     abstract fun damageDao(): DamageDao
+    //3期
+    abstract fun v3ProjectDao(): v3ProjectDao
 }

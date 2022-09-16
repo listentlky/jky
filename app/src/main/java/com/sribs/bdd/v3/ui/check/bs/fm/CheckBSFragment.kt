@@ -3,6 +3,7 @@ package com.sribs.bdd.v3.ui.check.bs.fm
 import android.util.Log
 import android.view.View
 import com.alibaba.android.arouter.facade.annotation.Route
+import com.alibaba.android.arouter.launcher.ARouter
 import com.cbj.sdk.libui.mvp.BaseFragment
 import com.cbj.sdk.libui.mvp.bindView
 import com.sribs.bdd.R
@@ -63,6 +64,12 @@ class CheckBSFragment : BaseFragment(R.layout.fragment_check_build_structure) {
 
         (activity as CheckBuildStructureActivity).openPDF(mBinding.pdfRoot,mBinding.pdfLayout,"111.pdf")
 
+        mBinding.checkFab.setOnClickListener {
+            ARouter.getInstance().build(ARouterPath.DRAW_PDF_ACTIVITY)
+                .withString(ARouterPath.VAL_COMMON_TITLE,
+                    (activity as CheckBuildStructureActivity).mTitle)
+                .navigation(activity)
+        }
     }
 
 }

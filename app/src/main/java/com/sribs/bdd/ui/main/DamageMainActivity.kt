@@ -14,6 +14,9 @@ import com.cbj.sdk.libui.mvp.BaseActivity
 import com.cbj.sdk.libui.mvp.BaseFragment
 import com.cbj.sdk.libui.mvp.adapter.BasePagerAdapter
 import com.cbj.sdk.libui.mvp.inflate
+import com.hjq.permissions.OnPermissionCallback
+import com.hjq.permissions.Permission
+import com.hjq.permissions.XXPermissions
 import com.sribs.bdd.Config
 import com.sribs.bdd.R
 import com.sribs.bdd.action.Dict
@@ -108,6 +111,30 @@ class DamageMainActivity :BaseActivity(),IMainListContrast.IMainView{
 //        if (extrsa != null) {
 //            mFromModule = extrsa.getString("from").toString()
 //        }
+
+        //get permission to open and write pdf
+        XXPermissions.with(this) // 适配 Android 11 分区存储这样写
+            //.permission(Permission.Group.STORAGE)
+            // 不适配 Android 11 分区存储这样写
+            .permission(Permission.MANAGE_EXTERNAL_STORAGE)
+            .request(object : OnPermissionCallback {
+
+                override fun onGranted(permissions: MutableList<String>, all: Boolean) {
+                    if (all) {
+                        println("leon 获取读写外部存储权限成功")
+                    } else {
+                        println("leon 获取读写外部存储权限部分成功")
+                    }
+                }
+
+                override fun onDenied(permissions: MutableList<String>, never: Boolean) {
+                    if (never) {
+                        println("leon 被永久拒绝读写外部存储权限") // 如果是被永久拒绝就跳转到应用权限系统设置页面
+                    } else {
+                        println("leon 获取读写外部存储权限失败")
+                    }
+                }
+            })
     }
 
     /**

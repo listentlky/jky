@@ -22,6 +22,7 @@ object Config {
         when(BUILD_LEVEL){
             0->{//开发
                 URL ="http://116.62.171.217:8123/mock/228/"
+             //   URL ="http://103.21.143.227:40001/mock/191/"  //v3
             }
             1->{//测试
 //                URL = "http://bdd.mercs.xyz:8897"

@@ -132,4 +132,9 @@ object ARouterPath {
      */
     const val FLOOR_ACTIVITY = "/floor/activity"; //楼栋单元列表
 
+    /**
+     * 3.0绘制PDF
+     */
+    const val DRAW_PDF_ACTIVITY = "/draw/pdf/activity" //绘制pdf
+
 }

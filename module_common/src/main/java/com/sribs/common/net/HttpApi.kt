@@ -126,6 +126,7 @@ interface HttpApi {
     /**
      * V3
      */
-  //  @GET(“http://103.21.143.227:40001/mock/191/api/v3/app/building/project/list”)
-
+    //查询所有项目
+    @GET("api/v3/app/building/project/list")
+    fun getV3ProjectList(@Body req:ProjectListReq):Observable<ResultBean<ListBean<ProjectListRes>>>
 }

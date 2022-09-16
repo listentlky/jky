@@ -10,6 +10,7 @@ import io.reactivex.schedulers.Schedulers
 import com.sribs.bdd.Config
 import com.sribs.bdd.R
 import com.sribs.bdd.bean.MainProjectBean
+import com.sribs.bdd.v3.util.LogUtils
 import com.sribs.common.bean.db.DrawingBean
 import com.sribs.common.bean.db.UnitBean
 import com.sribs.common.bean.net.ProjectListReq
@@ -45,7 +46,6 @@ class MainListPresenter:BasePresenter(),IMainListContrast.IPresenter {
                     remoteId= b.remoteId?:"",
                     updateTimeYMD = if (b.updateTime==null)"" else TimeUtil.YMD.format(b.updateTime),
                     status = mStateArr[b.status?:0],
-                    //address = b.name+b.buildNo,
                     address = b.name+"",
                     leader = b.leader?:"",
                     inspector = b.inspector?:""
@@ -53,9 +53,12 @@ class MainListPresenter:BasePresenter(),IMainListContrast.IPresenter {
                     _b.updateTime = TimeUtil.YMD_HMS.format(b.updateTime)
                     _b.createTime = TimeUtil.YMD_HMS.format(b.createTime)
                     _b.name = b.name
-                    _b.buildNo = b.buildNo
                 } })
+
+                LogUtils.d("读取本地项目: "+list.size)
+
                 if(!Config.isNetAvailable){
+                    LogUtils.d("无网络 直接展示本地数据: ")
 //                    mView?.onProjectList(ArrayList(list.sortedWith(compareBy({b->b.name},{b->b.sortedBuildNo}))))
                     mView?.onProjectList(ArrayList(list.sortedByDescending { b->b.updateTime }))
 
@@ -72,13 +75,14 @@ class MainListPresenter:BasePresenter(),IMainListContrast.IPresenter {
     }
 
     private fun getProjectRemote(localList:ArrayList<MainProjectBean>){
+        LogUtils.d("有网络 请求网络数据: ")
         addDisposable(HttpManager.instance.getHttpService<HttpApi>()
-            .getProjectList(ProjectListReq())
+            .getV3ProjectList(ProjectListReq())
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 checkResult(it)
-
+                LogUtils.d("请求网络数据: "+it.data!!.records.size)
                 var l = ArrayList<MainProjectBean>()
                 // 远程项目在本地中已有 remoteId相同，更新状态
                 it.data!!.records.forEach { remoteBean->
@@ -99,8 +103,7 @@ class MainListPresenter:BasePresenter(),IMainListContrast.IPresenter {
                 it.data!!.records.forEach {  remoteBean->
                     var i = localList.indexOfFirst { localBean->
                         localBean.remoteId.isNullOrEmpty() &&
-                                localBean.name == remoteBean.projectName &&
-                                localBean.buildNo == remoteBean.buildingNo
+                                localBean.name == remoteBean.projectName
                     }
                     if (i>=0) {
                         var localBean = localList[i]
@@ -116,21 +119,20 @@ class MainListPresenter:BasePresenter(),IMainListContrast.IPresenter {
                 var onlyRemoteList =  it.data!!.records.filter { remoteBean->
                     localList.find { localBean->
                         (!localBean.remoteId.isNullOrEmpty() && localBean.remoteId == remoteBean.projectId) ||
-                                (localBean.name == remoteBean.projectName && localBean.buildNo == remoteBean.buildingNo && localBean.remoteId.isNullOrEmpty())
+                                (localBean.name == remoteBean.projectName && localBean.remoteId.isNullOrEmpty())
                     }==null
                 }?.map { b -> MainProjectBean(
                     localId = -1,
                     remoteId= b.projectId,
                     updateTimeYMD = TimeUtil.time2YMD(b.updateTime),
                     status = mStateArr[2],
-                    address = b.projectName+b.buildingNo,
+                    address = b.projectName,
                     leader = b.leaderName?:"",
                     inspector = b.inspectorList?.joinToString(separator = "、")?:""
                 ).also { _b->
                     _b.updateTime = b.updateTime
                     _b.createTime = b.createTime
                     _b.name = b.projectName
-                    _b.buildNo = b.buildingNo
                     _b.remoteData = b
                 } }
                 l.addAll(localList)

@@ -1,7 +1,5 @@
 package com.sribs.common.bean.db
 
-import java.sql.Date
-
 /**
  * @date 2021/7/8
  * @author elijah

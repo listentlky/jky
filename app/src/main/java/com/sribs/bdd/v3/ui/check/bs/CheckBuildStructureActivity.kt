@@ -15,7 +15,6 @@ import com.cbj.sdk.libui.mvp.adapter.BasePagerAdapter
 import com.cbj.sdk.libui.mvp.inflate
 import com.radaee.annotui.UIAnnotMenu
 import com.radaee.pdf.*
-import com.radaee.pdf.Document.DocFont
 import com.radaee.reader.PDFLayoutView
 import com.radaee.reader.PDFViewController
 import com.radaee.util.PDFAssetStream
@@ -225,7 +224,8 @@ class CheckBuildStructureActivity : BaseActivity() {
                     )
                 }
                 pdfView.dr*/
-                addText(pagebo,x,y)
+                addLine(pdfView,pagebo,x,y)
+                LogUtils.d("mController: canSave: "+mController!!.savePDF())
                 return true
             }
 
@@ -242,7 +242,7 @@ class CheckBuildStructureActivity : BaseActivity() {
             }
 
             override fun OnPDFPageRendered(vpage: ILayoutView.IVPage?) {
-                LogUtils.d("OnPDFPageRendered")
+                LogUtils.d("OnPDFPageRendered" +vpage)
             }
 
             override fun onPDFNoteTapped(jstring: String?) {
@@ -278,17 +278,22 @@ class CheckBuildStructureActivity : BaseActivity() {
         )
     }
 
-    private fun addText(pageno: Int, x: Float, y: Float) {
+    private fun addLine(pdfView:PDFLayoutView, pageno: Int, x: Float, y: Float) {
         LogUtils.d("mDoc: ${mDoc} ;pageno:${pageno} ;x:${x} ;y:${y}")
 
         var page = mDoc.GetPage(pageno)
         LogUtils.d("page: ${page}")
         if(page != null){
+            page.ObjsStart()
+            var addAnnotLine = page.AddAnnotLine(floatArrayOf(100f,100f), floatArrayOf(200f,300f), 4, 4,10f, Color.BLACK, Color.BLACK)
+            LogUtils.d(" addAnnotLine： "+ addAnnotLine)
+            page.Close()
+           LogUtils.d(" page.GetAnnotCount()： "+ page.GetAnnotCount())
+       //     pdfView.vRenderPage(pageno) // No such function
+       //     pdfView.OnPageRendered(pageno)  //No display
 
-            val matrix = Matrix(x, y, 100f, 10f)
-            var floatArray = floatArrayOf(50f,50f,50f)
-
-            page.AddAnnotMarkup(matrix,floatArray,1)
+         //   page.AddAnnotMarkup(matrix,floatArray,1)
+        //    matrix.Destroy()
 
 
      /*       val content = PageContent()
@@ -304,7 +309,7 @@ class CheckBuildStructureActivity : BaseActivity() {
             content.GSSetMatrix(matrix)
        //     content.GSRestore()
             content.Destroy()*/
-            page.Close()
+        //    page.Close()
 
         }
     }

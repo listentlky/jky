@@ -1,5 +1,7 @@
 package com.radaee.reader;
 
+import android.util.Log;
+
 import com.radaee.pdf.Document;
 import com.radaee.pdf.Page;
 
@@ -55,7 +57,12 @@ class OPAdd extends OPItem
     OPAdd(int pgno, Page page, int idx)
     {
         super(pgno, idx);
-        hand = page.GetAnnot(idx).GetRef();
+        Log.d("bdd","pgno: "+pgno+" ; page: "+page+" ; idx: "+idx);
+        try {
+            hand = page.GetAnnot(idx).GetRef();
+        }catch (Exception e){
+
+        }
     }
     @Override
     void op_undo(Document doc) {

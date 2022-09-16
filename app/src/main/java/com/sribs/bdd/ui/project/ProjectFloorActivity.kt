@@ -8,6 +8,7 @@ import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.view.View
 import android.widget.TextView
+import androidx.appcompat.widget.SearchView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -27,10 +28,15 @@ import com.sribs.bdd.module.project.IProjectContrast
 import com.sribs.bdd.module.project.ProjectFloorPresenter
 import com.sribs.bdd.ui.adapter.FloorAdapter
 import com.sribs.bdd.ui.adapter.RoomListAdapter
+import com.sribs.bdd.ui.main.MainListFragment
+import com.sribs.bdd.ui.main.MainMapFragment
 import com.sribs.common.bean.db.UnitBean
 import kotlinx.android.synthetic.main.activity_floor_list.view.*
 import kotlinx.android.synthetic.main.activity_unit_list.view.*
 
+/**
+ * 楼号/单元列表界面
+ */
 @Route(path = com.sribs.common.ARouterPath.PRO_CREATE_ATY_FLOOR_LIST)
 class ProjectFloorActivity:BaseActivity(), IUnitListContrast.IView,FloorAdapter.ICallback {
 
@@ -56,6 +62,28 @@ class ProjectFloorActivity:BaseActivity(), IUnitListContrast.IView,FloorAdapter.
         initToolbar()
         initData()
         initRecycle()
+        initSearchBar()
+    }
+
+    /**
+     * @Description search
+     */
+    private fun initSearchBar(){
+        var searchView = mBinding.mainSearchView
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                floorAdapter?.setSearch(query?:"")
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                if (newText.isNullOrEmpty()){
+                    floorAdapter?.setSearch("")
+                }
+                return false
+            }
+
+        })
 
     }
 
@@ -80,14 +108,14 @@ class ProjectFloorActivity:BaseActivity(), IUnitListContrast.IView,FloorAdapter.
         mPresenter.getAllUnit(mLocalProjectId)
     }
 
-
     private var floorAdapter:FloorAdapter? = null
+
     private var dataList:ArrayList<BuildingFloor> = ArrayList<BuildingFloor>()
 
     private fun initRecycle(){
         //todo 添加测试数据
-        dataList.add(BuildingFloor(11,22,33,"11","22", 1,
-            -1,"","","",null,0,0,0))
+      /*  dataList.add(BuildingFloor(11,22,33,"11","22", 1,
+            -1,"","","",null,0,0,0))*/
 
 
         mBinding.recyclerView.addItemDecoration(SplitGridDividerItemDecoration())
@@ -149,7 +177,7 @@ class ProjectFloorActivity:BaseActivity(), IUnitListContrast.IView,FloorAdapter.
         ARouter.getInstance().build(com.sribs.common.ARouterPath.PRO_ITEM_ATY_FLOOR)
             .withLong(com.sribs.common.ARouterPath.VAL_COMMON_LOCAL_ID, mLocalProjectId)
             .withLong(com.sribs.common.ARouterPath.VAL_BUILDING_ID,-1L)
-            .withString(com.sribs.common.ARouterPath.VAL_COMMON_TITLE,beanMain.unitNo)
+         /*   .withString(com.sribs.common.ARouterPath.VAL_COMMON_TITLE,beanMain.buildName)*/
             .navigation()
     }
 

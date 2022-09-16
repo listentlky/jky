@@ -6,6 +6,7 @@ import androidx.room.Room
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.cbj.sdk.libbase.utils.LOG
 import com.sribs.common.bean.db.*
+import com.sribs.common.bean.db.v3.project.v3ProjectDbBean
 import com.sribs.common.server.IDatabaseService
 import com.sribs.db.project.unit.UnitBean
 import com.sribs.db.project.unit.config.ConfigBean
@@ -73,6 +74,50 @@ class DatabaseSrv:IDatabaseService {
         it.onNext(dao.deleteProject(ConverterHelper.covertProjectBean(b)))
     }
 
+    /**
+     * 3期项目 start
+     */
+
+    override fun getv3Project(id: Long): Flowable<List<v3ProjectDbBean>> {
+        var dao = mDb!!.v3ProjectDao()
+        return dao.getProject(id) .run { ConverterHelper.convertv3ProjectBean(this) }
+    }
+
+    override fun getv3ProjectOnce(id: Long): Single<List<v3ProjectDbBean>> {
+        var dao = mDb!!.v3ProjectDao()
+        return dao.getProjectOnce(id) .run { ConverterHelper.convertOnlyv3ProjectBean(this) }
+    }
+
+    override fun getv3ProjectOnce(name: String, buildNo: String): Single<List<v3ProjectDbBean>> {
+        var dao = mDb!!.v3ProjectDao()
+        return dao.getProjectOnce(name,buildNo).run { ConverterHelper.convertOnlyv3ProjectBean(this) }
+    }
+
+    override fun getv3ProjectOnce(name: String): Single<List<v3ProjectDbBean>> {
+        var dao = mDb!!.v3ProjectDao()
+        return dao.getProjectOnce(name).run { ConverterHelper.convertOnlyv3ProjectBean(this) }
+    }
+
+    override fun getv3AllProject(): Flowable<List<v3ProjectDbBean>> {
+        var dao = mDb!!.v3ProjectDao()
+        return dao.getAllProject().run { ConverterHelper.convertv3ProjectBean(this) }
+    }
+
+    override fun updatev3Project(b: v3ProjectDbBean): Observable<Long>
+            = Observable.create {
+        var dao = mDb!!.v3ProjectDao()
+        it.onNext(dao.insertProject(ConverterHelper.convertv3ProjectRoom(b)))
+    }
+
+    override fun deletev3Project(b: v3ProjectDbBean): Observable<Int>
+            = Observable.create {
+        var dao = mDb!!.v3ProjectDao()
+        it.onNext(dao.deleteProject(ConverterHelper.convertv3ProjectRoom(b)))
+    }
+
+    /**
+     * 3期项目 end
+     */
 
     override fun getAllUnit(projectId: Long): Flowable<List<com.sribs.common.bean.db.UnitBean>> {
         var dao = mDb!!.unitDao()
@@ -101,7 +146,6 @@ class DatabaseSrv:IDatabaseService {
 
     override fun updateUnit(b: com.sribs.common.bean.db.UnitBean): Observable<Long>
             = Observable.create {
-        println("leon DatabaseSrv updateUnit")
         var dao = mDb!!.unitDao()
         it.onNext(dao.insertUnit(ConverterHelper.convertUnitBean(b)))
     }
