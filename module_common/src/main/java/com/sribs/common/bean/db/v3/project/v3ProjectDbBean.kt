@@ -13,7 +13,8 @@ data class v3ProjectDbBean (
     var inspectors:List<String>?=null,
     var leaderId:String?=null,
     var leaderName:String?=null,
-    var remoteId:String?=null,
+    var projectId:String?=null,
+    var status:Int?=null,
     var createTime:Date?=null,
     var updateTime:Date?=null
         ){

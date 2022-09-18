@@ -19,7 +19,10 @@ data class UnitBean(
     var updateTime:Date?=null,
     var remoteId:String?=null,
     var version:Int?=null,
-    var status:Int?=null  //0  本地    1 本地已上传
+    var status:Int?=null,  //0  本地    1 本地已上传
+    var leaderId:String?=null,
+    var leaderName:String?=null,
+    var inspectors:String?=null
 ){
     fun isSame( unitNo:String?, floorSize:Int?, neighborSize:Int?,floorType: Int?):Boolean{
         var isSame = true

@@ -38,7 +38,7 @@ data class BuildingFloor(val projectId:Long?,
     companion object{
         fun copyFromUnitBean(unitbean:UnitBean):BuildingFloor{
             return BuildingFloor(unitbean.projectId,unitbean.bldId,unitbean.unitId,unitbean.unitNo,unitbean.remoteId, unitbean.version,
-                -1,"","","",null,0,0,0)
+                -1,"",unitbean.inspectors!!,"",null,0,0,0)
         }
     }
 

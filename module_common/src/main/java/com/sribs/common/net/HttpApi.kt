@@ -128,5 +128,15 @@ interface HttpApi {
      */
     //查询所有项目
     @GET("api/v3/app/building/project/list")
-    fun getV3ProjectList(@Body req:ProjectListReq):Observable<ResultBean<ListBean<ProjectListRes>>>
+    fun getV3ProjectList():Observable<ResultBean<ListBean<ProjectListRes>>>
+
+    @POST("api/v3/app/project/save")
+    fun createOrUpdateProject(@Body req:ProjectCreateReq):Observable<ResultBean<Any>>
+
+    @POST("api/v3/app/project/delete")
+    fun deleteProject(@QueryName projectId:Long):Observable<ResultBean<Any>>
+
+    @POST("api/v3/app/building/list")
+    fun getV3UnitList(@QueryName projectId:String):Observable<ResultBean<ListBean<UnitListRes>>>
+
 }

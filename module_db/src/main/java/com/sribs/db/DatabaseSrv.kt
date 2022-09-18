@@ -83,19 +83,14 @@ class DatabaseSrv:IDatabaseService {
         return dao.getProject(id) .run { ConverterHelper.convertv3ProjectBean(this) }
     }
 
-    override fun getv3ProjectOnce(id: Long): Single<List<v3ProjectDbBean>> {
+    override fun getv3ProjectOnce(name: String, buildNo: String): Flowable<List<v3ProjectDbBean>> {
         var dao = mDb!!.v3ProjectDao()
-        return dao.getProjectOnce(id) .run { ConverterHelper.convertOnlyv3ProjectBean(this) }
+        return dao.getProjectOnce(name,buildNo).run { ConverterHelper.convertv3ProjectBean(this) }
     }
 
-    override fun getv3ProjectOnce(name: String, buildNo: String): Single<List<v3ProjectDbBean>> {
+    override fun getv3ProjectOnce(name: String): Flowable<List<v3ProjectDbBean>> {
         var dao = mDb!!.v3ProjectDao()
-        return dao.getProjectOnce(name,buildNo).run { ConverterHelper.convertOnlyv3ProjectBean(this) }
-    }
-
-    override fun getv3ProjectOnce(name: String): Single<List<v3ProjectDbBean>> {
-        var dao = mDb!!.v3ProjectDao()
-        return dao.getProjectOnce(name).run { ConverterHelper.convertOnlyv3ProjectBean(this) }
+        return dao.getProjectOnce(name).run { ConverterHelper.convertv3ProjectBean(this) }
     }
 
     override fun getv3AllProject(): Flowable<List<v3ProjectDbBean>> {

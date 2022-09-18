@@ -13,7 +13,7 @@ data class MainProjectBean(
     var remoteId:String="",
     var updateTimeYMD:String,
     var status: String,
-    var address:String,// name+buildNo
+    var address:String,
     var leader:String,
     var inspector:String
 ){
@@ -35,4 +35,10 @@ data class MainProjectBean(
             Integer.valueOf((no?.get(0)?:"0").toString())
         }
     }
+
+    override fun toString(): String {
+        return "MainProjectBean(localId=$localId, remoteId='$remoteId', updateTimeYMD='$updateTimeYMD', status='$status', address='$address', leader='$leader', inspector='$inspector', isCardSel=$isCardSel, isMenuChecked=$isMenuChecked, hasNewer=$hasNewer, updateTime='$updateTime', createTime='$createTime', name=$name, buildNo=$buildNo, remoteData=$remoteData)"
+    }
+
+
 }

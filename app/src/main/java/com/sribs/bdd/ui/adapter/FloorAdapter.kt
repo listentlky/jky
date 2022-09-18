@@ -39,6 +39,7 @@ class FloorAdapter(private val mCb:ICallback) :BaseListAdapter<BuildingFloor, Vi
 
         bind.itemRoomTimeTv.text = beanMain.time
         bind.itemRoomCard.isSelected = beanMain.isCardSel
+
        /* if (beanMain.isFinish){
             bind.itemRoomStatusTv.text = beanMain.houseFinishStatus
             bind.itemRoomStatusTv.isSelected = true
@@ -47,15 +48,8 @@ class FloorAdapter(private val mCb:ICallback) :BaseListAdapter<BuildingFloor, Vi
             bind.itemRoomStatusTv.isSelected = false
         }*/
 
-      /*  bind.itemRoomFloorneighborTv.text = beanMain.buildName
-        var inspector = ""
-        beanMain.inspectors!!.forEachIndexed { index, s ->
-            inspector+=s
-            if(index != beanMain.inspectors!!.size-1){
-                inspector+=","
-            }
-        }
-        bind.itemRoomMemberTv.text = "检验员："+inspector*/
+        bind.itemRoomFloorneighborTv.text = beanMain.unitNo
+        bind.itemRoomMemberTv.text = "检验员："+beanMain.inspector
 
 
         bind.itemRoomCard.setOnClickListener {
@@ -162,12 +156,12 @@ class FloorAdapter(private val mCb:ICallback) :BaseListAdapter<BuildingFloor, Vi
     var mKeyword:String?=null
 
     fun setSearch(keyword:String?){
-     /*   mKeyword = keyword
+        mKeyword = keyword
         if (mList.isNullOrEmpty())return
 
-        mList = ArrayList<BuildingFloor>(mList!!.filter { it.buildName!!.contains(mKeyword!!) ||
+        mList = ArrayList<BuildingFloor>(mList!!.filter { it.unitNo!!.contains(mKeyword!!) ||
                 mKeyword.isNullOrEmpty()})
-        notifyDataSetChanged()*/
+        notifyDataSetChanged()
     }
 
 }

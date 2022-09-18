@@ -6,6 +6,7 @@ import android.graphics.Canvas
 import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
+import android.view.Menu
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.widget.SearchView
@@ -30,6 +31,7 @@ import com.sribs.bdd.ui.adapter.FloorAdapter
 import com.sribs.bdd.ui.adapter.RoomListAdapter
 import com.sribs.bdd.ui.main.MainListFragment
 import com.sribs.bdd.ui.main.MainMapFragment
+import com.sribs.bdd.v3.util.LogUtils
 import com.sribs.common.bean.db.UnitBean
 import kotlinx.android.synthetic.main.activity_floor_list.view.*
 import kotlinx.android.synthetic.main.activity_unit_list.view.*
@@ -43,6 +45,10 @@ class ProjectFloorActivity:BaseActivity(), IUnitListContrast.IView,FloorAdapter.
     @JvmField
     @Autowired(name= com.sribs.common.ARouterPath.VAL_COMMON_LOCAL_ID)
     var mLocalProjectId = -1L
+
+    @JvmField
+    @Autowired(name= com.sribs.common.ARouterPath.VAL_COMMON_REMOTE_ID)
+    var mRemoteId = null
 
     @JvmField
     @Autowired(name= com.sribs.common.ARouterPath.VAL_COMMON_TITLE)
@@ -99,10 +105,18 @@ class ProjectFloorActivity:BaseActivity(), IUnitListContrast.IView,FloorAdapter.
 
         mBinding.matchMainFab.setOnClickListener {
             ARouter.getInstance().build(com.sribs.common.ARouterPath.PRO_CREATE_ATY_TYPE)
-                .withInt(com.sribs.common.ARouterPath.VAL_COMMON_LOCAL_ID, mLocalProjectId.toInt())
+                .withLong(com.sribs.common.ARouterPath.VAL_COMMON_LOCAL_ID, mLocalProjectId)
+                .withString(com.sribs.common.ARouterPath.VAL_COMMON_REMOTE_ID, mRemoteId)
                 .navigation()
         }
     }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        super.onCreateOptionsMenu(menu)
+        menuInflater.inflate(R.menu.menu_floor, menu)
+        return true
+    }
+
 
     private fun initData(){
         mPresenter.getAllUnit(mLocalProjectId)
@@ -114,8 +128,8 @@ class ProjectFloorActivity:BaseActivity(), IUnitListContrast.IView,FloorAdapter.
 
     private fun initRecycle(){
         //todo 添加测试数据
-      /*  dataList.add(BuildingFloor(11,22,33,"11","22", 1,
-            -1,"","","",null,0,0,0))*/
+        dataList.add(BuildingFloor(11,22,33,"11","22", 1,
+            -1,"","","",null,0,0,0))
 
 
         mBinding.recyclerView.addItemDecoration(SplitGridDividerItemDecoration())
@@ -143,9 +157,9 @@ class ProjectFloorActivity:BaseActivity(), IUnitListContrast.IView,FloorAdapter.
         if (l.isNotEmpty()){
             dataList.clear()
             l.forEach {
-                LOG.I("ZZZZZZZZ",it.toString())
                 dataList.add(BuildingFloor.copyFromUnitBean(it))
             }
+            LogUtils.d("楼栋数据为: "+dataList.toString())
             floorAdapter?.setData(dataList)
         }
 
@@ -176,8 +190,7 @@ class ProjectFloorActivity:BaseActivity(), IUnitListContrast.IView,FloorAdapter.
     override fun onCardSelect(beanMain: BuildingFloor, pos: Int) {
         ARouter.getInstance().build(com.sribs.common.ARouterPath.PRO_ITEM_ATY_FLOOR)
             .withLong(com.sribs.common.ARouterPath.VAL_COMMON_LOCAL_ID, mLocalProjectId)
-            .withLong(com.sribs.common.ARouterPath.VAL_BUILDING_ID,-1L)
-         /*   .withString(com.sribs.common.ARouterPath.VAL_COMMON_TITLE,beanMain.buildName)*/
+            .withString(com.sribs.common.ARouterPath.VAL_BUILDING_ID,beanMain.remoteId)
             .navigation()
     }
 

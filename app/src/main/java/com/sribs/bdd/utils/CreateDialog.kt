@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import com.cbj.sdk.libbase.utils.LOG
 import com.cbj.sdk.libui.mvp.inflate
@@ -13,6 +14,7 @@ import com.sribs.bdd.databinding.DialogCreateProjectBinding
 import com.sribs.bdd.module.project.IProjectContrast
 import com.sribs.bdd.module.project.ProjectProjectPresenter
 import com.sribs.bdd.ui.project.ProjectCreateActivity
+import com.sribs.bdd.v3.util.LogUtils
 
 class CreateDialog(context:Context,var mLocalProjectId:Int = -1,var onResult: (projectId: Int) -> Unit):Dialog(context), IProjectContrast.IView {
 
@@ -103,7 +105,7 @@ class CreateDialog(context:Context,var mLocalProjectId:Int = -1,var onResult: (p
             return
         }
 
-        mProjectPresenter.createNewLocalProject(
+        mProjectPresenter.createProject(
             if(mLocalProjectId>-1) mLocalProjectId.toLong() else null,
             mData.name,
             mData.leader,
@@ -112,6 +114,7 @@ class CreateDialog(context:Context,var mLocalProjectId:Int = -1,var onResult: (p
             if (mLocalProjectId<0) {
                 mLocalProjectId = it.toInt()
             }
+            LogUtils.d("创建项目返回")
             onResult(it)
         }
     }

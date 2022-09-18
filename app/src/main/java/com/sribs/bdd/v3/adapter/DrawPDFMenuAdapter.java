@@ -28,12 +28,18 @@ public class DrawPDFMenuAdapter extends BaseAdapter {
 
     private int mSelect = -1;
 
+    private boolean mChecked;
+
     public DrawPDFMenuAdapter(Context mContext, List<DrawPDFMenuModule> mData) {
         this.mContext = mContext;
         this.mData = mData;
     }
 
-    public void notifyItem(int position){
+    public void notifyChecked(int position){
+        this.mChecked = false;
+        if(mItemClickListener != null){
+            mItemClickListener.onItemClick(mSelect,mChecked);
+        }
         this.mSelect = position;
         notifyDataSetChanged();
     }
@@ -71,18 +77,37 @@ public class DrawPDFMenuAdapter extends BaseAdapter {
         vh.text.setText(drawPDFMenuModule.getText());
         vh.img.setBackgroundResource(drawPDFMenuModule.getIcon());
 
+        if(!mChecked){
+            vh.root.setEnabled(true);
+            vh.root.setBackgroundResource(R.drawable.draw_menu_item_no_bg);
+        }else {
+            if (mSelect != -1 && mSelect == position) {
+                vh.root.setBackgroundResource(R.drawable.draw_menu_item_yes_bg);
+            }else {
+                vh.root.setEnabled(false);
+            }
+        }
+/*
         if (mSelect != -1 && mSelect == position) {
+            if(mChecked){
+                vh.root.setBackgroundResource(R.drawable.draw_menu_item_yes_bg);
+            }else {
+                vh.root.setBackgroundResource(R.drawable.draw_menu_item_no_bg);
+            }
             vh.root.setBackgroundResource(R.drawable.draw_menu_item_yes_bg);
+            vh.root.setEnabled(true);
         } else {
             vh.root.setBackgroundResource(R.drawable.draw_menu_item_no_bg);
-        }
+            vh.root.setEnabled(false);
+        }*/
         if(mItemClickListener != null){
             vh.root.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    mChecked = !mChecked;
                     mSelect = position;
                     notifyDataSetChanged();
-                    mItemClickListener.onItemClick(position);
+                    mItemClickListener.onItemClick(position,mChecked);
                 }
             });
         }
@@ -103,7 +128,7 @@ public class DrawPDFMenuAdapter extends BaseAdapter {
 
     public interface ItemClickListener {
 
-        void onItemClick(int position);
+        void onItemClick(int position,boolean checked);
 
     }
 }

@@ -1,7 +1,6 @@
 package com.sribs.bdd.module.main
 
 import com.alibaba.android.arouter.launcher.ARouter
-import com.cbj.sdk.libbase.utils.LOG
 import com.cbj.sdk.libnet.http.HttpManager
 import com.sribs.common.module.BasePresenter
 import com.cbj.sdk.libui.mvp.moudles.IBaseView
@@ -13,10 +12,10 @@ import com.sribs.bdd.bean.MainProjectBean
 import com.sribs.bdd.v3.util.LogUtils
 import com.sribs.common.bean.db.DrawingBean
 import com.sribs.common.bean.db.UnitBean
-import com.sribs.common.bean.net.ProjectListReq
 import com.sribs.common.net.HttpApi
 import com.sribs.common.server.IDatabaseService
 import com.sribs.common.utils.TimeUtil
+import kotlin.collections.ArrayList
 
 /**
  * @date 2021/6/24
@@ -35,6 +34,9 @@ class MainListPresenter:BasePresenter(),IMainListContrast.IPresenter {
             .navigation() as IDatabaseService
     }
 
+    /**
+     * 本地获取项目列表
+     */
     override fun getProjectList() {
 
         addDisposable(mDb.getAllProject()
@@ -44,7 +46,7 @@ class MainListPresenter:BasePresenter(),IMainListContrast.IPresenter {
                 var list = ArrayList(it.map { b->MainProjectBean(
                     localId= b.id?:-1,
                     remoteId= b.remoteId?:"",
-                    updateTimeYMD = if (b.updateTime==null)"" else TimeUtil.YMD.format(b.updateTime),
+                    updateTimeYMD = if (b.updateTime==null)"" else TimeUtil.YMD_HMS.format(b.updateTime),
                     status = mStateArr[b.status?:0],
                     address = b.name+"",
                     leader = b.leader?:"",
@@ -55,7 +57,21 @@ class MainListPresenter:BasePresenter(),IMainListContrast.IPresenter {
                     _b.name = b.name
                 } })
 
-                LogUtils.d("读取本地项目: "+list.size)
+              /*  list.add(MainProjectBean(
+                    localId= -1,
+                    projectId= "",
+                    updateTimeYMD = "2022-09-17",
+                    status = "",
+                    projectName = "盛世宝邸",
+                    leader = "李大洋",
+                    inspector = Arrays.asList("AAA","BBB","CCC")?.joinToString(separator = "、")?:""
+                )!!.also {b->
+                    b.updateTime = "2022-09-17 12:00:00"
+                    b.createTime = "2022-09-17 10:00:00"
+                    b.name = b.projectName
+                })*/
+
+                LogUtils.d("读取本地项目: "+list.toString())
 
                 if(!Config.isNetAvailable){
                     LogUtils.d("无网络 直接展示本地数据: ")
@@ -74,17 +90,24 @@ class MainListPresenter:BasePresenter(),IMainListContrast.IPresenter {
 
     }
 
+    /**
+     * 从网络获取项目列表
+     */
     private fun getProjectRemote(localList:ArrayList<MainProjectBean>){
         LogUtils.d("有网络 请求网络数据: ")
         addDisposable(HttpManager.instance.getHttpService<HttpApi>()
-            .getV3ProjectList(ProjectListReq())
+            .getV3ProjectList()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
+                LogUtils.d("请求网络数据: "+it.toString())
                 checkResult(it)
-                LogUtils.d("请求网络数据: "+it.data!!.records.size)
                 var l = ArrayList<MainProjectBean>()
                 // 远程项目在本地中已有 remoteId相同，更新状态
+                if(it.data == null){
+                    mView?.onProjectList(ArrayList(localList.sortedByDescending { b->b.updateTime }))
+                    return@subscribe
+                }
                 it.data!!.records.forEach { remoteBean->
                     var i = localList.indexOfFirst { localBean->
                         !localBean.remoteId.isNullOrEmpty() && localBean.remoteId == remoteBean.projectId
@@ -128,7 +151,7 @@ class MainListPresenter:BasePresenter(),IMainListContrast.IPresenter {
                     status = mStateArr[2],
                     address = b.projectName,
                     leader = b.leaderName?:"",
-                    inspector = b.inspectorList?.joinToString(separator = "、")?:""
+                    inspector = b.inspectors?.joinToString(separator = "、")?:""
                 ).also { _b->
                     _b.updateTime = b.updateTime
                     _b.createTime = b.createTime

@@ -96,26 +96,12 @@ object  ConverterHelper {
             b.inspectors,
             b.leaderId,
             b.leaderName,
-            b.remoteId,
+            b.projectId,
+            b.status,
             b.createTime,
             b.updateTime,
             )
     } }
-
-    fun convertOnlyv3ProjectBean(l: Single<List<v3ProjectRoom>>): Single<List<v3ProjectDbBean>>
-            =l.map { it.map { b->
-        v3ProjectDbBean(
-            b.id,
-            b.projectName,
-            b.inspectors,
-            b.leaderId,
-            b.leaderName,
-            b.remoteId,
-            b.createTime,
-            b.updateTime,
-            )
-    } }
-
 
     fun convertv3ProjectRoom(b:v3ProjectDbBean):v3ProjectRoom
             = v3ProjectRoom(
@@ -123,10 +109,13 @@ object  ConverterHelper {
         inspectors = b.inspectors,
         leaderId = b.leaderId,
         leaderName = b.leaderName,
-        remoteId = b.remoteId
+        projectId = b.projectId,
     ).also {
         if (b.id?:-1>0){
             it.id = b.id!!
+        }
+        if (b.status!=null){
+            it.status = b.status
         }
         if (b.createTime!=null){
             it.createTime = b.createTime
@@ -153,7 +142,10 @@ object  ConverterHelper {
             b.updateTime,
             b.remoteId,
             b.version,
-            b.status
+            b.status,
+            b.leaderId,
+            b.leaderName,
+            b.inspectors
         )
     } }
 
@@ -171,7 +163,11 @@ object  ConverterHelper {
             b.updateTime,
             b.remoteId,
             b.version,
-            b.status
+            b.status,
+            b.leaderId,
+            b.leaderName,
+            b.inspectors
+
         )
     } }
 
@@ -202,6 +198,15 @@ object  ConverterHelper {
         }
         if (b.status!=null){
             it.status = b.status
+        }
+        if(b.leaderId!=null){
+            it.leaderId = b.leaderId
+        }
+        if(b.leaderName!=null){
+            it.leaderName = b.leaderName
+        }
+        if(b.inspectors!=null){
+            it.inspectors = b.inspectors
         }
     }
 

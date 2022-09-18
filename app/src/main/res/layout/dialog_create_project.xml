@@ -30,7 +30,7 @@
                 app:TagPadding="@dimen/project_create_tag_margin"
                 app:TagText="项目名称"
                 app:EditEnable="true"
-                app:EditHint="请输入项目名称+弄"
+                app:EditHint="请输入项目名称"
                 app:EditWidth="@dimen/project_create_et_width"
                 android:gravity="right"
                 />

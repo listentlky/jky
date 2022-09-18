@@ -1,38 +1,39 @@
 package com.sribs.bdd.v3.ui.draw
 
 
+import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.Canvas
-import android.text.TextUtils
+import android.net.Uri
+import android.os.Build
 import android.view.View
-import androidx.appcompat.view.menu.MenuAdapter
+import androidx.appcompat.app.AppCompatActivity
 import com.alibaba.android.arouter.facade.annotation.Autowired
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.cbj.sdk.libui.mvp.BaseActivity
 import com.cbj.sdk.libui.mvp.inflate
 import com.hjq.permissions.Permission
 import com.hjq.permissions.XXPermissions
-import com.radaee.annotui.UIAnnotMenu
 import com.radaee.pdf.Document
 import com.radaee.pdf.Global
 import com.radaee.pdf.Page
-import com.radaee.reader.PDFLayoutView
-import com.radaee.reader.PDFPagesAct
 import com.radaee.reader.PDFViewController
 import com.radaee.util.PDFAssetStream
 import com.radaee.util.PDFHttpStream
-import com.radaee.util.RadaeePDFManager
 import com.radaee.util.RadaeePluginCallback
 import com.radaee.view.ILayoutView
 import com.sribs.bdd.R
 import com.sribs.bdd.databinding.ActivityDrawPdfactivityBinding
-import com.sribs.bdd.ui.building.BldDrwDmgMngMainFragment
+import com.sribs.bdd.utils.ModuleHelper
 import com.sribs.bdd.v3.adapter.DrawPDFMenuAdapter
 import com.sribs.bdd.v3.module.DrawPDFMenuModule
 import com.sribs.bdd.v3.util.LogUtils
+import com.sribs.common.utils.FileUtil
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import java.io.File
 
 @Route(path = com.sribs.common.ARouterPath.DRAW_PDF_ACTIVITY)
 class DrawPDFActivity : BaseActivity() {
@@ -78,47 +79,43 @@ class DrawPDFActivity : BaseActivity() {
             it.text = "手绘"
         })
         mMenuAdapter = DrawPDFMenuAdapter(this, mMenuList)
-        mMenuAdapter!!.setItemClickListener {
-            LogUtils.d("当前选中position: " + it)
-            when (it) {
+        mMenuAdapter!!.setItemClickListener {position,checked->
+            LogUtils.d("当前选中position: " + position)
+            when (position) {
                 0 -> {
-             //       mBinding.pdfView.PDFSetRect(1)
-              /*      mBinding.pdfView.PDFSetEllipse(1)
-                    mBinding.pdfView.PDFSetInk(1)*/
-
-                    mBinding.pdfView.PDFSetLine(0)
-
-                    //   mBinding.pdfView.PDFSetNote(1)
+                    if(checked){
+                        mBinding.pdfView.PDFSetLine(0)
+                    }else{
+                        mBinding.pdfView.PDFSetLine(1)
+                    }
                 }
                 1 -> {
-              //      mBinding.pdfView.PDFSetLine(1)
-           //         mBinding.pdfView.PDFSetEllipse(1)
-                    //     mBinding.pdfView.PDFSetNote(1)
-          //          mBinding.pdfView.PDFSetInk(1)
-                    mBinding.pdfView.PDFSetRect(0)
+                    if(checked){
+                        mBinding.pdfView.PDFSetRect(0)
+                    }else{
+                        mBinding.pdfView.PDFSetRect(1)
+                    }
                 }
                 2 -> {
-           /*         mBinding.pdfView.PDFSetLine(1)
-                    mBinding.pdfView.PDFSetRect(1)
-                    //      mBinding.pdfView.PDFSetNote(1)
-                    mBinding.pdfView.PDFSetInk(1)*/
-                    mBinding.pdfView.PDFSetEllipse(0)
+                    if(checked){
+                        mBinding.pdfView.PDFSetEllipse(0)
+                    }else{
+                        mBinding.pdfView.PDFSetEllipse(1)
+                    }
                 }
                 3 -> {
-                    mBinding.pdfView.PDFSetEditbox(0)
-                    //       mBinding.pdfView.PDFSetNote(0)
-                    /*    mBinding.pdfView.PDFSetLine(1)
-                        mBinding.pdfView.PDFSetRect(1)
-                        mBinding.pdfView.PDFSetEllipse(1)
-                        mBinding.pdfView.PDFSetInk(1)*/
+                    if(checked){
+                        mBinding.pdfView.PDFSetEditbox(0)
+                    }else{
+                        mBinding.pdfView.PDFSetEditbox(1)
+                    }
                 }
                 4 -> {
-                /*    mBinding.pdfView.PDFSetLine(1)
-                    mBinding.pdfView.PDFSetRect(1)
-                    mBinding.pdfView.PDFSetEllipse(1)*/
-                    mBinding.pdfView.PDFSetInk(0)
-                    //     mBinding.pdfView.PDFSetNote(1)
-
+                    if(checked){
+                        mBinding.pdfView.PDFSetInk(0)
+                    }else{
+                        mBinding.pdfView.PDFSetInk(1)
+                    }
                 }
             }
         }
@@ -126,8 +123,8 @@ class DrawPDFActivity : BaseActivity() {
         mBinding.leftLayout.gridview.adapter = mMenuAdapter
 
         mBinding.leftLayout.cancel.setOnClickListener { //取消选中
-            mMenuAdapter!!.notifyItem(-1)
-            mBinding.pdfView.PDFCancelAnnot()
+            mMenuAdapter!!.notifyChecked(-1)
+
         }
 
         mBinding.leftLayout.ok.setOnClickListener { //完成绘制
@@ -136,8 +133,102 @@ class DrawPDFActivity : BaseActivity() {
         }
 
         Global.Init(this)
-        openPdf("111.pdf")
+       // openPdf("111.pdf")
+    //    browseDocuments(0)
+        openPdf("/storage/emulated/0/Android/data/com.sribs.bdd/files/图纸/1663504525916.pdf")
     }
+
+    private fun browseDocuments(requestCode:Int) {
+        val supportedMimeTypes = arrayOf("application/pdf", "image/*")
+        var intent:Intent = Intent()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            intent.type = if (supportedMimeTypes.size === 1) supportedMimeTypes[0] else "*/*"
+            if (supportedMimeTypes.size > 0) {
+                intent.putExtra(Intent.EXTRA_MIME_TYPES, supportedMimeTypes)
+            }
+        } else {
+            var mimeTypes = ""
+            for (mimeType in supportedMimeTypes) {
+                mimeTypes += "$mimeType|"
+            }
+            intent.type = mimeTypes.substring(0, mimeTypes.length - 1)
+        }
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+        intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
+        startActivityForResult(intent, requestCode);
+
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        var uri: Uri?
+        var uriList: ArrayList<Uri> = ArrayList<Uri>()
+        if (resultCode == AppCompatActivity.RESULT_OK) {
+            var fileNameString:String = ""
+            var origiNameString:String = ""
+            if (data != null) {
+                // Checking for selection multiple files or single.
+                if (data.clipData != null) {
+                    // Getting the length of data and logging up the logs using index
+                    var index = 0
+                    while (index < data.clipData!!.itemCount) {
+                        // Getting the URIs of the selected files and logging them into logcat at debug level
+                        uri = data.clipData!!.getItemAt(index).uri
+                        uri?.let {
+                            LogUtils.d("clipData uri="+uri.toString())
+                            uriList.add(uri!!)
+                            origiNameString = FileUtil.uriToFileName(uri!!, this)
+                            LogUtils.d("origiNameString： "+origiNameString)
+                            if (!fileNameString.isNullOrEmpty())
+                                fileNameString += ", " + origiNameString
+                            else
+                                fileNameString = origiNameString
+                        }
+                        index++
+                    }
+                } else {
+                    // Getting the URI of the selected file and logging into logcat at debug level
+                    uri = data.data
+                    uri?.let {
+                        LogUtils.d("uri： "+uri.toString())
+                        uriList.add(uri)
+                        origiNameString = FileUtil.uriToFileName(uri, this)
+                        LogUtils.d("origiNameString： "+origiNameString)
+                        if(!fileNameString.isNullOrEmpty())
+                            fileNameString += ", " + origiNameString
+                        else
+                            fileNameString = origiNameString
+                    }
+
+                    var cacheRootDir: String = FileUtil.getDrawingCacheRootDir(this)
+                    var mCurDrawingsDir = "/" + ModuleHelper.DRAWING_CACHE_FOLDER + "/"
+                    var cachePath = cacheRootDir + mCurDrawingsDir + System.currentTimeMillis()+".pdf"
+
+                    addDisposable(Observable.fromIterable(uriList)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(Schedulers.io())
+                        .flatMap{
+                            val file = File(cacheRootDir + mCurDrawingsDir)
+                            file.mkdirs()
+                            LogUtils.d("cachePath file："+file)
+                            if (cachePath != null) {
+                                FileUtil.copyFileTo(this, Uri.parse(it.toString()), cachePath)
+                            }
+                            Observable.just("Done")
+                        }
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(Schedulers.io())
+                        .subscribe({
+                            LogUtils.d("copyDrawingsToLocalCache =${it}")
+                            openPdf(cachePath)
+                        },{
+                            it.printStackTrace()
+                        }))
+                }
+            }
+        }
+    }
+
 
     /**
      * @Description 初始化toolbar
@@ -149,7 +240,8 @@ class DrawPDFActivity : BaseActivity() {
         setSupportActionBar(mBinding.toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
         mBinding.toolbar.setNavigationOnClickListener {
-            finish()
+         //   finish()
+            promptToSavePdf(true)
         }
     }
 
@@ -161,6 +253,7 @@ class DrawPDFActivity : BaseActivity() {
 
     private var mController: PDFViewController? = null
 
+    @SuppressLint("CheckResult")
     private fun openPdf(pdfPath: String) {
         Observable.create<Boolean> { o ->
             o.onNext(XXPermissions.isGranted(this, Permission.MANAGE_EXTERNAL_STORAGE))
@@ -172,8 +265,8 @@ class DrawPDFActivity : BaseActivity() {
                 when (it) {
                     true -> {
                         mDoc = Document()
-                        mAssetStream?.open(assets, pdfPath)
-                        ret = mDoc!!.OpenStream(mAssetStream, "")
+                        ret = mDoc!!.Open(pdfPath, "")
+                        LogUtils.d("打开pdf: "+ret)
                     }
                 }
                 Observable.create<Int> { o ->
@@ -184,20 +277,31 @@ class DrawPDFActivity : BaseActivity() {
             .subscribe({
                 mBinding.pdfView.PDFOpen(mDoc, object : ILayoutView.PDFLayoutListener {
                     override fun OnPDFPageModified(pageno: Int) {
-                        LogUtils.d("OnPDFPageModified "+mDoc.CanSave())
-                        mDoc.Save()
+                        mPDFNoteModified = true
+                        mController?.onPageModified(pageno)
                     }
-
+                    private var m_cur_page = 0
                     override fun OnPDFPageChanged(pageno: Int) {
                         LogUtils.d("OnPDFPageChanged")
+                        m_cur_page = pageno
+                        if (mController != null) mController!!.OnPageChanged(pageno)
+                        RadaeePluginCallback.getInstance().didChangePage(pageno)
                     }
 
                     override fun OnPDFAnnotTapped(pno: Int, annot: Page.Annotation?) {
                         LogUtils.d("OnPDFAnnotTapped")
+                        if (annot != null) {
+                            RadaeePluginCallback.getInstance().onAnnotTapped(annot)
+                            if (!mBinding.pdfView!!.PDFCanSave() && annot.GetType() != 2) return
+                        }
+                        if (mController != null) mController!!.OnAnnotTapped(pno, annot)
                     }
 
                     override fun OnPDFBlankTapped(pagebo: Int) {
                         LogUtils.d("OnPDFBlankTapped")
+                        if (mController != null)
+                            mController!!.OnBlankTapped()
+                        RadaeePluginCallback.getInstance().onBlankTapped(pagebo)
                     }
 
                     override fun OnPDFSelectEnd(text: String?) {
@@ -247,6 +351,7 @@ class DrawPDFActivity : BaseActivity() {
 
                     override fun OnPDFLongPressed(pagebo: Int, x: Float, y: Float) {
                         LogUtils.d("OnPDFLongPressed")
+                        RadaeePluginCallback.getInstance().onLongPressed(pagebo, x, y)
                     }
 
                     override fun OnPDFSearchFinished(found: Boolean) {
@@ -257,8 +362,13 @@ class DrawPDFActivity : BaseActivity() {
                         LogUtils.d("OnPDFPageDisplayed")
                     }
 
+                    private var mDidShowReader = false
                     override fun OnPDFPageRendered(vpage: ILayoutView.IVPage?) {
-                        LogUtils.d("OnPDFPageRendered")
+                        LogUtils.d("OnPDFPageRendered" +vpage)
+                        if (!mDidShowReader) {
+                            RadaeePluginCallback.getInstance().didShowReader()
+                            mDidShowReader = true
+                        }
                     }
 
                     override fun onPDFNoteTapped(jstring: String?) {
@@ -287,12 +397,12 @@ class DrawPDFActivity : BaseActivity() {
 
                 })
 
-                /* mController = PDFViewController(mLayout,
-                     mView,
-                     mPath,
+                 mController = PDFViewController(mBinding.pdfRoot,
+                     mBinding.pdfView,
+                     pdfPath,
                      mAssetStream != null || mHttpStream != null
                  )
-                 mController!!.SetPagesListener(View.OnClickListener {
+                /* mController!!.SetPagesListener(View.OnClickListener {
                      val intent = Intent()
                      intent.setClass(this, PDFPagesAct::class.java)
                      PDFPagesAct.SetTranDoc(mDoc)
@@ -301,6 +411,44 @@ class DrawPDFActivity : BaseActivity() {
             }, {
                 LogUtils.d(" not granted ${Permission.MANAGE_EXTERNAL_STORAGE}")
             })
+    }
+
+    /**
+     * 是否改动了  测试默认改动
+     */
+    private var mPDFNoteModified:Boolean = false
+
+    fun getFileState(): Int {
+        return mController?.getFileState() ?: PDFViewController.NOT_MODIFIED
+    }
+
+    fun isPDFModifiedNotSaved():Boolean{
+        return (getFileState() == PDFViewController.MODIFIED_NOT_SAVED || mPDFNoteModified)
+    }
+
+    private fun promptToSavePdf(ifExit: Boolean){
+        if (isPDFModifiedNotSaved()) {
+            AlertDialog.Builder(this).setTitle(R.string.drawing_edit_exit_dialog_title)
+                .setMessage(R.string.save_pdf_message).setPositiveButton(R.string.dialog_ok) { dialog, which ->
+                    //cache damage list to local sqlite
+                    //        mDoc?.let { it1 -> saveDamageData() }
+                    mController?.savePDF()
+                    if(ifExit)
+                        finish()
+                }.setNegativeButton(R.string.dialog_cancel
+                ) {
+                        dialog, which ->
+                    if(ifExit)
+                        finish()
+                }
+                .show()
+        }
+        else
+        {
+            if(ifExit){
+                finish()
+            }
+        }
     }
 
 

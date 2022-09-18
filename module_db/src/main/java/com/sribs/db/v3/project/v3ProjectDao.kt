@@ -19,14 +19,11 @@ interface v3ProjectDao {
     @Query("Select * from project where id = :id")
     fun getProject(id:Long):Flowable<List<v3ProjectRoom>>
 
-    @Query("Select * from project where id = :id")
-    fun getProjectOnce(id:Long): Single<List<v3ProjectRoom>>
-
     @Query("Select * from project where name = :name and building_no = :buildNo")
-    fun getProjectOnce(name:String,buildNo:String): Single<List<v3ProjectRoom>>
+    fun getProjectOnce(name:String,buildNo:String): Flowable<List<v3ProjectRoom>>
 
     @Query("Select * from project where name = :name")
-    fun getProjectOnce(name:String): Single<List<v3ProjectRoom>>
+    fun getProjectOnce(name:String): Flowable<List<v3ProjectRoom>>
 
     @Insert(onConflict = REPLACE)
     fun insertProject(bean:v3ProjectRoom):Long

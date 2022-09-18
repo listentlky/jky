@@ -1,11 +1,11 @@
-package com.sribs.bdd.v3.bean
+package com.sribs.common.bean.v3
 
 /**
  * create time: 2022/9/16
  * author: bruce
  * description:
  */
-class ProjectBean{
+class v3ProjectBean{
     var code:String?=null
     var data:List<Project>?=null
     var msg:String?=null

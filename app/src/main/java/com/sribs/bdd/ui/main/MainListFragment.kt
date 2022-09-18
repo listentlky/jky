@@ -1,6 +1,5 @@
 package com.sribs.bdd.ui.main
 
-import android.app.AlertDialog
 import android.content.Context
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -8,7 +7,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.cbj.sdk.databinding.LayoutBaseListMvpBinding
-import com.cbj.sdk.libbase.utils.LOG
 import com.cbj.sdk.libui.mvp.BaseListFragment
 import com.cbj.sdk.libui.mvp.adapter.BaseListAdapter
 import com.cbj.sdk.libui.mvp.bindView
@@ -23,8 +21,7 @@ import com.sribs.bdd.v3.util.LogUtils
 import com.sribs.common.bean.db.DrawingBean
 import com.sribs.common.bean.db.UnitBean
 import com.sribs.common.ui.widget.CommonGridDividerItemDecoration
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
+import kotlin.collections.ArrayList
 
 /**
  * @date 2021/6/23
@@ -57,14 +54,12 @@ class MainListFragment :
             }
 
             override fun onCardSelect(beanMain: MainProjectBean, pos: Int) {
-                LogUtils.d("leon MainListFragment from=${beanMain.toString()}")
+                LogUtils.d("选中："+beanMain.toString())
 
                 ARouter.getInstance().build(com.sribs.common.ARouterPath.PRO_CREATE_ATY_FLOOR_LIST)
                     .withString(com.sribs.common.ARouterPath.VAL_COMMON_TITLE, beanMain.address)
-                    .withLong(com.sribs.common.ARouterPath.VAL_COMMON_LOCAL_ID,
-                        beanMain?.localId!!)
-                    .withString(com.sribs.common.ARouterPath.VAL_COMMON_REMOTE_ID,
-                        beanMain.remoteId)
+                    .withLong(com.sribs.common.ARouterPath.VAL_COMMON_LOCAL_ID, beanMain?.localId!!)
+                    .withString(com.sribs.common.ARouterPath.VAL_COMMON_REMOTE_ID, beanMain.remoteId)
                     .navigation()
 
 
@@ -215,6 +210,10 @@ class MainListFragment :
     }
 
     override fun onProjectList(l: ArrayList<MainProjectBean>) {
+        LogUtils.d("onProjectList")
+
+        LogUtils.d("数据源: "+l.size)
+
         mAdapter.setData(l)
         refreshFinish()
 

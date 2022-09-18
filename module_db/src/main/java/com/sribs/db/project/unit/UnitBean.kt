@@ -24,7 +24,12 @@ data class UnitBean(
 
     @ColumnInfo(name="remote_id")           var remoteId:String?=null,
     @ColumnInfo(name="version")             var version:Int?=1,
-    @ColumnInfo(name="status")              var status:Int?=0
+    @ColumnInfo(name="status")              var status:Int?=0,
+
+    @ColumnInfo(name="leader_id")           var leaderId:String?=null,
+    @ColumnInfo(name="leader_name")         var leaderName:String?=null,
+    @ColumnInfo(name="inspectors")           var inspectors:String?=null
+
 ) {
     @ColumnInfo(name="id")
     @PrimaryKey(autoGenerate = true)

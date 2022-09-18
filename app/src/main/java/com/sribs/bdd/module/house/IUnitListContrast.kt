@@ -14,7 +14,7 @@ interface IUnitListContrast {
     }
 
     interface IPresenter:IBasePresenter{
-        fun getAllUnit(projectId:Long)
+        fun getAllUnit(localId:Long)
         fun uploadUnit(projectId: Long,unitId:Long,unitNo:String,willCover:Boolean)
         fun unitGetConfigHistory(projectId: Long, unitId:Long?, unitNo: String, history:(Array<HistoryBean>, String)->Unit)
         fun unitGetRecordHistory(projectId: Long, unitId:Long?, unitNo: String, history:(Array<HistoryBean>, String)->Unit)

@@ -9,6 +9,7 @@ import com.sribs.bdd.R
 import com.sribs.bdd.bean.MainProjectBean
 import com.sribs.bdd.bean.UnitConfigType
 import com.sribs.bdd.module.BaseUnitConfigPresenter
+import com.sribs.bdd.v3.util.LogUtils
 import com.sribs.common.bean.HistoryBean
 import com.sribs.common.bean.db.ConfigBean
 import com.sribs.common.bean.db.ProjectBean
@@ -105,8 +106,8 @@ class MainPresenter:BaseUnitConfigPresenter(),IMainListContrast.IMainPresenter {
         return mDb.updateProject( ProjectBean(
             name = b!!.projectName,
             leader = b.leaderName,
-            inspector = b.inspectorList?.joinToString(separator = "、"),
-            buildNo = b.buildingNo,
+            inspector = b.inspectors?.joinToString(separator = "、"),
+            buildNo = "",
             createTime = Date(TimeUtil.YMD_HMS.parse(b.createTime).time),
             updateTime = Date(TimeUtil.YMD_HMS.parse(b.updateTime).time),
             remoteId = b.projectId
@@ -310,6 +311,8 @@ class MainPresenter:BaseUnitConfigPresenter(),IMainListContrast.IMainPresenter {
     }
 
     override fun projectDelete(projectId: Long) {
+        //删除本地数据库
+        LogUtils.d("删除本地数据")
         var obList = ArrayList<Observable<Boolean>>()
         obList.add(mDb.deleteProject(ProjectBean(id=projectId)).map { true })
         obList.add(mDb.deleteUnit(projectId))
@@ -328,9 +331,22 @@ class MainPresenter:BaseUnitConfigPresenter(),IMainListContrast.IMainPresenter {
             },{
                 it.printStackTrace()
             })
+        //删除网络数据
+        LogUtils.d("删除网络数据")
+        addDisposable(HttpManager.instance.getHttpService<HttpApi>()
+            .deleteProject(projectId)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                checkResult(it)
+                LogUtils.d("删除远端项目成功："+it.toString())
+                mView?.onMsg("删除项目成功")
+            },{
+                LogUtils.d("删除远端项目失败")
+                mView?.onMsg(checkError(it))
+            }))
 
     }
-
 
 
     override fun bindView(v: IBaseView) {

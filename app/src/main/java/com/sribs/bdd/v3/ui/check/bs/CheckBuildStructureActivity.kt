@@ -1,5 +1,6 @@
 package com.sribs.bdd.v3.ui.check.bs
 
+import android.app.AlertDialog
 import android.graphics.Canvas
 import android.graphics.Color
 import android.view.Menu
@@ -19,6 +20,7 @@ import com.radaee.reader.PDFLayoutView
 import com.radaee.reader.PDFViewController
 import com.radaee.util.PDFAssetStream
 import com.radaee.util.PDFHttpStream
+import com.radaee.util.RadaeePluginCallback
 import com.radaee.view.ILayoutView
 import com.sribs.bdd.R
 import com.sribs.bdd.databinding.ActivityCheckBuildStructureBinding
@@ -83,7 +85,8 @@ class CheckBuildStructureActivity : BaseActivity() {
             if(mBinding.checkVp.currentItem != 0){
                 mBinding.checkVp.currentItem = 0
             }else{
-                finish()
+                promptToSavePdf(true)
+             //   finish()
             }
         }
     }
@@ -134,6 +137,8 @@ class CheckBuildStructureActivity : BaseActivity() {
 
     private var mController: PDFViewController? = null
 
+    private var m_cur_page = 0
+
     fun openPDF(layout: RelativeLayout, pdfView:PDFLayoutView, pdfPath:String){
         mAssetStream?.open(assets,pdfPath)
         var open = mDoc?.OpenStream(mAssetStream, null)
@@ -160,18 +165,30 @@ class CheckBuildStructureActivity : BaseActivity() {
         pdfView.PDFOpen(mDoc,object :ILayoutView.PDFLayoutListener{
             override fun OnPDFPageModified(pageno: Int) {
                 LogUtils.d("OnPDFPageModified")
+                mController?.onPageModified(pageno)
             }
 
             override fun OnPDFPageChanged(pageno: Int) {
                 LogUtils.d("OnPDFPageChanged")
+                m_cur_page = pageno
+                if (mController != null) mController!!.OnPageChanged(pageno)
+                RadaeePluginCallback.getInstance().didChangePage(pageno)
             }
 
             override fun OnPDFAnnotTapped(pno: Int, annot: Page.Annotation?) {
                 LogUtils.d("OnPDFAnnotTapped")
+                if (annot != null) {
+                    RadaeePluginCallback.getInstance().onAnnotTapped(annot)
+                    if (!pdfView!!.PDFCanSave() && annot.GetType() != 2) return
+                }
+                if (mController != null) mController!!.OnAnnotTapped(pno, annot)
             }
 
             override fun OnPDFBlankTapped(pagebo: Int) {
                 LogUtils.d("OnPDFBlankTapped")
+                if (mController != null)
+                    mController!!.OnBlankTapped()
+                RadaeePluginCallback.getInstance().onBlankTapped(pagebo)
             }
 
             override fun OnPDFSelectEnd(text: String?) {
@@ -224,13 +241,14 @@ class CheckBuildStructureActivity : BaseActivity() {
                     )
                 }
                 pdfView.dr*/
-                addLine(pdfView,pagebo,x,y)
-                LogUtils.d("mController: canSave: "+mController!!.savePDF())
+       //         addLine(pdfView,pagebo,x,y)
+       //         LogUtils.d("mController: canSave: "+mController!!.savePDF())
                 return true
             }
 
             override fun OnPDFLongPressed(pagebo: Int, x: Float, y: Float) {
                 LogUtils.d("OnPDFLongPressed")
+                RadaeePluginCallback.getInstance().onLongPressed(pagebo, x, y)
             }
 
             override fun OnPDFSearchFinished(found: Boolean) {
@@ -240,9 +258,13 @@ class CheckBuildStructureActivity : BaseActivity() {
             override fun OnPDFPageDisplayed(canvas: Canvas?, vpage: ILayoutView.IVPage?) {
                 LogUtils.d("OnPDFPageDisplayed")
             }
-
+            private var mDidShowReader = false
             override fun OnPDFPageRendered(vpage: ILayoutView.IVPage?) {
                 LogUtils.d("OnPDFPageRendered" +vpage)
+                if (!mDidShowReader) {
+                    RadaeePluginCallback.getInstance().didShowReader()
+                    mDidShowReader = true
+                }
             }
 
             override fun onPDFNoteTapped(jstring: String?) {
@@ -277,6 +299,46 @@ class CheckBuildStructureActivity : BaseActivity() {
             mAssetStream != null || mHttpStream != null
         )
     }
+
+    /**
+     * 是否改动了  测试默认改动
+     */
+    private var mPDFNoteModified:Boolean = true
+
+
+    fun getFileState(): Int {
+        return mController?.getFileState() ?: PDFViewController.NOT_MODIFIED
+    }
+
+    fun isPDFModifiedNotSaved():Boolean{
+        return (getFileState() == PDFViewController.MODIFIED_NOT_SAVED || mPDFNoteModified)
+    }
+
+    private fun promptToSavePdf(ifExit: Boolean){
+        if (isPDFModifiedNotSaved()) {
+            AlertDialog.Builder(this).setTitle(R.string.drawing_edit_exit_dialog_title)
+                .setMessage(R.string.save_pdf_message).setPositiveButton(R.string.dialog_ok) { dialog, which ->
+                    //cache damage list to local sqlite
+            //        mDoc?.let { it1 -> saveDamageData() }
+                    mController?.savePDF()
+                    if(ifExit)
+                        finish()
+                }.setNegativeButton(R.string.dialog_cancel
+                ) {
+                        dialog, which ->
+                    if(ifExit)
+                        finish()
+                }
+                .show()
+        }
+        else
+        {
+            if(ifExit){
+                finish()
+            }
+        }
+    }
+
 
     private fun addLine(pdfView:PDFLayoutView, pageno: Int, x: Float, y: Float) {
         LogUtils.d("mDoc: ${mDoc} ;pageno:${pageno} ;x:${x} ;y:${y}")

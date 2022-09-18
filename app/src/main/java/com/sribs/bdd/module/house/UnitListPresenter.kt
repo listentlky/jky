@@ -37,16 +37,17 @@ class UnitListPresenter:BaseUnitConfigPresenter(),IUnitListContrast.IPresenter {
 
     private var mView:IUnitListContrast.IView?=null
 
-    override fun getAllUnit(projectId: Long) {
-        addDisposable(mDb.getAllUnit(projectId)
+    override fun getAllUnit(localId: Long) {
+        addDisposable(mDb.getAllUnit(localId)
             .subscribeOn(Schedulers.computation())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
+                LogUtils.d("获取本地楼数据: "+it.toString())
                 if (com.sribs.bdd.Config.isNetAvailable){
-                    LogUtils.d("network getRemoteUnit()")
-                    getRemoteUnit(projectId,1,it)
+                    LogUtils.d("有网络从网络获取")
+                    getRemoteUnit(localId,it)
                 }else{
-                    LogUtils.d("no network callback")
+                    LogUtils.d("无网络直接返回本地数据")
                     mView?.onAllUnit(it)
                 }
             },{
@@ -57,12 +58,14 @@ class UnitListPresenter:BaseUnitConfigPresenter(),IUnitListContrast.IPresenter {
     private fun updateUnitRemoteId(localList:List<UnitBean>,remoteList:List<UnitListRes>){
         var obList = ArrayList<Observable<Long>>()
         localList.forEach {
-            var remoteId = remoteList.find { r->r.unitNo == it.unitNo.toString() }?.unitId?:""
+            var remoteId = remoteList.find { r->r.buildName == it.unitNo.toString() }?.buildingId?:""
             if (!remoteId.isNullOrEmpty()){
                 it.remoteId = remoteId
                 obList.add(mDb.updateUnit(it))
+                LogUtils.d("本地数据有该楼栋,更新它: "+it.toString())
             }else{
-                LOG.I("123","getRemoteUnit nofind  local no=${it.unitNo}  id=${it.unitId} remoteId=${it.remoteId}  remoteList=$remoteList")
+                LogUtils.d("本地数据无该楼栋: "+it.toString())
+             //   LOG.I("123","getRemoteUnit nofind  local no=${it.unitNo}  id=${it.unitId} remoteId=${it.remoteId}  remoteList=$remoteList")
             }
         }
         if (obList.isEmpty()){
@@ -73,51 +76,54 @@ class UnitListPresenter:BaseUnitConfigPresenter(),IUnitListContrast.IPresenter {
             .subscribeOn(Schedulers.computation())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                LOG.I("123","更新unit remoteId unitId=$it")
+                LogUtils.d("unit remoteId unitId=$it")
             },{
                 it.printStackTrace()
             }))
     }
 
-    private fun getRemoteUnit(projectId: Long, bldId:Long, localList:List<UnitBean>){
-        LOG.I("123","getRemoteUnit  localList=$localList")
-        addDisposable(mDb.getProjectOnce(projectId).toObservable()
+    private fun getRemoteUnit(localId: Long, localList:List<UnitBean>){
+        LogUtils.d("getRemoteUnit localId："+localId)
+        addDisposable(mDb.getProjectOnce(localId).toObservable()
             .subscribeOn(Schedulers.computation())
             .observeOn(Schedulers.io())
             .flatMap {
                 if (it.isEmpty())throw MsgThrowable("获取本地项目失败")
                 var localProject = it[0]
+                LogUtils.d("根据localId获取项目信息："+localProject.toString())
                 if (localProject.remoteId.isNullOrEmpty()) throw MsgThrowable("")
                 HttpManager.instance.getHttpService<HttpApi>()
-                    .getUnitList(UnitListReq(localProject.remoteId!!))
+                    .getV3UnitList(localProject.remoteId!!)
             }
             .observeOn(Schedulers.computation())
             .flatMap {
                 checkResult(it)
                 var allList = ArrayList<UnitBean>()
-                var l = it.data!!.records.distinctBy { b-> b.unitNo }
+                var l = it.data!!.records.distinctBy { b-> b.buildingId }
                 var remoteMoreList =  l.filter { remote->
-                    localList.find { local->local.remoteId == remote.unitId } == null
+                    localList.find { local->local.remoteId == remote.buildingId } == null
                 }
                 var needUpdateRemoteId = remoteMoreList.filter { remote ->
-                    localList.find { local->local.unitNo.toString() == remote.unitNo }!=null
+                    localList.find { local->local.unitId.toString() == remote.buildingId }!=null
                 }
                 if (needUpdateRemoteId.isNotEmpty()) {
                     updateUnitRemoteId(localList, needUpdateRemoteId)
                 }
                 var remoteList = remoteMoreList.filter { remote ->
-                    localList.find { local->local.unitNo.toString() == remote.unitNo }==null
+                    localList.find { local->local.unitId.toString() == remote.buildingId }==null
                 }.map { b->
                     UnitBean(
-                        projectId = projectId,
-                        bldId = bldId,
+                        projectId = localId,
+                        bldId = b.buildingId.toLong(),
                         unitId = -1,
-                        unitNo = b.unitNo,
+                        unitNo = b.buildName,
                         createTime = TimeUtil.time2Date(b.createTime),
                         updateTime = TimeUtil.time2Date(b.updateTime),
-                        remoteId = b.unitId,
+                        remoteId = b.buildingId,
                         version = b.version,
-
+                        leaderId = b.leaderId,
+                        leaderName = b.leaderName,
+                        inspectors = b.inspectors?.joinToString(separator = "、")?:"",
                     )
                 }
                 allList.addAll(localList)
@@ -128,10 +134,12 @@ class UnitListPresenter:BaseUnitConfigPresenter(),IUnitListContrast.IPresenter {
             }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                LOG.E("123","onAllUnit getRemoteUnit has remote ${it.map { e->"no:${e.unitNo}  id:${e.unitId}  remoteId=${e.remoteId}" }}")
+                LogUtils.d("获取楼网络数据成功: "+it.toString())
+           //     LOG.E("123","onAllUnit getRemoteUnit has remote ${it.map { e->"no:${e.unitNo}  id:${e.unitId}  remoteId=${e.remoteId}" }}")
                 mView?.onAllUnit(it)
             },{
-                LOG.E("123","onAllUnit getRemoteUnit just local")
+                LogUtils.d("获取楼网络数据失败: "+it.toString())
+           //     LOG.E("123","onAllUnit getRemoteUnit just local")
                 mView?.onAllUnit(localList)
                 mView?.onMsg(checkError(it))
             }))

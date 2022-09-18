@@ -249,11 +249,12 @@ class DamageMainActivity :BaseActivity(),IMainListContrast.IMainView{
                     2->{
                         DialogUtil.showMsgDialog(this,"是否确认删除项目?",{
                             //TODO del project
-                            if (beanMain.localId>0){
+                          /*  if (beanMain.localId>0){
                                 mPresenter.projectDelete(beanMain.localId)
                             }else{
                                 showToast("无法删除云端项目")
-                            }
+                            }*/
+                            mPresenter.projectDelete(beanMain.localId)
                         })
                     }
                     3->{

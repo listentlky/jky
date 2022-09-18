@@ -19,7 +19,7 @@ data class v3ProjectRoom(
     @ColumnInfo(name = "create_time") var createTime: Date? = null,
     @ColumnInfo(name = "updateTime") var updateTime: Date? = Date(java.util.Date().time),
     @ColumnInfo(name = "status") var status: Int? = 0,//状态 //本地，已上传
-    @ColumnInfo(name = "remote_id")  var remoteId:String?=null, //远端ID
+    @ColumnInfo(name = "projectId")  var projectId:String?=null, //远端ID
 ) {
     @ColumnInfo(name="id")
     @PrimaryKey(autoGenerate = true)

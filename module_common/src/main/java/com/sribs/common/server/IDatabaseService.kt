@@ -37,11 +37,9 @@ interface IDatabaseService:IProvider {
 
     fun getv3Project(id:Long):Flowable<List<v3ProjectDbBean>>
 
-    fun getv3ProjectOnce(id:Long):Single<List<v3ProjectDbBean>>
+    fun getv3ProjectOnce(name:String,buildNo:String):Flowable<List<v3ProjectDbBean>>
 
-    fun getv3ProjectOnce(name:String,buildNo:String):Single<List<v3ProjectDbBean>>
-
-    fun getv3ProjectOnce(name:String):Single<List<v3ProjectDbBean>>
+    fun getv3ProjectOnce(name:String):Flowable<List<v3ProjectDbBean>>
 
     fun updatev3Project(b:v3ProjectDbBean):Observable<Long>
 

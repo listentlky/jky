@@ -24,6 +24,9 @@ import com.sribs.bdd.utils.ChosePicDialog
 import com.sribs.common.ui.widget.TagEditView
 import com.sribs.common.utils.FileUtil
 
+/**
+ * 创建楼栋
+ */
 @Route(path = com.sribs.common.ARouterPath.PRO_CREATE_ATY_TYPE)
 class ProjectCreateByTypeActivity:BaseActivity(), IProjectContrast.IProjectCreateTypeView {
 
