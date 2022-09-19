@@ -44,6 +44,8 @@ class CreateFloorAdapter(var iCallback: ICallback?):BaseListAdapter<BuildingFloo
             }
         }
         bind.delete.setOnClickListener {
+            bean.pictureList!!.clear()
+            adapter.notifyDataSetChanged()
             mList?.remove(bean)
             notifyDataSetChanged()
         }

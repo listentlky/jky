@@ -1,6 +1,5 @@
 package com.sribs.common.bean.db
 
-import java.sql.Date
 
 /**
  * @date 2021/7/8
@@ -15,6 +14,7 @@ data class BuildingBean(
     var createTime:Long?=null,
     var updateTime:Long?=null,
     var deleteTime:Long?=null,
+    var leader:String?=null,
     var inspectorName:String?=null,
     var version:Int?=null,
     var remoteId:String?=null,

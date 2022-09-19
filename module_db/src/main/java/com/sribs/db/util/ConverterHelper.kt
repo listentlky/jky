@@ -693,6 +693,7 @@ object  ConverterHelper {
         bb.createTime,
         bb.updateTime,
         bb.deleteTime,
+        bb.leader,
         bb.inspectorName,
         bb.remoteId,
         bb.version,
@@ -702,6 +703,24 @@ object  ConverterHelper {
             it.id = bb.id!!
         }
     }
+
+    fun convertBuildingBean(l: Flowable<List<BuildingBean>>): Flowable<List<com.sribs.common.bean.db.BuildingBean>>
+            =l.map { it.map { b->
+        com.sribs.common.bean.db.BuildingBean(
+            b.id,
+            b.projectId,
+            b.bldName,
+            b.bldType,
+            b.createTime,
+            b.updateTime,
+            b.deleteTime,
+            b.leader,
+            b.inspectorName,
+            b.version,
+            b.remoteId,
+            b.status
+        )
+    } }
 
     fun convertBuildingBeanOnce(l: Single<List<BuildingBean>>): Single<List<com.sribs.common.bean.db.BuildingBean>>
             =l.map { it.map { b->
@@ -713,6 +732,7 @@ object  ConverterHelper {
             b.createTime,
             b.updateTime,
             b.deleteTime,
+            b.leader,
             b.inspectorName,
             b.version,
             b.remoteId,

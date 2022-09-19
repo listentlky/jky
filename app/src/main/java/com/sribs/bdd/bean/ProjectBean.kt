@@ -76,6 +76,26 @@ data class ProjectBean(
             var status:Int? = -1
         }
 
+/**
+ * 层
+ */
+data class Floor2(
+    var id:Long?,
+    var buildingId:Long?,
+    var projectId: Long?,
+    var floorId: String?,
+    var floorName: String?
+){
+    var unitId: Long? = -1
+    var houseList: ArrayList<House>? = null
+    var drawingsList: ArrayList<Drawing>? = null//每层图纸
+    var createTime: Long? = 0
+    var engineer: String? = ""
+    var remoteId:String? = ""
+    var version:Int? = -1
+    var status:Int? = -1
+}
+
     //楼层
     /**
      * 户

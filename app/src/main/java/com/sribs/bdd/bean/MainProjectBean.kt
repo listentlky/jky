@@ -2,6 +2,7 @@ package com.sribs.bdd.bean
 
 import org.apache.commons.lang3.math.NumberUtils
 import com.sribs.common.bean.net.ProjectListRes
+import java.io.Serializable
 
 /**
  * @date 2021/6/23
@@ -14,8 +15,8 @@ data class MainProjectBean(
     var updateTimeYMD:String,
     var status: String,
     var address:String,
-    var leader:String,
-    var inspector:String
+    var leader:String="",
+    var inspector:String=""
 ){
     var isCardSel:Boolean = false
     var isMenuChecked:Boolean = false

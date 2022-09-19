@@ -5,8 +5,10 @@ import com.sribs.common.bean.db.UnitBean
 
 //楼层
 data class BuildingFloorBean(var name:String,var pictureList: ArrayList<BuildingFloorPictureBean>?)
+
+data class BuildingFloorIndexBean(var name:String,var floor:String,var pictureList: ArrayList<BuildingFloorPictureBean>?)
 //楼层配置图片
-data class BuildingFloorPictureBean(var name: String,var url:String,var chose:Boolean=false)
+data class BuildingFloorPictureBean(var name: String,var uri:String?,var url:String?,var chose:Boolean=false)
 //每一栋楼
 data class BuildingFloor(val projectId:Long?,
                          var bldId: Long?,
@@ -48,7 +50,6 @@ data class BuildingFloor(val projectId:Long?,
 data class BuildingFloorItem(val projectId:Long?,var bldId:Long?,var type:Int,var time:String){
 
 }
-
 
 
 

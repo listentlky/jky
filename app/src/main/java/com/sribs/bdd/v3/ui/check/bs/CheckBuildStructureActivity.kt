@@ -24,14 +24,30 @@ import com.radaee.util.RadaeePluginCallback
 import com.radaee.view.ILayoutView
 import com.sribs.bdd.R
 import com.sribs.bdd.databinding.ActivityCheckBuildStructureBinding
+import com.sribs.bdd.module.project.ProjectCreateTypePresenter
+import com.sribs.bdd.v3.bean.CheckBSMainBean
 import com.sribs.bdd.v3.util.LogUtils
 
 @Route(path = com.sribs.common.ARouterPath.CHECK_BUILD_STRUCTURE_ACTIVITY)
-class CheckBuildStructureActivity : BaseActivity() {
+class CheckBuildStructureActivity : BaseActivity() ,ICheckBSContrast.ICheckBSView{
 
     @JvmField
     @Autowired(name= com.sribs.common.ARouterPath.VAL_COMMON_TITLE)
     var mTitle = ""
+
+    @JvmField
+    @Autowired(name= com.sribs.common.ARouterPath.VAL_PROJECT_ID)
+    var mLocalProjectId = -1L
+
+    @JvmField
+    @Autowired(name= com.sribs.common.ARouterPath.VAL_BUILDING_ID)
+    var mBuildingId = -1L
+
+    @JvmField
+    @Autowired(name= com.sribs.common.ARouterPath.VAL_COMMON_REMOTE_ID)
+    var mRemoteId = ""
+
+    private val mPresenter by lazy { CheckBSPresenter() }
 
     private val mBinding: ActivityCheckBuildStructureBinding by inflate()
 
@@ -70,6 +86,7 @@ class CheckBuildStructureActivity : BaseActivity() {
         initViewPager()
         Global.Init(this)
 
+        mPresenter.getModuleInfo(mLocalProjectId,mBuildingId,mRemoteId)
     }
 
     /**
@@ -105,7 +122,6 @@ class CheckBuildStructureActivity : BaseActivity() {
         return true
     }
 
-    var mMenuMapView: View? = null
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
         super.onPrepareOptionsMenu(menu)
         var item = menu?.findItem(R.id.menu_check_pop)
@@ -374,5 +390,21 @@ class CheckBuildStructureActivity : BaseActivity() {
         //    page.Close()
 
         }
+    }
+
+    override fun onModuleInfo(checkMainBean: List<CheckBSMainBean>) {
+
+    }
+
+    override fun bindPresenter() {
+       mPresenter.bindView(this)
+    }
+
+    override fun onMsg(msg: String) {
+       showToast(msg)
+    }
+
+    override fun unbindPresenter() {
+        mPresenter.unbindView()
     }
 }

@@ -45,8 +45,6 @@ class DamageMainActivity :BaseActivity(),IMainListContrast.IMainView{
 
     private val mBinding:ActivityDamageMainBinding by inflate()
 
-
-
     private val mPresenter by lazy { MainPresenter() }
 
     private val mFragments by lazy {

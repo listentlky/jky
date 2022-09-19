@@ -32,12 +32,16 @@ import kotlin.collections.ArrayList
 class ProjectFloorItemActivity :BaseActivity(), IProjectContrast.IProjectFloorDetailView{
 
     @JvmField
-    @Autowired(name= com.sribs.common.ARouterPath.VAL_COMMON_LOCAL_ID)
+    @Autowired(name= com.sribs.common.ARouterPath.VAL_PROJECT_ID)
     var mLocalProjectId = -1L
 
     @JvmField
     @Autowired(name= com.sribs.common.ARouterPath.VAL_BUILDING_ID)
     var mBuildingId = -1L
+
+    @JvmField
+    @Autowired(name= com.sribs.common.ARouterPath.VAL_COMMON_REMOTE_ID)
+    var mRemoteId = ""
 
     @JvmField
     @Autowired(name= com.sribs.common.ARouterPath.VAL_COMMON_TITLE)
@@ -73,11 +77,19 @@ class ProjectFloorItemActivity :BaseActivity(), IProjectContrast.IProjectFloorDe
     private fun initRecycleView(){
         mBinding.floorItem.layoutManager = LinearLayoutManager(this)
         mAdapter.setItemClickCallback(object :FloorItemAdapter.ItemClickCallback{
-            override fun onClick(routing: String,projectId:Long) {
+            override fun onClick(routing: String) {
                 ARouter.getInstance().build(routing)
-                    .withInt(
-                        com.sribs.common.ARouterPath.VAL_COMMON_LOCAL_ID,
-                        projectId!!.toInt()
+                    .withLong(
+                        com.sribs.common.ARouterPath.VAL_PROJECT_ID,
+                        mLocalProjectId
+                    )
+                    .withLong(
+                        com.sribs.common.ARouterPath.VAL_BUILDING_ID,
+                        mBuildingId
+                    )
+                    .withString(
+                        com.sribs.common.ARouterPath.VAL_COMMON_REMOTE_ID,
+                        mRemoteId
                     )
                     .withString(com.sribs.common.ARouterPath.VAL_COMMON_TITLE,mTitle)
                         .navigation()
@@ -91,7 +103,6 @@ class ProjectFloorItemActivity :BaseActivity(), IProjectContrast.IProjectFloorDe
         mAdapter.setData(list)
 
     }
-
 
     override fun getContext(): Context? = this
 

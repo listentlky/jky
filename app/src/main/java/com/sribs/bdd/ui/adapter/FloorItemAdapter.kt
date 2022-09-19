@@ -53,7 +53,7 @@ class FloorItemAdapter : BaseListAdapter<BuildingFloorItem, ItemFloorDetailBindi
         }
         bind.edit.setOnClickListener {
             if(routing != null && mItemClickCallback != null) {
-                mItemClickCallback!!.onClick(routing,bean.projectId!!)
+                mItemClickCallback!!.onClick(routing)
 
             }
         }
@@ -85,6 +85,6 @@ class FloorItemAdapter : BaseListAdapter<BuildingFloorItem, ItemFloorDetailBindi
     }
 
     interface ItemClickCallback{
-        fun onClick(routing:String,projectId:Long);
+        fun onClick(routing:String);
     }
 }

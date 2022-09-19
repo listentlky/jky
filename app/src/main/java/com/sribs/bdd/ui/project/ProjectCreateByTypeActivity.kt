@@ -3,14 +3,15 @@ package com.sribs.bdd.ui.project
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
+import android.os.Build
+
 import android.text.Editable
-import android.text.TextWatcher
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.alibaba.android.arouter.facade.annotation.Autowired
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
-import com.cbj.sdk.libbase.utils.LOG
 import com.cbj.sdk.libui.mvp.BaseActivity
 import com.cbj.sdk.libui.mvp.inflate
 import com.donkingliang.imageselector.utils.ImageSelector
@@ -21,6 +22,7 @@ import com.sribs.bdd.databinding.ActivityCreateProjectTypeBinding
 import com.sribs.bdd.module.project.IProjectContrast
 import com.sribs.bdd.module.project.ProjectCreateTypePresenter
 import com.sribs.bdd.utils.ChosePicDialog
+import com.sribs.bdd.v3.util.LogUtils
 import com.sribs.common.ui.widget.TagEditView
 import com.sribs.common.utils.FileUtil
 
@@ -38,6 +40,13 @@ class ProjectCreateByTypeActivity:BaseActivity(), IProjectContrast.IProjectCreat
     @Autowired(name= com.sribs.common.ARouterPath.VAL_BUILDING_ID)
     var mBuildingId = -1L
 
+    @JvmField
+    @Autowired(name= com.sribs.common.ARouterPath.VAL_COMMON_LEADER)
+    var mLeader = ""
+
+    @JvmField
+    @Autowired(name= com.sribs.common.ARouterPath.VAL_COMMON_INSPECTOR)
+    var mInspector = ""
 
     private val mBinding:ActivityCreateProjectTypeBinding by inflate()
 
@@ -46,12 +55,16 @@ class ProjectCreateByTypeActivity:BaseActivity(), IProjectContrast.IProjectCreat
     private var selected = ArrayList<String>()
     private var selectedPic = ArrayList<BuildingFloorPictureBean>()
 
-    private val REQUEST_CODE = 12
+    private val REQUEST_CODE = 12 //上传图片(pdf/img)
 
-    private val REQUEST_CODE_PIC = 13
+    private val REQUEST_CODE_PIC_FLOOR = 13 //基于楼层拍照
 
-    private val REQUEST_CODE_WHITE = 14
-    private val REQUEST_CODE_BEAN_WHITE = 15
+    private val REQUEST_CODE_BEAN_WHITE_FLLOR = 14 //基于楼层的白板
+
+    private val REQUEST_CODE_PIC_BUIlDING = 15 //基于楼拍照
+
+    private val REQUEST_CODE_WHITE_BUILDING = 16 //基于楼的白板
+
 
     override fun deinitView() {
 
@@ -95,13 +108,14 @@ class ProjectCreateByTypeActivity:BaseActivity(), IProjectContrast.IProjectCreat
 
         mBinding.chosePic.setOnClickListener {//选择图片
             //不限数量的多选
-            ImageSelector.builder()
+         /*   ImageSelector.builder()
                 .useCamera(false) // 设置是否使用拍照
                 .setSingle(false)  //设置是否单选
                 .setMaxSelectCount(0) // 图片的最大选择数量，小于等于0时，不限数量。
                 .setSelected(selected) // 把已选的图片传入默认选中。
                 .canPreview(true) //是否可以预览图片，默认为true
-                .start(this, REQUEST_CODE); // 打开相册
+                .start(this, REQUEST_CODE) // 打开相册*/
+            openPdfOrImgSelector()
         }
 
 
@@ -112,9 +126,9 @@ class ProjectCreateByTypeActivity:BaseActivity(), IProjectContrast.IProjectCreat
             }
             selectedPic.clear()
             selected.forEach {
-                var name = FileUtil.getFileName(it)
+                var name = FileUtil.uriToFileName(Uri.parse(it),this)
                 name = name ?: it
-                selectedPic.add(BuildingFloorPictureBean(name,it))
+                selectedPic.add(BuildingFloorPictureBean(name,it,null))
             }
 
             var dialog = ChosePicDialog(this,selectedPic){
@@ -128,73 +142,95 @@ class ProjectCreateByTypeActivity:BaseActivity(), IProjectContrast.IProjectCreat
             ImageSelector
                 .builder()
                 .onlyTakePhoto(true)  // 仅拍照，不打开相册
-                .start(this, REQUEST_CODE_PIC)
+                .start(this, REQUEST_CODE_PIC_BUIlDING)
         }
 
         mBinding.choseWhiteList.setOnClickListener {
             ARouter.getInstance().build(com.sribs.common.ARouterPath.DRAW_WHITE)
-                .navigation(this,REQUEST_CODE_WHITE)
+                .navigation(this,REQUEST_CODE_WHITE_BUILDING)
         }
 
         mBinding.createComplete.setOnClickListener {//保存到数据库中Building
             if (mBinding.builderName.getEditText().text!=null){
-                projectCreateTypePresenter.createLocalBuilding(mLocalProjectId.toInt(),mBuildingId,mBinding.builderName.getEditText().text.toString())
+                projectCreateTypePresenter.createLocalBuilding(this,
+                    mLocalProjectId.toInt(),
+                    mBuildingId,
+                    mBinding.builderName.getEditText().text.toString()
+                    ,mLeader!!
+                    ,mInspector!!)
             }else{
                 showToast("请输入楼名称")
             }
 
         }
+    }
 
+    fun openPdfOrImgSelector(){
+        val supportedMimeTypes = arrayOf("application/pdf", "image/*")
+        var intent:Intent = Intent()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            intent.type = if (supportedMimeTypes.size === 1) supportedMimeTypes[0] else "*/*"
+            if (supportedMimeTypes.size > 0) {
+                intent.putExtra(Intent.EXTRA_MIME_TYPES, supportedMimeTypes)
+            }
+        } else {
+            var mimeTypes = ""
+            for (mimeType in supportedMimeTypes) {
+                mimeTypes += "$mimeType|"
+            }
+            intent.type = mimeTypes.substring(0, mimeTypes.length - 1)
+        }
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+        intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
+        startActivityForResult(intent, REQUEST_CODE)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_CODE && data != null) {
-            /**
-             * 是否是来自于相机拍照的图片，
-             * 只有本次调用相机拍出来的照片，返回时才为true。
-             * 当为true时，图片返回的结果有且只有一张图片。
-             */
-            var  isCameraImage = data.getBooleanExtra(ImageSelector.IS_CAMERA_IMAGE, false)
-            //获取选择器返回的数据
-            var images = data.getStringArrayListExtra(ImageSelector.SELECT_RESULT)
-            if (!isCameraImage){
-                if (images != null) {
-                    selected.clear()
-                    selected.addAll(images)
-                    return
-                }
-            }else{
-                if (images!=null&&images.size>0){
-                    var name = FileUtil.getFileName(images[0])
-                    name = name ?: images[0]
-                    currentBean?.pictureList?.add(BuildingFloorPictureBean(name!!,images[0]))
-                    projectCreateTypePresenter.refeshData()
-                }
-                }
-        }else if (requestCode == REQUEST_CODE_PIC && data != null){
+        LogUtils.d("onActivityResult：requestCode=${requestCode}  data=${data}")
+        if (requestCode == REQUEST_CODE && data != null) { //上传图片
+            var uri = data.data
+            selected.add(uri.toString())
+        }else if(requestCode == REQUEST_CODE_PIC_FLOOR && data != null){
             var  isCameraImage = data.getBooleanExtra(ImageSelector.IS_CAMERA_IMAGE, false)
             if (isCameraImage){
                 var images = data.getStringArrayListExtra(ImageSelector.SELECT_RESULT)
                 if (images!=null&&images.size>0){
                     var name = FileUtil.getFileName(images[0])
                     name = name ?: images[0]
-                    projectCreateTypePresenter.refreshPicList(arrayListOf(BuildingFloorPictureBean(name!!,images[0])))
+                    LogUtils.d("基于楼层选择图片返回: "+images[0])
+                    currentBean?.pictureList?.add(BuildingFloorPictureBean(name!!,null,images[0]).also {
+                    })
+                    projectCreateTypePresenter.refeshData()
                 }
             }
-        }else if (requestCode == REQUEST_CODE_WHITE && data != null){//
+        }
+        else if (requestCode == REQUEST_CODE_PIC_BUIlDING && data != null){
+            var  isCameraImage = data.getBooleanExtra(ImageSelector.IS_CAMERA_IMAGE, false)
+            if (isCameraImage){
+                var images = data.getStringArrayListExtra(ImageSelector.SELECT_RESULT)
+                if (images!=null&&images.size>0){
+                    var name = FileUtil.getFileName(images[0])
+                    name = name ?: images[0]
+                    LogUtils.d("基于楼拍照返回: "+images[0])
+                    projectCreateTypePresenter.refreshPicList(arrayListOf(BuildingFloorPictureBean(name!!,null,images[0])))
+                }
+            }
+        }else if (requestCode == REQUEST_CODE_WHITE_BUILDING && data != null){//
                 var file = data.getStringExtra("File")
+            LogUtils.d("基于楼白板："+file)
             if (file != null) {
                 var name = FileUtil.getFileName(file)
                 name = name ?: file
-                projectCreateTypePresenter.refreshPicList(arrayListOf(BuildingFloorPictureBean(name,file)))
+                projectCreateTypePresenter.refreshPicList(arrayListOf(BuildingFloorPictureBean(name,null,file)))
             }
-        }else if (requestCode == REQUEST_CODE_BEAN_WHITE && data != null){
+        }else if (requestCode == REQUEST_CODE_BEAN_WHITE_FLLOR && data != null){
             var file = data.getStringExtra("File")
+            LogUtils.d("基于楼层白板："+file)
             if (file!=null){
                 var name = FileUtil.getFileName(file)
                 name = name ?: file
-                currentBean?.pictureList?.add(BuildingFloorPictureBean(name!!,file))
+                currentBean?.pictureList?.add(BuildingFloorPictureBean(name!!,null,file))
                 projectCreateTypePresenter.refeshData()
             }
         }
@@ -210,9 +246,9 @@ class ProjectCreateByTypeActivity:BaseActivity(), IProjectContrast.IProjectCreat
         }
         selectedPic.clear()
         selected.forEach {
-            var name = FileUtil.getFileName(it)
+            var name = FileUtil.uriToFileName(Uri.parse(it),this)
             name = name ?: it
-            selectedPic.add(BuildingFloorPictureBean(name,it))
+            selectedPic.add(BuildingFloorPictureBean(name,it,null))
         }
 
         var dialog = ChosePicDialog(this,selectedPic){
@@ -227,16 +263,21 @@ class ProjectCreateByTypeActivity:BaseActivity(), IProjectContrast.IProjectCreat
         ImageSelector
             .builder()
             .onlyTakePhoto(true)  // 仅拍照，不打开相册
-            .start(this, REQUEST_CODE)
+            .start(this, REQUEST_CODE_PIC_FLOOR)
         currentBean = bean
 
     }
 
     override fun choseWhite(bean: BuildingFloorBean) {
         ARouter.getInstance().build(com.sribs.common.ARouterPath.DRAW_WHITE)
-            .navigation(this,REQUEST_CODE_BEAN_WHITE)
+            .navigation(this,REQUEST_CODE_BEAN_WHITE_FLLOR)
         currentBean = bean
 
+    }
+
+    override fun createBuildingSuccess() {
+        showToast("新建楼成功")
+        finish()
     }
 
     override fun getContext(): Context? = this

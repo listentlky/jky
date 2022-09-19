@@ -729,7 +729,7 @@ class BuildingStoreyFragment:BaseFragment(R.layout.fragment_project_storey), IBu
         }
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
-        requireActivity().startActivityForResult(intent, requestCode);
+        requireActivity().startActivityForResult(intent, requestCode)
 
     }
 

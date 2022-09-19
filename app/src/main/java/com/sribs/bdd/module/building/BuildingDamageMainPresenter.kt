@@ -116,6 +116,7 @@ class BuildingDamageMainPresenter :BasePresenter(), IBuildingContrast.IBuildingP
                     curTime,
                     0L,
                     "",
+                    "",
                     1,
                     "",
                     0

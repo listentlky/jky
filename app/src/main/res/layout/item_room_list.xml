@@ -27,12 +27,12 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 android:gravity="center"
                 android:textSize="@dimen/common_text_small"
-                android:textColor="@color/white"
-                android:background="@drawable/ic_sel_house_list"
+                android:textColor="@color/blue_800"
                 android:paddingVertical="@dimen/_2sdp"
                 android:paddingHorizontal="@dimen/_6sdp"
                 android:includeFontPadding="false"
                 />
+            <!--    android:background="@drawable/ic_sel_house_list" -->
 <!--            android:drawableLeft="@drawable/ic_sel_room_list"-->
 <!--            android:drawablePadding="@dimen/_4sdp"-->
             <ImageView

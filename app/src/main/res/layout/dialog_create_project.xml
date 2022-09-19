@@ -58,7 +58,7 @@
                 app:TagPadding="@dimen/project_create_tag_margin"
                 app:TagText="检测员"
                 app:EditEnable="true"
-                app:EditHint="请输入"
+                app:EditHint="请输入检测员，多名检测员以、分割"
                 app:EditWidth="@dimen/project_create_et_width"
                 android:gravity="right"
                 android:layout_marginTop="@dimen/_13sdp" />

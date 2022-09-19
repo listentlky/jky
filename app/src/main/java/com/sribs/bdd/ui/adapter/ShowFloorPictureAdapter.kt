@@ -13,7 +13,7 @@ import com.sribs.common.ui.widget.TagEditView
 class ShowFloorPictureAdapter:BaseListAdapter<BuildingFloorPictureBean,ItemFloorPicBinding>() {
 
     override fun init(bind: ItemFloorPicBinding, bean: BuildingFloorPictureBean, pos: Int) {
-        bind.pictureName.setEditText("图片名"+bean.name)
+        bind.pictureName.setEditText("图纸名"+bean.name)
         bind.pictureName.setTextCallback(object :TagEditView.ITextChanged{
             override fun onTextChange(s: Editable?) {
                 if (s!=null&&s.toString()!=""){
@@ -23,9 +23,11 @@ class ShowFloorPictureAdapter:BaseListAdapter<BuildingFloorPictureBean,ItemFloor
 
         })
 
-        bind.delete.visibility = View.GONE
-
-
+     //   bind.delete.visibility = View.GONE
+        bind.delete.setOnClickListener {
+            mList!!.remove(bean)
+            notifyDataSetChanged()
+        }
     }
 
     override fun onCreateViewHolder(

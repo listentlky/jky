@@ -219,4 +219,13 @@ interface IDatabaseService:IProvider {
     fun getNonInhabitProjects(): Flowable<List<RelationBean>>
     fun removeDamageInDrawing(drwId:Long):Observable<Boolean>
     //leon add end
+
+    fun getAllFloor(): Flowable<List<FloorBean>>
+
+    fun getAllBuilding(): Flowable<List<BuildingBean>>
+
+    fun getBuildingByProjectId(projectId:Long):Flowable<List<BuildingBean>>
+
+    fun getAllDrawing(): Flowable<List<DrawingBean>>
+
 }

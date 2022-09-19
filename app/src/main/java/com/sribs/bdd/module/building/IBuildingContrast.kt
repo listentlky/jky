@@ -4,6 +4,7 @@ import android.content.Context
 import com.cbj.sdk.libui.mvp.moudles.IBasePresenter
 import com.cbj.sdk.libui.mvp.moudles.IBaseView
 import com.sribs.bdd.bean.Building
+import com.sribs.bdd.bean.BuildingMainBean
 import com.sribs.bdd.bean.Floor
 import com.sribs.bdd.bean.data.ProjectConfigBean
 import com.sribs.common.bean.db.*
@@ -56,6 +57,18 @@ interface IBuildingContrast {
 
     }
 
+    /**
+     * 楼栋
+     */
+    interface IBuildingListPresent:IBasePresenter{
+
+        fun getAllBuilding(localProject:Long)
+    }
+
+    interface IBuildingListView:IView{
+
+        fun onAllBuilding(l:List<BuildingMainBean>)
+    }
 
 
 }

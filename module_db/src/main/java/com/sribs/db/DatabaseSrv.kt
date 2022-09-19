@@ -573,6 +573,26 @@ class DatabaseSrv:IDatabaseService {
         return dao.getLocalFloorsInTheBuilding(bldId).run { ConverterHelper.convertFloorsInTheBuilding(this) }
     }
 
+    override fun getAllFloor(): Flowable<List<FloorBean>> {
+        var dao = mDb!!.floorDao()
+        return dao.getAllFloor().run { ConverterHelper.convertFloorsInTheBuilding(this) }
+    }
+
+    override fun getAllBuilding(): Flowable<List<BuildingBean>> {
+        var dao = mDb!!.buildingDao()
+        return dao.getAllBuilding().run { ConverterHelper.convertBuildingBean(this) }
+    }
+
+    override fun getBuildingByProjectId(projectId:Long): Flowable<List<BuildingBean>> {
+        var dao = mDb!!.buildingDao()
+        return dao.getBuildingByProjectId(projectId).run { ConverterHelper.convertBuildingBean(this) }
+    }
+
+    override fun getAllDrawing(): Flowable<List<DrawingBean>> {
+        var dao = mDb!!.drawingDao()
+        return dao.getAllDrawing().run { ConverterHelper.convertDbDrawingBeanToCommonFlow(this) }
+    }
+
     override fun getBuildingIdByProjectId(proId: Long): Observable<Long> = Observable.create{
         var dao = mDb!!.buildingDao()
         var bldId:Long = dao.getBuildingIdByProjectId(proId)

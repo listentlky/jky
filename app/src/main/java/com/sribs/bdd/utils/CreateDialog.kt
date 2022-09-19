@@ -49,7 +49,7 @@ class CreateDialog(context:Context,var mLocalProjectId:Int = -1,var onResult: (p
                 return@setOnClickListener
             }
             if (mData.inspector?.isNullOrEmpty()){
-                showToast("请输入检测员")
+                showToast("请输入检测员,多名检测员以、分割")
                 return@setOnClickListener
             }
 
@@ -101,7 +101,7 @@ class CreateDialog(context:Context,var mLocalProjectId:Int = -1,var onResult: (p
             return
         }
         if (mData.inspector.isNullOrEmpty()){
-            showToast("楼号不能为空")
+            showToast("检测员不能为空")
             return
         }
 

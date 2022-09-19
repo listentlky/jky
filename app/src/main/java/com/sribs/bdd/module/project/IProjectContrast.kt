@@ -79,6 +79,7 @@ interface IProjectContrast {
         fun chosePic(bean: BuildingFloorBean)
         fun takePhone(bean: BuildingFloorBean)
         fun choseWhite(bean: BuildingFloorBean)
+        fun createBuildingSuccess()
     }
 
     interface IProjectFloorPresenter:IBasePresenter{

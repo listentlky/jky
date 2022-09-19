@@ -20,6 +20,7 @@ data class BuildingBean(
     @ColumnInfo(name="update_time")         var updateTime:Long?=0,
     @ColumnInfo(name="delete_time")         var deleteTime:Long?=0,
 
+    @ColumnInfo(name="leader")              var leader:String?="",//负责人
     @ColumnInfo(name="inspector_name")      var inspectorName:String?="",//用jsonString记录多人检测情况
     @ColumnInfo(name="remote_id")           var remoteId:String?=null,
     @ColumnInfo(name="version")             var version:Int?=1,
@@ -29,8 +30,9 @@ data class BuildingBean(
     @PrimaryKey(autoGenerate = true)
     var id:Long = 0
 
-    constructor(id:Long, bldName: String, bldType: String, createTime: Long, updateTime: Long, deleteTime: Long, inspectorName: String, remoteId: String, version: Int, status: Int):this(
-        0L,"","",null,null,-1,"","",0,0
+    constructor(id:Long, bldName: String, bldType: String, createTime: Long, updateTime: Long, deleteTime: Long,
+                leader: String?,inspectorName: String, remoteId: String, version: Int, status: Int):this(
+        0L,"","",null,null,-1,"","","",0,0
     ){
         this.id = id
         this.projectId = projectId
@@ -39,6 +41,7 @@ data class BuildingBean(
         this.createTime = createTime
         this.updateTime = updateTime
         this.deleteTime = deleteTime
+        this.leader = leader
         this.inspectorName = inspectorName
         this.remoteId = remoteId
         this.version = version

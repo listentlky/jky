@@ -328,11 +328,13 @@ object FileUtil {
 
     fun getFileName(pathandname: String): String? {
         val start = pathandname.lastIndexOf("/")
-        val end = pathandname.lastIndexOf(".")
+     //   val end = pathandname.lastIndexOf(".")
+        val end = pathandname.length
         return if (start != -1 && end != -1) {
             pathandname.substring(start + 1, end)
         } else {
             null
         }
     }
+
 }

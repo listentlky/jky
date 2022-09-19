@@ -38,7 +38,6 @@ class MainListPresenter:BasePresenter(),IMainListContrast.IPresenter {
      * 本地获取项目列表
      */
     override fun getProjectList() {
-
         addDisposable(mDb.getAllProject()
             .subscribeOn(Schedulers.computation())
             .observeOn(AndroidSchedulers.mainThread())
@@ -56,20 +55,6 @@ class MainListPresenter:BasePresenter(),IMainListContrast.IPresenter {
                     _b.createTime = TimeUtil.YMD_HMS.format(b.createTime)
                     _b.name = b.name
                 } })
-
-              /*  list.add(MainProjectBean(
-                    localId= -1,
-                    projectId= "",
-                    updateTimeYMD = "2022-09-17",
-                    status = "",
-                    projectName = "盛世宝邸",
-                    leader = "李大洋",
-                    inspector = Arrays.asList("AAA","BBB","CCC")?.joinToString(separator = "、")?:""
-                )!!.also {b->
-                    b.updateTime = "2022-09-17 12:00:00"
-                    b.createTime = "2022-09-17 10:00:00"
-                    b.name = b.projectName
-                })*/
 
                 LogUtils.d("读取本地项目: "+list.toString())
 

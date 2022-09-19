@@ -346,6 +346,7 @@ public class DrawWhiteFragment extends Fragment implements SketchView.OnDrawChan
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         ScreenUtils.hideInput(saveDialog.getCurrentFocus());
+                        getActivity().finish();
                     }
                 })
                 .setCancelable(false)
@@ -791,10 +792,6 @@ public class DrawWhiteFragment extends Fragment implements SketchView.OnDrawChan
     }
 
 
-
-
-
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE) {
@@ -962,7 +959,8 @@ public class DrawWhiteFragment extends Fragment implements SketchView.OnDrawChan
 
             if (file.exists()){
                 intent.putExtra("File",file.getAbsolutePath());
-                Toast.makeText(getActivity(), file.getAbsolutePath(), Toast.LENGTH_SHORT).show();
+            //    Toast.makeText(getActivity(), file.getAbsolutePath(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "保存成功", Toast.LENGTH_SHORT).show();
             } else{
                 Toast.makeText(getActivity(), "保存失败！", Toast.LENGTH_SHORT).show();
             }
