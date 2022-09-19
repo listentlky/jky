@@ -49,7 +49,7 @@ class BuildingListPresenter : BasePresenter(), IBuildingContrast.IBuildingListPr
                     )
                 })
                 LogUtils.d("获取本地数据库楼表: " + list.toString())
-                mView!!.onAllBuilding(list)
+                mView!!.onAllBuilding(ArrayList(list.sortedByDescending { b->b.updateTime }))
             })
     }
 

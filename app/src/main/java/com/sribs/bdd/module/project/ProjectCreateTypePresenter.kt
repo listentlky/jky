@@ -346,11 +346,12 @@ class ProjectCreateTypePresenter: BasePresenter(),IProjectContrast.IProjectCreat
         }
     }
 
-    private var mAppFacadeDrawingList: ArrayList<Drawing>? = null
+    private var mAppFacadeDrawingList: ArrayList<Drawing>? = ArrayList<Drawing>()
 
     private fun createLocalFacadesDrawingInTheBuilding(activity: Activity, mLocalProjectId:Int,mBuildingId:Long){
         println("leon createLocalFloorsInTheBuilding mBldId=${mBldId}")
         var curTime: Long = System.currentTimeMillis()
+        mAppFacadeDrawingList!!.clear()
         getPicList(activity,mLocalProjectId,mBuildingId)
         if(picList != null){
             addDisposable(Observable.fromIterable(mAppFacadeDrawingList)
@@ -467,7 +468,7 @@ class ProjectCreateTypePresenter: BasePresenter(),IProjectContrast.IProjectCreat
             .flatMap{
                 val cacheFileParent = File(cacheRootDir + mCurDrawingsDir)
                 cacheFileParent.mkdirs()
-                val cacheFilePath = cacheFileParent.absolutePath+"/"+it.name
+                val cacheFilePath = cacheFileParent.absolutePath+it.name
                 LogUtils.d("图纸缓存目录: ${cacheFilePath}")
                 if (cacheFilePath != null) {
                     FileUtil.copyFileTo(activity, Uri.parse(it.uri),cacheFilePath)
@@ -491,7 +492,6 @@ class ProjectCreateTypePresenter: BasePresenter(),IProjectContrast.IProjectCreat
 
            copyDrawingsToLocalCache(activity,picList!!,cacheRootDir)
 
-           mAppFacadeDrawingList = arrayListOf()
            picList!!.forEach {
                cachePath = cacheRootDir + mCurDrawingsDir +  it.name
                LogUtils.d("楼图纸缓存目录："+cachePath)
@@ -515,6 +515,7 @@ class ProjectCreateTypePresenter: BasePresenter(),IProjectContrast.IProjectCreat
                    1,
                    0
                )
+               mAppFacadeDrawingList!!.add(drawing)
            }
        }
 
