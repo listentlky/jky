@@ -1,7 +1,5 @@
 package com.sribs.common.bean.db
 
-import java.sql.Date
-
 /**
  * @date 2021/7/8
  * @author elijah
@@ -32,3 +30,12 @@ data class DrawingBean(
 
 
 }
+
+data class DrawingV3Bean(
+    var fileName: String?,
+    var fileType: String?,//pdf,jpg,png,jpeg
+    var drawingType: String?,//east,west,south,north,overall,floor
+    var localAbsPath: String?,//移动端缓存地址
+    var remoteAbsPath: String?,//服务端缓存地址,
+)
+

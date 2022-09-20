@@ -1,5 +1,6 @@
 package com.sribs.bdd.bean
 
+import com.sribs.common.bean.db.DrawingV3Bean
 import java.io.Serializable
 import java.sql.Date
 
@@ -69,6 +70,7 @@ data class ProjectBean(
             var unitId: Long? = -1
             var houseList: ArrayList<House>? = null
             var drawingsList: ArrayList<Drawing>? = null//每层图纸
+            var drawingsV3List: ArrayList<DrawingV3Bean>? = null//每层图纸
             var createTime: Long? = 0
             var engineer: String? = ""
             var remoteId:String? = ""

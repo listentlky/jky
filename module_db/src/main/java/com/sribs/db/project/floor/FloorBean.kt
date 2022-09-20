@@ -3,6 +3,7 @@ package com.sribs.db.project.floor
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.sribs.common.bean.db.DrawingV3Bean
 import java.sql.Date
 import java.util.*
 
@@ -24,7 +25,8 @@ data class FloorBean(
     @ColumnInfo(name="inspector_name")      var inspectorName:String?="",
     @ColumnInfo(name="remote_id")           var remoteId:String?=null,
     @ColumnInfo(name="version")             var version:Int?=1,
-    @ColumnInfo(name="status")              var status:Int?=0//1,删除；0，正常，与云端is_deleted相同
+    @ColumnInfo(name="status")              var status:Int?=0,//1,删除；0，正常，与云端is_deleted相同
+    @ColumnInfo(name="drawing")              var drawing:List<DrawingV3Bean>?=null//基于楼层图纸列表
 ) {
     @ColumnInfo(name="id")
     @PrimaryKey(autoGenerate = true)

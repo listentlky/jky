@@ -3,6 +3,7 @@ package com.sribs.db.project.building
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.sribs.common.bean.db.DrawingV3Bean
 import java.sql.Date
 import java.util.*
 
@@ -24,14 +25,15 @@ data class BuildingBean(
     @ColumnInfo(name="inspector_name")      var inspectorName:String?="",//用jsonString记录多人检测情况
     @ColumnInfo(name="remote_id")           var remoteId:String?=null,
     @ColumnInfo(name="version")             var version:Int?=1,
-    @ColumnInfo(name="status")              var status:Int?=0//1,删除；0，正常，与云端is_deleted相同
+    @ColumnInfo(name="status")              var status:Int?=0,//1,删除；0，正常，与云端is_deleted相同
+    @ColumnInfo(name="drawing")              var drawing:List<DrawingV3Bean>?=null//基于楼图纸列表
 ) {
     @ColumnInfo(name="id")
     @PrimaryKey(autoGenerate = true)
     var id:Long = 0
 
     constructor(id:Long, bldName: String, bldType: String, createTime: Long, updateTime: Long, deleteTime: Long,
-                leader: String?,inspectorName: String, remoteId: String, version: Int, status: Int):this(
+                leader: String?,inspectorName: String, remoteId: String, version: Int, status: Int,drawing: List<DrawingV3Bean>?):this(
         0L,"","",null,null,-1,"","","",0,0
     ){
         this.id = id
@@ -46,6 +48,7 @@ data class BuildingBean(
         this.remoteId = remoteId
         this.version = version
         this.status = status
+        this.drawing = drawing
     }
 
 }

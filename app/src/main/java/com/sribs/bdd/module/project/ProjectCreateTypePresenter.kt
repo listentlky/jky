@@ -19,6 +19,7 @@ import com.sribs.bdd.ui.adapter.CreateFloorPictureAdapter
 import com.sribs.bdd.utils.ModuleHelper
 import com.sribs.bdd.v3.util.LogUtils
 import com.sribs.common.bean.db.DrawingBean
+import com.sribs.common.bean.db.DrawingV3Bean
 import com.sribs.common.bean.db.FloorBean
 import com.sribs.common.server.IDatabaseService
 import com.sribs.common.utils.FileUtil
@@ -145,9 +146,14 @@ class ProjectCreateTypePresenter: BasePresenter(),IProjectContrast.IProjectCreat
             mView?.onMsg("图纸不能为空")
             return -1
         }
+        //赋值楼层名作为图纸上级目录
 
-        LogUtils.d("leon createLocalBuilding mBldId=${mBuildingId}")
+        mCurDrawingsDir = "/" + ModuleHelper.DRAWING_CACHE_FOLDER + "/" + mProName + "/" + name + "/"
 
+        LogUtils.d("创建本地楼: mBldId=${mBuildingId}")
+
+        createLocalFacadesDrawingInTheBuilding(activity,mLocalProjectId, mBldId!!)
+        LogUtils.d("楼图纸："+mAppFacadeDrawingList.toString())
         mDb.getLocalBuildingOnce(mBuildingId.toLong()?:-1).toObservable()
             .subscribeOn(Schedulers.computation())
             .observeOn(Schedulers.computation())
@@ -167,6 +173,7 @@ class ProjectCreateTypePresenter: BasePresenter(),IProjectContrast.IProjectCreat
                     1,
                     "",
                     0,
+                    mAppFacadeDrawingList
                 )
                 mDb.createLocalBuilding(dbBldBean)
             }
@@ -177,7 +184,7 @@ class ProjectCreateTypePresenter: BasePresenter(),IProjectContrast.IProjectCreat
                 //cache floors info to sqlite
                 createLocalFloorsInTheBuilding(activity,mLocalProjectId, mBldId!!)
                 //cache building drawings info to sqlite
-                createLocalFacadesDrawingInTheBuilding(activity,mLocalProjectId, mBldId!!)
+
 
                 addDisposable(mDb.getAllBuilding()
                     .subscribeOn(Schedulers.computation())
@@ -194,7 +201,8 @@ class ProjectCreateTypePresenter: BasePresenter(),IProjectContrast.IProjectCreat
                             inspectorName = b.inspectorName!!,
                             remoteId= b.remoteId?:"",
                             version = b.version!!,
-                            status = b.status!!
+                            status = b.status!!,
+                            drawing = b.drawing!!
                         )})
                         LogUtils.d("获取本地数据库楼表: "+list.toString())
                     })
@@ -210,18 +218,19 @@ class ProjectCreateTypePresenter: BasePresenter(),IProjectContrast.IProjectCreat
                             unitId = b.unitId,
                             floorId = b.floorId,
                             floorName = b.floorName,
-                            createTime = b.createTime!!,
-                            updateTime = b.updateTime!!,
-                            deleteTime = b.deleteTime!!,
-                            inspectorName = b.inspectorName!!,
+                            createTime = b.createTime,
+                            updateTime = b.updateTime,
+                            deleteTime = b.deleteTime,
+                            inspectorName = b.inspectorName,
                             remoteId= b.remoteId?:"",
-                            version = b.version!!,
-                            status = b.status!!
+                            version = b.version,
+                            status = b.status,
+                            drawing = b.drawing
                         )})
                         LogUtils.d("获取本地数据库楼层表: "+list.toString())
                     })
 
-                addDisposable(mDb.getAllDrawing()
+               /* addDisposable(mDb.getAllDrawing()
                     .subscribeOn(Schedulers.computation())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe {
@@ -246,7 +255,7 @@ class ProjectCreateTypePresenter: BasePresenter(),IProjectContrast.IProjectCreat
                             status = b.status!!
                         )})
                         LogUtils.d("获取本地数据库图纸表: "+list.toString())
-                    })
+                    })*/
               /*  if(Config.isNetAvailable){ // 有网，网络创建
 
                 }else {*/
@@ -263,15 +272,14 @@ class ProjectCreateTypePresenter: BasePresenter(),IProjectContrast.IProjectCreat
     private fun createLocalFloorsInTheBuilding(activity:Activity,mLocalProjectId:Int,mBuildingId:Long){
         println("leon createLocalFloorsInTheBuilding mBldId=${mBuildingId}")
         getFloorList(activity,mLocalProjectId,mBuildingId)
-        var curTime: Long = System.currentTimeMillis()
         if(floorList != null){
             var floorId:Long = -1
             var floorName:String? = null
-            var appFloorDrawingList: ArrayList<Drawing>? = null
             addDisposable(Observable.fromIterable(floorList)
                 .subscribeOn(Schedulers.computation())
                 .observeOn(Schedulers.computation())
                 .flatMap{
+                    LogUtils.d("楼层图纸："+ it.drawingsV3List.toString())
                     floorId = it.floorId?.toLong() ?: 0
                     floorName = it.floorName
                     println("leon 00 floorid=${floorId}, floorName=${floorName}")
@@ -288,104 +296,43 @@ class ProjectCreateTypePresenter: BasePresenter(),IProjectContrast.IProjectCreat
                         "",
                         1,
                         "",
-                        0
-                    )
-                    appFloorDrawingList = it.drawingsList
-                    mDb.createLocalFloor(appFloor)
-                }
-                .observeOn(Schedulers.computation())
-                .flatMap{
-
-                    var floor: Floor? = null
-                    for(i in 0..floorList?.size?.minus(1)!!){
-                        floor = floorList?.get(i)
-                        if(floor?.id!! <0){
-                            floor.id = it
-                            break
-                        }
-                    }
-
-                    var drawingList: ArrayList<Drawing>? = null
-                    if(floor != null){
-                        if(floor.drawingsList != null){
-                            drawingList = floor.drawingsList
-                        }
-                    }
-                    Observable.fromIterable(drawingList)
-                }.observeOn(Schedulers.computation())
-                .flatMap{
-                    println("leon 11 floorid=${floorId}, floorName=${floorName}")
-                    var drawing:com.sribs.common.bean.db.DrawingBean = com.sribs.common.bean.db.DrawingBean(
-                        -1,
-                        mLocalProjectId.toLong(),
-                        mBuildingId,
-                        -1,
-                        it.floorId,
-                        it.floorName,
-                        it.fileName,
-                        it.drawingType,
-                        it.fileType,
-                        it.cacheAbsPath,
-                        "",
-                        it.createTime?:curTime,
-                        it.updateTime?:curTime,
                         0,
-                        "",
-                        "",
-                        1,
-                        0
+                        it.drawingsV3List
                     )
-                    mDb.createLocalDrawing(drawing)
+                    mDb.createLocalFloor(appFloor)
                 }
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    print("leon createLocalFloorsInTheBuilding ret drawing id=$it")
+                    print("leon createLocalFloorsInTheBuilding ret floor id=$it")
                 },{
                     it.printStackTrace()
                 }))
         }
     }
 
-    private var mAppFacadeDrawingList: ArrayList<Drawing>? = ArrayList<Drawing>()
+    private var mAppFacadeDrawingList: ArrayList<DrawingV3Bean>? = ArrayList<DrawingV3Bean>()
 
     private fun createLocalFacadesDrawingInTheBuilding(activity: Activity, mLocalProjectId:Int,mBuildingId:Long){
         println("leon createLocalFloorsInTheBuilding mBldId=${mBldId}")
-        var curTime: Long = System.currentTimeMillis()
         mAppFacadeDrawingList!!.clear()
-        getPicList(activity,mLocalProjectId,mBuildingId)
-        if(picList != null){
-            addDisposable(Observable.fromIterable(mAppFacadeDrawingList)
-                .subscribeOn(Schedulers.computation())
-                .observeOn(Schedulers.computation())
-                .flatMap{it ->
-                    var drawing:com.sribs.common.bean.db.DrawingBean = com.sribs.common.bean.db.DrawingBean(
-                        -1,
-                        mLocalProjectId.toLong(),
-                        mBldId,
-                        -1,
-                        it.floorId,
-                        it.floorName,
-                        it.fileName,
-                        it.drawingType,
-                        it.fileType,
-                        it.cacheAbsPath,
-                        "",
-                        it.createTime?:curTime,
-                        it.updateTime?:curTime,
-                        0L,
-                        "",
-                        "",
-                        1,
-                        0
-                    )
-                    mDb.createLocalDrawing(drawing)
-                }
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    print("leon createLocalFloorsInTheBuilding ret drawing id=$it")
-                },{
-                    it.printStackTrace()
-                }))
+        if (picList!=null&&picList!!.size>0){
+            var cacheRootDir: String = FileUtil.getDrawingCacheRootDir(mView!!.getContext()!!)
+
+            copyDrawingsToLocalCache(activity,picList!!,cacheRootDir)
+
+            picList!!.forEach {
+
+                var cacheFilePath = File(cacheRootDir + mCurDrawingsDir,it.name)
+
+                var drawingV3ToBuild = DrawingV3Bean(
+                    it.name,
+                    FileUtil.getFileExtension(it.name),
+                    "overall",
+                    if(it.url != null) it.url else cacheFilePath.absolutePath,
+                    ""
+                )
+                mAppFacadeDrawingList!!.add(drawingV3ToBuild)
+            }
         }
     }
 
@@ -403,50 +350,32 @@ class ProjectCreateTypePresenter: BasePresenter(),IProjectContrast.IProjectCreat
                     (i+1).toLong(),
                     item.name
                 )
-                floor.drawingsList = getDrawingList(activity,item,mLocalProjectId,mBuildingId)
+                floor.drawingsV3List = getDrawingList(activity,item,mLocalProjectId,mBuildingId)
+                LogUtils.d("楼层图纸集合: "+floor.drawingsV3List)
                 floorList.add(floor)
             }
         }
     }
 
-    fun getDrawingList(activity:Activity,floorBean:BuildingFloorBean,mLocalProjectId:Int,mBuildingId:Long):ArrayList<Drawing>?{
+    fun getDrawingList(activity:Activity,floorBean:BuildingFloorBean,mLocalProjectId:Int,mBuildingId:Long):ArrayList<DrawingV3Bean>?{
         if (floorBean.pictureList!=null&& floorBean.pictureList!!.size>0){
-            var cachePath:String
             var originList = floorBean.pictureList
             var cacheRootDir: String = FileUtil.getDrawingCacheRootDir(mView!!.getContext()!!)
-            var floorDrawingsList: ArrayList<Drawing> = ArrayList<Drawing>()
-            var drawingItem :Drawing
-            var curTime: Long = System.currentTimeMillis()
+            var floorDrawingsList: ArrayList<DrawingV3Bean> = ArrayList<DrawingV3Bean>()
 
             copyDrawingsToLocalCache(activity,originList!!,cacheRootDir)
 
             for (i in originList!!.indices) {
                 var  item = originList!![i]
-
-                cachePath = cacheRootDir + mCurDrawingsDir +  item.name
-                LogUtils.d("楼层图纸缓存目录："+cachePath)
-
-                drawingItem = Drawing(
-                    -1,
-                    mLocalProjectId.toLong(),
-                    mBuildingId.toLong(),
-                    -1,
-                    (i+1).toLong(),
-                    floorBean.name,
+                var cacheFilePath = File(cacheRootDir + mCurDrawingsDir,item.name)
+                var drawingV3ToBuild = DrawingV3Bean(
                     item.name,
-                    "floor",
-                    null,
                     FileUtil.getFileExtension(item.name),
-                    if(item.url != null) item.url else item.uri,
-                    if(item.url != null) item.url else cachePath,
-                    curTime,
-                    curTime,
-                    mProLeader!!,
-                    "",
-                    1,
-                    0
+                    "floor",
+                    if(item.url != null) item.url else cacheFilePath.absolutePath,
+                    ""
                 )
-                floorDrawingsList.add(drawingItem)
+                floorDrawingsList.add(drawingV3ToBuild)
             }
             return floorDrawingsList
 
@@ -460,18 +389,16 @@ class ProjectCreateTypePresenter: BasePresenter(),IProjectContrast.IProjectCreat
         var filters = pictureBean.filter {
             it.uri != null
         }
-        LogUtils.d("过滤uri不等于null后: "+filters.size)
-
         addDisposable(Observable.fromIterable(filters)
             .subscribeOn(Schedulers.io())
             .observeOn(Schedulers.io())
             .flatMap{
                 val cacheFileParent = File(cacheRootDir + mCurDrawingsDir)
                 cacheFileParent.mkdirs()
-                val cacheFilePath = cacheFileParent.absolutePath+it.name
-                LogUtils.d("图纸缓存目录: ${cacheFilePath}")
-                if (cacheFilePath != null) {
-                    FileUtil.copyFileTo(activity, Uri.parse(it.uri),cacheFilePath)
+                var cacheFile = File(cacheFileParent,it.name)
+                LogUtils.d("图纸缓存目录： "+cacheFile.toString())
+                if (cacheFile != null) {
+                    FileUtil.copyFileTo(activity, Uri.parse(it.uri),cacheFile.absolutePath)
                 }
                 Observable.just("Done")
             }
@@ -483,45 +410,6 @@ class ProjectCreateTypePresenter: BasePresenter(),IProjectContrast.IProjectCreat
                 it.printStackTrace()
             }))
     }
-
-   private fun getPicList(activity: Activity,mLocalProjectId:Int,mBuildingId:Long){
-       if (picList!=null&&picList!!.size>0){
-           var cachePath:String
-           var cacheRootDir: String = FileUtil.getDrawingCacheRootDir(mView!!.getContext()!!)
-           var curTime: Long = System.currentTimeMillis()
-
-           copyDrawingsToLocalCache(activity,picList!!,cacheRootDir)
-
-           picList!!.forEach {
-               cachePath = cacheRootDir + mCurDrawingsDir +  it.name
-               LogUtils.d("楼图纸缓存目录："+cachePath)
-               var drawing = Drawing(
-                   -1,
-                   mLocalProjectId.toLong(),
-                   mBuildingId,
-                   -1,
-                   -1,
-                  "",
-                   it.name,
-                   "overall",
-                   null,
-                   FileUtil.getFileExtension(it.name),
-                   if(it.url != null) it.url else it.uri,
-                   if(it.url != null) it.url else cachePath,
-                   curTime,
-                   curTime,
-                   mProLeader!!,
-                   "",
-                   1,
-                   0
-               )
-               mAppFacadeDrawingList!!.add(drawing)
-           }
-       }
-
-    }
-
-
 
     private lateinit var mPrefs: SharedPreferences
     private var mCurDrawingsDir: String? = ""

@@ -697,7 +697,8 @@ object  ConverterHelper {
         bb.inspectorName,
         bb.remoteId,
         bb.version,
-        bb.status
+        bb.status,
+        bb.drawing
     ).also {
         if (bb.id?:-1>0){
             it.id = bb.id!!
@@ -718,7 +719,8 @@ object  ConverterHelper {
             b.inspectorName,
             b.version,
             b.remoteId,
-            b.status
+            b.status,
+            b.drawing
         )
     } }
 
@@ -736,7 +738,8 @@ object  ConverterHelper {
             b.inspectorName,
             b.version,
             b.remoteId,
-            b.status
+            b.status,
+            b.drawing
             )
     } }
 
@@ -753,7 +756,8 @@ object  ConverterHelper {
         fb.inspectorName,
         fb.remoteId,
         fb.version,
-        fb.status
+        fb.status,
+        fb.drawing
     ).also {
         if (fb.id?:-1>0){
             it.id = fb.id!!
@@ -775,7 +779,8 @@ object  ConverterHelper {
             b.inspectorName,
             b.version,
             b.remoteId,
-            b.status
+            b.status,
+            b.drawing
         )
     } }
 

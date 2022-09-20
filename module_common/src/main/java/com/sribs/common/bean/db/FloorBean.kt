@@ -20,6 +20,8 @@ data class FloorBean(
     var version:Int?=null,
     var remoteId:String?=null,
     var status:Int?=null,
+    var drawing:List<DrawingV3Bean>?=null
+
 ){
     fun isSame(projectId:Long?,bldId: Long?,unitId: Long?,floorId: Long?):Boolean =
         this.projectId == projectId && this.bldId == bldId && this.unitId == unitId && this.floorId == floorId
