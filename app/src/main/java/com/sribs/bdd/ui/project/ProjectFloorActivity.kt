@@ -243,6 +243,7 @@ class ProjectFloorActivity : BaseActivity(), IBuildingContrast.IBuildingListView
 
     override fun onCardSelect(beanMain: BuildingMainBean, pos: Int) {
         ARouter.getInstance().build(com.sribs.common.ARouterPath.PRO_ITEM_ATY_FLOOR)
+            .withString(com.sribs.common.ARouterPath.VAL_COMMON_TITLE, mTitle)
             .withLong(com.sribs.common.ARouterPath.VAL_PROJECT_ID, mLocalProjectId)
             .withLong(com.sribs.common.ARouterPath.VAL_BUILDING_ID, beanMain.bldId!!)
             .withString(com.sribs.common.ARouterPath.VAL_COMMON_REMOTE_ID, beanMain.remoteId)

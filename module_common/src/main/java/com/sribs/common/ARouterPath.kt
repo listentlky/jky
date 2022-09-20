@@ -51,6 +51,7 @@ object ARouterPath {
     const val VAL_COMMON_CODE = "code"
     const val VAL_COMMON_TITLE = "title"
     const val VAL_COMMON_ID = "id"
+    const val VAL_COMMON_LOCAL_CURRENT_PDF = "local_current_pdf"
 
     const val VAL_PROJECT_ID = "project_id"
     const val VAL_BUILDING_ID = "building_id"

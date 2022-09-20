@@ -1,41 +1,46 @@
-package com.sribs.bdd.v3.popup;
+package com.radaee.view;
 
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.PopupWindow;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.sribs.bdd.R;
-import com.sribs.bdd.v3.adapter.ChoosePicPopupAdapter;
-import com.sribs.bdd.v3.adapter.OneChoosePopupAdapter;
+import com.radaee.adapter.V3ChoosePopupAdapter;
+import com.radaee.viewlib.R;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChoosePicPopupWindow extends android.widget.PopupWindow {
+/**
+ * create time: 2022/9/20
+ * author: bruce
+ * description:
+ */
+public class V3DamagePopupWindow extends android.widget.PopupWindow {
 
     private RecyclerView mRecyclerView;
     private Context mContext;
 
     private int mChoosePosition = 0;
 
-    private ChoosePicPopupAdapter mChoosePicPopupAdapter;
+    private V3ChoosePopupAdapter mChoosePicPopupAdapter;
 
-    private ChoosePicPopupWindow.PopupCallback mPopupCallback;
+    private V3DamagePopupWindow.PopupCallback mPopupCallback;
 
     private List<String> datas = new ArrayList<>();
 
-    public ChoosePicPopupWindow(Context context, int width, List<String> list, ChoosePicPopupWindow.PopupCallback popupCallback) {
+    public V3DamagePopupWindow(Context context, int width, List<String> list, V3DamagePopupWindow.PopupCallback popupCallback) {
         super(context);
         this.mContext = context;
         this.mPopupCallback = popupCallback;
         if(list != null){
             this.datas.addAll(list);
         }
-        View view = LayoutInflater.from(mContext).inflate(R.layout.popup_choose_pic_layout,null);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.v3_popup_layout,null);
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(width,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
         view.setLayoutParams(layoutParams);
@@ -46,7 +51,7 @@ public class ChoosePicPopupWindow extends android.widget.PopupWindow {
 
         mRecyclerView = (RecyclerView)view.findViewById(R.id.popup_recyclerView);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
-        mChoosePicPopupAdapter = new ChoosePicPopupAdapter(mContext,datas).setmItemClickCallback(new ChoosePicPopupAdapter.ItemClickCallback() {
+        mChoosePicPopupAdapter = new V3ChoosePopupAdapter(mContext,datas).setmItemClickCallback(new V3ChoosePopupAdapter.ItemClickCallback() {
             @Override
             public void onItemClick(int position) {
                 mChoosePosition = position;
@@ -74,4 +79,3 @@ public class ChoosePicPopupWindow extends android.widget.PopupWindow {
         void onSelect(int position);
     }
 }
-

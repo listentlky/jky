@@ -5,25 +5,20 @@ import android.app.Activity
 import android.content.Context
 import android.content.SharedPreferences
 import android.net.Uri
-import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.android.arouter.launcher.ARouter
-import com.cbj.sdk.libbase.utils.LOG
 import com.sribs.common.module.BasePresenter
 import com.cbj.sdk.libui.mvp.moudles.IBaseView
 import com.cbj.sdk.utils.NumberUtil
-import com.sribs.bdd.Config
 import com.sribs.bdd.bean.*
 import com.sribs.bdd.ui.adapter.CreateFloorAdapter
 import com.sribs.bdd.ui.adapter.CreateFloorPictureAdapter
 import com.sribs.bdd.utils.ModuleHelper
 import com.sribs.bdd.v3.util.LogUtils
-import com.sribs.common.bean.db.DrawingBean
 import com.sribs.common.bean.db.DrawingV3Bean
 import com.sribs.common.bean.db.FloorBean
 import com.sribs.common.server.IDatabaseService
 import com.sribs.common.utils.FileUtil
-import com.sribs.common.utils.TimeUtil
 import com.sribs.db.project.building.BuildingBean
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -318,7 +313,7 @@ class ProjectCreateTypePresenter: BasePresenter(),IProjectContrast.IProjectCreat
         if (picList!=null&&picList!!.size>0){
             var cacheRootDir: String = FileUtil.getDrawingCacheRootDir(mView!!.getContext()!!)
 
-            copyDrawingsToLocalCache(activity,picList!!,cacheRootDir)
+            copyDrawingsToLocalCache(activity,picList!!,null,cacheRootDir)
 
             picList!!.forEach {
 
@@ -363,7 +358,7 @@ class ProjectCreateTypePresenter: BasePresenter(),IProjectContrast.IProjectCreat
             var cacheRootDir: String = FileUtil.getDrawingCacheRootDir(mView!!.getContext()!!)
             var floorDrawingsList: ArrayList<DrawingV3Bean> = ArrayList<DrawingV3Bean>()
 
-            copyDrawingsToLocalCache(activity,originList!!,cacheRootDir)
+            copyDrawingsToLocalCache(activity,originList!!,floorBean.name,cacheRootDir)
 
             for (i in originList!!.indices) {
                 var  item = originList!![i]
@@ -384,7 +379,10 @@ class ProjectCreateTypePresenter: BasePresenter(),IProjectContrast.IProjectCreat
         return null
     }
 
-    private fun copyDrawingsToLocalCache(activity:Activity,pictureBean:ArrayList<BuildingFloorPictureBean>,cacheRootDir:String){
+    private fun copyDrawingsToLocalCache(activity:Activity,
+                                         pictureBean:ArrayList<BuildingFloorPictureBean>,
+                                         floorName:String?,
+                                         cacheRootDir:String){
         LogUtils.d("copyDrawingsToLocalCache: "+pictureBean.size)
         var filters = pictureBean.filter {
             it.uri != null
@@ -393,7 +391,10 @@ class ProjectCreateTypePresenter: BasePresenter(),IProjectContrast.IProjectCreat
             .subscribeOn(Schedulers.io())
             .observeOn(Schedulers.io())
             .flatMap{
-                val cacheFileParent = File(cacheRootDir + mCurDrawingsDir)
+                var cacheFileParent = File(cacheRootDir + mCurDrawingsDir)
+                if(!floorName.isNullOrEmpty()) { // 不为空认为是楼图纸   为空认为是楼层图纸
+                    cacheFileParent = File(cacheRootDir + mCurDrawingsDir + floorName)
+                }
                 cacheFileParent.mkdirs()
                 var cacheFile = File(cacheFileParent,it.name)
                 LogUtils.d("图纸缓存目录： "+cacheFile.toString())

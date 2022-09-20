@@ -11,7 +11,7 @@
         android:layout_marginTop="@dimen/_1sdp"
         android:background="@color/blue_800"
         android:orientation="vertical"
-        app:layout_constraintHorizontal_weight="0.28"
+        app:layout_constraintHorizontal_weight="0.2"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@id/pdf_root"/>
 
@@ -19,7 +19,7 @@
         android:id="@+id/pdf_root"
         android:layout_width="0dp"
         android:background="@color/white"
-        app:layout_constraintHorizontal_weight="0.72"
+        app:layout_constraintHorizontal_weight="0.8"
         app:layout_constraintLeft_toRightOf="@id/tool_layout"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_height="match_parent">
@@ -28,8 +28,7 @@
             android:id="@+id/pdf_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:clickable="true"
-            />
+            android:clickable="true" />
 
     </RelativeLayout>
 
@@ -55,7 +54,7 @@
         android:id="@+id/check_select_index"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:clickable="true"
         android:layout_marginRight="@dimen/_20sdp"

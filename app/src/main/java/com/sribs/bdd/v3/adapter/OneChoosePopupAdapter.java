@@ -1,8 +1,6 @@
 package com.sribs.bdd.v3.adapter;
 
 import android.content.Context;
-import android.util.Log;
-import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -14,7 +12,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.sribs.bdd.R;
-import com.sribs.bdd.v3.util.LogUtils;
 
 import java.util.List;
 
@@ -76,7 +73,7 @@ public class OneChoosePopupAdapter extends RecyclerView.Adapter<OneChoosePopupAd
     @NonNull
     @Override
     public ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new ItemViewHolder(LayoutInflater.from(mContext).inflate(R.layout.popup_item,parent,false));
+        return new ItemViewHolder(LayoutInflater.from(mContext).inflate(R.layout.v3_popup_item,parent,false));
     }
 
     @Override

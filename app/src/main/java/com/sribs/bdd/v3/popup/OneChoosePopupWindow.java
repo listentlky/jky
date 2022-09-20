@@ -25,7 +25,6 @@ public class OneChoosePopupWindow extends android.widget.PopupWindow {
 
     private Context mContext;
 
-
     private OneChoosePopupAdapter mOneChoosePopupAdapter;
 
     private List<String> datas = new ArrayList<>();

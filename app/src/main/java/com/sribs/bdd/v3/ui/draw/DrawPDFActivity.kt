@@ -11,6 +11,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.alibaba.android.arouter.facade.annotation.Autowired
 import com.alibaba.android.arouter.facade.annotation.Route
+import com.cbj.sdk.libbase.rxbus.RxBus
 import com.cbj.sdk.libui.mvp.BaseActivity
 import com.cbj.sdk.libui.mvp.inflate
 import com.hjq.permissions.Permission
@@ -27,6 +28,7 @@ import com.sribs.bdd.R
 import com.sribs.bdd.databinding.ActivityDrawPdfactivityBinding
 import com.sribs.bdd.utils.ModuleHelper
 import com.sribs.bdd.v3.adapter.DrawPDFMenuAdapter
+import com.sribs.bdd.v3.event.RefreshPDFEvent
 import com.sribs.bdd.v3.module.DrawPDFMenuModule
 import com.sribs.bdd.v3.util.LogUtils
 import com.sribs.common.utils.FileUtil
@@ -42,11 +44,17 @@ class DrawPDFActivity : BaseActivity() {
     @Autowired(name = com.sribs.common.ARouterPath.VAL_COMMON_TITLE)
     var mTitle = ""
 
+    @JvmField
+    @Autowired(name = com.sribs.common.ARouterPath.VAL_COMMON_LOCAL_CURRENT_PDF)
+    var mLocalPDF = ""
+
     private val mBinding: ActivityDrawPdfactivityBinding by inflate()
 
     private var mMenuList = ArrayList<DrawPDFMenuModule>()
 
     private var mMenuAdapter: DrawPDFMenuAdapter? = null
+
+    private var mChecked = false
 
     override fun deinitView() {
 
@@ -81,6 +89,7 @@ class DrawPDFActivity : BaseActivity() {
         mMenuAdapter = DrawPDFMenuAdapter(this, mMenuList)
         mMenuAdapter!!.setItemClickListener {position,checked->
             LogUtils.d("当前选中position: " + position)
+            mChecked = checked
             when (position) {
                 0 -> {
                     if(checked){
@@ -128,14 +137,14 @@ class DrawPDFActivity : BaseActivity() {
         }
 
         mBinding.leftLayout.ok.setOnClickListener { //完成绘制
-
-
+            mMenuAdapter!!.notifyChecked(-1)
+            promptToSavePdf(false)
         }
 
         Global.Init(this)
        // openPdf("111.pdf")
     //    browseDocuments(0)
-        openPdf("/storage/emulated/0/Android/data/com.sribs.bdd/files/图纸/1663504525916.pdf")
+        openPdf(mLocalPDF)
     }
 
     private fun browseDocuments(requestCode:Int) {
@@ -427,12 +436,16 @@ class DrawPDFActivity : BaseActivity() {
     }
 
     private fun promptToSavePdf(ifExit: Boolean){
+        if(mChecked){
+            showToast("当前绘制未完成")
+            return
+        }
         if (isPDFModifiedNotSaved()) {
-            AlertDialog.Builder(this).setTitle(R.string.drawing_edit_exit_dialog_title)
+            AlertDialog.Builder(this).setTitle(if(ifExit)getString(R.string.drawing_edit_exit_dialog_title ) else "提示")
                 .setMessage(R.string.save_pdf_message).setPositiveButton(R.string.dialog_ok) { dialog, which ->
-                    //cache damage list to local sqlite
-                    //        mDoc?.let { it1 -> saveDamageData() }
                     mController?.savePDF()
+                    mPDFNoteModified = false;
+                    RxBus.getDefault().post(RefreshPDFEvent(true))
                     if(ifExit)
                         finish()
                 }.setNegativeButton(R.string.dialog_cancel

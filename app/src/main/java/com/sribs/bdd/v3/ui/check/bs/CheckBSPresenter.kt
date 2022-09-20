@@ -25,7 +25,7 @@ class CheckBSPresenter : BasePresenter(),ICheckBSContrast.ICheckBSPresenter{
 
     override fun getModuleInfo(localProjectId:Long,localBldId:Long,remoteId:String?) {
         LogUtils.d("getModuleInfo ${localProjectId}  ${localBldId}   ${remoteId}")
-        addDisposable(mDb.getLocalDrawingListInBuilding(localProjectId,localBldId)
+        addDisposable(mDb.getLocalFloorsInTheBuilding(localBldId)
             .subscribeOn(Schedulers.computation())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
@@ -34,19 +34,21 @@ class CheckBSPresenter : BasePresenter(),ICheckBSContrast.ICheckBSPresenter{
                            bldId = b.bldId,
                            floorName = b.floorName,
                            remoteId = b.remoteId,
-                           fileName = b.fileName,
-                           drawingType = b.drawingType,
-                           fileType = b.fileType,
-                           localAbsPath = b.localAbsPath,
-                           remoteAbsPath = b.remoteAbsPath,
+                           inspectorName = b.inspectorName,
+                           drawing = b.drawing,
+                           createTime = b.createTime,
+                           updateTime = b.updateTime,
+                           deleteTime = b.deleteTime,
                            version = b.version,
                            status = b.status
                        )
                        })
-                LogUtils.d("获取到该楼下所有图纸 "+list.toString())
+                LogUtils.d("获取到该楼下所有楼层 "+list.toString())
+                LogUtils.d("mView "+mView)
                 mView?.onModuleInfo(list)
             },{
-                LogUtils.d("获取到该楼下所有图纸失败 ${it}")
+                mView?.onMsg(it.toString())
+                LogUtils.d("获取到该楼下所有楼层 ${it}")
             }))
 
     }

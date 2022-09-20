@@ -1,5 +1,7 @@
 package com.sribs.bdd.v3.bean
 
+import com.sribs.common.bean.db.DrawingV3Bean
+
 /**
  * create time: 2022/9/19
  * author: bruce
@@ -10,11 +12,8 @@ class CheckBSMainBean (
     var bldId:Long?,
     var floorName:String?,
     var remoteId:String?=null,
-    var fileName: String?,
-    var drawingType: String?,
-    var fileType: String?,
-    var localAbsPath: String?,
-    var remoteAbsPath: String?,
+    var inspectorName:String?="",
+    var drawing:List<DrawingV3Bean>?=null,
     var createTime:Long?=0,
     var updateTime:Long?=0,
     var deleteTime:Long?=0,
@@ -22,6 +21,6 @@ class CheckBSMainBean (
     var status:Int?=0
 ){
     override fun toString(): String {
-        return "CheckBSMainBean(projectId=$projectId, bldId=$bldId, floorName=$floorName, remoteId=$remoteId, fileName=$fileName, drawingType=$drawingType, fileType=$fileType, localAbsPath=$localAbsPath, remoteAbsPath=$remoteAbsPath, createTime=$createTime, updateTime=$updateTime, deleteTime=$deleteTime, version=$version, status=$status)"
+        return "CheckBSMainBean(projectId=$projectId, bldId=$bldId, floorName=$floorName, remoteId=$remoteId, inspectorName=$inspectorName, drawing=$drawing, createTime=$createTime, updateTime=$updateTime, deleteTime=$deleteTime, version=$version, status=$status)"
     }
 }

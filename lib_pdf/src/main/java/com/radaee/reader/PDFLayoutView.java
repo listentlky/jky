@@ -63,6 +63,7 @@ import com.radaee.view.PDFLayout.PDFPos;
 import com.radaee.view.PDFLayoutDual;
 import com.radaee.view.PDFLayoutHorz;
 import com.radaee.view.PDFLayoutVert;
+import com.radaee.view.V3DamagePopupWindow;
 import com.radaee.view.VPage;
 import com.radaee.view.VSel;
 import com.radaee.viewlib.R;
@@ -71,6 +72,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
@@ -130,6 +132,19 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
     //leon add start
     private int mNewAnnotColor = 0;
     private MotionEvent mCacheMotionEvent = null;
+
+    //v3
+    private boolean mIsV3 = false;
+
+    private String[] mV3DamageType = {"轴网","层高"};
+
+    public void setV3Version(boolean isV3){
+        mIsV3 = isV3;
+    }
+
+    public void setV3DamageType(String[] damageType){
+        mV3DamageType = damageType;
+    }
 
     //leon add start
 //    private List<DamageTypeItem> mDamageTypeList = new ArrayList<DamageTypeItem>();
@@ -191,7 +206,11 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
 
             mCacheMotionEvent = e;
             mCacheMotionEvent.setAction(1);
-            promptSelectDamageTypeDialog();
+            if(mIsV3){
+                showV3DamagePopupWindow();
+            }else {
+                promptSelectDamageTypeDialog();
+            }
             Log.i("leon", "PDFLayout onLongPress will exit");
 //            m_status = STA_NOTE;
 
@@ -226,6 +245,7 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
                 PopupEditAct.ms_listener = new PopupEditAct.ActRetListener() {
                     @Override
                     public void OnEditValue(String val) {
+                        Log.d("bdd","设置文字注释回调: "+val);
                         if (m_annot != null) {
                             m_annot.SetEditText(val);
                             m_annot.SetModifyDate(CommonUtil.getCurrentDate());
@@ -1490,6 +1510,9 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
                 annot.SetIcon(8);//13 means star
                 int fillColor = (255 << 24) | mNewAnnotColor;
                 annot.SetFillColor(fillColor);
+                annot.SetEditText("1");
+                annot.SetEditTextColor(Color.RED);
+                annot.SetStrokeColor(fillColor);
             }
             //leon add end
 
@@ -2389,7 +2412,29 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
         }
 //        Log.i("leon", "PDFLayoutView PDFEditAnnot ref=" + ref);
 //        String[] items = getContext().getResources().getStringArray(R.Array.drawing_damage_type);
+    }
 
+    /**
+     * 3期损伤弹窗
+     */
+    private V3DamagePopupWindow.PopupCallback popupCallback = new V3DamagePopupWindow.PopupCallback() {
+        @Override
+        public void onSelect(int position) {
+            Log.d("bdd","当前选择损伤: "+mV3DamageType[position]);
+            PDFSetNote(0);
+            mNewAnnotColor = Color.parseColor("#FF005B82");
+            onTouchNote(mCacheMotionEvent);
+        }
+
+    };
+
+    private V3DamagePopupWindow v3DamagePopupWindow;
+    private void showV3DamagePopupWindow() {
+        if(v3DamagePopupWindow == null){
+            v3DamagePopupWindow = new V3DamagePopupWindow(getContext(),150, Arrays.asList(mV3DamageType)
+            ,popupCallback);
+        }
+        v3DamagePopupWindow.showAsDropDown(this,(int)(Math.round(m_annot_note_x0)),(int)(Math.round(m_annot_note_y0)));
     }
 
     private void promptSelectDamageTypeDialog(){
