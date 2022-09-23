@@ -7,11 +7,6 @@ import com.sribs.common.bean.db.DrawingV3Bean
 import java.sql.Date
 import java.util.*
 
-/**
- * @date 2022/3/15
- * @author leon
- * @Description
- */
 @Entity(tableName = "v3_module_floor")
 data class v3ModuleFloorRoom(
     @ColumnInfo(name = "project_id") var projectId: Long?,//project 表主键

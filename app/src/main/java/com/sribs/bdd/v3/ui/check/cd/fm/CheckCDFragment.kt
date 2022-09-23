@@ -72,31 +72,26 @@ class CheckCDFragment : BaseFragment(R.layout.fragment_check_componentdetection)
         Log.d("addItemView", "mMenuList: " + mMenuList.toString());
         mBinding.toolLayout.setMenuModuleList(mMenuList!!)
             .setCheckMenuCallback(object : CheckMenuView2.CheckMenuCallback {
-                override fun onClick(v: View?, damageType:String?) {
-                    when (String){
-                      /*  0->   (activity as CheckComponentDetectionActivity).setVpCurrentItem(1)
-                        1->   (activity as CheckComponentDetectionActivity).setVpCurrentItem(2)
-                        2->   (activity as CheckComponentDetectionActivity).setVpCurrentItem(3)
-                        3->   (activity as CheckComponentDetectionActivity).setVpCurrentItem(4)*/
-                override fun onClick(v: View?, pos: Int?) {
-                    when (pos) {
-                        0 -> (activity as CheckComponentDetectionActivity).setVpCurrentItem(1)
+                override fun onClick(v: View?, damageType: String?) {
+                    when (String) {
+                      /*  0 -> (activity as CheckComponentDetectionActivity).setVpCurrentItem(1)
                         1 -> (activity as CheckComponentDetectionActivity).setVpCurrentItem(2)
                         2 -> (activity as CheckComponentDetectionActivity).setVpCurrentItem(3)
-                        3 -> (activity as CheckComponentDetectionActivity).setVpCurrentItem(4)
+                        3 -> (activity as CheckComponentDetectionActivity).setVpCurrentItem(4)*/
                     }
                 }
 
-                override fun onMarkClick(v: View?,damage: DamageV3Bean?,damageType:String?) {
+                override fun onMarkClick(v: View?, damage: DamageV3Bean?, damageType: String?) {
                     TODO("Not yet implemented")
                 }
-
             })!!.build()
 
         initPdf()
     }
 
-    /**
+
+
+                /**
      * call when page changed.
      * @param pageno
      */
@@ -167,7 +162,7 @@ class CheckCDFragment : BaseFragment(R.layout.fragment_check_componentdetection)
     }
 
     override fun OnPDFDoubleTapped(pagebo: Int, x: Float, y: Float): Boolean {
-        var mVapge =mBinding.pdfLayout.m_layout.vGetPage(pagebo)
+      /*  var mVapge =mBinding.pdfLayout.m_layout.vGetPage(pagebo)
         val page = m_doc.GetPage(mVapge.GetPageNo())
         page.ObjsStart()
         var pt = floatArrayOf(x,y)
@@ -182,7 +177,7 @@ class CheckCDFragment : BaseFragment(R.layout.fragment_check_componentdetection)
 
         }else{
         ToastUtil.getInstance()._short(activity,"GG")
-        }
+        }*/
 
 
        /*  var mPageConent=PageContent()

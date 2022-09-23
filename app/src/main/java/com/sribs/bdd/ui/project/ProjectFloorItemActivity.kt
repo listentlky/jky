@@ -210,7 +210,7 @@ class ProjectFloorItemActivity : BaseActivity(), IProjectContrast.IProjectFloorD
 
     )
     val items = arrayOf(
-        "建筑结构复核", "倾斜测量", "相对高差测量", "构建测量", "居民类检测测量", "非居民类检测测量"
+        "建筑结构复核", "倾斜测量", "相对高差测量", "构建检测", "居民类检测测量", "非居民类检测测量"
     )
 
 

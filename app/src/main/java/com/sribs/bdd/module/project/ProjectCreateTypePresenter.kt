@@ -53,12 +53,14 @@ class ProjectCreateTypePresenter: BasePresenter(),IProjectContrast.IProjectCreat
 
     @SuppressLint("NotifyDataSetChanged")
     override fun addAboveFlourList(num: Int) {
+        LogUtils.d("addAboveFlourList： "+num)
         if (num==0){
             array?.removeAll(above)
             above.clear()
             flourAdapter.notifyDataSetChanged()
         }else if (num>0){
             array?.removeAll(above)
+            above.clear()
             for (i in 0 until num){
                 var name = NumberUtil.num2Chinese(i+1)
                 var buildingFloorBean = BuildingFloorBean(name+"层", arrayListOf())
@@ -73,12 +75,14 @@ class ProjectCreateTypePresenter: BasePresenter(),IProjectContrast.IProjectCreat
 
     @SuppressLint("NotifyDataSetChanged")
     override fun addAfterFlourList(num: Int) {
+        LogUtils.d("addAfterFlourList： "+num)
         if (num==0){
             array?.removeAll(before)
             before.clear()
             flourAdapter.notifyDataSetChanged()
         }else if (num>0){
             array?.removeAll(before)
+            before.clear()
             for (i in 0 until num){
                 var name = NumberUtil.num2Chinese(i+1)
                 var buildingFloorBean = BuildingFloorBean("负"+name+"层", arrayListOf())
@@ -168,7 +172,9 @@ class ProjectCreateTypePresenter: BasePresenter(),IProjectContrast.IProjectCreat
                     1,
                     "",
                     0,
-                    mAppFacadeDrawingList
+                    mAppFacadeDrawingList,
+                    above.size,
+                    before.size
                 )
                 mDb.createLocalBuilding(dbBldBean)
             }
@@ -292,7 +298,9 @@ class ProjectCreateTypePresenter: BasePresenter(),IProjectContrast.IProjectCreat
                         1,
                         "",
                         0,
-                        it.drawingsV3List
+                        it.drawingsV3List,
+                        above.size,
+                        before.size
                     )
                     mDb.createLocalFloor(appFloor)
                 }
@@ -305,7 +313,7 @@ class ProjectCreateTypePresenter: BasePresenter(),IProjectContrast.IProjectCreat
         }
     }
 
-    private var mAppFacadeDrawingList: ArrayList<DrawingV3Bean>? = ArrayList<DrawingV3Bean>()
+    private var mAppFacadeDrawingList: ArrayList<DrawingV3Bean> = ArrayList<DrawingV3Bean>()
 
     private fun createLocalFacadesDrawingInTheBuilding(activity: Activity, mLocalProjectId:Int,mBuildingId:Long){
         println("leon createLocalFloorsInTheBuilding mBldId=${mBldId}")

@@ -1,6 +1,6 @@
 package com.sribs.common.bean.db.v3.project
 
-import java.sql.Date
+import com.sribs.common.bean.db.DrawingV3Bean
 
 /**
  * create time: 2022/9/17
@@ -17,8 +17,8 @@ data class v3BuildingModuleDbBean(
     var isDeleted: Int? = 0,
     var aboveGroundNumber: Int? = 0,
     var underGroundNumber: Int? = 0,
-    var drawings: List<String>? = null,
-    var inspectors: List<String>? = null,
+    var drawings: List<DrawingV3Bean>?= ArrayList(),
+    var inspectors: String?= "",
     var deleteTime: String? = "",
     var createTime: String? = "",
     var updateTime: String? = null,

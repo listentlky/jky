@@ -225,9 +225,9 @@ object ConverterHelper {
                     b.drawingsList,
                     b.aboveNumber,
                     b.afterNumber,
-                    b.createTime?.toLong(),
-                    b.updateTime?.toLong(),
-                    b.deleteTime?.toLong(),
+                    b.createTime,
+                    b.updateTime,
+                    b.deleteTime,
                     b.version,
                     b.remoteId,
                     b.status
@@ -867,7 +867,9 @@ object ConverterHelper {
         bb.remoteId,
         bb.version,
         bb.status,
-        bb.drawing
+        bb.drawing,
+        bb.aboveGroundNumber,
+        bb.underGroundNumber
     ).also {
         if (bb.id ?: -1 > 0) {
             it.id = bb.id!!
@@ -890,7 +892,9 @@ object ConverterHelper {
                     b.version,
                     b.remoteId,
                     b.status,
-                    b.drawing
+                    b.drawing,
+                    b.aboveGroundNumber,
+                    b.underGroundNumber
                 )
             }
         }
@@ -911,7 +915,9 @@ object ConverterHelper {
                     b.version,
                     b.remoteId,
                     b.status,
-                    b.drawing
+                    b.drawing,
+                    b.aboveGroundNumber,
+                    b.underGroundNumber
                 )
             }
         }
@@ -929,7 +935,9 @@ object ConverterHelper {
         fb.remoteId,
         fb.version,
         fb.status,
-        fb.drawing
+        fb.drawing,
+        fb.aboveGroundNumber,
+        fb.underGroundNumber
     ).also {
         if (fb.id ?: -1 > 0) {
             it.id = fb.id!!
@@ -953,7 +961,9 @@ object ConverterHelper {
                     b.version,
                     b.remoteId,
                     b.status,
-                    b.drawing
+                    b.drawing,
+                    b.aboveGroundNumber,
+                    b.underGroundNumber
                 )
             }
         }

@@ -27,7 +27,9 @@ data class FloorBean(
     @ColumnInfo(name="remote_id")           var remoteId:String?=null,
     @ColumnInfo(name="version")             var version:Int?=1,
     @ColumnInfo(name="status")              var status:Int?=0,//1,删除；0，正常，与云端is_deleted相同
-    @ColumnInfo(name="drawing")              var drawing:List<DrawingV3Bean>?=ArrayList()//基于楼层图纸列表
+    @ColumnInfo(name="drawing")              var drawing:List<DrawingV3Bean>?=ArrayList(),//基于楼层图纸列表
+    @ColumnInfo(name="aboveGroundNumber")             var aboveGroundNumber:Int?=0,//楼上层数
+    @ColumnInfo(name="underGroundNumber")              var underGroundNumber:Int?=0,//地下层数
 ) {
     @ColumnInfo(name="id")
     @PrimaryKey(autoGenerate = true)

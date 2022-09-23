@@ -2,14 +2,10 @@ package com.sribs.db.v3.project
 
 import androidx.room.*
 import androidx.room.OnConflictStrategy.REPLACE
+import com.sribs.common.bean.db.DrawingV3Bean
 import io.reactivex.Flowable
 import io.reactivex.Single
 
-/**
- * create time: 2022/9/17
- * author:
- * description:
- */
 @Dao
 interface v3BuildingModuleDao {
 
@@ -39,5 +35,5 @@ interface v3BuildingModuleDao {
 
 
     @Query("UPDATE v3_building_module SET drawings = :drawings WHERE id =:moduleId")
-    fun updateProjectOneData(moduleId: Long,drawings:List<String>): Int
+    fun updateProjectOneData(moduleId: Long,drawings:List<DrawingV3Bean>): Int
 }

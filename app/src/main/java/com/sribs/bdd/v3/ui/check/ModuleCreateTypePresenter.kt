@@ -198,10 +198,10 @@ class ModuleCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCrea
             projectId = mLocalProjectId.toLong(),
             moduleName = moduleName,
             updateTime = TimeUtil.YMD_HMS.format(Date()),
-            drawings = listOf(""),
+            drawings = ArrayList(),
             aboveGroundNumber = aboveGroundNumber,
             underGroundNumber = underGroundNumber,
-            inspectors = listOf(inspector),
+            inspectors = "",
             remoteId = remoteId,
 
             )
@@ -271,11 +271,11 @@ class ModuleCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCrea
                         floorId = it.floorId,
                         floorName = it.floorName,
                         drawingsList = it.floorList,
-                        deleteTime = 0L,
+                        deleteTime = "",
                         aboveNumber = it.aboveNumber,
                         afterNumber = it.afterNumber,
-                        createTime = curTime,
-                        updateTime = curTime,
+                        createTime = TimeUtil.YMD_HMS.format(Date()),
+                        updateTime = TimeUtil.YMD_HMS.format(Date()),
                         status = 0
                     )
                     mDb.updatev3ModuleFloor(bean)
@@ -346,11 +346,13 @@ class ModuleCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCrea
                 LogUtils.d("楼层图纸缓存目录：" + cachePath)
 
                 drawingItem = DrawingV3Bean(
+                    -1,
                     item.name,
                     FileUtil.getFileExtension(item.name),
                     "floor",
                     if (item.url != null) item.url else cacheFilePath.absolutePath,
-                    ""
+                    "",
+                    ArrayList()
                 )
                 floorDrawingsList.add(drawingItem)
             }

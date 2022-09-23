@@ -60,7 +60,7 @@ class ModuleFloorCreateTypeBuildingPresenter : BasePresenter(), IBasePresenter {
         mModuleId: Long,
     ) {
         var bean = v3BuildingModuleDbBean(
-            drawings = listOf("nihao222"),
+            drawings = ArrayList(),
             id = mModuleId
             )
 

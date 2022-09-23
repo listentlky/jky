@@ -5,11 +5,6 @@ import androidx.room.OnConflictStrategy.REPLACE
 import io.reactivex.Flowable
 import io.reactivex.Single
 
-/**
- * @date 2021/7/7
- * @author elijah
- * @Description
- */
 @Dao
 interface v3ModuleFloorDao {
     @Query("Select * from V3_MODULE_FLOOR")

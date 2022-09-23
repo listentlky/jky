@@ -1,6 +1,5 @@
 package com.sribs.common.bean.v3
 
-import com.sribs.common.bean.db.DamageBean
 import com.sribs.common.bean.db.DrawingV3Bean
 
 /**
@@ -18,9 +17,9 @@ data class v3ModuleFloorDbBean(
     var drawingsList: List<DrawingV3Bean>? = null,
     var aboveNumber:Int?=0,
     var afterNumber:Int?=0,
-    var createTime:Long?=null,
-    var updateTime:Long?=null,
-    var deleteTime:Long?=null,
+    var createTime:String?=null,
+    var updateTime:String?=null,
+    var deleteTime:String?=null,
     var version:Int?=null,
     var remoteId:String?=null,
     var status:Int?=0,

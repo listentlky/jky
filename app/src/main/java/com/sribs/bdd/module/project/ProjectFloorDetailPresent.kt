@@ -1,22 +1,22 @@
 package com.sribs.bdd.module.project
 
-import cc.shinichi.library.tool.ui.ToastUtil
 import com.alibaba.android.arouter.launcher.ARouter
-import com.cbj.sdk.libbase.utils.LOG
 import com.cbj.sdk.libnet.http.HttpManager
 import com.cbj.sdk.libui.mvp.moudles.IBaseView
 import com.sribs.bdd.bean.BuildingFloorItem
 import com.sribs.bdd.v3.util.LogUtils
 import com.sribs.common.bean.db.v3.project.v3BuildingModuleDbBean
+import com.sribs.common.bean.v3.v3ModuleFloorDbBean
 
 import com.sribs.common.module.BasePresenter
 import com.sribs.common.net.HttpApi
 import com.sribs.common.server.IDatabaseService
 import com.sribs.common.utils.TimeUtil
+import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import java.sql.Date
 import java.util.*
+import kotlin.collections.ArrayList
 
 class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloorDetailPresent {
 
@@ -87,72 +87,132 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
             .subscribeOn(Schedulers.computation())
             .observeOn(Schedulers.computation())
             .flatMap {
-                mDb.deletev3ModuleFloor(projectId,buildingId,moduleId )
+                mDb.deletev3ModuleFloor(projectId, buildingId, moduleId)
             }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-             //   cb(it)
+                //   cb(it)
                 onResult()
-                       LogUtils.d("llf删除数据成功")
-            },{
-              //  cb(false)
+                LogUtils.d("llf删除数据成功")
+            }, {
+                //  cb(false)
                 it.printStackTrace()
             })
         )
 
     }
 
-
     fun createOrSaveModule(
-        projectId: Long?,
-        buildingId: Long?,
+        projectId: Long,
+        buildingId: Long,
         remoteId: String?,
         moduleName: String?,
         onResult: (Long) -> Unit
     ) {
-
         LogUtils.d("llf无网络 单本地创建")
+        /**
+         * 查询copy楼栋下的图纸
+         */
 
-        createNewLocalModule(projectId, buildingId, remoteId, moduleName, onResult)
-    }
-
-
-    fun createNewLocalModule(
-        projectId: Long?,
-        buildingId: Long?,
-        remoteId: String?,
-        moduleName: String?,
-        onResult: (Long) -> Unit
-    ) {
-        var b = v3BuildingModuleDbBean()
-        b.projectId = projectId
-        b.buildingId = buildingId.toString()
-        b.remoteId = remoteId
-        b.moduleName = moduleName
-        b.drawings = arrayListOf("1", "2")
-        b.inspectors = arrayListOf("1", "2")
-        b.leaderId = "21"
-        b.leaderName = "21"
-        b.updateTime = TimeUtil.YMD_HMS.format(Date())
-
-        addDisposable(
-            mDb.updatev3BuildingModule(b)
+            mDb.getLocalBuildingOnce(buildingId).toObservable()
                 .subscribeOn(Schedulers.computation())
+                .observeOn(Schedulers.computation())
+                .flatMap {
+                    var cc = v3BuildingModuleDbBean()
+                    cc.projectId = projectId
+                    cc.buildingId = buildingId.toString()
+                    cc.remoteId = remoteId
+                    cc.moduleName = moduleName
+                    cc.drawings = it[0].drawing
+                    cc.inspectors = it[0].inspectorName
+                    cc.leaderId = ""
+                    cc.leaderName = it[0].leader
+                    cc.updateTime = TimeUtil.YMD_HMS.format(Date())
+                    cc.aboveGroundNumber = it[0].aboveGroundNumber
+                    cc.underGroundNumber = it[0].underGroundNumber
+
+                    LogUtils.d("查询到楼栋下面的数据包装进 model表 : " + cc)
+
+                    mDb.updatev3BuildingModule(cc)
+                }
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
+                    LogUtils.d("本地楼层model创建成功 "+it)
                     onResult(it)
-                }, {
-                    it.printStackTrace()
+                    createModuleFloor(it, projectId, buildingId, remoteId, moduleName)
+                },{
+                    LogUtils.d("本地楼层model创建失败 : " + it)
                 })
-        )
     }
 
+    fun createModuleFloor(
+        moduleId:Long,
+        projectId: Long,
+        buildingId: Long,
+        remoteId: String?,
+        moduleName: String?,
+    ) {
+
+        mDb.getLocalFloorsInTheBuilding(buildingId).toObservable()
+            .subscribeOn(Schedulers.computation())
+            .observeOn(Schedulers.computation())
+            .subscribe({
+                var floorList = ArrayList(it.map { b->v3ModuleFloorDbBean(
+                    id = -1,
+                    projectId = projectId,
+                    bldId = buildingId,
+                    moduleId = moduleId,
+                    floorId = b.floorId,
+                    floorName =  b.floorName,
+                    drawingsList = b.drawing,
+                    remoteId = remoteId,
+                    aboveNumber = b.aboveGroundNumber,
+                    afterNumber = b.underGroundNumber,
+                    version = 1,
+                    status = 0,
+                    createTime = TimeUtil.YMD_HMS.format(Date()),
+                    updateTime = TimeUtil.YMD_HMS.format(Date())
+                )})
+                LogUtils.d("查询包装 model楼层表 : " + floorList)
+                addDisposable(Observable.fromIterable(floorList)
+                    .subscribeOn(Schedulers.computation())
+                    .observeOn(Schedulers.computation())
+                    .flatMap {
+                        mDb.updatev3ModuleFloor(it)
+                    }.observeOn(AndroidSchedulers.mainThread())
+                    .subscribe({
+                        LogUtils.d("存储到model 楼层表 : " + it)
+                    },{
+
+                    }))
+            },{
+                LogUtils.d("存储到model 楼层表失败 : " + it)
+            })
+    }
+
+    fun saveModuleFloor(
+        floorList:ArrayList<v3ModuleFloorDbBean>,
+        onResult: (Long) -> Unit
+    ){
+        addDisposable(Observable.fromIterable(floorList)
+            .subscribeOn(Schedulers.computation())
+            .observeOn(Schedulers.computation())
+            .flatMap {
+                mDb.updatev3ModuleFloor(it)
+            }.observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+
+            },{
+
+            }))
+
+    }
 
     override fun bindView(v: IBaseView) {
-        mView = v as IProjectContrast.IProjectFloorDetailView
-    }
+    mView = v as IProjectContrast.IProjectFloorDetailView
+}
 
-    override fun unbindView() {
-        mView = null
-    }
+override fun unbindView() {
+    mView = null
+}
 }

@@ -15,11 +15,13 @@ data class BuildingBean(
     var updateTime:Long?=null,
     var deleteTime:Long?=null,
     var leader:String?=null,
-    var inspectorName:String?=null,
+    var inspectorName:String?="",
     var version:Int?=null,
     var remoteId:String?=null,
     var status:Int?=null,
-    var drawing:List<DrawingV3Bean>?=ArrayList()
+    var drawing:List<DrawingV3Bean>?= ArrayList(),
+    var aboveGroundNumber:Int?=0, //楼上层数
+    var underGroundNumber:Int?=0, //地下层数
 
 ){
     fun isSame(id: Long?,projectId:Long?):Boolean =

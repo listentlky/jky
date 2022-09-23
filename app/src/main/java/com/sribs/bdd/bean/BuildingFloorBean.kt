@@ -47,7 +47,7 @@ data class BuildingFloor(val projectId:Long?,
 }
 
 //每栋楼的模块
-data class BuildingFloorItem(val projectId:Long?,var bldId:Long?,var type:Int,var time:String){
+data class BuildingFloorItem(var moduleid:Long?,var buildingId:String?,var name:String?,var updateTime:String?){
 
 }
 
