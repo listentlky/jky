@@ -1,6 +1,196 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <include
+        android:id="@+id/check_menu_layout"
+        layout="@layout/check_title_menu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="1dp"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_marginTop="@dimen/_30sdp"
+        app:layout_constraintTop_toBottomOf="@id/check_menu_layout"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginLeft="@dimen/_30sdp"
+        android:layout_marginRight="@dimen/_30sdp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/check_bs_floor_current"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:includeFontPadding="false"
+            android:text="当前层数:一层"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_7ssp"
+            app:layout_constraintBottom_toTopOf="@id/check_bs_floor_edit1"
+            app:layout_constraintLeft_toLeftOf="@id/check_bs_floor_hint_text"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/check_bs_floor_zx"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:includeFontPadding="false"
+            android:text="轴线"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_7ssp"
+            app:layout_constraintBottom_toBottomOf="@id/check_bs_floor_edit1"
+            app:layout_constraintLeft_toLeftOf="@id/check_bs_floor_current"
+            app:layout_constraintTop_toTopOf="@id/check_bs_floor_edit1" />
+
+        <include
+            android:id="@+id/check_bs_floor_edit1"
+            layout="@layout/double_edit_item"
+            android:layout_width="@dimen/_80sdp"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_6sdp"
+            app:layout_constraintLeft_toRightOf="@id/check_bs_floor_zx"
+            app:layout_constraintBottom_toTopOf="@id/check_bs_floor_zwsjz"
+            app:layout_constraintTop_toBottomOf="@id/check_bs_floor_current" />
+
+        <TextView
+            android:id="@+id/check_bs_floor_fj"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_2sdp"
+            android:includeFontPadding="false"
+            android:text="/"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_7ssp"
+            app:layout_constraintBottom_toBottomOf="@id/check_bs_floor_edit1"
+            app:layout_constraintLeft_toRightOf="@id/check_bs_floor_edit1"
+            app:layout_constraintTop_toTopOf="@id/check_bs_floor_edit1" />
+
+        <include
+            android:id="@+id/check_bs_floor_edit2"
+            layout="@layout/double_edit_item"
+            android:layout_width="@dimen/_80sdp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_2sdp"
+            app:layout_constraintBottom_toBottomOf="@id/check_bs_floor_edit1"
+            app:layout_constraintLeft_toRightOf="@id/check_bs_floor_fj"
+            app:layout_constraintTop_toTopOf="@id/check_bs_floor_edit1" />
+
+        <EditText
+            android:id="@+id/check_bs_floor_zx_edit"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@drawable/check_gray_is_edit_selector"
+            android:gravity="center_vertical"
+            android:hint="请输入轴线"
+            android:visibility="gone"
+            android:paddingLeft="@dimen/_4sdp"
+            android:paddingRight="@dimen/_4sdp"
+            android:textColor="@color/black"
+            android:textColorHint="@color/gray_600"
+            android:textSize="@dimen/_6ssp"
+            app:layout_constraintBottom_toBottomOf="@id/check_bs_floor_edit1"
+            app:layout_constraintLeft_toLeftOf="@id/check_bs_floor_edit1"
+            app:layout_constraintRight_toRightOf="@id/check_bs_floor_edit2"
+            app:layout_constraintTop_toTopOf="@id/check_bs_floor_edit1" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/check_bs_choose_but"
+            android:layout_width="@dimen/_35sdp"
+            android:layout_height="@dimen/_16sdp"
+            android:layout_marginLeft="@dimen/_6sdp"
+            android:background="@drawable/round_blue_bg"
+            android:gravity="center"
+            android:text="切换"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_7ssp"
+            app:layout_constraintBottom_toBottomOf="@id/check_bs_floor_edit1"
+            app:layout_constraintLeft_toRightOf="@id/check_bs_floor_edit2"
+            app:layout_constraintTop_toTopOf="@id/check_bs_floor_edit1" />
+
+
+        <include
+            android:id="@+id/check_bs_floor_zwsjz"
+            layout="@layout/check_edit_item"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_10sdp"
+            app:layout_constraintLeft_toLeftOf="@id/check_bs_floor_hint_text"
+            app:layout_constraintRight_toRightOf="@id/check_bs_floor_hint_text"
+            app:layout_constraintBottom_toTopOf="@id/check_bs_floor_zwscz"
+            app:layout_constraintTop_toBottomOf="@id/check_bs_floor_edit1" />
+
+
+        <include
+            android:id="@+id/check_bs_floor_zwscz"
+            layout="@layout/check_edit_item"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_10sdp"
+            app:layout_constraintLeft_toLeftOf="@id/check_bs_floor_hint_text"
+            app:layout_constraintRight_toRightOf="@id/check_bs_floor_hint_text"
+            app:layout_constraintBottom_toTopOf="@id/check_bs_floor_hint"
+            app:layout_constraintTop_toBottomOf="@id/check_bs_floor_zwsjz" />
+
+        <TextView
+            android:id="@+id/check_bs_floor_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:text="备注"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_7ssp"
+            app:layout_constraintLeft_toLeftOf="@id/check_bs_floor_hint_text"
+            app:layout_constraintBottom_toTopOf="@id/check_bs_floor_hint_text"
+            app:layout_constraintTop_toBottomOf="@id/check_bs_floor_zwscz"  />
+
+        <EditText
+            android:id="@+id/check_bs_floor_hint_text"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@drawable/check_gray_stroke_bg"
+            android:gravity="start"
+            android:hint="请输入备注"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:minWidth="@dimen/_80sdp"
+            android:padding="@dimen/_4sdp"
+            android:textColor="@color/black"
+            android:textColorHint="@color/gray_600"
+            android:textSize="@dimen/_6ssp"
+            app:layout_constraintBottom_toTopOf="@id/check_bs_floor_confirm"
+            app:layout_constraintDimensionRatio="6:1"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/check_bs_floor_hint" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/check_bs_floor_confirm"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/login_input_height"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_marginBottom="@dimen/_40sdp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:padding="0dp"
+            android:text="完 成"
+            android:textColor="@color/white"
+            android:textSize="@dimen/common_text_title"
+            android:theme="@style/Theme.MaterialComponents.Light"
+            app:backgroundTint="@color/blue_800"
+            app:cornerRadius="@dimen/_2sdp"
+            app:layout_constraintTop_toBottomOf="@id/check_bs_floor_hint_text"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="@id/check_bs_floor_hint_text"
+            app:layout_constraintRight_toRightOf="@id/check_bs_floor_hint_text"
+            app:rippleColor="@color/rippleColor" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

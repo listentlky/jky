@@ -16,6 +16,8 @@ import com.sribs.bdd.R;
 import com.sribs.bdd.v3.module.FloorDrawingModule;
 import com.sribs.bdd.v3.popup.FloorDrawingSpinnerPopupWindow;
 import com.sribs.bdd.v3.util.LogUtils;
+import com.sribs.common.bean.db.DamageV3Bean;
+import com.sribs.common.bean.db.DrawingV3Bean;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,7 +76,7 @@ public class FloorDrawingSpinnerView extends LinearLayout {
         mView.clear();
         mTextViews.clear();
         layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                mContext.getResources().getDimensionPixelSize(R.dimen._15sdp));
+                mContext.getResources().getDimensionPixelSize(R.dimen._20sdp));
 
         for (int i =0; i <mData.size();i++){
 
@@ -108,16 +110,17 @@ public class FloorDrawingSpinnerView extends LinearLayout {
                         mSpinnerLayout.setVisibility(VISIBLE);
                     }
                     if(mFloorDrawItemClickCallback != null){
-                        mFloorDrawItemClickCallback.onClick(null,null);
+                        mFloorDrawItemClickCallback.onClick(null);
                     }
                 }
             });
 
             for (int k = 0; k < menuData.getMNameList().size();k++){
-                FloorDrawingModule.Item item = menuData.getMNameList().get(k);
+                DrawingV3Bean drawingV3Bean = menuData.getMNameList().get(k);
+                drawingV3Bean.setFloorName(menuData.getMMenuName());
                 View mSpinnerItemView = View.inflate(mContext, R.layout.floor_drawing_spinner_child_item,null);
                 TextView spinnerItem = mSpinnerItemView.findViewById(R.id.spinner_item_name);
-                spinnerItem.setText(item.getName());
+                spinnerItem.setText(drawingV3Bean.getFileName());
                 mTextViews.add(spinnerItem);
                 mView.add(mSpinnerItemView);
                 mSpinnerItemView.setOnClickListener(new OnClickListener() {
@@ -127,7 +130,7 @@ public class FloorDrawingSpinnerView extends LinearLayout {
                         mSpinnerItemView.setBackgroundColor(Color.parseColor("#FF005B82"));
                         spinnerItem.setTextColor(Color.WHITE);
                         if(mFloorDrawItemClickCallback != null){
-                            mFloorDrawItemClickCallback.onClick(item.getPath(),item.getName());
+                            mFloorDrawItemClickCallback.onClick(drawingV3Bean);
                         }
                     }
                 });

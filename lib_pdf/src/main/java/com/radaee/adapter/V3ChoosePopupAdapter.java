@@ -1,6 +1,7 @@
 package com.radaee.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -29,6 +30,8 @@ public class V3ChoosePopupAdapter  extends RecyclerView.Adapter<V3ChoosePopupAda
     private List<String> datas;
 
     private int select = 0;
+
+    private int color = 16742912;
 
     private V3ChoosePopupAdapter.ItemClickCallback mItemClickCallback;
 
@@ -60,12 +63,23 @@ public class V3ChoosePopupAdapter  extends RecyclerView.Adapter<V3ChoosePopupAda
                 holder.choose.setSelected(false);
                 holder.text.setSelected(false);
             }
+            switch (s){
+                case "轴网":
+                    holder.choose.setBackgroundResource(R.drawable.circle_orange);
+                    color = 16742912;
+                    break;
+                case "层高":
+                    holder.choose.setBackgroundResource(R.drawable.circle_green);
+                    color = 65408;
+                    break;
+            }
             if (mItemClickCallback != null) {
+                int finalColor = color;
                 holder.layout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         select = position;
-                        mItemClickCallback.onItemClick(position);
+                        mItemClickCallback.onItemClick(position, finalColor);
                         notifyDataSetChanged();
                     }
                 });
@@ -91,6 +105,6 @@ public class V3ChoosePopupAdapter  extends RecyclerView.Adapter<V3ChoosePopupAda
     }
 
     public interface ItemClickCallback {
-        void onItemClick(int position);
+        void onItemClick(int position,int color);
     }
 }

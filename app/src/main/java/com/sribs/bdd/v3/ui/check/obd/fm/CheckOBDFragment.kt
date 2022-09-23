@@ -13,6 +13,7 @@ import com.sribs.bdd.v3.popup.ChoosePicPopupWindow
 import com.sribs.bdd.v3.view.CheckMenuView
 import com.sribs.bdd.v3.view.CheckMenuView2
 import com.sribs.common.ARouterPath
+import com.sribs.common.bean.db.DamageV3Bean
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -44,8 +45,12 @@ class CheckOBDFragment : BaseFragment(R.layout.fragment_check_obliquedeformation
         Log.d("addItemView","mMenuList: "+mMenuList.toString());
 
         mBinding.toolLayout.setMenuModuleList(mMenuList!!).setCheckMenuCallback(object :CheckMenuView2.CheckMenuCallback{
-            override fun onClick(v: View?, pos: Int?) {
+            override fun onClick(v: View?, damageType:String?) {
                  (activity as CheckObliqueDeformationActivity).setVpCurrentItem(1)
+            }
+
+            override fun onMarkClick(v: View?,damage: DamageV3Bean?,damageType:String?) {
+                TODO("Not yet implemented")
             }
 
         })!!.build()

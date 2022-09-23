@@ -11,6 +11,8 @@ import android.widget.Toast;
 import com.sribs.bdd.R;
 import com.sribs.bdd.v3.module.FloorDrawingModule;
 import com.sribs.bdd.v3.view.FloorDrawingSpinnerView;
+import com.sribs.common.bean.db.DamageV3Bean;
+import com.sribs.common.bean.db.DrawingV3Bean;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +28,7 @@ public class FloorDrawingSpinnerPopupWindow extends PopupWindow {
 
     private List<FloorDrawingModule> mData = new ArrayList<>();
 
-    private String mName,mPath;
+    private DrawingV3Bean mSelectData;
 
     public FloorDrawingSpinnerPopupWindow(Context context, int width,
                                           List<FloorDrawingModule> data,
@@ -55,26 +57,25 @@ public class FloorDrawingSpinnerPopupWindow extends PopupWindow {
         view.findViewById(R.id.popup_confirm).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(TextUtils.isEmpty(mPath) || TextUtils.isEmpty(mName)){
+                if(mSelectData == null){
                     Toast.makeText(context,"未选择图纸",Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if(callback != null){
-                    callback.onClick(mPath,mName);
+                    callback.onClick(mSelectData);
                 }
                 dismiss();
             }
         });
         mFloorDrawingSpinnerView.setData(mData).setCallback(new FloorDrawItemClickCallback() {
             @Override
-            public void onClick(String path, String name) {
-                mName = name;
-                mPath = path;
+            public void onClick(DrawingV3Bean data) {
+                mSelectData = data;
             }
         }).build();
     }
 
     public interface FloorDrawItemClickCallback{
-        void onClick(String path,String name);
+        void onClick(DrawingV3Bean data);
     }
 }

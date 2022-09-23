@@ -59,6 +59,12 @@ public class OneChoosePopupWindow extends android.widget.PopupWindow {
         mRecyclerView.setAdapter(mOneChoosePopupAdapter);
     }
 
+    public void setSelect(int position){
+       if(mOneChoosePopupAdapter != null){
+           mOneChoosePopupAdapter.setSelect(position);
+       }
+    }
+
    public interface PopupCallback{
         void onSelect(String text);
     }

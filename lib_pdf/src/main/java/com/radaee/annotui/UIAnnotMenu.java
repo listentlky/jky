@@ -160,8 +160,10 @@ public class UIAnnotMenu {
 //        } else m_view.findViewById(R.id.btn_annot_property).setVisibility(View.GONE);
 
         if (is_show) {
-            m_view.setX(calculateX(annot_rect, btnsCount) + 640);
-            m_view.setY(calculateY(annot_rect) + 150);
+        /*    m_view.setX(calculateX(annot_rect, btnsCount) + 640);
+            m_view.setY(calculateY(annot_rect) + 150);*/
+            m_view.setX(calculateX(annot_rect, btnsCount));
+            m_view.setY(calculateY(annot_rect));
             m_view.setVisibility(View.VISIBLE);
             return true;
         } else {

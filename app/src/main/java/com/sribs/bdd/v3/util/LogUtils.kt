@@ -9,7 +9,7 @@ import android.util.Log
  */
 object LogUtils {
 
-    val TAG: String? = "bdd"
+    val TAG: String? = "bruce"
 
     fun d(msg: String) {
         Log.d(TAG, msg)

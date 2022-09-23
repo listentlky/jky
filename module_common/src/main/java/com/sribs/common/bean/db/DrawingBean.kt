@@ -32,10 +32,14 @@ data class DrawingBean(
 }
 
 data class DrawingV3Bean(
+    var drawingID:Long,
     var fileName: String?,
     var fileType: String?,//pdf,jpg,png,jpeg
     var drawingType: String?,//east,west,south,north,overall,floor
     var localAbsPath: String?,//移动端缓存地址
     var remoteAbsPath: String?,//服务端缓存地址,
-)
+    var damage:ArrayList<DamageV3Bean> //损伤
+){
+    var floorName:String?=""
+}
 

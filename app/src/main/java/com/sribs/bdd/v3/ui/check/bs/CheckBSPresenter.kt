@@ -4,6 +4,7 @@ import com.alibaba.android.arouter.launcher.ARouter
 import com.cbj.sdk.libui.mvp.moudles.IBaseView
 import com.sribs.bdd.v3.bean.CheckBSMainBean
 import com.sribs.bdd.v3.util.LogUtils
+import com.sribs.common.bean.db.DamageV3Bean
 import com.sribs.common.module.BasePresenter
 import com.sribs.common.server.IDatabaseService
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -30,6 +31,7 @@ class CheckBSPresenter : BasePresenter(),ICheckBSContrast.ICheckBSPresenter{
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                        var list = ArrayList(it.map { b->CheckBSMainBean(
+                           id= b.id,
                            projectId = b.projectId,
                            bldId = b.bldId,
                            floorName = b.floorName,
@@ -44,12 +46,25 @@ class CheckBSPresenter : BasePresenter(),ICheckBSContrast.ICheckBSPresenter{
                        )
                        })
                 LogUtils.d("获取到该楼下所有楼层 "+list.toString())
-                LogUtils.d("mView "+mView)
                 mView?.onModuleInfo(list)
             },{
                 mView?.onMsg(it.toString())
                 LogUtils.d("获取到该楼下所有楼层 ${it}")
             }))
+
+    }
+
+    override fun saveDamageToDb(damageInfo: DamageV3Bean) {
+        if(damageInfo.id < 0){ // 新建
+
+
+        }else{ //更新
+
+        }
+
+    }
+
+    override fun deleteDamageToDb(damageInfo: DamageV3Bean) {
 
     }
 

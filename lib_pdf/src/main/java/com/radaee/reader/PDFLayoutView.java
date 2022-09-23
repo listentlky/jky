@@ -136,7 +136,7 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
     //v3
     private boolean mIsV3 = false;
 
-    private String[] mV3DamageType = {"轴网","层高"};
+    private String[] mV3DamageType = {"层高","轴网"};
 
     public void setV3Version(boolean isV3){
         mIsV3 = isV3;
@@ -362,6 +362,7 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
                     Toast.makeText(getContext(), "Readonly annotation", Toast.LENGTH_SHORT).show();
                     if(m_listener != null) m_listener.OnPDFAnnotTapped(m_annot_pos.pageno, m_annot);
                 } else if (PDFCanSave() && check >= 0) {
+                    Toast.makeText(getContext(), "1111111111", Toast.LENGTH_SHORT).show();
                     switch (check) {
                         case 0:
                             m_annot.SetCheckValue(true);
@@ -383,10 +384,12 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
                     if (m_listener != null)
                         m_listener.OnPDFPageModified(m_annot_page.GetPageNo());
                     PDFEndAnnot();
-                } else if (PDFCanSave() && m_annot.GetEditType() > 0) //if form edit-box.
+                } else if (PDFCanSave() && m_annot.GetEditType() > 0) {//if form edit-box.
+                    Toast.makeText(getContext(), "22222222222222", Toast.LENGTH_SHORT).show();
                     onEditAnnot();
-                else if (PDFCanSave() && m_annot.GetComboItemCount() >= 0)//if form choice
+                }else if (PDFCanSave() && m_annot.GetComboItemCount() >= 0)//if form choice
                 {
+                    Toast.makeText(getContext(), "3333333333333", Toast.LENGTH_SHORT).show();
                     try {
                         int[] location = new int[2];
                         getLocationOnScreen(location);
@@ -441,14 +444,19 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
                         m_pCombo.showAtLocation(PDFLayoutView.this, Gravity.NO_GRAVITY, (int) m_annot_rect[0] + location[0], (int) (m_annot_rect[3] + location[1]));
                     } catch (Exception ignored) {
                     }
-                } else if (PDFCanSave() && m_annot.GetListItemCount() >= 0)  //if list choice
+                } else if (PDFCanSave() && m_annot.GetListItemCount() >= 0) {  //if list choice
+                    Toast.makeText(getContext(), "44444444444444", Toast.LENGTH_SHORT).show();
                     onListAnnot();
-                else if (PDFCanSave() && m_annot.GetFieldType() == 4 && m_annot.GetSignStatus() == 0 && Global.g_hand_signature)  //signature field
+                }else if (PDFCanSave() && m_annot.GetFieldType() == 4 &&
+                        m_annot.GetSignStatus() == 0 && Global.g_hand_signature) {  //signature field
+                    Toast.makeText(getContext(), "5555555555555", Toast.LENGTH_SHORT).show();
                     handleSignatureField();
-                else if(m_annot.GetURI() != null && Global.g_auto_launch_link && m_listener != null) { // launch link automatically
+                }else if(m_annot.GetURI() != null && Global.g_auto_launch_link && m_listener != null) { // launch link automatically
+                    Toast.makeText(getContext(), "666666666666666666", Toast.LENGTH_SHORT).show();
                     m_listener.OnPDFOpenURI(m_annot.GetURI());
                     PDFEndAnnot();
                 } else if (m_listener != null) {
+                    Toast.makeText(getContext(), "7777777777777777777", Toast.LENGTH_SHORT).show();
                     Log.i("leon","onSingleTapConfirmed 222 PDFCanSave()=" + PDFCanSave());
                     Log.i("leon","onSingleTapConfirmed 222 m_aMenu=" + m_aMenu);
                     m_listener.OnPDFAnnotTapped(m_annot_pos.pageno, m_annot);
@@ -489,8 +497,8 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
                                     JSONObject jsonObject = new JSONObject();
                                     try {
                                         jsonObject.put("action", whichBtn);//BUTTON_POPMENU_EDIT/BUTTON_POPMENU_DEL
-                                        jsonObject.put("ref", ref);
-                                        jsonObject.put("type", "");
+                                        jsonObject.put("annotRef", ref);
+                                        jsonObject.put("type", mSelectedDamageType);
                                         jsonObject.put("axis", "");
                                         jsonObject.put("content", "");
                                     } catch (JSONException e) {
@@ -988,7 +996,10 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
             {//popup editbox from UI.
                 m_annot_pg.ObjsStart();
                 m_annot = m_annot_pg.GetAnnot(m_annot_pg.GetAnnotCount() - 1);
-                Log.d("bdd","m_annot is null : "+m_annot);
+                if(m_annot == null){
+                    Log.e("bdd","m_annot is null : "+m_annot);
+                    return false;
+                }
                 m_annot_rect = m_annot.GetRect();
                 float tmp = m_annot_rect[1];
                 m_annot_rect[0] = m_annot_page.GetVX(m_annot_rect[0]) - m_layout.vGetX();
@@ -1389,6 +1400,7 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
                 rects[cur + 1] = event.getY();
                 rects[cur + 2] = event.getX();
                 rects[cur + 3] = event.getY();
+                Log.i("bdd", " bruce:  rects[0]" + rects[0]+"   "+ rects[1]+"   "+rects[2]+"   "+rects[3]);
                 m_rects = rects;
                 break;
             case MotionEvent.ACTION_MOVE:
@@ -1396,6 +1408,7 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
             case MotionEvent.ACTION_CANCEL:
                 m_rects[len - 2] = event.getX();
                 m_rects[len - 1] = event.getY();
+                Log.i("bdd", " bruce:  m_rects[2]" + m_rects[2]+"   "+ m_rects[3]);
                 break;
         }
         invalidate();
@@ -1509,10 +1522,9 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
             if(m_status == STA_NOTE) {
                 annot.SetIcon(8);//13 means star
                 int fillColor = (255 << 24) | mNewAnnotColor;
+                Log.d("bruce","mNewAnnotColor: "+ mNewAnnotColor);
                 annot.SetFillColor(fillColor);
-                annot.SetEditText("1");
-                annot.SetEditTextColor(Color.RED);
-                annot.SetStrokeColor(fillColor);
+                annot.SetStrokeWidth(Global.g_oval_annot_width);
             }
             //leon add end
 
@@ -1528,9 +1540,9 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
 //                Log.i("leon", "PDFLayoutView onAnnotCreated SetLineStyle style=" + style);
             }
 
-            if((m_status == STA_LINE) || (m_status == STA_RECT) || (m_status == STA_ELLIPSE) || (m_status == STA_INK) || (m_status == STA_EDITBOX)){
+          /*  if((m_status == STA_LINE) || (m_status == STA_RECT) || (m_status == STA_ELLIPSE) || (m_status == STA_INK) || (m_status == STA_EDITBOX)){
                 annot.SetReadOnly(true);
-            }
+            }*/
 
             annot.SetModifyDate(CommonUtil.getCurrentDate());
             if (!TextUtils.isEmpty(Global.g_annot_def_author))
@@ -1541,7 +1553,7 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
                 JSONObject jsonObject = new JSONObject();
                 try {
                     jsonObject.put("action", 0);//BUTTON_POPMENU_EDIT/BUTTON_POPMENU_DEL
-                    jsonObject.put("ref", ref);
+                    jsonObject.put("annotRef", ref);
                     jsonObject.put("type", mSelectedDamageType);
                     jsonObject.put("axis", "");
                     jsonObject.put("content", "");
@@ -2171,6 +2183,7 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
                 float[] pt1 = new float[2];
                 float[] pt2 = new float[2];
                 PDFVPageSet pset = new PDFVPageSet(len);
+
                 for (cur = 0; cur < len; cur += 4) {
                     PDFPos pos = m_layout.vGetPos((int) m_rects[cur], (int) m_rects[cur + 1]);
                     VPage vpage = m_layout.vGetPage(pos.pageno);
@@ -2178,13 +2191,20 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
                     pt1[1] = m_rects[cur + 1];
                     pt2[0] = m_rects[cur + 2];
                     pt2[1] = m_rects[cur + 3];
+                    Log.i("bruce", "第一次  "+pt1[0]+ " pt1[1] "+pt1[1]+
+                            "pt2[0] "+pt2[0]+ " pt2[1] "+pt2[1]);
                     Page page = m_doc.GetPage(vpage.GetPageNo());
                     if (page != null) {
                         page.ObjsStart();
+                        Log.i("bruce", "m_layout.vGetX()  "+m_layout.vGetX()+"-----------"+
+                                m_layout.vGetY());
+
                         Matrix mat = vpage.CreateInvertMatrix(m_layout.vGetX(), m_layout.vGetY());
                         mat.TransformPoint(pt1);
                         mat.TransformPoint(pt2);
-                        page.AddAnnotLine(pt1, pt2, Global.g_line_annot_style1, Global.g_line_annot_style2, vpage.ToPDFSize(Global.g_line_annot_width), Global.g_line_annot_color, Global.g_line_annot_fill_color);
+                        Log.i("bruce", "第二次 pt1[0] "+pt1[0]+ " pt1[1] "+pt1[1]+
+                                "pt2[0] "+pt2[0]+ " pt2[1] "+pt2[1]);
+                        page.AddAnnotLine(pt1, pt2,Global.g_line_annot_style1 , Global.g_line_annot_style2, vpage.ToPDFSize(Global.g_line_annot_width), Global.g_line_annot_color, Global.g_line_annot_fill_color);
                         mat.Destroy();
                         onAnnotCreated(page.GetAnnot(page.GetAnnotCount() - 1));
                         //add to redo/undo stack.
@@ -2419,19 +2439,32 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
      */
     private V3DamagePopupWindow.PopupCallback popupCallback = new V3DamagePopupWindow.PopupCallback() {
         @Override
-        public void onSelect(int position) {
-            Log.d("bdd","当前选择损伤: "+mV3DamageType[position]);
+        public void onSelect(int position,int color) {
+            Log.d("bruce","当前选择损伤: "+mV3DamageType[position] + "color: "+color);
+            mSelectedDamageType = mV3DamageType[position];
             PDFSetNote(0);
-            mNewAnnotColor = Color.parseColor("#FF005B82");
+            mNewAnnotColor = color;
             onTouchNote(mCacheMotionEvent);
+            if(mV3SelectDamageTypeCallback != null){
+                mV3SelectDamageTypeCallback.onSelect(mV3DamageType[position]);
+            }
         }
-
     };
+
+    private V3SelectDamageTypeCallback mV3SelectDamageTypeCallback;
+
+    public void setV3SelectDamageCallback(V3SelectDamageTypeCallback mV3SelectDamageTypeCallback){
+        this.mV3SelectDamageTypeCallback = mV3SelectDamageTypeCallback;
+    }
+
+    public interface V3SelectDamageTypeCallback{
+        void onSelect(String type);
+    }
 
     private V3DamagePopupWindow v3DamagePopupWindow;
     private void showV3DamagePopupWindow() {
         if(v3DamagePopupWindow == null){
-            v3DamagePopupWindow = new V3DamagePopupWindow(getContext(),150, Arrays.asList(mV3DamageType)
+            v3DamagePopupWindow = new V3DamagePopupWindow(getContext(),200, Arrays.asList(mV3DamageType)
             ,popupCallback);
         }
         v3DamagePopupWindow.showAsDropDown(this,(int)(Math.round(m_annot_note_x0)),(int)(Math.round(m_annot_note_y0)));

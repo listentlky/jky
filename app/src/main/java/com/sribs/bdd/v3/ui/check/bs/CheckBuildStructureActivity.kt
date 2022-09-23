@@ -1,8 +1,8 @@
 package com.sribs.bdd.v3.ui.check.bs
 
 import android.app.AlertDialog
+import android.content.Intent
 import android.graphics.Canvas
-import android.graphics.Color
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -15,10 +15,16 @@ import com.cbj.sdk.libui.mvp.BaseActivity
 import com.cbj.sdk.libui.mvp.BaseFragment
 import com.cbj.sdk.libui.mvp.adapter.BasePagerAdapter
 import com.cbj.sdk.libui.mvp.inflate
+import com.google.gson.Gson
 import com.hjq.permissions.Permission
 import com.hjq.permissions.XXPermissions
-import com.radaee.pdf.*
+import com.radaee.annotui.UIAnnotMenu
+import com.radaee.constant.Constant
+import com.radaee.pdf.Document
+import com.radaee.pdf.Global
+import com.radaee.pdf.Page
 import com.radaee.reader.PDFLayoutView
+import com.radaee.reader.PDFPagesAct
 import com.radaee.reader.PDFViewController
 import com.radaee.util.PDFAssetStream
 import com.radaee.util.PDFHttpStream
@@ -28,16 +34,23 @@ import com.sribs.bdd.R
 import com.sribs.bdd.databinding.ActivityCheckBuildStructureBinding
 import com.sribs.bdd.v3.bean.CheckBSMainBean
 import com.sribs.bdd.v3.event.RefreshPDFEvent
+import com.sribs.bdd.v3.ui.check.bs.fm.CheckBSFloorFragment
 import com.sribs.bdd.v3.ui.check.bs.fm.CheckBSFragment
+import com.sribs.bdd.v3.ui.check.bs.fm.CheckBSGridFragment
 import com.sribs.bdd.v3.util.LogUtils
 import com.sribs.common.ARouterPath
+import com.sribs.common.bean.db.DamageV3Bean
+import com.sribs.common.bean.db.DrawingV3Bean
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 @Route(path = com.sribs.common.ARouterPath.CHECK_BUILD_STRUCTURE_ACTIVITY)
 class CheckBuildStructureActivity : BaseActivity(), ICheckBSContrast.ICheckBSView,
-    ILayoutView.PDFLayoutListener {
+    ILayoutView.PDFLayoutListener, PDFLayoutView.V3SelectDamageTypeCallback {
 
     @JvmField
     @Autowired(name = com.sribs.common.ARouterPath.VAL_COMMON_TITLE)
@@ -59,6 +72,11 @@ class CheckBuildStructureActivity : BaseActivity(), ICheckBSContrast.ICheckBSVie
      * 当前编辑的pdf
      */
     var mCurrentLocalPDF = ""
+
+    /**
+     * 当前页损伤类型
+     */
+    var mCurrentDamageType = Arrays.asList("层高","轴网")
 
     private val mPresenter by lazy { CheckBSPresenter() }
 
@@ -98,8 +116,24 @@ class CheckBuildStructureActivity : BaseActivity(), ICheckBSContrast.ICheckBSVie
         bindPresenter()
         initToolbar()
         initViewPager()
+
+        mBinding.checkMenuLayout.checkObdMenuScale.setBackgroundResource(R.mipmap.icon_check_damage_zoom)
+        mBinding.checkMenuLayout.checkObdMenuScale.setOnClickListener {
+            mBinding.checkMenuLayout.root.visibility = View.GONE
+            mBinding.checkVp.currentItem = mScaleDamageIndex
+        }
+        mBinding.checkMenuLayout.checkObdMenuClose.setOnClickListener {
+            mBinding.checkMenuLayout.root.visibility = View.GONE
+        }
+
         Global.Init(this)
         mPresenter.getModuleInfo(mLocalProjectId, mBuildingId, mRemoteId)
+        RxBus.getDefault().toObservable<RefreshPDFEvent>(RefreshPDFEvent::class.java)
+            .subscribe {
+                if(it.isRefresh){
+                    openPDF(mCurrentLocalPDF)
+                }
+            }
     }
 
     /**
@@ -129,10 +163,11 @@ class CheckBuildStructureActivity : BaseActivity(), ICheckBSContrast.ICheckBSVie
             return
         }
         if(mPDFNoteModified){
-            AlertDialog.Builder(this).setTitle(R.string.drawing_edit_exit_dialog_title)
+            AlertDialog.Builder(this).setTitle("提示")
                 .setMessage(R.string.save_pdf_message)
                 .setPositiveButton(R.string.dialog_ok) { dialog, which ->
                     mController?.savePDF()
+                    mPDFNoteModified = false
                     ARouter.getInstance().build(ARouterPath.DRAW_PDF_ACTIVITY)
                         .withString(ARouterPath.VAL_COMMON_LOCAL_CURRENT_PDF, mCurrentLocalPDF)
                         .withString(ARouterPath.VAL_COMMON_TITLE,mTitle)
@@ -152,13 +187,6 @@ class CheckBuildStructureActivity : BaseActivity(), ICheckBSContrast.ICheckBSVie
             .withString(ARouterPath.VAL_COMMON_LOCAL_CURRENT_PDF, mCurrentLocalPDF)
             .withString(ARouterPath.VAL_COMMON_TITLE,mTitle)
             .navigation()
-
-        RxBus.getDefault().toObservable<RefreshPDFEvent>(RefreshPDFEvent::class.java)
-            .subscribe {
-                if(it.isRefresh){
-                    openPDF(mCurrentLocalPDF)
-                }
-            }
     }
 
     private fun initViewPager() {
@@ -244,12 +272,21 @@ class CheckBuildStructureActivity : BaseActivity(), ICheckBSContrast.ICheckBSVie
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 mView?.PDFOpen(mDoc, this)
+                mView?.setReadOnly(false)
+                mView?.setAnnotMenu(UIAnnotMenu(mViewParent))
+                mView?.setV3SelectDamageCallback(this)
                 mController = PDFViewController(
                     mViewParent,
                     mView,
                     pdfPath,
                     mAssetStream != null || mHttpStream != null
                 )
+                mController!!.SetPagesListener(View.OnClickListener {
+                    val intent = Intent()
+                    intent.setClass(this, PDFPagesAct::class.java)
+                    PDFPagesAct.SetTranDoc(mDoc)
+                    startActivityForResult(intent, 10000)
+                })
             }, {
                 LogUtils.d(" not granted ${Permission.MANAGE_EXTERNAL_STORAGE}")
             })
@@ -258,12 +295,13 @@ class CheckBuildStructureActivity : BaseActivity(), ICheckBSContrast.ICheckBSVie
     /**
      * 是否改动了
      */
-    private var mPDFNoteModified: Boolean = false
+    var mPDFNoteModified: Boolean = false
 
 
     fun getFileState(): Int {
         return mController?.getFileState() ?: PDFViewController.NOT_MODIFIED
     }
+
 
     fun isPDFModifiedNotSaved(): Boolean {
         return (getFileState() == PDFViewController.MODIFIED_NOT_SAVED || mPDFNoteModified)
@@ -271,12 +309,13 @@ class CheckBuildStructureActivity : BaseActivity(), ICheckBSContrast.ICheckBSVie
 
     private fun promptToSavePdf(ifExit: Boolean) {
         if (isPDFModifiedNotSaved()) {
-            AlertDialog.Builder(this).setTitle(R.string.drawing_edit_exit_dialog_title)
+            AlertDialog.Builder(this).setTitle(if(ifExit)getString(R.string.drawing_edit_exit_dialog_title ) else "提示")
                 .setMessage(R.string.save_pdf_message)
                 .setPositiveButton(R.string.dialog_ok) { dialog, which ->
                     //cache damage list to local sqlite
                     //        mDoc?.let { it1 -> saveDamageData() }
                     mController?.savePDF()
+                    mPDFNoteModified = false
                     if (ifExit)
                         finish()
                 }.setNegativeButton(
@@ -294,62 +333,168 @@ class CheckBuildStructureActivity : BaseActivity(), ICheckBSContrast.ICheckBSVie
     }
 
 
-    private fun addLine(pdfView: PDFLayoutView, pageno: Int, x: Float, y: Float) {
-        LogUtils.d("mDoc: ${mDoc} ;pageno:${pageno} ;x:${x} ;y:${y}")
+    var mCheckBSMainBeanList:ArrayList<CheckBSMainBean>?=ArrayList()
 
-        var page = mDoc.GetPage(pageno)
-        LogUtils.d("page: ${page}")
-        if (page != null) {
-            page.ObjsStart()
-            var addAnnotLine = page.AddAnnotLine(
-                floatArrayOf(100f, 100f),
-                floatArrayOf(200f, 300f),
-                4,
-                4,
-                10f,
-                Color.BLACK,
-                Color.BLACK
-            )
-            LogUtils.d(" addAnnotLine： " + addAnnotLine)
-            page.Close()
-            LogUtils.d(" page.GetAnnotCount()： " + page.GetAnnotCount())
-            //     pdfView.vRenderPage(pageno) // No such function
-            //     pdfView.OnPageRendered(pageno)  //No display
+    /**
+     * 当前层
+     */
+    var mCurrentFloorName:String?=""
 
-            //   page.AddAnnotMarkup(matrix,floatArray,1)
-            //    matrix.Destroy()
+    /**
+     * 所有损伤信息集合
+     *  pdf图纸
+     *  对应损伤集合
+     */
+    var mDamageBeanList:HashMap<String?,ArrayList<DamageV3Bean>?>?=HashMap()
 
-
-            /*       val content = PageContent()
-                   content.Create()
-                   content.TextBegin()
-                   content.TextMove(100f, 300f)
-                   content.TextSetFont(rfont, 16f)
-                   content.SetFillColor(Color.BLUE)
-                   content.DrawText("啊啊啊啊啊啊啊")
-                   content.TextEnd()
-                   page.AddContent(content, true)
-
-                   content.GSSetMatrix(matrix)
-              //     content.GSRestore()
-                   content.Destroy()*/
-            //    page.Close()
-
-        }
-    }
+    /**
+     * 当前图纸信息
+     */
+    var mCurrentDrawing: DrawingV3Bean?=null
 
     /**
      * 获取数据
      */
     override fun onModuleInfo(checkMainBean: List<CheckBSMainBean>) {
+        this.mCheckBSMainBeanList!!.clear()
+        mCheckBSMainBeanList!!.addAll(checkMainBean)
         LogUtils.d("回调到view层数据")
-
+        /**
+         * 初始化选择窗图纸列表
+         */
         (mFragments[0] as CheckBSFragment).initFloorDrawData(checkMainBean)
 
-        var drawingV3Bean = checkMainBean[0].drawing?.get(0)
-        if (drawingV3Bean != null) {
-            openPDF(drawingV3Bean.localAbsPath!!)
+        /**
+         * 初始化损伤列表
+         *
+         */
+
+        checkMainBean.forEach { a->
+            a.drawing!!.forEach { b->
+                mDamageBeanList!!.put(b.localAbsPath,if(b.damage.isNullOrEmpty()) ArrayList() else b.damage)
+            }
         }
+
+        resetDamageList()
+
+        mCurrentDrawing = checkMainBean!![0].drawing!![0]
+
+        mCurrentFloorName = checkMainBean!![0].floorName
+
+        /**
+         * 初始化并加载第一张图纸
+         */
+
+        if (mCurrentDrawing != null) {
+            openPDF(mCurrentDrawing!!.localAbsPath!!)
+        }
+    }
+
+    /**
+     * 设置损伤页面详情，并展示
+     */
+    fun resetDamageInfo(damageV3Bean: DamageV3Bean?,type:String?){
+        when(type){
+           mCurrentDamageType[0]->{ // 层高
+               (mFragments[1] as CheckBSFloorFragment).resetView(damageV3Bean)
+               mBinding.checkVp.currentItem = 1
+            }
+            mCurrentDamageType[1]->{ //轴网
+                (mFragments[2] as CheckBSGridFragment).resetView(damageV3Bean)
+                mBinding.checkVp.currentItem = 2
+            }
+        }
+    }
+
+    /**
+     * 保存损伤到数据库
+     */
+    fun saveDamage(damageInfo:DamageV3Bean){
+      //  mPresenter.saveDamageToDb(damageInfo)
+
+        var exitDamageBeanList = mDamageBeanList!!.get(mCurrentLocalPDF)
+
+
+        LogUtils.d("当前数据："+damageInfo)
+
+        LogUtils.d("过滤前损伤数据："+exitDamageBeanList)
+        /**
+         * 先过滤相同损伤
+         */
+        var totleDamageBranList = exitDamageBeanList!!.filter {
+            it.createTime != damageInfo.createTime
+        }
+
+        LogUtils.d("过滤后损伤数据："+totleDamageBranList)
+
+        /***
+         * 再添加
+         */
+        exitDamageBeanList.clear()
+        exitDamageBeanList.addAll(totleDamageBranList)
+        exitDamageBeanList!!.add(damageInfo)
+
+        LogUtils.d("再添加损伤数据："+totleDamageBranList)
+
+        mDamageBeanList!!.put(mCurrentLocalPDF,exitDamageBeanList)
+        resetDamageList()
+        mBinding.checkVp.currentItem = 0
+    }
+
+    /**
+     * 重置损伤列表和详情
+     */
+    fun resetDamageList(){
+        //添加到损伤模块
+        (mFragments[0] as CheckBSFragment).setDamage(mDamageBeanList!!.get(mCurrentLocalPDF))
+    }
+
+    /**
+     * 选择pdf图片
+     */
+    fun choosePDF(data: DrawingV3Bean){
+        if (isPDFModifiedNotSaved()) {
+            AlertDialog.Builder(this).setTitle("提示")
+                .setMessage(R.string.save_pdf_message)
+                .setPositiveButton(R.string.dialog_ok) { dialog, which ->
+                    mController?.savePDF()
+                    mPDFNoteModified = false
+                    (mFragments[0] as CheckBSFragment).mBinding.checkSelectIndex.text = data.fileName
+                    mCurrentFloorName = data.floorName!!
+                    mCurrentDrawing = data;
+                    openPDF(data.localAbsPath!!)
+                    resetDamageList()
+                }.setNegativeButton(
+                    R.string.dialog_cancel
+                ) { dialog, which ->
+
+                }
+                .show()
+        } else {
+            (mFragments[0] as CheckBSFragment).mBinding.checkSelectIndex.text = data.fileName
+            mCurrentFloorName = data.floorName!!
+            openPDF(data.localAbsPath!!)
+            resetDamageList()
+        }
+    }
+
+    /**
+     * 保存到数据库成功
+     */
+    override fun onSaveToDbSuccess() {
+        mBinding.checkVp.currentItem = 1
+    }
+
+
+    var mScaleDamageIndex = 0
+
+    /**
+     * 当前缩小损伤页面
+     */
+    fun scaleDamageInfo(index:Int){
+        mScaleDamageIndex = index
+        mBinding.checkMenuLayout.root.visibility = View.VISIBLE
+        mBinding.checkVp.currentItem = 0
     }
 
     override fun bindPresenter() {
@@ -462,12 +607,72 @@ class CheckBuildStructureActivity : BaseActivity(), ICheckBSContrast.ICheckBSVie
         LogUtils.d("onPDFNoteTapped")
     }
 
+    /**
+     * 当前mark
+     */
+    var mCurrentAddAnnotReF = -1L
+
+    fun setAddAnnotReF(addAnnotReF:Long){
+        mCurrentAddAnnotReF = addAnnotReF
+    }
+
     override fun onPDFNoteAdded(annotPoint: String?) {
-        LogUtils.d("onPDFNoteAdded")
+        LogUtils.d("onPDFNoteAdded "+annotPoint)
+        var damageBean = Gson().fromJson(annotPoint, DamageV3Bean::class.java)
+        mCurrentAddAnnotReF = damageBean.annotRef
+        resetDamageInfo(null,damageBean.type)
+        when(damageBean.type){
+            mCurrentDamageType[0]->{
+                mBinding.checkVp.currentItem = 1
+            }
+            mCurrentDamageType[1]->{
+                mBinding.checkVp.currentItem = 2
+            }
+        }
     }
 
     override fun onPDFNoteEdited(annotPoint: String?) {
-        LogUtils.d("onPDFNoteEdited")
+        LogUtils.d("onPDFNoteEdited "+ annotPoint)
+        // 添加mark返回的信息，需保存 annotRef
+        var damageBean: DamageV3Bean = Gson().fromJson(annotPoint!!, DamageV3Bean::class.java)
+        when(damageBean.action){
+            Constant.BUTTON_POPMENU_EDIT->{
+                /**
+                 * 查询标记对应的损伤信息,查询到就设置上 进入编辑页面
+                 */
+                mDamageBeanList!!.get(mCurrentLocalPDF)!!.forEach {
+                    if(damageBean.annotRef == it.annotRef){
+                        resetDamageInfo(it,it.type)
+                    }
+                }
+                when(damageBean.type){
+                    mCurrentDamageType[0]->{
+                        mBinding.checkVp.currentItem = 1
+                    }
+                    mCurrentDamageType[1]->{
+                        mBinding.checkVp.currentItem = 2
+                    }
+                }
+            }
+            Constant.BUTTON_POPMENU_DEL->{
+                /**
+                 * 删除标记对应的损伤信息
+                 */
+                var exitDamageBeanList = mDamageBeanList!!.get(mCurrentLocalPDF)
+                LogUtils.d("删除前损伤数据: "+exitDamageBeanList)
+
+                var mTotalDamageBeanList = exitDamageBeanList!!.filter {
+                    damageBean.annotRef != it.annotRef
+                }
+                exitDamageBeanList.clear()
+                exitDamageBeanList.addAll(mTotalDamageBeanList)
+
+                mDamageBeanList!!.put(mCurrentLocalPDF,exitDamageBeanList)
+                resetDamageList()
+                //todo 此处同步从数据库中删除
+
+            }
+        }
     }
 
     override fun onPDFNoteDeleted(annotPoint: String?) {
@@ -480,5 +685,19 @@ class CheckBuildStructureActivity : BaseActivity(), ICheckBSContrast.ICheckBSVie
 
     override fun onButtonNextPressed() {
         LogUtils.d("onButtonNextPressed")
+    }
+
+    /**
+     * 当前选择新建损伤类型
+     */
+    override fun onSelect(type: String?) {
+     /*   when(type){
+            mCurrentDamageType[0]->{
+                mBinding.checkVp.currentItem = 1
+            }
+            mCurrentDamageType[1]->{
+                mBinding.checkVp.currentItem = 2
+            }
+        }*/
     }
 }

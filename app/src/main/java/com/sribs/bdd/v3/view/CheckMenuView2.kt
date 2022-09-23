@@ -14,6 +14,7 @@ import android.widget.TextView
 import androidx.core.view.forEachIndexed
 import com.sribs.bdd.R
 import com.sribs.bdd.v3.module.CheckMenuModule
+import com.sribs.common.bean.db.DamageV3Bean
 
 /**
  * create time: 2022/9/5
@@ -48,22 +49,22 @@ class CheckMenuView2 : LinearLayout {
         orientation = VERTICAL
         menuModuleList!!.forEachIndexed {index, it ->
             Log.d("111","MENU_TYPE: "+it.name)
-            addView(addItemView(MENU_TYPE, it.name,index))
+            addView(addItemView(MENU_TYPE, it.name,null,""))
             addView(addLine())
-            it.menu!!.forEachIndexed { index, it ->
-            Log.d("111","ITEM_TYPE: "+it.name)
-                addView(addItemView(ITEM_TYPE, it.name,index))
+            it.menu!!.forEachIndexed { index, b ->
+            Log.d("111","ITEM_TYPE: "+b.name)
+                addView(addItemView(ITEM_TYPE, b.name,null,b.name))
                 addView(addLine())
-                it.item!!.forEachIndexed { index, it ->
-                    Log.d("111","MARK_TYPE: "+it.name)
-                    addView(addItemView(MARK_TYPE, it.name,index))
+                b.item!!.forEachIndexed { index, c ->
+                    Log.d("111","MARK_TYPE: "+c.name)
+                    addView(addItemView(MARK_TYPE, c.name,c.damage,b.name))
                     addView(addLine())
                 }
             }
         }
     }
 
-    private fun addItemView(type: Int?, name: String?,pos:Int?): View? {
+    private fun addItemView(type: Int?, name: String?,damage: DamageV3Bean?,damageType:String?): View? {
         when(type){
             MENU_TYPE->{
                 val tv = TextView(mContext)
@@ -88,7 +89,7 @@ class CheckMenuView2 : LinearLayout {
                 itemLayout.setPadding(padding, 0, padding / 2, 0)
                 val itemLayoutParams = LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
-                    mContext!!.resources.getDimensionPixelOffset(R.dimen._18sdp)
+                    mContext!!.resources.getDimensionPixelOffset(R.dimen._22sdp)
                 )
 
                 val tv2 = TextView(mContext)
@@ -124,7 +125,7 @@ class CheckMenuView2 : LinearLayout {
 
                 itemLayout.layoutParams = itemLayoutParams
                 itemLayout.setOnClickListener { v ->
-                    mCheckMenuCallback!!.onClick(v,pos)
+                    mCheckMenuCallback!!.onClick(v,damageType)
                 }
                 return itemLayout
             }
@@ -139,10 +140,14 @@ class CheckMenuView2 : LinearLayout {
                 tv4.setTextColor(Color.parseColor("#FFFFFF"))
                 val tv4Params = LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
-                    mContext!!.resources.getDimensionPixelOffset(R.dimen._18sdp)
+                    mContext!!.resources.getDimensionPixelOffset(R.dimen._22sdp)
                 )
                 tv4Params.leftMargin = mContext!!.resources.getDimensionPixelOffset(R.dimen._18sdp)
                 tv4.layoutParams = tv4Params
+                tv4.setOnClickListener { v ->
+                    mCheckMenuCallback!!.onMarkClick(v,damage,damageType)
+                }
+
                 return tv4
             }
         }
@@ -169,7 +174,10 @@ class CheckMenuView2 : LinearLayout {
     }
 
     interface CheckMenuCallback {
-        fun onClick(v: View?,pos:Int?)
+        fun onClick(v: View?,damageType:String?)
+
+        fun onMarkClick(v: View?,damage: DamageV3Bean?,damageType:String?)
+
     }
 
 }

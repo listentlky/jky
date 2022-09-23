@@ -70,10 +70,15 @@ public class OneChoosePopupAdapter extends RecyclerView.Adapter<OneChoosePopupAd
         return this;
     }
 
+     public void setSelect(int position){
+        this.select = position;
+        notifyDataSetChanged();
+    }
+
     @NonNull
     @Override
     public ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new ItemViewHolder(LayoutInflater.from(mContext).inflate(R.layout.v3_popup_item,parent,false));
+        return new ItemViewHolder(LayoutInflater.from(mContext).inflate(R.layout.popup_item,parent,false));
     }
 
     @Override

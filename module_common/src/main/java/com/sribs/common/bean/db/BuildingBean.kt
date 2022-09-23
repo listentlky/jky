@@ -19,7 +19,7 @@ data class BuildingBean(
     var version:Int?=null,
     var remoteId:String?=null,
     var status:Int?=null,
-    var drawing:List<DrawingV3Bean>?=null
+    var drawing:List<DrawingV3Bean>?=ArrayList()
 
 ){
     fun isSame(id: Long?,projectId:Long?):Boolean =

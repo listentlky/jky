@@ -1,5 +1,6 @@
 package com.sribs.bdd.v3.module
 
+import com.sribs.common.bean.db.DrawingV3Bean
 import java.io.Serializable
 
 /**
@@ -9,12 +10,7 @@ import java.io.Serializable
  */
 class FloorDrawingModule : Serializable{
 
-    var mMenuName:String?=null
-    var mNameList:ArrayList<Item>?=ArrayList()
-
-    class Item : Serializable {
-        var name:String?=null
-        var path:String?=null
-    }
+    var mMenuName:String?=""
+    var mNameList:ArrayList<DrawingV3Bean>?=ArrayList()
 
 }

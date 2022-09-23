@@ -8,9 +8,9 @@ import com.cbj.sdk.libui.mvp.bindView
 import com.sribs.bdd.R
 import com.sribs.bdd.databinding.FragmentCheckObliquedeformationBinding
 import com.sribs.bdd.v3.module.CheckMenuModule
-import com.sribs.bdd.v3.ui.check.cd.CheckComponentDetectionActivity
 import com.sribs.bdd.v3.view.CheckMenuView2
 import com.sribs.common.ARouterPath
+import com.sribs.common.bean.db.DamageV3Bean
 
 @Route(path = ARouterPath.CHECK_COMPONENT_DETECTION_FRAGMENT)
 class CheckCDFragment : BaseFragment(R.layout.fragment_check_componentdetection) {
@@ -45,13 +45,17 @@ class CheckCDFragment : BaseFragment(R.layout.fragment_check_componentdetection)
         Log.d("addItemView", "mMenuList: " + mMenuList.toString());
         mBinding.toolLayout.setMenuModuleList(mMenuList!!)
             .setCheckMenuCallback(object : CheckMenuView2.CheckMenuCallback {
-                override fun onClick(v: View?, pos: Int?) {
-                    when (pos){
-                        0->   (activity as CheckComponentDetectionActivity).setVpCurrentItem(1)
+                override fun onClick(v: View?, damageType:String?) {
+                    when (String){
+                      /*  0->   (activity as CheckComponentDetectionActivity).setVpCurrentItem(1)
                         1->   (activity as CheckComponentDetectionActivity).setVpCurrentItem(2)
                         2->   (activity as CheckComponentDetectionActivity).setVpCurrentItem(3)
-                        3->   (activity as CheckComponentDetectionActivity).setVpCurrentItem(4)
+                        3->   (activity as CheckComponentDetectionActivity).setVpCurrentItem(4)*/
                     }
+                }
+
+                override fun onMarkClick(v: View?,damage: DamageV3Bean?,damageType:String?) {
+                    TODO("Not yet implemented")
                 }
 
             })!!.build()

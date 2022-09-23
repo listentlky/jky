@@ -108,6 +108,19 @@ public class OneChooseSpinnerView extends LinearLayout {
         addView(inflate,layoutParams);
     }
 
+    public void setText(String text){
+        if(mSpinnerText != null){
+            mSpinnerText.setText(text);
+        }
+    }
+
+    public void setSelect(int position){
+        mSelectPosition = position;
+        if(mOneChoosePopupWindow != null) {
+            mOneChoosePopupWindow.setSelect(position);
+        }
+    }
+
     private void chooseSpinnerStatus(){
         if(!mIsOpen){
             mSpinnerArrow.setRotation(180f);

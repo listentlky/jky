@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    android:layout_width="match_parent"
+<LinearLayout android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/check_blue_stroke_bg"
     android:orientation="vertical"
@@ -11,7 +10,7 @@
         android:overScrollMode="never"
         android:layout_width="match_parent"
         android:layout_marginTop="@dimen/_4sdp"
-        android:layout_height="@dimen/_90sdp">
+        android:layout_height="@dimen/_120sdp">
 
         <com.sribs.bdd.v3.view.FloorDrawingSpinnerView
             android:paddingLeft="@dimen/_2sdp"
@@ -27,8 +26,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:orientation="horizontal"
-            android:layout_marginTop="@dimen/_4sdp"
-            android:layout_height="@dimen/_15sdp">
+            android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/popup_cancel"
@@ -37,24 +35,28 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toLeftOf="@id/popup_confirm"
                 android:text="取消"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
                 android:gravity="center"
-                android:textSize="@dimen/_6sdp"
+                android:textSize="@dimen/_10sdp"
                 android:textColor="@color/black_500"
-                android:layout_height="match_parent"/>
+                android:layout_height="wrap_content"/>
 
             <TextView
                 android:id="@+id/popup_confirm"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:text="确定"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
                 app:layout_constraintLeft_toRightOf="@id/popup_cancel"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintHorizontal_weight="1"
                 android:background="@drawable/choose_pic_confirm_bg"
                 android:gravity="center"
-                android:textSize="@dimen/_6sdp"
+                android:textSize="@dimen/_10sdp"
                 android:textColor="@color/white"
-                android:layout_height="match_parent"/>
+                android:layout_height="wrap_content"/>
 
             <View
                 android:layout_width="0dp"

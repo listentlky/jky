@@ -6,6 +6,7 @@ import androidx.room.PrimaryKey
 import com.sribs.common.bean.db.DrawingV3Bean
 import java.sql.Date
 import java.util.*
+import kotlin.collections.ArrayList
 
 /**
  * @date 2022/3/15
@@ -26,7 +27,7 @@ data class BuildingBean(
     @ColumnInfo(name="remote_id")           var remoteId:String?=null,
     @ColumnInfo(name="version")             var version:Int?=1,
     @ColumnInfo(name="status")              var status:Int?=0,//1,删除；0，正常，与云端is_deleted相同
-    @ColumnInfo(name="drawing")              var drawing:List<DrawingV3Bean>?=null//基于楼图纸列表
+    @ColumnInfo(name="drawing")              var drawing:List<DrawingV3Bean>?=ArrayList()//基于楼图纸列表
 ) {
     @ColumnInfo(name="id")
     @PrimaryKey(autoGenerate = true)

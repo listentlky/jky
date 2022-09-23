@@ -13,7 +13,9 @@ import com.radaee.adapter.V3ChoosePopupAdapter;
 import com.radaee.viewlib.R;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * create time: 2022/9/20
@@ -26,6 +28,8 @@ public class V3DamagePopupWindow extends android.widget.PopupWindow {
     private Context mContext;
 
     private int mChoosePosition = 0;
+
+    private int mChooseColor = 0;
 
     private V3ChoosePopupAdapter mChoosePicPopupAdapter;
 
@@ -53,8 +57,9 @@ public class V3DamagePopupWindow extends android.widget.PopupWindow {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         mChoosePicPopupAdapter = new V3ChoosePopupAdapter(mContext,datas).setmItemClickCallback(new V3ChoosePopupAdapter.ItemClickCallback() {
             @Override
-            public void onItemClick(int position) {
+            public void onItemClick(int position,int color) {
                 mChoosePosition = position;
+                mChooseColor = color;
             }
         });
         mRecyclerView.setAdapter(mChoosePicPopupAdapter);
@@ -68,7 +73,7 @@ public class V3DamagePopupWindow extends android.widget.PopupWindow {
             @Override
             public void onClick(View view) {
                 if(mPopupCallback != null){
-                    mPopupCallback.onSelect(mChoosePosition);
+                    mPopupCallback.onSelect(mChoosePosition,mChooseColor);
                 }
                 dismiss();
             }
@@ -76,6 +81,6 @@ public class V3DamagePopupWindow extends android.widget.PopupWindow {
     }
 
     public interface PopupCallback{
-        void onSelect(int position);
+        void onSelect(int position,int color);
     }
 }

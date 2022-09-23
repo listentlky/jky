@@ -320,11 +320,13 @@ class ProjectCreateTypePresenter: BasePresenter(),IProjectContrast.IProjectCreat
                 var cacheFilePath = File(cacheRootDir + mCurDrawingsDir,it.name)
 
                 var drawingV3ToBuild = DrawingV3Bean(
+                    -1,
                     it.name,
                     FileUtil.getFileExtension(it.name),
                     "overall",
                     if(it.url != null) it.url else cacheFilePath.absolutePath,
-                    ""
+                    "",
+                    ArrayList()
                 )
                 mAppFacadeDrawingList!!.add(drawingV3ToBuild)
             }
@@ -362,13 +364,15 @@ class ProjectCreateTypePresenter: BasePresenter(),IProjectContrast.IProjectCreat
 
             for (i in originList!!.indices) {
                 var  item = originList!![i]
-                var cacheFilePath = File(cacheRootDir + mCurDrawingsDir,item.name)
+                var cacheFilePath = File(cacheRootDir + mCurDrawingsDir+floorBean.name,item.name)
                 var drawingV3ToBuild = DrawingV3Bean(
+                    -1,
                     item.name,
                     FileUtil.getFileExtension(item.name),
                     "floor",
                     if(item.url != null) item.url else cacheFilePath.absolutePath,
-                    ""
+                    "",
+                    ArrayList()
                 )
                 floorDrawingsList.add(drawingV3ToBuild)
             }

@@ -8,12 +8,13 @@ import com.sribs.common.bean.db.DrawingV3Bean
  * description:
  */
 class CheckBSMainBean (
+    var id:Long?,
     var projectId:Long?,
     var bldId:Long?,
     var floorName:String?,
     var remoteId:String?=null,
     var inspectorName:String?="",
-    var drawing:List<DrawingV3Bean>?=null,
+    var drawing:List<DrawingV3Bean>?=ArrayList(),
     var createTime:Long?=0,
     var updateTime:Long?=0,
     var deleteTime:Long?=0,

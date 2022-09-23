@@ -3,6 +3,8 @@
     android:id="@+id/popup_item_text"
     android:textSize="@dimen/_6sdp"
     android:focusable="true"
+    android:paddingTop="@dimen/_4sdp"
+    android:paddingBottom="@dimen/_4sdp"
     android:focusableInTouchMode="true"
     android:textColor="@drawable/popup_textcolor_selector"
     android:gravity="center"

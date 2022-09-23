@@ -70,7 +70,7 @@ data class ProjectBean(
             var unitId: Long? = -1
             var houseList: ArrayList<House>? = null
             var drawingsList: ArrayList<Drawing>? = null//每层图纸
-            var drawingsV3List: ArrayList<DrawingV3Bean>? = null//每层图纸
+            var drawingsV3List: ArrayList<DrawingV3Bean>? = ArrayList()//每层图纸
             var createTime: Long? = 0
             var engineer: String? = ""
             var remoteId:String? = ""

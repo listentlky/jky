@@ -784,7 +784,7 @@ class BuildingDamageActivity:BaseActivity(), IBuildingContrast.IBuildingView, PD
         } as ArrayList<com.sribs.common.bean.db.DamageBean>
 
         println("leon onPDFNoteAdded curDrawingDamageList=${curDrawingDamageList.toString()}")
-        var size:Int = curDrawingDamageList?.size
+        var size:Int = curDrawingDamageList.size
         println("leon onPDFNoteAdded size=${size}")
         size++
         mNewDamageMonitorId = size.toString()

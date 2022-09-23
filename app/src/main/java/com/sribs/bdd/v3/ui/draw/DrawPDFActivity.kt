@@ -250,6 +250,7 @@ class DrawPDFActivity : BaseActivity() {
         supportActionBar?.setDisplayShowTitleEnabled(false)
         mBinding.toolbar.setNavigationOnClickListener {
          //   finish()
+            mMenuAdapter!!.notifyChecked(-1)
             promptToSavePdf(true)
         }
     }
@@ -460,6 +461,8 @@ class DrawPDFActivity : BaseActivity() {
         {
             if(ifExit){
                 finish()
+            }else{
+                showToast("图纸无更改")
             }
         }
     }
