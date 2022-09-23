@@ -1,22 +1,29 @@
 package com.sribs.bdd.v3.ui.check.cd
 
+import android.graphics.Canvas
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import cc.shinichi.library.tool.ui.ToastUtil
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.cbj.sdk.libui.mvp.BaseActivity
 import com.cbj.sdk.libui.mvp.BaseFragment
 import com.cbj.sdk.libui.mvp.adapter.BasePagerAdapter
 import com.cbj.sdk.libui.mvp.inflate
+import com.radaee.pdf.Document
 import com.radaee.pdf.Global
+import com.radaee.pdf.Page
+import com.radaee.reader.PDFGLLayoutView
+import com.radaee.util.PDFAssetStream
+import com.radaee.view.ILayoutView
 import com.sribs.bdd.R
 import com.sribs.bdd.databinding.ActivityCheckComponentDetectionBinding
 
 /**
  *    author :
  *    e-mail :
- *    date   : 2022/9/611:15
+ *    date   : 2022/9/6 11:15
  *    desc   :
  *    version: 1.0
  */
@@ -24,6 +31,13 @@ import com.sribs.bdd.databinding.ActivityCheckComponentDetectionBinding
 class CheckComponentDetectionActivity : BaseActivity() {
 
     private val mBinding: ActivityCheckComponentDetectionBinding by inflate()
+
+
+    private var m_doc = Document()
+    private var m_asset_stream = PDFAssetStream()
+
+    private lateinit var mPdfView: PDFGLLayoutView
+
 
     private val mFragments by lazy {
         listOf(
@@ -62,8 +76,6 @@ class CheckComponentDetectionActivity : BaseActivity() {
     override fun initView() {
         initToolbar()
         initViewPager()
-        Global.Init(this)
-
     }
 
     /**
@@ -123,6 +135,9 @@ class CheckComponentDetectionActivity : BaseActivity() {
     fun setVpCurrentItem(item: Int) {
         mBinding.checkVp.currentItem = item
     }
+
+
+
 
 
 }

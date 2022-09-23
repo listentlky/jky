@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -13,8 +14,7 @@
         android:orientation="vertical"
         app:layout_constraintHorizontal_weight="0.28"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@id/pdf_layout"/>
-
+        app:layout_constraintRight_toLeftOf="@id/pdf_layout" />
 
     <com.radaee.reader.PDFLayoutView
         android:id="@+id/pdf_layout"
@@ -27,37 +27,37 @@
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/check_fab"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
         android:layout_width="@dimen/_30sdp"
         android:layout_height="@dimen/_30sdp"
-        app:layout_anchorGravity="bottom|right|end"
-        android:src="@mipmap/icon_white_pen"
-        app:fabCustomSize="@dimen/_30sdp"
-        android:clickable="true"
         android:layout_marginRight="@dimen/_10sdp"
         android:layout_marginBottom="@dimen/_20sdp"
-        app:rippleColor="@color/rippleColor"
-        app:backgroundTint="@color/blue_800"
+        android:clickable="true"
+        android:contentDescription="main_fab"
         android:scaleType="fitXY"
-        android:contentDescription="main_fab" />
+        android:src="@mipmap/icon_white_pen"
+        app:backgroundTint="@color/blue_800"
+        app:fabCustomSize="@dimen/_30sdp"
+        app:layout_anchorGravity="bottom|right|end"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:rippleColor="@color/rippleColor" />
 
 
     <TextView
         android:id="@+id/check_select_index"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:clickable="true"
-        android:layout_marginRight="@dimen/_20sdp"
         android:layout_marginTop="@dimen/_30sdp"
+        android:layout_marginRight="@dimen/_20sdp"
         android:background="@drawable/round_blue_bg"
+        android:clickable="true"
         android:paddingTop="@dimen/_6sdp"
         android:paddingBottom="@dimen/_6sdp"
-        android:textSize="@dimen/_8ssp"
         android:text="第一张"
-        android:textColor="@color/white" />
+        android:textColor="@color/white"
+        android:textSize="@dimen/_8ssp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

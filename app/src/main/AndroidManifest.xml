@@ -49,7 +49,7 @@
             android:value="10" />
 
         <activity
-            android:name=".ui.login.LoginActivity"
+            android:name=".ui.login.LoginActiivty"
             android:exported="true"
             android:launchMode="singleTask"
             android:screenOrientation="landscape"
@@ -185,6 +185,18 @@
             android:name=".v3.ui.check.obd.CheckObliqueDeformationActivity"
             android:screenOrientation="landscape"
             android:theme="@style/AppTheme.Main" />
+
+        <activity
+            android:name=".v3.ui.check.ModuleCreateByTypeFloorActivity"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme.Main" />
+
+        <activity
+            android:name=".v3.ui.check.ModuleCreateByTypeBuildingActivity"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme.Main" />
+
+
         <activity
             android:name=".v3.ui.check.bs.CheckBuildStructureActivity"
             android:screenOrientation="landscape"

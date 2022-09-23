@@ -8,6 +8,7 @@ import android.widget.ListView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
+import cc.shinichi.library.tool.ui.ToastUtil
 import com.alibaba.android.arouter.facade.annotation.Autowired
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
@@ -20,6 +21,7 @@ import com.sribs.bdd.databinding.ActivityProjectFloorDetailBinding
 import com.sribs.bdd.module.project.IProjectContrast
 import com.sribs.bdd.module.project.ProjectFloorDetailPresent
 import com.sribs.bdd.ui.adapter.FloorItemAdapter
+import com.sribs.bdd.v3.util.LogUtils
 import com.sribs.common.utils.TimeUtil
 import java.util.*
 import kotlin.collections.ArrayList
@@ -29,29 +31,37 @@ import kotlin.collections.ArrayList
  * 单栋楼下模块界面
  */
 @Route(path = com.sribs.common.ARouterPath.PRO_ITEM_ATY_FLOOR)
-class ProjectFloorItemActivity :BaseActivity(), IProjectContrast.IProjectFloorDetailView{
+class ProjectFloorItemActivity : BaseActivity(), IProjectContrast.IProjectFloorDetailView {
 
     @JvmField
-    @Autowired(name= com.sribs.common.ARouterPath.VAL_PROJECT_ID)
+    @Autowired(name = com.sribs.common.ARouterPath.VAL_PROJECT_ID)
     var mLocalProjectId = -1L
 
     @JvmField
-    @Autowired(name= com.sribs.common.ARouterPath.VAL_BUILDING_ID)
+    @Autowired(name = com.sribs.common.ARouterPath.VAL_BUILDING_ID)
     var mBuildingId = -1L
 
     @JvmField
-    @Autowired(name= com.sribs.common.ARouterPath.VAL_COMMON_REMOTE_ID)
+    @Autowired(name = com.sribs.common.ARouterPath.VAL_COMMON_REMOTE_ID)
     var mRemoteId = ""
 
     @JvmField
-    @Autowired(name= com.sribs.common.ARouterPath.VAL_COMMON_TITLE)
+    @Autowired(name = com.sribs.common.ARouterPath.VAL_COMMON_TITLE)
     var mTitle = ""
 
-    private val mBinding:ActivityProjectFloorDetailBinding by inflate()
+    @JvmField
+    @Autowired(name = com.sribs.common.ARouterPath.VAL_COMMON_INSPECTOR)
+    var mInspector = ""
 
-    private val mPresent:ProjectFloorDetailPresent by lazy {  ProjectFloorDetailPresent() }
+    @JvmField
+    @Autowired(name = com.sribs.common.ARouterPath.VAL_COMMON_LEADER)
+    var mLeaderName = ""
 
-    private val mAdapter:FloorItemAdapter by lazy { FloorItemAdapter() }
+    private val mBinding: ActivityProjectFloorDetailBinding by inflate()
+
+    private val mPresent: ProjectFloorDetailPresent by lazy { ProjectFloorDetailPresent() }
+
+    private val mAdapter: FloorItemAdapter by lazy { FloorItemAdapter() }
 
     override fun deinitView() {
         unbindPresenter()
@@ -68,22 +78,98 @@ class ProjectFloorItemActivity :BaseActivity(), IProjectContrast.IProjectFloorDe
         }
 
         initRecycleView()
-        mPresent.getData(mLocalProjectId,mBuildingId)
+
+        if (mRemoteId.isNullOrEmpty()) {
+            //TODO 查询本地数据库
+            mPresent.getLocalModule(mLocalProjectId, mBuildingId)
+        } else {
+            //TODO 查询网络接口
+            mPresent.getRemoteModule(mLocalProjectId, mBuildingId)
+        }
+
         mBinding.matchMainFab.setOnClickListener {
             showMutilAlertDialog(it)
         }
     }
 
-    private fun initRecycleView(){
+    private fun initRecycleView() {
         mBinding.floorItem.layoutManager = LinearLayoutManager(this)
-        mAdapter.setItemClickCallback(object :FloorItemAdapter.ItemClickCallback{
-            override fun onClick(routing: String) {
+        mAdapter.setItemClickCallback(object : FloorItemAdapter.ItemClickCallback {
+
+            override fun onEdit(moduleName: String, routing: String, moduleId: Long) {
                 ARouter.getInstance().build(routing)
-                    .withLong(com.sribs.common.ARouterPath.VAL_PROJECT_ID, mLocalProjectId)
-                    .withLong(com.sribs.common.ARouterPath.VAL_BUILDING_ID, mBuildingId)
-                    .withString(com.sribs.common.ARouterPath.VAL_COMMON_REMOTE_ID, mRemoteId)
-                    .withString(com.sribs.common.ARouterPath.VAL_COMMON_TITLE,mTitle)
-                        .navigation()
+                    .withLong(
+                        com.sribs.common.ARouterPath.VAL_PROJECT_ID,
+                        mLocalProjectId
+                    )
+                    .withLong(
+                        com.sribs.common.ARouterPath.VAL_BUILDING_ID,
+                        mBuildingId
+                    )
+                    .withLong(
+                        com.sribs.common.ARouterPath.VAL_MODULE_ID,
+                        moduleId
+                    )
+                    .withString(
+                        com.sribs.common.ARouterPath.VAL_MODULE_NAME,
+                        moduleName
+                    )
+                    .withString(
+                        com.sribs.common.ARouterPath.VAL_COMMON_REMOTE_ID,
+                        mRemoteId
+                    ).withString(
+                        com.sribs.common.ARouterPath.VAL_COMMON_INSPECTOR,
+                        mInspector
+                    ).withString(
+                        com.sribs.common.ARouterPath.VAL_COMMON_TITLE,
+                        mTitle
+                    ).withString(
+                        com.sribs.common.ARouterPath.VAL_COMMON_LEADER,
+                        mLeaderName
+                    )
+                     .navigation()
+            }
+
+            override fun onConfig(moduleName: String, routing: String, moduleId: Long) {
+                ARouter.getInstance().build(routing)
+                    .withLong(
+                        com.sribs.common.ARouterPath.VAL_PROJECT_ID,
+                        mLocalProjectId
+                    )
+                    .withLong(
+                        com.sribs.common.ARouterPath.VAL_BUILDING_ID,
+                        mBuildingId
+                    )
+                    .withLong(
+                        com.sribs.common.ARouterPath.VAL_MODULE_ID,
+                        moduleId
+                    )
+                    .withString(
+                        com.sribs.common.ARouterPath.VAL_MODULE_NAME,
+                        moduleName
+                    )
+                    .withString(
+                        com.sribs.common.ARouterPath.VAL_COMMON_REMOTE_ID,
+                        mRemoteId
+                    ).withString(
+                        com.sribs.common.ARouterPath.VAL_COMMON_INSPECTOR,
+                        mInspector
+                    ).withString(
+                        com.sribs.common.ARouterPath.VAL_COMMON_TITLE,
+                        mTitle
+                    ).withString(
+                        com.sribs.common.ARouterPath.VAL_COMMON_LEADER,
+                        mLeaderName
+                    )
+                    .navigation()
+
+            }
+
+            override fun onDelete(moduleId: Long) {
+                mPresent.deleteModule(mLocalProjectId,mBuildingId,moduleId) {
+                    ToastUtil.getInstance()._short(getContext(), "本地module删除成功")
+                }
+
             }
 
         })
@@ -95,10 +181,19 @@ class ProjectFloorItemActivity :BaseActivity(), IProjectContrast.IProjectFloorDe
 
     }
 
+    override fun addItem(bean: BuildingFloorItem) {
+        mAdapter.addItem(bean)
+    }
+
+    override fun removeItem(bean: BuildingFloorItem) {
+        mAdapter.removeItem(bean)
+    }
+
+
     override fun getContext(): Context? = this
 
     override fun bindPresenter() {
-       mPresent.bindView(this)
+        mPresent.bindView(this)
     }
 
     override fun onMsg(msg: String) {
@@ -115,7 +210,7 @@ class ProjectFloorItemActivity :BaseActivity(), IProjectContrast.IProjectFloorDe
 
     )
     val items = arrayOf(
-        "建筑结构复核",  "倾斜测量",  "相对高差测量",  "构建测量",  "居民类检测测量",  "非居民类检测测量"
+        "建筑结构复核", "倾斜测量", "相对高差测量", "构建测量", "居民类检测测量", "非居民类检测测量"
     )
 
 
@@ -129,13 +224,49 @@ class ProjectFloorItemActivity :BaseActivity(), IProjectContrast.IProjectFloorDe
          * 第三个参数：勾选事件监听
          */
 
-        alertBuilder.setSingleChoiceItems(items,0
+        alertBuilder.setSingleChoiceItems(
+            items, 0
         ) { _, which -> choseType = which }
+
+
 
         alertBuilder.setPositiveButton(
             "确定"
         ) { _, i ->
-            mAdapter.addItem(BuildingFloorItem(mLocalProjectId,mBuildingId,choseType+1, TimeUtil.YMD_HMS.format(Date())))
+
+           if (mAdapter.hasSameName(items.get(choseType))){
+               onMsg("模块请勿重复创建~")
+
+           }else {
+
+               mPresent.createOrSaveModule(
+                   mLocalProjectId,
+                   mBuildingId,
+                   mRemoteId,
+                   items.get(choseType)
+               ) {
+                   ToastUtil.getInstance()._short(getContext(), "" + it)
+                   mAdapter.addItem(
+                       (BuildingFloorItem(
+                           it,
+                           mBuildingId.toString(),
+                           items.get(choseType),
+                           TimeUtil.YMD_HMS.format(Date())
+                       ))
+                   )
+                   LogUtils.d("llf传递数据" + TimeUtil.YMD_HMS.format(Date()))
+
+               }
+           }
+
+            /*mAdapter.addItem(
+                BuildingFloorItem(
+                    mLocalProjectId,
+                    mBuildingId,
+                    choseType + 1,
+                    TimeUtil.YMD_HMS.format(Date())
+                )
+            )*/
             alertDialog3?.dismiss();
 
         }

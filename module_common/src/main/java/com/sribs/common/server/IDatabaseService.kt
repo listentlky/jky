@@ -2,7 +2,9 @@ package com.sribs.common.server
 
 import com.alibaba.android.arouter.facade.template.IProvider
 import com.sribs.common.bean.db.*
+import com.sribs.common.bean.db.v3.project.v3BuildingModuleDbBean
 import com.sribs.common.bean.db.v3.project.v3ProjectDbBean
+import com.sribs.common.bean.v3.v3ModuleFloorDbBean
 import io.reactivex.Flowable
 import io.reactivex.Maybe
 import io.reactivex.Observable
@@ -44,6 +46,38 @@ interface IDatabaseService:IProvider {
     fun updatev3Project(b:v3ProjectDbBean):Observable<Long>
 
     fun deletev3Project(b:v3ProjectDbBean):Observable<Int>
+
+
+
+
+
+    fun getv3AllBuildingModule(): Flowable<List<v3BuildingModuleDbBean>>
+
+    fun getv3BuildingModule(projectId: Long,buildingId: String): Flowable<List<v3BuildingModuleDbBean>>
+
+    fun getv3BuildingModuleOnce(buildingId: String): Single<List<v3BuildingModuleDbBean>>
+
+    fun getv3BuildingModuleOnce(
+        buildingId: String,
+        projectId: Long
+    ): Single<List<v3BuildingModuleDbBean>>
+
+    fun getv3BuildingModuleOnce(moduleId: Long): Single<List<v3BuildingModuleDbBean>>
+
+    fun updatev3BuildingModule(b: v3BuildingModuleDbBean): Observable<Long>
+
+
+    fun updatev3BuildingModuleOneData(b: v3BuildingModuleDbBean): Observable<Int>
+
+    fun deletev3BuildingModule(b: v3BuildingModuleDbBean): Observable<Int>
+
+    fun updatev3ModuleFloor(b:v3ModuleFloorDbBean):Observable<Long>
+
+    fun getv3ModuleFloor(projectId: Long,buildingId: Long,moduleId: Long): Flowable<List<v3ModuleFloorDbBean>>
+
+    fun deletev3ModuleFloor(projectId:Long,buildingId:Long,moduleId:Long): Observable<Boolean>
+
+    fun deletev3ModuleFloorOnce(projectId:Long,buildingId:Long,moduleId:Long,floorId: Long): Observable<Boolean>
 
     /**
      * 3期项目end

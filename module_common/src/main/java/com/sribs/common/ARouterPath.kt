@@ -52,10 +52,14 @@ object ARouterPath {
     const val VAL_COMMON_TITLE = "title"
     const val VAL_COMMON_ID = "id"
     const val VAL_COMMON_LOCAL_CURRENT_PDF = "local_current_pdf"
+    const val VAL_ABOVE_NUMBER = 0
+    const val VAL_AFTER_NUMBER = 0
 
     const val VAL_PROJECT_ID = "project_id"
     const val VAL_BUILDING_ID = "building_id"
     const val VAL_BUILDING_NO = "building_no"
+    const val VAL_MODULE_ID = "module_id"
+    const val VAL_MODULE_NAME = "module_name"
     const val VAL_UNIT_CODE = "unit_code"
     const val VAL_UNIT_NO = "unit_no"
     const val VAL_UNIT_CONFIG_DES_CODE = "unit_des_code"
@@ -129,6 +133,12 @@ object ARouterPath {
     const val CHECK_COMPONENT_DETECTION_WALL_FRAGMENT = "/check/componentdetection/wall/fragment"; //构建检测-墙
 
     const val CHECK_COMPONENT_DETECTION_PLATE_FRAGMENT = "/check/componentdetection/plate/fragment"; //构建检测-板
+
+    /**
+     * 3.0模块配置
+     */
+    const val CHECK_MODULE_CONFIG_TYPE_FLOOR_ACTIVITY = "/check/module_config/type_floor_activity"; //
+    const val CHECK_MODULE_CONFIG_TYPE_BUILDING_ACTIVITY = "/check/module_config/type_building_activity"; //
 
     /**
      * 3.0楼栋单元列表

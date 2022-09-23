@@ -33,8 +33,7 @@ import com.sribs.db.report.ReportBean
 import com.sribs.db.report.ReportDao
 import com.sribs.db.user.UserBean
 import com.sribs.db.user.UserDao
-import com.sribs.db.v3.project.v3ProjectDao
-import com.sribs.db.v3.project.v3ProjectRoom
+import com.sribs.db.v3.project.*
 
 /**
  * @date 2021/7/8
@@ -85,7 +84,9 @@ import com.sribs.db.v3.project.v3ProjectRoom
         FloorBean::class,
         DamageBean::class,
         //3期
-        v3ProjectRoom::class
+        v3ProjectRoom::class,
+        v3BuildingModuleRoom::class,
+        v3ModuleFloorRoom::class
     ],
     version = 1,
     exportSchema = false,
@@ -109,4 +110,6 @@ abstract class DDBDataBase: RoomDatabase() {
     abstract fun damageDao(): DamageDao
     //3期
     abstract fun v3ProjectDao(): v3ProjectDao
+    abstract fun v3BuildingModuleDao(): v3BuildingModuleDao
+    abstract fun v3ModuleFloorDao():v3ModuleFloorDao
 }

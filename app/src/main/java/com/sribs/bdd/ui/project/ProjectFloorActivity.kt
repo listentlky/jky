@@ -46,6 +46,11 @@ class ProjectFloorActivity : BaseActivity(), IBuildingContrast.IBuildingListView
     @Autowired(name = com.sribs.common.ARouterPath.VAL_COMMON_LOCAL_ID)
     var mLocalProjectId = -1L
 
+
+    @JvmField
+    @Autowired(name = com.sribs.common.ARouterPath.VAL_PROJECT_ID)
+    var mLocalProjectId2 = -1L
+
     @JvmField
     @Autowired(name = com.sribs.common.ARouterPath.VAL_COMMON_REMOTE_ID)
     var mRemoteId = ""
@@ -244,9 +249,11 @@ class ProjectFloorActivity : BaseActivity(), IBuildingContrast.IBuildingListView
     override fun onCardSelect(beanMain: BuildingMainBean, pos: Int) {
         ARouter.getInstance().build(com.sribs.common.ARouterPath.PRO_ITEM_ATY_FLOOR)
             .withString(com.sribs.common.ARouterPath.VAL_COMMON_TITLE, mTitle)
-            .withLong(com.sribs.common.ARouterPath.VAL_PROJECT_ID, mLocalProjectId)
+            .withLong(com.sribs.common.ARouterPath.VAL_PROJECT_ID, mLocalProjectId2)
             .withLong(com.sribs.common.ARouterPath.VAL_BUILDING_ID, beanMain.bldId!!)
-            .withString(com.sribs.common.ARouterPath.VAL_COMMON_REMOTE_ID, beanMain.remoteId)
+            .withString(com.sribs.common.ARouterPath.VAL_COMMON_LEADER, mLeader)
+            .withString(com.sribs.common.ARouterPath.VAL_COMMON_REMOTE_ID, mRemoteId)
+            .withString(com.sribs.common.ARouterPath.VAL_COMMON_INSPECTOR,beanMain.inspectorName)
             .navigation()
     }
 

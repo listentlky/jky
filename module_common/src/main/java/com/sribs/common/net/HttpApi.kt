@@ -4,6 +4,7 @@ import androidx.annotation.NonNull
 import com.cbj.sdk.libnet.http.bean.ListBean
 import com.cbj.sdk.libnet.http.bean.ResultBean
 import com.sribs.common.bean.net.*
+import com.sribs.common.bean.net.v3.V3BuildingModuleListRes
 import io.reactivex.Observable
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -138,5 +139,20 @@ interface HttpApi {
 
     @POST("api/v3/app/building/list")
     fun getV3UnitList(@QueryName projectId:String):Observable<ResultBean<ListBean<UnitListRes>>>
+
+
+    @POST("/api/v3/app/building/module/list")
+    fun getV3BuildingModuleList(@QueryName buildingId: Long):Observable<ResultBean<ListBean<Any>>>
+
+
+    @POST("/api/v3/app/module/save")
+    fun createOrUpdateBuildingModule(@Body req: V3BuildingModuleListRes):Observable<ResultBean<Any>>
+
+
+    @POST("/api/v3/app/module/delete")
+    fun deleteBuildingModule(@QueryName projectId:Long):Observable<ResultBean<Any>>
+
+
+
 
 }

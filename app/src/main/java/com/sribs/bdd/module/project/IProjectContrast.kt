@@ -7,12 +7,13 @@ import com.cbj.sdk.libui.mvp.moudles.IBaseView
 import com.sribs.bdd.bean.Building
 import com.sribs.bdd.bean.BuildingFloorBean
 import com.sribs.bdd.bean.BuildingFloorItem
+import com.sribs.bdd.bean.data.ModuleFloorBean
 import com.sribs.bdd.bean.data.ProjectConfigBean
 import com.sribs.common.bean.HistoryBean
 import com.sribs.common.bean.db.ConfigBean
 import com.sribs.common.bean.db.ProjectBean
 import com.sribs.common.bean.db.UnitBean
-import com.sribs.db.project.building.BuildingBean
+import com.sribs.common.bean.v3.v3ModuleFloorDbBean
 
 /**
  * @date 2021/7/13
@@ -82,6 +83,23 @@ interface IProjectContrast {
         fun createBuildingSuccess()
     }
 
+
+    interface IModuleCreateTypeView:IView{
+        fun initLocalData(beanList:List<v3ModuleFloorDbBean> )
+        fun getFloorRecycleView():RecyclerView
+        fun chosePic(bean: ModuleFloorBean)
+        fun takePhoto(bean: ModuleFloorBean)
+        fun choseWhite(bean: ModuleFloorBean)
+        fun createModuleConfigSuccess()
+    }
+
+
+    interface IModuleCreateTypeBuildingView:IView{
+        fun initLocalData(beanList:List<v3ModuleFloorDbBean> )
+        fun getPicRecycleView():RecyclerView
+        fun createModuleConfigSuccess()
+    }
+
     interface IProjectFloorPresenter:IBasePresenter{
         fun getAllUnit(projectId:Long)
         fun uploadUnit(projectId: Long,unitId:Long,unitNo:String,willCover:Boolean)
@@ -100,10 +118,13 @@ interface IProjectContrast {
 
 
     interface IProjectFloorDetailPresent:IBasePresenter{
-       fun getData(mLocalProjectId:Long,mBuildingId:Long)
+       fun getRemoteModule(mLocalProjectId:Long, mBuildingId:Long)
+       fun getLocalModule(mLocalProjectId:Long, mBuildingId:Long)
     }
 
     interface IProjectFloorDetailView:IView{
         fun handlItemList(list:ArrayList<BuildingFloorItem>)
+        fun addItem(bean:BuildingFloorItem)
+        fun removeItem(bean:BuildingFloorItem)
     }
 }

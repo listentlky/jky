@@ -1,7 +1,8 @@
 package com.sribs.bdd.v3.ui.check.cd.fm
 
 import android.view.View
-import android.view.View.*
+import android.view.View.INVISIBLE
+import android.view.View.VISIBLE
 import android.widget.EditText
 import android.widget.TextView
 import com.alibaba.android.arouter.facade.annotation.Route
@@ -9,8 +10,12 @@ import com.cbj.sdk.libui.mvp.BaseFragment
 import com.cbj.sdk.libui.mvp.bindView
 import com.google.android.material.button.MaterialButton
 import com.radaee.pdf.Document
+import com.radaee.pdf.Global
+import com.radaee.reader.PDFGLLayoutView
+import com.radaee.util.PDFAssetStream
 import com.sribs.bdd.R
 import com.sribs.bdd.databinding.FragmentCheckComponentdetectionBeamEditBinding
+import com.sribs.bdd.v3.ui.check.cd.CheckComponentDetectionActivity
 import com.sribs.bdd.v3.view.OneChooseSpinnerView
 import com.sribs.common.ARouterPath
 
@@ -84,7 +89,8 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
     private lateinit var mViewLeftRealA: View
     private lateinit var mEditViewLeftRealA1: EditText
     private lateinit var mLeftRealAnotherEA2: EditText
-    private var mDocument = Document()
+
+
 
     //实测截面类型-备注
     private lateinit var mEditViewLeftRealNote: EditText
@@ -93,7 +99,10 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
     override fun deinitView() {
     }
 
+
+
     override fun initView() {
+
 
         //梁-标题
         mMenuBeamNameET = mBinding.checkCpdSubtitle1.checkEdit
