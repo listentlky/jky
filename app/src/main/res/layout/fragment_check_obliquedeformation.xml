@@ -14,23 +14,31 @@
         android:orientation="vertical"
         app:layout_constraintHorizontal_weight="0.28"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@id/pdf_layout" />
+        app:layout_constraintRight_toLeftOf="@id/pdf_root" />
 
-    <com.radaee.reader.PDFLayoutView
-        android:id="@+id/pdf_layout"
+    <RelativeLayout
+        android:id="@+id/pdf_root"
         android:layout_width="0dp"
-        android:layout_height="match_parent"
         android:background="@color/white"
-        app:layout_constraintHorizontal_weight="0.72"
+        app:layout_constraintHorizontal_weight="0.8"
         app:layout_constraintLeft_toRightOf="@id/tool_layout"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_height="match_parent">
+
+        <com.radaee.reader.PDFLayoutView
+            android:id="@+id/pdf_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clickable="true" />
+
+    </RelativeLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/check_fab"
         android:layout_width="@dimen/_30sdp"
         android:layout_height="@dimen/_30sdp"
-        android:layout_marginRight="@dimen/_10sdp"
-        android:layout_marginBottom="@dimen/_20sdp"
+        android:layout_marginRight="@dimen/_20sdp"
+        android:layout_marginBottom="@dimen/_30sdp"
         android:clickable="true"
         android:contentDescription="main_fab"
         android:scaleType="fitXY"
@@ -45,7 +53,7 @@
 
     <TextView
         android:id="@+id/check_select_index"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_30sdp"
         android:layout_marginRight="@dimen/_20sdp"

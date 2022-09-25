@@ -10,7 +10,7 @@ import java.sql.Date
 
 @Entity(tableName = "v3_building_module")
 data class v3BuildingModuleRoom(
-    @ColumnInfo(name = "building_id") var buildingId: String? = "",  //楼id
+    @ColumnInfo(name = "building_id") var buildingId: Long?,  //楼id
     @ColumnInfo(name = "project_id") var projectId: Long?, //模块id
     @ColumnInfo(name = "module_name") var moduleName: String? = null, //模块name
     @ColumnInfo(name = "drawings") var drawings: List<DrawingV3Bean>? = null, //
@@ -20,6 +20,7 @@ data class v3BuildingModuleRoom(
     @ColumnInfo(name = "aboveground_number") var aboveGroundNumber: Int? = 0,  //
     @ColumnInfo(name = "underground_number") var underGroundNumber: Int? = 0,  //
     @ColumnInfo(name = "is_deleted") var isDeleted: Int? = 0,  //
+    @ColumnInfo(name = "version") var version: Int? = 1,
     @ColumnInfo(name = "status") var status: Int? = 0,  //
 
 

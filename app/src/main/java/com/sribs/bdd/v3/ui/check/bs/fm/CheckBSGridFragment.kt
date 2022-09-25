@@ -124,7 +124,7 @@ class CheckBSGridFragment : BaseFragment(R.layout.fragment_check_build_structure
                 if(mDamageCreateTime<0) System.currentTimeMillis() else mDamageCreateTime,
                 mAxisNote,
                 mAxisNoteList,
-                (context as CheckBuildStructureActivity).mCurrentFloorName,
+                (context as CheckBuildStructureActivity).mCurrentDrawing!!.floorName,
                 mBinding.checkBsFloorZwsjz.checkEdit.text.toString(),
                 mBinding.checkBsFloorZwscz.checkEdit.text.toString()
             )
@@ -135,7 +135,7 @@ class CheckBSGridFragment : BaseFragment(R.layout.fragment_check_build_structure
 
     fun resetView(damageV3Bean: DamageV3Bean?){
         LogUtils.d("重新resetView："+damageV3Bean)
-        mBinding.checkBsFloorCurrent.setText("当前层数: "+(context as CheckBuildStructureActivity).mCurrentFloorName)
+        mBinding.checkBsFloorCurrent.setText("当前层数: "+(context as CheckBuildStructureActivity).mCurrentDrawing!!.floorName)
 
         if(damageV3Bean == null){
             mBinding.checkBsFloorEdit1.root.visibility = View.VISIBLE

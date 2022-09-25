@@ -29,7 +29,7 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
             .navigation() as IDatabaseService
     }
 
-    override fun getRemoteModule(mLocalProjectId: Long, mBuildingId: Long) {
+/*    override fun getRemoteModule(mLocalProjectId: Long, mBuildingId: Long) {
 
         LogUtils.d("请求网络楼模块下数据")
         addDisposable(
@@ -47,11 +47,11 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
         )
 
 
-    }
+    }*/
 
     override fun getLocalModule(mLocalProjectId: Long, mBuildingId: Long) {
 
-        mDb.getv3BuildingModule(mLocalProjectId, mBuildingId.toString())
+        mDb.getv3BuildingModule(mLocalProjectId, mBuildingId)
             .subscribeOn(Schedulers.computation())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe() {
@@ -120,7 +120,7 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
                 .flatMap {
                     var cc = v3BuildingModuleDbBean()
                     cc.projectId = projectId
-                    cc.buildingId = buildingId.toString()
+                    cc.buildingId = buildingId
                     cc.remoteId = remoteId
                     cc.moduleName = moduleName
                     cc.drawings = it[0].drawing

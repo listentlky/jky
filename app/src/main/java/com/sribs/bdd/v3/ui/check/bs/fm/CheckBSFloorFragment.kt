@@ -169,7 +169,7 @@ class CheckBSFloorFragment : BaseFragment(R.layout.fragment_check_build_structur
                 mAxisNote,
                 mAxisNoteList,
                 mJgZgList!![mSelectPosition],
-                (context as CheckBuildStructureActivity).mCurrentFloorName,
+                (context as CheckBuildStructureActivity).mCurrentDrawing!!.floorName,
                 mBinding.checkBsFloorCgsj.checkEdit.text.toString(),
                 mBinding.checkBsFloorCgsc.checkEdit.text.toString(),
                 mBinding.checkBsFloorSjbh.checkEdit.text.toString(),
@@ -187,7 +187,7 @@ class CheckBSFloorFragment : BaseFragment(R.layout.fragment_check_build_structur
 
         LogUtils.d("重新resetView："+damageV3Bean)
 
-        mBinding.checkBsFloorCurrent.setText("当前层数: "+(context as CheckBuildStructureActivity).mCurrentFloorName)
+        mBinding.checkBsFloorCurrent.setText("当前层数: "+(context as CheckBuildStructureActivity).mCurrentDrawing!!.floorName)
         if(damageV3Bean == null){
             mBinding.checkBsFloorEdit1.root.visibility = View.VISIBLE
             mBinding.checkBsFloorEdit1.root.check_edit.setText("")

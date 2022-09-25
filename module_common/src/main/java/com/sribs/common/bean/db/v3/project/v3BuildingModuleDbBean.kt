@@ -9,7 +9,7 @@ import com.sribs.common.bean.db.DrawingV3Bean
  */
 data class v3BuildingModuleDbBean(
     var id: Long? = null,
-    var buildingId: String? = null,
+    var buildingId: Long? = null,
     var projectId: Long? =null,
     var moduleName: String? = null,
     var leaderId: String? ="",
@@ -22,10 +22,12 @@ data class v3BuildingModuleDbBean(
     var deleteTime: String? = "",
     var createTime: String? = "",
     var updateTime: String? = null,
-    var remoteId: String? = null
+    var remoteId: String? = null,
+    var version: Int? = 1,
+    var status: Int? = 0
 ) {
 
-    fun isSame(buildingId: String?, projectId: Long?): Boolean =
+    fun isSame(buildingId: Long?, projectId: Long?): Boolean =
         this.buildingId == buildingId && this.projectId == projectId
 
 }

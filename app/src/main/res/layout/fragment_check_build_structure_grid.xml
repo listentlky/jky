@@ -13,7 +13,6 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_marginTop="@dimen/_30sdp"
         app:layout_constraintTop_toBottomOf="@id/check_menu_layout"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -156,14 +155,14 @@
             android:background="@drawable/check_gray_stroke_bg"
             android:gravity="start"
             android:hint="请输入备注"
-            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_marginTop="@dimen/_6sdp"
             android:minWidth="@dimen/_80sdp"
             android:padding="@dimen/_4sdp"
             android:textColor="@color/black"
             android:textColorHint="@color/gray_600"
             android:textSize="@dimen/_6ssp"
             app:layout_constraintBottom_toTopOf="@id/check_bs_floor_confirm"
-            app:layout_constraintDimensionRatio="6:1"
+            app:layout_constraintDimensionRatio="8:1"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/check_bs_floor_hint" />
@@ -173,7 +172,6 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/login_input_height"
             android:layout_marginTop="@dimen/_10sdp"
-            android:layout_marginBottom="@dimen/_40sdp"
             android:insetTop="0dp"
             android:insetBottom="0dp"
             android:padding="0dp"

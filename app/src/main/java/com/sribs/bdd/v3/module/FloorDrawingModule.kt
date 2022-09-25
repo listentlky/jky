@@ -10,7 +10,8 @@ import java.io.Serializable
  */
 class FloorDrawingModule : Serializable{
 
-    var mMenuName:String?=""
+    var mId:Long?= -1L
+    var mFloorName:String?=""
     var mNameList:ArrayList<DrawingV3Bean>?=ArrayList()
 
 }

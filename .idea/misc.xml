@@ -140,6 +140,29 @@
         <entry key="..\:/android/project/bdd-android/bdd-android/app/src/main/res/layout/popup_item.xml" value="0.13707865168539327" />
         <entry key="..\:/android/project/bdd-android/bdd-android/app/src/main/res/layout/popup_layout.xml" value="0.25" />
         <entry key="..\:/android/project/bdd-android/bdd-android/whiteboardlib/src/main/res/layout/include_draw_content_layout.xml" value="0.24365942028985507" />
+        <entry key="..\:/android/project/jky/app/src/main/res/drawable/circle_blue800.xml" value="0.2361111111111111" />
+        <entry key="..\:/android/project/jky/app/src/main/res/drawable/radio_selector.xml" value="0.2361111111111111" />
+        <entry key="..\:/android/project/jky/app/src/main/res/layout/activity_check_oblique_deformation.xml" value="0.1405775075987842" />
+        <entry key="..\:/android/project/jky/app/src/main/res/layout/check_title_menu.xml" value="0.18432971014492755" />
+        <entry key="..\:/android/project/jky/app/src/main/res/layout/floor_drawing_spinner.xml" value="0.1405775075987842" />
+        <entry key="..\:/android/project/jky/app/src/main/res/layout/fragment_check_build_structure_floor.xml" value="0.18432971014492755" />
+        <entry key="..\:/android/project/jky/app/src/main/res/layout/fragment_check_build_structure_grid.xml" value="0.5" />
+        <entry key="..\:/android/project/jky/app/src/main/res/layout/fragment_check_obliquedeformation.xml" value="0.1405775075987842" />
+        <entry key="..\:/android/project/jky/app/src/main/res/layout/popup_choose_pic_item.xml" value="0.1405775075987842" />
+        <entry key="..\:/android/project/jky/app/src/main/res/layout/popup_choose_pic_layout.xml" value="0.1" />
+        <entry key="..\:/android/project/jky/lib_pdf/src/main/res/drawable/circle_black.xml" value="0.2611111111111111" />
+        <entry key="..\:/android/project/jky/lib_pdf/src/main/res/drawable/circle_blue.xml" value="0.2611111111111111" />
+        <entry key="..\:/android/project/jky/lib_pdf/src/main/res/drawable/circle_blue800.xml" value="0.2111111111111111" />
+        <entry key="..\:/android/project/jky/lib_pdf/src/main/res/drawable/circle_gray.xml" value="0.2611111111111111" />
+        <entry key="..\:/android/project/jky/lib_pdf/src/main/res/drawable/circle_green.xml" value="0.2611111111111111" />
+        <entry key="..\:/android/project/jky/lib_pdf/src/main/res/drawable/circle_indigo.xml" value="0.2611111111111111" />
+        <entry key="..\:/android/project/jky/lib_pdf/src/main/res/drawable/circle_pink.xml" value="0.2611111111111111" />
+        <entry key="..\:/android/project/jky/lib_pdf/src/main/res/drawable/circle_red.xml" value="0.2611111111111111" />
+        <entry key="..\:/android/project/jky/lib_pdf/src/main/res/drawable/circle_yellow.xml" value="0.2611111111111111" />
+        <entry key="..\:/android/project/jky/lib_pdf/src/main/res/drawable/v3_choose_pic_layout_bg.xml" value="0.30520833333333336" />
+        <entry key="..\:/android/project/jky/lib_pdf/src/main/res/layout/pop_damage_type_choice.xml" value="0.1405775075987842" />
+        <entry key="..\:/android/project/jky/lib_pdf/src/main/res/layout/v3_popup_item.xml" value="0.1802536231884058" />
+        <entry key="..\:/android/project/jky/lib_pdf/src/main/res/layout/v3_popup_layout.xml" value="0.25" />
         <entry key="..\:/android/project/sribs03-android/sribs03-android/bdd-android/app/src/main/res/drawable/check_gray_storke_bg.xml" value="0.2935185185185185" />
         <entry key="..\:/android/project/sribs03-android/sribs03-android/bdd-android/app/src/main/res/drawable/ic_bk_damage_point_green.xml" value="0.1" />
         <entry key="..\:/android/project/sribs03-android/sribs03-android/bdd-android/app/src/main/res/drawable/radio_selector.xml" value="0.2935185185185185" />

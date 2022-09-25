@@ -5,6 +5,7 @@ import com.cbj.sdk.libui.mvp.moudles.IBaseView
 import com.sribs.bdd.v3.bean.CheckBSMainBean
 import com.sribs.bdd.v3.util.LogUtils
 import com.sribs.common.bean.db.DamageV3Bean
+import com.sribs.common.bean.db.DrawingV3Bean
 import com.sribs.common.module.BasePresenter
 import com.sribs.common.server.IDatabaseService
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -24,9 +25,38 @@ class CheckBSPresenter : BasePresenter(),ICheckBSContrast.ICheckBSPresenter{
             .navigation() as IDatabaseService
     }
 
-    override fun getModuleInfo(localProjectId:Long,localBldId:Long,remoteId:String?) {
+    override fun getModuleInfo(localProjectId:Long,localBldId:Long,localModuleId:Long,remoteId:String?) {
         LogUtils.d("getModuleInfo ${localProjectId}  ${localBldId}   ${remoteId}")
-        addDisposable(mDb.getLocalFloorsInTheBuilding(localBldId)
+
+        addDisposable(mDb.getv3ModuleFloor(localProjectId,localBldId,localModuleId)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                var list = ArrayList(it.map { b->CheckBSMainBean(
+                    id = b.id,
+                    projectId = b.projectId,
+                    bldId = b.bldId,
+                    moduleId = b.moduleId,
+                    floorId = b.floorId,
+                    floorName = b.floorName,
+                    remoteId = b.remoteId,
+                    drawing = b.drawingsList,
+                    createTime = b.createTime,
+                    updateTime = b.updateTime,
+                    deleteTime = b.deleteTime,
+                    version = b.version,
+                    status = b.status
+                )
+                })
+                LogUtils.d("获取到该楼下所有楼层数据 "+list.toString())
+                mView?.onModuleInfo(list)
+            },{
+                mView?.onMsg(it.toString())
+                LogUtils.d("获取到该楼下所有楼层失败 ${it}")
+            }))
+
+
+      /*  addDisposable(mDb.getLocalFloorsInTheBuilding(localBldId)
             .subscribeOn(Schedulers.computation())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
@@ -50,21 +80,24 @@ class CheckBSPresenter : BasePresenter(),ICheckBSContrast.ICheckBSPresenter{
             },{
                 mView?.onMsg(it.toString())
                 LogUtils.d("获取到该楼下所有楼层 ${it}")
-            }))
+            }))*/
 
     }
 
-    override fun saveDamageToDb(damageInfo: DamageV3Bean) {
-        if(damageInfo.id < 0){ // 新建
-
-
-        }else{ //更新
-
-        }
-
-    }
-
-    override fun deleteDamageToDb(damageInfo: DamageV3Bean) {
+    /**
+     * 保存图纸损伤信息
+     */
+    override fun saveDamageToDb(drawingV3Bean:List<DrawingV3Bean>, id:Long) {
+        LogUtils.d("saveDamageToDb： "+drawingV3Bean+" ; id="+id)
+        addDisposable(mDb.updateModuleFloorDrawing(drawingV3Bean,id)
+            .subscribeOn(Schedulers.computation())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                LogUtils.d("更新图纸损伤信息成功")
+            },{
+                LogUtils.d("更新图纸损伤信息失败: "+it)
+            })
+        )
 
     }
 

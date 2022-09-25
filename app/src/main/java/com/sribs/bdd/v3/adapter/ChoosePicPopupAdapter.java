@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.sribs.bdd.R;
 import com.sribs.bdd.v3.util.LogUtils;
+import com.sribs.common.bean.db.DrawingV3Bean;
 
 import java.util.List;
 
@@ -20,13 +21,13 @@ public class ChoosePicPopupAdapter  extends RecyclerView.Adapter<ChoosePicPopupA
 
     private Context mContext;
 
-    private List<String> datas;
+    private List<DrawingV3Bean> datas;
 
     private int select = 0;
 
     private ChoosePicPopupAdapter.ItemClickCallback mItemClickCallback;
 
-    public ChoosePicPopupAdapter(Context mContext, List<String> datas) {
+    public ChoosePicPopupAdapter(Context mContext, List<DrawingV3Bean> datas) {
         this.mContext = mContext;
         this.datas = datas;
     }
@@ -45,13 +46,13 @@ public class ChoosePicPopupAdapter  extends RecyclerView.Adapter<ChoosePicPopupA
     @Override
     public void onBindViewHolder(@NonNull ChoosePicPopupAdapter.ItemViewHolder holder, int position) {
         if (holder instanceof ChoosePicPopupAdapter.ItemViewHolder) {
-            String s = datas.get(position);
-            holder.text.setText(s);
+            DrawingV3Bean drawingV3Bean = datas.get(position);
+            holder.text.setText(drawingV3Bean.getFileName());
             if(select != -1 && select == position){
-                holder.choose.setSelected(true);
+                holder.choose.setBackgroundResource(R.drawable.circle_blue800);
                 holder.text.setSelected(true);
             }else {
-                holder.choose.setSelected(false);
+                holder.choose.setBackgroundResource(R.drawable.circle_gray);
                 holder.text.setSelected(false);
             }
             if (mItemClickCallback != null) {
@@ -59,7 +60,7 @@ public class ChoosePicPopupAdapter  extends RecyclerView.Adapter<ChoosePicPopupA
                     @Override
                     public void onClick(View v) {
                         select = position;
-                        mItemClickCallback.onItemClick(position);
+                        mItemClickCallback.onItemClick(drawingV3Bean);
                         notifyDataSetChanged();
                     }
                 });
@@ -86,6 +87,6 @@ public class ChoosePicPopupAdapter  extends RecyclerView.Adapter<ChoosePicPopupA
     }
 
     public interface ItemClickCallback {
-        void onItemClick(int position);
+        void onItemClick(DrawingV3Bean drawingV3Bean);
     }
 }

@@ -60,9 +60,9 @@
             app:layout_constraintBottom_toBottomOf="@id/check_obd_count"
             app:layout_constraintLeft_toRightOf="@id/check_obd_count"
             android:layout_marginLeft="@dimen/_4sdp"
-            android:layout_width="@dimen/_12sdp"
+            android:layout_width="12dp"
             android:src="@drawable/radio_selector"
-            android:layout_height="@dimen/_12sdp"/>
+            android:layout_height="12dp"/>
 
         <TextView
             android:id="@+id/check_obd_only_text"
@@ -70,6 +70,7 @@
             app:layout_constraintBottom_toBottomOf="@id/check_obd_count"
             app:layout_constraintLeft_toRightOf="@id/check_obd_only_radio"
             android:textColor="@color/black"
+            android:paddingLeft="@dimen/_2sdp"
             android:text="单项"
             android:layout_width="wrap_content"
             android:textSize="@dimen/_6ssp"
@@ -81,9 +82,9 @@
             app:layout_constraintBottom_toBottomOf="@id/check_obd_count"
             app:layout_constraintLeft_toRightOf="@id/check_obd_only_text"
             android:layout_marginLeft="@dimen/_6sdp"
-            android:layout_width="@dimen/_12sdp"
+            android:layout_width="12dp"
             android:src="@drawable/radio_selector"
-            android:layout_height="@dimen/_12sdp"/>
+            android:layout_height="12dp"/>
 
         <TextView
             android:id="@+id/check_obd_double_text"
@@ -91,6 +92,7 @@
             app:layout_constraintBottom_toBottomOf="@id/check_obd_count"
             app:layout_constraintLeft_toRightOf="@id/check_obd_double_radio"
             android:textColor="@color/black"
+            android:paddingLeft="@dimen/_2sdp"
             android:text="双项"
             android:layout_width="wrap_content"
             android:textSize="@dimen/_6ssp"

@@ -7,21 +7,23 @@ import com.sribs.common.bean.db.DrawingV3Bean
  * author: bruce
  * description:
  */
-class CheckBSMainBean (
-    var id:Long?,
+data class CheckBSMainBean (
+    var id : Long?,
     var projectId:Long?,
     var bldId:Long?,
+    var moduleId:Long?,
+    var floorId:Long?,
     var floorName:String?,
     var remoteId:String?=null,
     var inspectorName:String?="",
     var drawing:List<DrawingV3Bean>?=ArrayList(),
-    var createTime:Long?=0,
-    var updateTime:Long?=0,
-    var deleteTime:Long?=0,
+    var createTime:String?="",
+    var updateTime:String?="",
+    var deleteTime:String?="",
     var version:Int?=1,
     var status:Int?=0
 ){
     override fun toString(): String {
-        return "CheckBSMainBean(projectId=$projectId, bldId=$bldId, floorName=$floorName, remoteId=$remoteId, inspectorName=$inspectorName, drawing=$drawing, createTime=$createTime, updateTime=$updateTime, deleteTime=$deleteTime, version=$version, status=$status)"
+        return "CheckBSMainBean(projectId=$projectId, bldId=$bldId, moduleId=$moduleId, floorId=$floorId, floorName=$floorName, remoteId=$remoteId, inspectorName=$inspectorName, drawing=$drawing, createTime=$createTime, updateTime=$updateTime, deleteTime=$deleteTime, version=$version, status=$status)"
     }
 }

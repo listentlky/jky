@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.sribs.bdd.R;
 import com.sribs.bdd.v3.adapter.ChoosePicPopupAdapter;
 import com.sribs.bdd.v3.adapter.OneChoosePopupAdapter;
+import com.sribs.common.bean.db.DrawingV3Bean;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,15 +21,15 @@ public class ChoosePicPopupWindow extends android.widget.PopupWindow {
     private RecyclerView mRecyclerView;
     private Context mContext;
 
-    private int mChoosePosition = 0;
+    private DrawingV3Bean mDrawingV3Bean = null;
 
     private ChoosePicPopupAdapter mChoosePicPopupAdapter;
 
     private ChoosePicPopupWindow.PopupCallback mPopupCallback;
 
-    private List<String> datas = new ArrayList<>();
+    private List<DrawingV3Bean> datas= new ArrayList<DrawingV3Bean>();
 
-    public ChoosePicPopupWindow(Context context, int width, List<String> list, ChoosePicPopupWindow.PopupCallback popupCallback) {
+    public ChoosePicPopupWindow(Context context, int width, List<DrawingV3Bean> list, ChoosePicPopupWindow.PopupCallback popupCallback) {
         super(context);
         this.mContext = context;
         this.mPopupCallback = popupCallback;
@@ -48,8 +49,8 @@ public class ChoosePicPopupWindow extends android.widget.PopupWindow {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         mChoosePicPopupAdapter = new ChoosePicPopupAdapter(mContext,datas).setmItemClickCallback(new ChoosePicPopupAdapter.ItemClickCallback() {
             @Override
-            public void onItemClick(int position) {
-                mChoosePosition = position;
+            public void onItemClick(DrawingV3Bean drawingV3Bean) {
+                mDrawingV3Bean = drawingV3Bean;
             }
         });
         mRecyclerView.setAdapter(mChoosePicPopupAdapter);
@@ -63,7 +64,7 @@ public class ChoosePicPopupWindow extends android.widget.PopupWindow {
             @Override
             public void onClick(View view) {
                 if(mPopupCallback != null){
-                    mPopupCallback.onSelect(mChoosePosition);
+                    mPopupCallback.onSelect(mDrawingV3Bean);
                 }
                 dismiss();
             }
@@ -71,7 +72,7 @@ public class ChoosePicPopupWindow extends android.widget.PopupWindow {
     }
 
     public interface PopupCallback{
-        void onSelect(int position);
+        void onSelect(DrawingV3Bean drawingV3Bean);
     }
 }
 

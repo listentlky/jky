@@ -31,7 +31,7 @@ public class V3ChoosePopupAdapter  extends RecyclerView.Adapter<V3ChoosePopupAda
 
     private int select = 0;
 
-    private int color = 16742912;
+    private int color = 0;
 
     private V3ChoosePopupAdapter.ItemClickCallback mItemClickCallback;
 
@@ -57,20 +57,31 @@ public class V3ChoosePopupAdapter  extends RecyclerView.Adapter<V3ChoosePopupAda
             String s = datas.get(position);
             holder.text.setText(s);
             if (select != -1 && select == position) {
-                holder.choose.setSelected(true);
                 holder.text.setSelected(true);
+                switch (s){
+                    case "层高":
+                        holder.choose.setBackgroundResource(R.drawable.circle_green);
+                        break;
+                    case "轴网":
+                        holder.choose.setBackgroundResource(R.drawable.circle_orange);
+                        break;
+                    case "点位":
+                        holder.choose.setBackgroundResource(R.drawable.circle_red);
+                        break;
+                }
             } else {
-                holder.choose.setSelected(false);
+                holder.choose.setBackgroundResource(R.drawable.circle_gray);
                 holder.text.setSelected(false);
             }
             switch (s){
+                case "层高":
+                    color = 65408;
+                    break;
                 case "轴网":
-                    holder.choose.setBackgroundResource(R.drawable.circle_orange);
                     color = 16742912;
                     break;
-                case "层高":
-                    holder.choose.setBackgroundResource(R.drawable.circle_green);
-                    color = 65408;
+                case "点位":
+                    color = 16711680;
                     break;
             }
             if (mItemClickCallback != null) {

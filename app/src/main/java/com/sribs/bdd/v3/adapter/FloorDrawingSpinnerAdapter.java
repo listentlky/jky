@@ -43,7 +43,7 @@ class FloorDrawingSpinnerAdapter extends RecyclerView.Adapter<FloorDrawingSpinne
     public void onBindViewHolder(@NonNull FloorDrawingViewHolder holder, int position) {
         if(holder instanceof FloorDrawingViewHolder){
             FloorDrawingModule floorDrawingModule = mData.get(position);
-            holder.mSpinnerText.setText(floorDrawingModule.getMMenuName());
+            holder.mSpinnerText.setText(floorDrawingModule.getMFloorName());
             holder.mChooseSpinner.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

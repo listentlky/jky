@@ -73,5 +73,30 @@ class DamageV3Bean(){
         return "DamageV3Bean(id=$id, drawingId=$drawingId, type=$type, action=$action, annotRef=$annotRef, note=$note, createTime=$createTime, axisNote=$axisNote, axisNoteList=$axisNoteList, heightType=$heightType, floorName=$floorName, floorDesign=$floorDesign, floorReal=$floorReal, plateDesign=$plateDesign, decorateDesign=$decorateDesign, gridDesign=$gridDesign, gridReal=$gridReal)"
     }
 
+    //倾斜测量点位
+    var direction:String?="" //方向
+    var pointName:String?="" //点位名称
+    var measure1Height:String?="" //测量高度1
+    var measure2Height:String?="" //测量高度2
+    var tilt1:String?="" //倾斜量1
+    var tilt2:String?="" //倾斜量2
+    //倾斜测量点位
+    constructor(id:Long,drawingId:Long,type:String?,action:Int?,annotRef:Long,note:String?,createTime:Long,
+                direction:String?,pointName:String?,measure1Height:String?,measure2Height:String?,
+                tilt1:String?,tilt2:String?):this(){
+        this.id = id
+        this.drawingId = drawingId
+        this.type = type
+        this.action = action
+        this.annotRef = annotRef
+        this.note = note
+        this.createTime = createTime
+        this.direction = direction
+        this.pointName = pointName
+        this.measure1Height = measure1Height
+        this.measure2Height = measure2Height
+        this.tilt1 = tilt1
+        this.tilt2 = tilt2
 
+    }
 }

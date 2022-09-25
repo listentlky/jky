@@ -49,17 +49,19 @@ interface IDatabaseService:IProvider {
 
 
 
-
-
     fun getv3AllBuildingModule(): Flowable<List<v3BuildingModuleDbBean>>
 
-    fun getv3BuildingModule(projectId: Long,buildingId: String): Flowable<List<v3BuildingModuleDbBean>>
-
-    fun getv3BuildingModuleOnce(buildingId: String): Single<List<v3BuildingModuleDbBean>>
+    fun getv3BuildingModule(projectId: Long,buildingId: Long): Flowable<List<v3BuildingModuleDbBean>>
 
     fun getv3BuildingModuleOnce(
-        buildingId: String,
+        buildingId: Long,
         projectId: Long
+    ): Single<List<v3BuildingModuleDbBean>>
+
+    fun getv3BuildingModuleOnce(
+        buildingId: Long,
+        projectId: Long,
+        moduleId: Long
     ): Single<List<v3BuildingModuleDbBean>>
 
     fun getv3BuildingModuleOnce(moduleId: Long): Single<List<v3BuildingModuleDbBean>>
@@ -67,7 +69,9 @@ interface IDatabaseService:IProvider {
     fun updatev3BuildingModule(b: v3BuildingModuleDbBean): Observable<Long>
 
 
-    fun updatev3BuildingModuleOneData(b: v3BuildingModuleDbBean): Observable<Int>
+    fun updatev3BuildingModuleDrawing(b: v3BuildingModuleDbBean): Observable<Int>
+
+    fun updatev3BuildingModuleDrawing(id:Long,drawingList:List<DrawingV3Bean>): Observable<Int>
 
     fun deletev3BuildingModule(b: v3BuildingModuleDbBean): Observable<Int>
 
@@ -261,5 +265,10 @@ interface IDatabaseService:IProvider {
     fun getBuildingByProjectId(projectId:Long):Flowable<List<BuildingBean>>
 
     fun getAllDrawing(): Flowable<List<DrawingBean>>
+
+    /**
+     * 更新模块层表图纸数据
+     */
+    fun updateModuleFloorDrawing(drawingList:List<DrawingV3Bean>, id: Long):Observable<Int>
 
 }

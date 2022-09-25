@@ -16,7 +16,6 @@ import com.sribs.bdd.R;
 import com.sribs.bdd.v3.module.FloorDrawingModule;
 import com.sribs.bdd.v3.popup.FloorDrawingSpinnerPopupWindow;
 import com.sribs.bdd.v3.util.LogUtils;
-import com.sribs.common.bean.db.DamageV3Bean;
 import com.sribs.common.bean.db.DrawingV3Bean;
 
 import java.util.ArrayList;
@@ -91,7 +90,7 @@ public class FloorDrawingSpinnerView extends LinearLayout {
             TextView menuName = menuLayout.findViewById(R.id.spinner_name);
             mTextViews.add(menuName);
             ImageView menuImg = menuLayout.findViewById(R.id.spinner_img);
-            menuName.setText(menuData.getMMenuName());
+            menuName.setText(menuData.getMFloorName());
             if(i > 0){
                 mSpinnerLayout.setVisibility(GONE);
                 menuImg.setRotation(-90);
@@ -117,7 +116,7 @@ public class FloorDrawingSpinnerView extends LinearLayout {
 
             for (int k = 0; k < menuData.getMNameList().size();k++){
                 DrawingV3Bean drawingV3Bean = menuData.getMNameList().get(k);
-                drawingV3Bean.setFloorName(menuData.getMMenuName());
+                drawingV3Bean.setFloorName(menuData.getMFloorName());
                 View mSpinnerItemView = View.inflate(mContext, R.layout.floor_drawing_spinner_child_item,null);
                 TextView spinnerItem = mSpinnerItemView.findViewById(R.id.spinner_item_name);
                 spinnerItem.setText(drawingV3Bean.getFileName());

@@ -64,7 +64,7 @@ class ModuleFloorCreateTypeBuildingPresenter : BasePresenter(), IBasePresenter {
             id = mModuleId
             )
 
-        addDisposable(mDb.updatev3BuildingModuleOneData(bean)
+        addDisposable(mDb.updatev3BuildingModuleDrawing(bean)
             .subscribeOn(Schedulers.computation())
             .observeOn(Schedulers.computation())
             .subscribe({

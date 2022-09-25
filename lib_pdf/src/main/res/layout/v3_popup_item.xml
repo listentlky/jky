@@ -6,7 +6,6 @@
     android:gravity="center"
     android:layout_height="wrap_content">
 
-    <!-- android:src="@drawable/v3_radio_selector" -->
     <ImageView
         android:id="@+id/popup_choose"
         android:layout_marginRight="4dp"
@@ -16,8 +15,8 @@
     <TextView
         android:id="@+id/popup_item_text"
         android:textSize="12dp"
-        android:paddingTop="4dp"
-        android:paddingBottom="4dp"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp"
         android:includeFontPadding="false"
         android:textColor="@drawable/v3_choose_pic_textcolor_selector"
         android:gravity="center"

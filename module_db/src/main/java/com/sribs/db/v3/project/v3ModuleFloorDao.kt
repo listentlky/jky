@@ -2,56 +2,60 @@ package com.sribs.db.v3.project
 
 import androidx.room.*
 import androidx.room.OnConflictStrategy.REPLACE
+import com.sribs.common.bean.db.DrawingV3Bean
 import io.reactivex.Flowable
 import io.reactivex.Single
 
 @Dao
 interface v3ModuleFloorDao {
     @Query("Select * from V3_MODULE_FLOOR")
-    fun getAllFloor(): Flowable<List<v3ModuleFloorRoom>>
+    fun getAllModuleFloor(): Flowable<List<v3ModuleFloorRoom>>
 
     @Query("Select * from V3_MODULE_FLOOR where id = :id")
-    fun getFloor(id: Long): Flowable<List<v3ModuleFloorRoom>>
+    fun getModuleFloor(id: Long): Flowable<List<v3ModuleFloorRoom>>
 
     @Query("Select * from V3_MODULE_FLOOR where id = :id")
-    fun getFloorOnce(id: Long): Single<List<v3ModuleFloorRoom>>
+    fun getModuleFloorOnce(id: Long): Single<List<v3ModuleFloorRoom>>
 
 
     @Query("Select * from V3_MODULE_FLOOR where project_id = :projectId and building_id =:buildingId and module_id =:moduleId and status == 0")
-    fun getFloorByProjectIdOnce(
+    fun getModuleFloorByProjectIdOnce(
         projectId: Long,
         buildingId: Long,
         moduleId: Long
     ): Flowable<List<v3ModuleFloorRoom>>
 
+    @Query("Update V3_MODULE_FLOOR SET drawingsList = :drawingList WHERE id = :id and status == 0")
+    fun updateModuleFloorDrawing(drawingList:List<DrawingV3Bean>
+                                 , id: Long): Int
 
     @Query("Select * from V3_MODULE_FLOOR where project_id = :floorId and status == 0")
-    fun getFloorByProjectId(floorId: Long): Flowable<List<v3ModuleFloorRoom>>
+    fun getModuleFloorByProjectId(floorId: Long): Flowable<List<v3ModuleFloorRoom>>
 
     @Query("Select * from V3_MODULE_FLOOR where project_id = :floorId and status == 0")
-    fun getFloorByProjectIdOnce(floorId: Long): Single<List<v3ModuleFloorRoom>>
+    fun getModuleFloorByProjectIdOnce(floorId: Long): Single<List<v3ModuleFloorRoom>>
 
     @Query("Select * from V3_MODULE_FLOOR where remote_id = :remoteId")
-    fun getFloorByRemoteIdOnce(remoteId: String): Single<List<v3ModuleFloorRoom>>
+    fun getModuleFloorByRemoteIdOnce(remoteId: String): Single<List<v3ModuleFloorRoom>>
 
     @Query("Select * from V3_MODULE_FLOOR where building_id = :bldId and status == 0 order by floor_id asc ")
-    fun getLocalFloorsInTheBuilding(bldId: Long): Flowable<List<v3ModuleFloorRoom>>
+    fun getModuleFloorInTheBuilding(bldId: Long): Flowable<List<v3ModuleFloorRoom>>
 
     @Insert(onConflict = REPLACE)
-    fun insertFloor(bean: v3ModuleFloorRoom): Long
+    fun insertModuleFloor(bean: v3ModuleFloorRoom): Long
 
     @Update(onConflict = REPLACE)
-    fun updateFloor(bean: v3ModuleFloorRoom): Int
+    fun updateModuleFloor(bean: v3ModuleFloorRoom): Int
 
     @Delete
-    fun deleteFloor(bean: v3ModuleFloorRoom): Int
+    fun deleteModuleFloor(bean: v3ModuleFloorRoom): Int
 
     @Delete
-    fun deleteFloors(vararg bean: v3ModuleFloorRoom): Int
+    fun deleteModuleFloor(vararg bean: v3ModuleFloorRoom): Int
 
     @Query("Delete from V3_MODULE_FLOOR where module_id = :moduleId and project_id = :projectId and building_id =:buildingId ")
-    fun deleteFloor(projectId: Long, buildingId: Long, moduleId: Long)
+    fun deleteModuleFloor(projectId: Long, buildingId: Long, moduleId: Long)
 
     @Query("Delete from V3_MODULE_FLOOR where module_id = :moduleId and project_id = :projectId and building_id =:buildingId  and  floor_id =:floorId ")
-    fun deleteFloorOnce(projectId: Long, buildingId: Long, moduleId: Long, floorId: Long)
+    fun deleteModuleFloorOnce(projectId: Long, buildingId: Long, moduleId: Long, floorId: Long)
 }

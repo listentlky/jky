@@ -152,7 +152,9 @@ object ConverterHelper {
                     b.deleteTime,
                     b.createTime,
                     b.updateTime,
-                    b.remoteId
+                    b.remoteId,
+                    b.version,
+                    b.status
                 )
             }
         }
@@ -175,7 +177,9 @@ object ConverterHelper {
                     b.deleteTime,
                     b.createTime,
                     b.updateTime,
-                    b.remoteId
+                    b.remoteId,
+                    b.version,
+                    b.status
                 )
             }
         }
@@ -192,7 +196,9 @@ object ConverterHelper {
             underGroundNumber = b.underGroundNumber,
             drawings = b.drawings,
             inspectors = b.inspectors,
-            remoteId = b.remoteId
+            remoteId = b.remoteId,
+            version = b.version,
+            status = b.status
 
 
         ).also {

@@ -147,7 +147,7 @@ class ModuleCreateByTypeFloorActivity : BaseActivity(), IProjectContrast.IModule
 
             moduleCreateTypePresenter.createLocalModule(
                 this,
-                mLocalProjectId.toInt(),
+                mLocalProjectId,
                 mBuildingId,
                 mModuleId,
                 mRemoteId,

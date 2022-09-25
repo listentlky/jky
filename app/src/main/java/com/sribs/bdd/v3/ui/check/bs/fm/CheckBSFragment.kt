@@ -1,5 +1,6 @@
 package com.sribs.bdd.v3.ui.check.bs.fm
 
+import android.app.AlertDialog
 import android.view.View
 import android.widget.RelativeLayout
 import com.alibaba.android.arouter.facade.annotation.Route
@@ -41,7 +42,7 @@ class CheckBSFragment : BaseFragment(R.layout.fragment_check_build_structure),
     }
 
     override fun initView() {
-        mMenuList.add(CheckMenuModule().also {
+       /* mMenuList.add(CheckMenuModule().also {
             it.name = "建筑结构列表"
             it.menu.add(CheckMenuModule.Item().also {
                 it.name = "层高"
@@ -61,9 +62,13 @@ class CheckBSFragment : BaseFragment(R.layout.fragment_check_build_structure),
 
                 }
 
-            })!!.build()
+                override fun onMarkRemoveClick(v: View?, damage: DamageV3Bean?, damageType: String?) {
+                    TODO("Not yet implemented")
+                }
 
-        var popupWidth = resources.getDimensionPixelOffset(R.dimen._100sdp)
+            })!!.build()*/
+
+        var popupWidth = resources.getDimensionPixelOffset(R.dimen._80sdp)
         mBinding.checkSelectIndex.setOnClickListener {
             if(mChooseFloorDraw == null){
                 mChooseFloorDraw = FloorDrawingSpinnerPopupWindow(activity,
@@ -87,7 +92,8 @@ class CheckBSFragment : BaseFragment(R.layout.fragment_check_build_structure),
         mFloorDrawModule!!.clear()
         checkMainBean.forEach {
             mFloorDrawModule!!.add(FloorDrawingModule().also { b->
-                b.mMenuName = it.floorName
+                b.mId = it.id
+                b.mFloorName = it.floorName
                 it.drawing!!.forEach { c->
                     b.mNameList!!.add(c)
                     /*b.mNameList!!.add(FloorDrawingModule.Item().also { d->
@@ -148,6 +154,19 @@ class CheckBSFragment : BaseFragment(R.layout.fragment_check_build_structure),
 
                 override fun onMarkClick(v: View?,damage: DamageV3Bean?,damageType:String?) {
                     (activity as CheckBuildStructureActivity).resetDamageInfo(damage,damageType)
+                }
+
+                override fun onMarkRemoveClick(v: View?, damage: DamageV3Bean?, damageType: String?) {
+                    AlertDialog.Builder(activity).setTitle("提示")
+                        .setMessage("是否移除当前损伤记录")
+                        .setPositiveButton(R.string.dialog_ok) { dialog, which ->
+                            (activity as CheckBuildStructureActivity).removeDamage(damage,damageType)
+                        }.setNegativeButton(
+                            R.string.dialog_cancel
+                        ) { dialog, which ->
+
+                        }
+                        .show()
                 }
 
             })!!.build()

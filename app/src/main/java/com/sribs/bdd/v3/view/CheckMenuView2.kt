@@ -45,28 +45,30 @@ class CheckMenuView2 : LinearLayout {
 
     fun build() {
         removeAllViews()
-        mContext?:context
+        mContext ?: context
         orientation = VERTICAL
-        menuModuleList!!.forEachIndexed {index, it ->
-            Log.d("111","MENU_TYPE: "+it.name)
-            addView(addItemView(MENU_TYPE, it.name,null,""))
+        menuModuleList!!.forEachIndexed { index, it ->
+            addView(addItemView(MENU_TYPE, it.name, null, ""))
             addView(addLine())
             it.menu!!.forEachIndexed { index, b ->
-            Log.d("111","ITEM_TYPE: "+b.name)
-                addView(addItemView(ITEM_TYPE, b.name,null,b.name))
+                addView(addItemView(ITEM_TYPE, b.name, null, b.name))
                 addView(addLine())
                 b.item!!.forEachIndexed { index, c ->
-                    Log.d("111","MARK_TYPE: "+c.name)
-                    addView(addItemView(MARK_TYPE, c.name,c.damage,b.name))
+                    addView(addItemView(MARK_TYPE, c.name, c.damage, b.name))
                     addView(addLine())
                 }
             }
         }
     }
 
-    private fun addItemView(type: Int?, name: String?,damage: DamageV3Bean?,damageType:String?): View? {
-        when(type){
-            MENU_TYPE->{
+    private fun addItemView(
+        type: Int?,
+        name: String?,
+        damage: DamageV3Bean?,
+        damageType: String?
+    ): View? {
+        when (type) {
+            MENU_TYPE -> {
                 val tv = TextView(mContext)
                 tv.text = name
                 tv.gravity = Gravity.CENTER_VERTICAL
@@ -83,7 +85,7 @@ class CheckMenuView2 : LinearLayout {
                 tv.layoutParams = tvParams
                 return tv
             }
-            ITEM_TYPE->{
+            ITEM_TYPE -> {
                 val itemLayout = RelativeLayout(mContext)
                 val padding = context.resources.getDimensionPixelOffset(R.dimen._12sdp)
                 itemLayout.setPadding(padding, 0, padding / 2, 0)
@@ -125,12 +127,13 @@ class CheckMenuView2 : LinearLayout {
 
                 itemLayout.layoutParams = itemLayoutParams
                 itemLayout.setOnClickListener { v ->
-                    mCheckMenuCallback!!.onClick(v,damageType)
+                    if (mCheckMenuCallback != null)
+                        mCheckMenuCallback!!.onClick(v, damageType)
                 }
                 return itemLayout
             }
-            MARK_TYPE->{
-                val tv4 = TextView(mContext)
+            MARK_TYPE -> {
+             /*   val tv4 = TextView(mContext)
                 tv4.text = name
                 tv4.gravity = Gravity.CENTER_VERTICAL
                 tv4.setTextSize(
@@ -145,10 +148,61 @@ class CheckMenuView2 : LinearLayout {
                 tv4Params.leftMargin = mContext!!.resources.getDimensionPixelOffset(R.dimen._18sdp)
                 tv4.layoutParams = tv4Params
                 tv4.setOnClickListener { v ->
-                    mCheckMenuCallback!!.onMarkClick(v,damage,damageType)
+                    if (mCheckMenuCallback != null)
+                        mCheckMenuCallback!!.onMarkClick(v, damage, damageType)
+                }
+                return tv4
+                */
+
+                val itemLayout = RelativeLayout(mContext)
+                val padding = context.resources.getDimensionPixelOffset(R.dimen._18sdp)
+                itemLayout.setPadding(padding, 0, 0, 0)
+                val itemLayoutParams = LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    mContext!!.resources.getDimensionPixelOffset(R.dimen._22sdp)
+                )
+
+                val tv2 = TextView(mContext)
+                tv2.text = name
+                tv2.gravity = Gravity.CENTER_VERTICAL
+                tv2.setTextSize(
+                    TypedValue.COMPLEX_UNIT_PX,
+                    context.resources.getDimension(R.dimen._8ssp)
+                )
+                tv2.setTextColor(Color.parseColor("#FFFFFF"))
+                val tv2Params = RelativeLayout.LayoutParams(
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+                )
+                tv2Params.addRule(RelativeLayout.CENTER_VERTICAL)
+                itemLayout.addView(tv2, tv2Params)
+
+                val tv3 = TextView(mContext)
+                tv3.text = "-"
+                tv3.gravity = Gravity.CENTER
+                tv3.setTextSize(
+                    TypedValue.COMPLEX_UNIT_PX,
+                    mContext!!.resources.getDimension(R.dimen._8ssp)
+                )
+                tv3.setPadding(padding, 0, padding / 2, 0)
+                tv3.setTextColor(Color.parseColor("#FFFFFF"))
+                val tv3Params = RelativeLayout.LayoutParams(
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT
+                )
+                tv3Params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT)
+                tv3Params.addRule(RelativeLayout.CENTER_VERTICAL)
+                itemLayout.addView(tv3, tv3Params)
+                tv3.setOnClickListener { v->
+                        mCheckMenuCallback!!.onMarkRemoveClick(v,damage, damageType)
                 }
 
-                return tv4
+                itemLayout.layoutParams = itemLayoutParams
+                itemLayout.setOnClickListener { v ->
+                        mCheckMenuCallback!!.onMarkClick(v, damage, damageType)
+                }
+                return itemLayout
+
             }
         }
         return null
@@ -174,9 +228,11 @@ class CheckMenuView2 : LinearLayout {
     }
 
     interface CheckMenuCallback {
-        fun onClick(v: View?,damageType:String?)
+        fun onClick(v: View?, damageType: String?)
 
-        fun onMarkClick(v: View?,damage: DamageV3Bean?,damageType:String?)
+        fun onMarkClick(v: View?, damage: DamageV3Bean?, damageType: String?)
+
+        fun onMarkRemoveClick(v: View?, damage: DamageV3Bean?, damageType: String?)
 
     }
 

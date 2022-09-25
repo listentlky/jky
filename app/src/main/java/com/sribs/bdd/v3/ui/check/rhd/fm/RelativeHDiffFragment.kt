@@ -46,12 +46,12 @@ class RelativeHDiffFragment : BaseFragment(R.layout.fragment_relative_h_diff){
             "第二张","第三张"))
         mBinding.checkSelectIndex.setOnClickListener {
             if(mChoosePicPopupWindow == null){
-                mChoosePicPopupWindow = ChoosePicPopupWindow(context,popupWidth,mPicList,object:ChoosePicPopupWindow.PopupCallback{
+              /*  mChoosePicPopupWindow = ChoosePicPopupWindow(context,popupWidth,mPicList,object:ChoosePicPopupWindow.PopupCallback{
                     override fun onSelect(position: Int) {
                         mBinding.checkSelectIndex.text=mPicList!![position]
                     }
 
-                })
+                })*/
             }
             mChoosePicPopupWindow!!.showAsDropDown(mBinding.checkSelectIndex,-popupWidth-10,-mBinding.checkSelectIndex.height)
         }

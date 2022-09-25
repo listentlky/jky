@@ -136,13 +136,13 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
     //v3
     private boolean mIsV3 = false;
 
-    private String[] mV3DamageType = {"层高","轴网"};
+    private List<String> mV3DamageType = Arrays.asList("层高","轴网");
 
     public void setV3Version(boolean isV3){
         mIsV3 = isV3;
     }
 
-    public void setV3DamageType(String[] damageType){
+    public void setV3DamageType(List<String> damageType){
         mV3DamageType = damageType;
     }
 
@@ -385,11 +385,9 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
                         m_listener.OnPDFPageModified(m_annot_page.GetPageNo());
                     PDFEndAnnot();
                 } else if (PDFCanSave() && m_annot.GetEditType() > 0) {//if form edit-box.
-                    Toast.makeText(getContext(), "22222222222222", Toast.LENGTH_SHORT).show();
                     onEditAnnot();
                 }else if (PDFCanSave() && m_annot.GetComboItemCount() >= 0)//if form choice
                 {
-                    Toast.makeText(getContext(), "3333333333333", Toast.LENGTH_SHORT).show();
                     try {
                         int[] location = new int[2];
                         getLocationOnScreen(location);
@@ -445,23 +443,21 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
                     } catch (Exception ignored) {
                     }
                 } else if (PDFCanSave() && m_annot.GetListItemCount() >= 0) {  //if list choice
-                    Toast.makeText(getContext(), "44444444444444", Toast.LENGTH_SHORT).show();
                     onListAnnot();
                 }else if (PDFCanSave() && m_annot.GetFieldType() == 4 &&
                         m_annot.GetSignStatus() == 0 && Global.g_hand_signature) {  //signature field
-                    Toast.makeText(getContext(), "5555555555555", Toast.LENGTH_SHORT).show();
                     handleSignatureField();
                 }else if(m_annot.GetURI() != null && Global.g_auto_launch_link && m_listener != null) { // launch link automatically
-                    Toast.makeText(getContext(), "666666666666666666", Toast.LENGTH_SHORT).show();
                     m_listener.OnPDFOpenURI(m_annot.GetURI());
                     PDFEndAnnot();
                 } else if (m_listener != null) {
-                    Toast.makeText(getContext(), "7777777777777777777", Toast.LENGTH_SHORT).show();
                     Log.i("leon","onSingleTapConfirmed 222 PDFCanSave()=" + PDFCanSave());
                     Log.i("leon","onSingleTapConfirmed 222 m_aMenu=" + m_aMenu);
                     m_listener.OnPDFAnnotTapped(m_annot_pos.pageno, m_annot);
                     if (PDFCanSave() && m_aMenu != null) {
                         Log.i("leon","onSingleTapConfirmed m_aMenu.show");
+
+                        Log.d("bruce","m_annot GetType: "+m_annot.GetType());
 
                         m_aMenu.show(m_annot, m_annot_rect, new UIAnnotMenu.IMemnuCallback() {
                             //the update need new operator in OPStack
@@ -2440,13 +2436,13 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
     private V3DamagePopupWindow.PopupCallback popupCallback = new V3DamagePopupWindow.PopupCallback() {
         @Override
         public void onSelect(int position,int color) {
-            Log.d("bruce","当前选择损伤: "+mV3DamageType[position] + "color: "+color);
-            mSelectedDamageType = mV3DamageType[position];
+            Log.d("bruce","当前选择损伤: "+mV3DamageType.get(position) + "color: "+color);
+            mSelectedDamageType = mV3DamageType.get(position);
             PDFSetNote(0);
             mNewAnnotColor = color;
             onTouchNote(mCacheMotionEvent);
             if(mV3SelectDamageTypeCallback != null){
-                mV3SelectDamageTypeCallback.onSelect(mV3DamageType[position]);
+                mV3SelectDamageTypeCallback.onSelect(mV3DamageType.get(position));
             }
         }
     };
@@ -2462,10 +2458,15 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
     }
 
     private V3DamagePopupWindow v3DamagePopupWindow;
+    private int mV3DefaultColor  = 65408;
+    public void setMarkV3DefaultColor(int color){
+        mV3DefaultColor = color;
+    }
     private void showV3DamagePopupWindow() {
         if(v3DamagePopupWindow == null){
-            v3DamagePopupWindow = new V3DamagePopupWindow(getContext(),200, Arrays.asList(mV3DamageType)
+            v3DamagePopupWindow = new V3DamagePopupWindow(getContext(),90, mV3DamageType
             ,popupCallback);
+            v3DamagePopupWindow.initFirstColor(mV3DefaultColor);
         }
         v3DamagePopupWindow.showAsDropDown(this,(int)(Math.round(m_annot_note_x0)),(int)(Math.round(m_annot_note_y0)));
     }

@@ -120,7 +120,7 @@ class DatabaseSrv : IDatabaseService {
 
     override fun getv3BuildingModule(
         projectId: Long,
-        buildingId: String
+        buildingId: Long
     ): Flowable<List<v3BuildingModuleDbBean>> {
         var dao = mDb!!.v3BuildingModuleDao()
         return dao.getProject(projectId, buildingId).run {
@@ -128,19 +128,23 @@ class DatabaseSrv : IDatabaseService {
         }
     }
 
-    override fun getv3BuildingModuleOnce(buildingId: String): Single<List<v3BuildingModuleDbBean>> {
+    override fun getv3BuildingModuleOnce(
+        buildingId: Long,
+        projectId: Long
+    ): Single<List<v3BuildingModuleDbBean>> {
         var dao = mDb!!.v3BuildingModuleDao()
-        return dao.getProjectOnce(buildingId).run {
+        return dao.getProjectOnce(projectId, buildingId).run {
             ConverterHelper.convertOnlyv3BuildingModuleBean(this)
         }
     }
 
     override fun getv3BuildingModuleOnce(
-        buildingId: String,
-        projectId: Long
+        buildingId: Long,
+        projectId: Long,
+        moduleId: Long
     ): Single<List<v3BuildingModuleDbBean>> {
         var dao = mDb!!.v3BuildingModuleDao()
-        return dao.getProjectOnce(projectId, buildingId).run {
+        return dao.getProjectOnce(projectId, buildingId,moduleId).run {
             ConverterHelper.convertOnlyv3BuildingModuleBean(this)
         }
     }
@@ -158,11 +162,18 @@ class DatabaseSrv : IDatabaseService {
             it.onNext(dao.insertProject(ConverterHelper.convertv3BuildingModuleRoom(b)))
         }
 
-    override fun updatev3BuildingModuleOneData(b: v3BuildingModuleDbBean): Observable<Int> =
+    override fun updatev3BuildingModuleDrawing(b: v3BuildingModuleDbBean): Observable<Int> =
         Observable.create {
             var dao = mDb!!.v3BuildingModuleDao()
             it.onNext(dao.updateProjectOneData(b.id!!,b.drawings!!))
 
+            Log.e("llf", "updatev3BuildingModuleOneData: "+it )
+        }
+
+    override fun updatev3BuildingModuleDrawing(id:Long,drawingList:List<DrawingV3Bean>): Observable<Int> =
+        Observable.create {
+            var dao = mDb!!.v3BuildingModuleDao()
+            it.onNext(dao.updateProjectOneData(id,drawingList))
             Log.e("llf", "updatev3BuildingModuleOneData: "+it )
         }
 
@@ -179,7 +190,7 @@ class DatabaseSrv : IDatabaseService {
         moduleId: Long
     ): Flowable<List<v3ModuleFloorDbBean>> {
         var dao = mDb!!.v3ModuleFloorDao()
-        return dao.getFloorByProjectIdOnce(projectId, buildingId, moduleId).run {
+        return dao.getModuleFloorByProjectIdOnce(projectId, buildingId, moduleId).run {
             ConverterHelper.convertv3ModuleFloorBean(this)
         }
     }
@@ -187,8 +198,9 @@ class DatabaseSrv : IDatabaseService {
     override fun updatev3ModuleFloor(b: v3ModuleFloorDbBean): Observable<Long> =
         Observable.create {
             var dao = mDb!!.v3ModuleFloorDao()
-            it.onNext(dao.insertFloor(ConverterHelper.convertv3ModuleFloorRoom(b)))
+            it.onNext(dao.insertModuleFloor(ConverterHelper.convertv3ModuleFloorRoom(b)))
         }
+
 
     override fun deletev3ModuleFloor(
         projectId: Long,
@@ -196,7 +208,7 @@ class DatabaseSrv : IDatabaseService {
         moduleId: Long
     ): Observable<Boolean> = Observable.create {
         var dao = mDb!!.v3ModuleFloorDao()
-        dao.deleteFloor(projectId, buildingId, moduleId)
+        dao.deleteModuleFloor(projectId, buildingId, moduleId)
         it.onNext(true)
     }
 
@@ -207,7 +219,7 @@ class DatabaseSrv : IDatabaseService {
         floorId: Long
     ): Observable<Boolean> =Observable.create {
         var dao = mDb!!.v3ModuleFloorDao()
-        dao.deleteFloorOnce(projectId,buildingId,moduleId,floorId)
+        dao.deleteModuleFloorOnce(projectId,buildingId,moduleId,floorId)
         it.onNext(true)
     }
 
@@ -724,6 +736,15 @@ class DatabaseSrv : IDatabaseService {
     override fun getAllDrawing(): Flowable<List<DrawingBean>> {
         var dao = mDb!!.drawingDao()
         return dao.getAllDrawing().run { ConverterHelper.convertDbDrawingBeanToCommonFlow(this) }
+    }
+
+    override fun updateModuleFloorDrawing (
+        drawingList: List<DrawingV3Bean>,
+        id: Long
+    ):Observable<Int> = Observable.create {
+        var dao = mDb!!.v3ModuleFloorDao();
+        var moduleFloorId = dao.updateModuleFloorDrawing(drawingList,id)
+        it.onNext(moduleFloorId)
     }
 
     override fun getBuildingIdByProjectId(proId: Long): Observable<Long> = Observable.create {

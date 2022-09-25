@@ -118,7 +118,7 @@ interface IProjectContrast {
 
 
     interface IProjectFloorDetailPresent:IBasePresenter{
-       fun getRemoteModule(mLocalProjectId:Long, mBuildingId:Long)
+    /*   fun getRemoteModule(mLocalProjectId:Long, mBuildingId:Long)*/
        fun getLocalModule(mLocalProjectId:Long, mBuildingId:Long)
     }
 

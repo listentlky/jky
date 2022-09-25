@@ -84,6 +84,10 @@ class CheckCDFragment : BaseFragment(R.layout.fragment_check_componentdetection)
                 override fun onMarkClick(v: View?, damage: DamageV3Bean?, damageType: String?) {
                     TODO("Not yet implemented")
                 }
+
+                override fun onMarkRemoveClick(v: View?, damage: DamageV3Bean?, damageType: String?) {
+                    TODO("Not yet implemented")
+                }
             })!!.build()
 
         initPdf()

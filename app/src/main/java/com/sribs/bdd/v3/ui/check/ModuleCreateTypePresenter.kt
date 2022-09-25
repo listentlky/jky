@@ -170,7 +170,7 @@ class ModuleCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCrea
 
     fun createLocalModule(
         activity: Activity,
-        mLocalProjectId: Int,
+        mLocalProjectId: Long,
         mBuildingId: Long,
         mModuleId: Long,
         remoteId: String,
@@ -194,7 +194,7 @@ class ModuleCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCrea
         }
         var bean = v3BuildingModuleDbBean(
             id = mModuleId,
-            buildingId = mBuildingId.toString(),
+            buildingId = mBuildingId,
             projectId = mLocalProjectId.toLong(),
             moduleName = moduleName,
             updateTime = TimeUtil.YMD_HMS.format(Date()),
@@ -215,13 +215,13 @@ class ModuleCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCrea
             }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                mLocalModuleId = it.toLong()
+                mLocalModuleId = it
                 LogUtils.d("llf createLocalModule new building id=${mLocalModuleId}")
                 createLocalFloorsInTheModule(
                     activity,
                     mLocalProjectId,
                     mBuildingId,
-                    mLocalModuleId!!.toInt(),
+                    mLocalModuleId!!,
                     aboveGroundNumber,
                     underGroundNumber
                 )
@@ -234,9 +234,9 @@ class ModuleCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCrea
 
     private fun createLocalFloorsInTheModule(
         activity: Activity,
-        mLocalProjectId: Int,
+        mLocalProjectId: Long,
         mBuildingId: Long,
-        moduleId: Int,
+        moduleId: Long,
         aboveGroundNumber: Int,
         underGroundNumber: Int
     ) {
@@ -295,9 +295,9 @@ class ModuleCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCrea
 
     fun getFloorList(
         activity: Activity,
-        mLocalProjectId: Int,
+        mLocalProjectId: Long,
         mBuildingId: Long,
-        moduleId: Int,
+        moduleId: Long,
         aboveGroundNumber: Int,
         underGroundNumber: Int
     ) {
@@ -326,7 +326,7 @@ class ModuleCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCrea
     fun getDrawingList(
         activity: Activity,
         floorBean: ModuleFloorBean,
-        mLocalProjectId: Int,
+        mLocalProjectId: Long,
         mBuildingId: Long,
     ): ArrayList<DrawingV3Bean>? {
         if (floorBean.pictureList != null && floorBean.pictureList!!.size > 0) {
