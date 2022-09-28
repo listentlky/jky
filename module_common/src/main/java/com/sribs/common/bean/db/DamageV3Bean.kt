@@ -1,5 +1,8 @@
 package com.sribs.common.bean.db
 
+import java.util.*
+import kotlin.collections.ArrayList
+
 /**
  * create time: 2022/9/21
  * author: bruce
@@ -69,12 +72,11 @@ class DamageV3Bean(){
         this.gridReal = gridReal
     }
 
-    override fun toString(): String {
-        return "DamageV3Bean(id=$id, drawingId=$drawingId, type=$type, action=$action, annotRef=$annotRef, note=$note, createTime=$createTime, axisNote=$axisNote, axisNoteList=$axisNoteList, heightType=$heightType, floorName=$floorName, floorDesign=$floorDesign, floorReal=$floorReal, plateDesign=$plateDesign, decorateDesign=$decorateDesign, gridDesign=$gridDesign, gridReal=$gridReal)"
-    }
+
 
     //倾斜测量点位
     var direction:String?="" //方向
+    var rotate:Int?=0//角度
     var pointName:String?="" //点位名称
     var measure1Height:String?="" //测量高度1
     var measure2Height:String?="" //测量高度2
@@ -82,7 +84,7 @@ class DamageV3Bean(){
     var tilt2:String?="" //倾斜量2
     //倾斜测量点位
     constructor(id:Long,drawingId:Long,type:String?,action:Int?,annotRef:Long,note:String?,createTime:Long,
-                direction:String?,pointName:String?,measure1Height:String?,measure2Height:String?,
+                direction:String?,rotate:Int?,pointName:String?,measure1Height:String?,measure2Height:String?,
                 tilt1:String?,tilt2:String?):this(){
         this.id = id
         this.drawingId = drawingId
@@ -92,6 +94,7 @@ class DamageV3Bean(){
         this.note = note
         this.createTime = createTime
         this.direction = direction
+        this.rotate = rotate
         this.pointName = pointName
         this.measure1Height = measure1Height
         this.measure2Height = measure2Height
@@ -99,4 +102,28 @@ class DamageV3Bean(){
         this.tilt2 = tilt2
 
     }
+
+    //相对高差
+    var rhdiffInfo:ArrayList<RelativeHDiffInfoBean>?=ArrayList() //单条数据
+    var pointList:List<RelativeHDiffPointBean>?=ArrayList() //测点数据
+
+    constructor(id:Long,drawingId:Long,type:String?,action:Int?,annotRef:Long,note:String?,createTime:Long,
+                rhdiffInfo:ArrayList<RelativeHDiffInfoBean>,pointList:List<RelativeHDiffPointBean>):this(){
+        this.id = id
+        this.drawingId = drawingId
+        this.type = type
+        this.action = action
+        this.annotRef = annotRef
+        this.note = note
+        this.createTime = createTime
+        this.rhdiffInfo = rhdiffInfo
+        this.pointList = pointList
+
+    }
+
+    override fun toString(): String {
+        return "DamageV3Bean(id=$id, drawingId=$drawingId, type=$type, action=$action, annotRef=$annotRef, note=$note, createTime=$createTime, axisNote=$axisNote, axisNoteList=$axisNoteList, heightType=$heightType, floorName=$floorName, floorDesign=$floorDesign, floorReal=$floorReal, plateDesign=$plateDesign, decorateDesign=$decorateDesign, gridDesign=$gridDesign, gridReal=$gridReal, direction=$direction, rotate=$rotate, pointName=$pointName, measure1Height=$measure1Height, measure2Height=$measure2Height, tilt1=$tilt1, tilt2=$tilt2, rhdiffInfo=$rhdiffInfo, pointList=$pointList)"
+    }
+
+
 }

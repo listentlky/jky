@@ -48,6 +48,9 @@ import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
+/**
+ * 建筑结构复核
+ */
 @Route(path = com.sribs.common.ARouterPath.CHECK_BUILD_STRUCTURE_ACTIVITY)
 class CheckBuildStructureActivity : BaseActivity(), ICheckBSContrast.ICheckBSView,
     ILayoutView.PDFLayoutListener, PDFLayoutView.V3SelectDamageTypeCallback {

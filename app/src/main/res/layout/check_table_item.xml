@@ -6,7 +6,7 @@
     android:background="@color/grayF5F7FA">
 
     <TextView
-        android:id="@+id/table_dh_text"
+        android:id="@+id/table_dh"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:gravity="center"
@@ -24,7 +24,7 @@
         android:layout_width="1px"
         android:layout_height="match_parent"
         android:background="@color/grayAAABAD"
-        app:layout_constraintLeft_toRightOf="@id/table_dh_text"
+        app:layout_constraintLeft_toRightOf="@id/table_dh"
         app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
@@ -32,12 +32,13 @@
         android:layout_width="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintLeft_toRightOf="@id/table_dh_text"
+        app:layout_constraintLeft_toRightOf="@id/table_dh"
         app:layout_constraintRight_toLeftOf="@id/table_qs"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_height="0dp">
 
         <EditText
+            android:id="@+id/table_hs_edit"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginLeft="@dimen/_4sdp"
@@ -45,6 +46,7 @@
             android:layout_marginRight="@dimen/_4sdp"
             android:layout_marginBottom="@dimen/_2sdp"
             android:gravity="center"
+            android:inputType="number"
             android:paddingLeft="@dimen/_4sdp"
             android:textColor="@color/gray_666"
             android:textSize="@dimen/_6ssp"
@@ -70,6 +72,7 @@
         android:layout_height="0dp">
 
         <EditText
+            android:id="@+id/table_qs_edit"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginLeft="@dimen/_4sdp"
@@ -77,6 +80,7 @@
             android:layout_marginRight="@dimen/_4sdp"
             android:layout_marginBottom="@dimen/_2sdp"
             android:gravity="center"
+            android:inputType="number"
             android:paddingLeft="@dimen/_4sdp"
             android:textColor="@color/gray_666"
             android:textSize="@dimen/_6ssp"
@@ -102,6 +106,7 @@
         android:layout_height="0dp">
 
         <EditText
+            android:id="@+id/table_qhsgc_edit"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginLeft="@dimen/_4sdp"
@@ -109,6 +114,7 @@
             android:layout_marginRight="@dimen/_4sdp"
             android:layout_marginBottom="@dimen/_2sdp"
             android:gravity="center"
+            android:inputType="number"
             android:paddingLeft="@dimen/_4sdp"
             android:paddingRight="@dimen/_4sdp"
             android:textColor="@color/gray_666"
@@ -135,6 +141,7 @@
         android:layout_height="0dp">
 
         <EditText
+            android:id="@+id/table_gc_edit"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginLeft="@dimen/_4sdp"
@@ -142,6 +149,7 @@
             android:layout_marginRight="@dimen/_4sdp"
             android:layout_marginBottom="@dimen/_2sdp"
             android:gravity="center"
+            android:inputType="number"
             android:paddingLeft="@dimen/_4sdp"
             android:paddingRight="@dimen/_4sdp"
             android:textColor="@color/gray_666"
@@ -168,6 +176,7 @@
         android:layout_height="0dp">
 
         <EditText
+            android:id="@+id/table_cdxdgc_edit"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginLeft="@dimen/_4sdp"
@@ -175,6 +184,7 @@
             android:layout_marginRight="@dimen/_4sdp"
             android:layout_marginBottom="@dimen/_2sdp"
             android:gravity="center"
+            android:inputType="number"
             android:paddingLeft="@dimen/_4sdp"
             android:paddingRight="@dimen/_4sdp"
             android:textColor="@color/gray_666"

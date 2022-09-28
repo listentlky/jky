@@ -37,7 +37,7 @@
         app:showAsAction="always"
         android:icon="@mipmap/icon_info"
         >
-        <menu>
+       <!-- <menu>
             <group>
                 <item
                     android:id="@+id/menu_main_pop_local"
@@ -65,6 +65,6 @@
                     android:icon="@drawable/ic_main_download_config"
                     />
             </group>
-        </menu>
+        </menu>-->
     </item>
 </menu>

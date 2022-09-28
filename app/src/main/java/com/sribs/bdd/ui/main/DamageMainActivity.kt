@@ -65,8 +65,6 @@ class DamageMainActivity :BaseActivity(),IMainListContrast.IMainView{
     var mBottomDialog: Dialog?=null
 
 
-
-
     private fun initCreateDialog() {
         var createDialog = CreateDialog(this, -1) {
 

@@ -36,6 +36,8 @@ import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import java.io.File
+import java.util.*
+import kotlin.collections.ArrayList
 
 @Route(path = com.sribs.common.ARouterPath.DRAW_PDF_ACTIVITY)
 class DrawPDFActivity : BaseActivity() {
@@ -130,6 +132,8 @@ class DrawPDFActivity : BaseActivity() {
         }
         mBinding.leftLayout.gridview.numColumns = 3
         mBinding.leftLayout.gridview.adapter = mMenuAdapter
+        mBinding.leftLayout.gridview.horizontalSpacing = 6
+        mBinding.leftLayout.gridview.verticalSpacing = 6
 
         mBinding.leftLayout.cancel.setOnClickListener { //取消选中
             mMenuAdapter!!.notifyChecked(-1)

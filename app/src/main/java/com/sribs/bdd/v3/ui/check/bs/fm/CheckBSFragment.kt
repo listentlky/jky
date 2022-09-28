@@ -42,32 +42,6 @@ class CheckBSFragment : BaseFragment(R.layout.fragment_check_build_structure),
     }
 
     override fun initView() {
-       /* mMenuList.add(CheckMenuModule().also {
-            it.name = "建筑结构列表"
-            it.menu.add(CheckMenuModule.Item().also {
-                it.name = "层高"
-            })
-            it.menu.add(CheckMenuModule.Item().also {
-                it.name = "轴网"
-            })
-        })
-        mBinding.toolLayout.setMenuModuleList(mMenuList)
-            .setCheckMenuCallback(object : CheckMenuView2.CheckMenuCallback {
-                override fun onClick(v: View?, damageType: String?) {
-                    (activity as CheckBuildStructureActivity).setAddAnnotReF(-1L)
-                    (activity as CheckBuildStructureActivity).resetDamageInfo(null,damageType)
-                }
-
-                override fun onMarkClick(v: View?, damage: DamageV3Bean?, damageType: String?) {
-
-                }
-
-                override fun onMarkRemoveClick(v: View?, damage: DamageV3Bean?, damageType: String?) {
-                    TODO("Not yet implemented")
-                }
-
-            })!!.build()*/
-
         var popupWidth = resources.getDimensionPixelOffset(R.dimen._80sdp)
         mBinding.checkSelectIndex.setOnClickListener {
             if(mChooseFloorDraw == null){
@@ -96,12 +70,6 @@ class CheckBSFragment : BaseFragment(R.layout.fragment_check_build_structure),
                 b.mFloorName = it.floorName
                 it.drawing!!.forEach { c->
                     b.mNameList!!.add(c)
-                    /*b.mNameList!!.add(FloorDrawingModule.Item().also { d->
-                        d.name = c.fileName
-                        d.path = c.localAbsPath
-                        d.drawingID = c.drawingID
-                        d.floorName = it.floorName
-                    })*/
                 }
             })
         }
@@ -131,13 +99,13 @@ class CheckBSFragment : BaseFragment(R.layout.fragment_check_build_structure),
                 when (it.type) {
                     (activity as CheckBuildStructureActivity).mCurrentDamageType[0] -> { // 层高
                         mMenuList!![0].menu!![0].item!!.add(CheckMenuModule.Item.Mark().also { b->
-                            b.name = "轴线"
+                            b.name = it.pointName
                             b.damage = it
                         })
                     }
                     (activity as CheckBuildStructureActivity).mCurrentDamageType[1] -> { //轴网
                         mMenuList!![0].menu!![1].item!!.add(CheckMenuModule.Item.Mark().also { c->
-                            c.name = "轴网"
+                            c.name = it.pointName
                             c.damage = it
                         })
                     }

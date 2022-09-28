@@ -46,13 +46,13 @@ public class V3DamagePopupWindow extends android.widget.PopupWindow {
             this.datas.addAll(list);
         }
         View view = LayoutInflater.from(mContext).inflate(R.layout.v3_popup_layout,null);
-        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(dp2px(context,width),
+        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(width,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
         view.setLayoutParams(layoutParams);
         setContentView(view);
         setBackgroundDrawable(null);
         setOutsideTouchable(true);
-        setWidth(dp2px(context,width));
+        setWidth(width);
 
         mRecyclerView = (RecyclerView)view.findViewById(R.id.popup_recyclerView);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
@@ -83,17 +83,6 @@ public class V3DamagePopupWindow extends android.widget.PopupWindow {
 
     public void initFirstColor(int color){
         this.mChooseColor = color;
-    }
-
-    /**
-     *  dp 2 px
-     * @param context
-     * @param dpVal
-     * @return
-     */
-    public static int dp2px(Context context, int dpVal) {
-        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-                dpVal, context.getResources().getDisplayMetrics());
     }
 
     public interface PopupCallback{

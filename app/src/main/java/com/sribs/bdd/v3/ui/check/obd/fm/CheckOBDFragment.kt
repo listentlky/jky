@@ -42,32 +42,6 @@ class CheckOBDFragment : BaseFragment(R.layout.fragment_check_obliquedeformation
     }
 
     override fun initView() {
-      /*  mMenuList?.add(CheckMenuModule().also {
-            it.name =  "倾斜测量点位列表"
-            it.menu?.add(CheckMenuModule.Item().also {
-                it.name = "点位"
-               *//* it.item?.add(CheckMenuModule.Item.Mark().also {
-                    it.name = "1.斜率1，斜率2"
-                })*//*
-            })
-        })
-        Log.d("addItemView","mMenuList: "+mMenuList.toString());
-
-        mBinding.toolLayout.setMenuModuleList(mMenuList!!).setCheckMenuCallback(object :CheckMenuView2.CheckMenuCallback{
-            override fun onClick(v: View?, damageType:String?) {
-                 (activity as CheckObliqueDeformationActivity).setVpCurrentItem(1)
-            }
-
-            override fun onMarkClick(v: View?,damage: DamageV3Bean?,damageType:String?) {
-                TODO("Not yet implemented")
-            }
-
-            override fun onMarkRemoveClick(v: View?, damage: DamageV3Bean?, damageType: String?) {
-                TODO("Not yet implemented")
-            }
-
-        })!!.build()
-        */
 
         var popupWidth = resources.getDimensionPixelOffset(R.dimen._70sdp)
         mBinding.checkSelectIndex.setOnClickListener {
@@ -87,6 +61,12 @@ class CheckOBDFragment : BaseFragment(R.layout.fragment_check_obliquedeformation
             (activity as CheckObliqueDeformationActivity).startFabPDF()
         }
 
+        mBinding.checkGuideImg.setCallback { text, rotate ->
+            (activity as CheckObliqueDeformationActivity).mGuideText = text
+            (activity as CheckObliqueDeformationActivity).mGuideRotate = rotate
+            mBinding.checkGuideHint.text = text
+        }
+
     }
 
     /**
@@ -99,6 +79,7 @@ class CheckOBDFragment : BaseFragment(R.layout.fragment_check_obliquedeformation
         }
         if(mDrawingV3Bean != null && mDrawingV3Bean!!.size>0) {
             mBinding.checkSelectIndex.text = mDrawingV3Bean!![0].fileName
+            setGuide(mDrawingV3Bean!![0].damage[0])
         }
     }
 
@@ -120,7 +101,7 @@ class CheckOBDFragment : BaseFragment(R.layout.fragment_check_obliquedeformation
                 when (it.type) {
                     (activity as CheckObliqueDeformationActivity).mCurrentDamageType[0] -> { // 点位
                         mMenuList!![0].menu!![0].item!!.add(CheckMenuModule.Item.Mark().also { b->
-                            b.name = "斜率"
+                            b.name = it.pointName
                             b.damage = it
                         })
                     }
@@ -154,6 +135,20 @@ class CheckOBDFragment : BaseFragment(R.layout.fragment_check_obliquedeformation
 
             })!!.build()
 
+    }
+
+    /**
+     * 设置指南方向
+     */
+    fun setGuide(damageV3Bean:DamageV3Bean?){
+        LogUtils.d("setGuide() "+damageV3Bean)
+        if(damageV3Bean == null){
+            mBinding.checkGuideImg.rotation = 0F
+            mBinding.checkGuideHint.text="北"
+        }else{
+            mBinding.checkGuideImg.rotation = damageV3Bean.rotate!!.toFloat()
+            mBinding.checkGuideHint.text= damageV3Bean.direction
+        }
     }
 
     fun getPDFView(): PDFLayoutView {

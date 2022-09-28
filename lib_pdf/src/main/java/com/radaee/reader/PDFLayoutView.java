@@ -20,6 +20,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -29,15 +30,8 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.CheckedTextView;
-import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.PopupWindow;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
-
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.radaee.annotui.UIAnnotDlgSign;
 import com.radaee.annotui.UIAnnotDlgSignProp;
@@ -135,15 +129,45 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
 
     //v3
     private boolean mIsV3 = false;
+    //是否展示损伤
+    private boolean isShowDamage = true;
 
-    private List<String> mV3DamageType = Arrays.asList("层高","轴网");
+    public List<String> mModuleType = Arrays.asList("建筑结构复核", "倾斜测量", "相对高差测量", "构建检测");
 
-    public void setV3Version(boolean isV3){
+    private String mCurrentModuleType = "建筑结构复核"; //默认模块
+
+    private List<String> mV3DamageType = Arrays.asList("层高", "轴网");
+
+    public float mMarkX, mMarkY;
+
+    public PDFPos mMarkPDFPos;
+
+    public PDFPos getMarkPDFPos() {
+        return mMarkPDFPos;
+    }
+
+    public float getMarkX() {
+        return mMarkX;
+    }
+
+    public float getMarkY() {
+        return mMarkY;
+    }
+
+    public void setShowDamage(boolean showDamage) {
+        isShowDamage = showDamage;
+    }
+
+    public void setV3Version(boolean isV3) {
         mIsV3 = isV3;
     }
 
-    public void setV3DamageType(List<String> damageType){
+    public void setV3DamageType(List<String> damageType) {
         mV3DamageType = damageType;
+    }
+
+    public void setCurrentModuleType(String mCurrentModuleType) {
+        this.mCurrentModuleType = mCurrentModuleType;
     }
 
     //leon add start
@@ -172,11 +196,10 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
         public boolean onDoubleTapEvent(MotionEvent e) {
             Log.i("bdd", "onDoubleTapEvent22222");
             if (m_layout == null) return false;
-            if (m_status == STA_NONE && e.getActionMasked() == MotionEvent.ACTION_UP)
-            {
+            if (m_status == STA_NONE && e.getActionMasked() == MotionEvent.ACTION_UP) {
                 float x = e.getX();
                 float y = e.getY();
-                int pageno = m_layout.vGetPage((int)x, (int)y);
+                int pageno = m_layout.vGetPage((int) x, (int) y);
                 if (m_listener == null || !m_listener.OnPDFDoubleTapped(pageno, x, y))
                     return false;
                 return true;
@@ -191,24 +214,34 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
 
         @Override
         public void onLongPress(MotionEvent e) {
-            Log.i("leon","PdfLayoutView onLongPress in, event.getActionMasked()=" + e.getActionMasked());
+            Log.i("leon", "PdfLayoutView onLongPress in, event.getActionMasked()=" + e.getActionMasked());
             if (m_layout == null) return;
-            if (m_status == STA_NONE && m_listener != null)
-            {
+            if (m_status == STA_NONE && m_listener != null) {
                 float x = e.getX();
                 float y = e.getY();
                 m_annot_note_x0 = x;
                 m_annot_note_y0 = y;
-                int pageno = m_layout.vGetPage((int)x, (int)y);
+                int pageno = m_layout.vGetPage((int) x, (int) y);
 //                Log.i("leon","PdfLayoutView onLongPress x="+x+", y="+y);
                 m_listener.OnPDFLongPressed(pageno, x, y);
             }
 
             mCacheMotionEvent = e;
             mCacheMotionEvent.setAction(1);
-            if(mIsV3){
-                showV3DamagePopupWindow();
-            }else {
+            mMarkX = e.getX();
+            mMarkY = e.getY();
+            if (!isShowDamage) {
+                return;
+            }
+            if (mIsV3) {
+                if (mCurrentModuleType.equals(mModuleType.get(0)) || mCurrentModuleType.equals(mModuleType.get(1))) {
+                    showV3DamagePopupWindow();
+                } else if (mCurrentModuleType.equals(mModuleType.get(2))) {
+                    PDFSetNote(0);
+                    mNewAnnotColor = 16711935;
+                    onTouchNote(mCacheMotionEvent);
+                }
+            } else {
                 promptSelectDamageTypeDialog();
             }
             Log.i("leon", "PDFLayout onLongPress will exit");
@@ -245,7 +278,7 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
                 PopupEditAct.ms_listener = new PopupEditAct.ActRetListener() {
                     @Override
                     public void OnEditValue(String val) {
-                        Log.d("bdd","设置文字注释回调: "+val);
+                        Log.d("bdd", "设置文字注释回调: " + val);
                         if (m_annot != null) {
                             m_annot.SetEditText(val);
                             m_annot.SetModifyDate(CommonUtil.getCurrentDate());
@@ -260,7 +293,8 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
                     }
                 };
                 getContext().startActivity(intent);
-            } catch (Exception ignored) { }
+            } catch (Exception ignored) {
+            }
         }
 
         boolean[] mCheckedItems;
@@ -323,7 +357,7 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
 
         @Override
         public boolean onSingleTapConfirmed(MotionEvent e) {
-            Log.i("leon","onSingleTapConfirmed 111");
+            Log.i("leon", "onSingleTapConfirmed 111");
             if (m_layout == null) return false;
             if (m_status != STA_NONE && m_status != STA_ANNOT) return false;
             if (m_annot_pg != null) {
@@ -358,9 +392,10 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
                 m_annot_rect[3] = m_annot_page.GetVY(tmp) - m_layout.vGetY();
                 m_status = STA_ANNOT;
                 int check = m_annot.GetCheckStatus();
-                if(Global.g_annot_readonly && m_annot.IsReadOnly()) {
+                if (Global.g_annot_readonly && m_annot.IsReadOnly()) {
                     Toast.makeText(getContext(), "Readonly annotation", Toast.LENGTH_SHORT).show();
-                    if(m_listener != null) m_listener.OnPDFAnnotTapped(m_annot_pos.pageno, m_annot);
+                    if (m_listener != null)
+                        m_listener.OnPDFAnnotTapped(m_annot_pos.pageno, m_annot);
                 } else if (PDFCanSave() && check >= 0) {
                     Toast.makeText(getContext(), "1111111111", Toast.LENGTH_SHORT).show();
                     switch (check) {
@@ -386,7 +421,7 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
                     PDFEndAnnot();
                 } else if (PDFCanSave() && m_annot.GetEditType() > 0) {//if form edit-box.
                     onEditAnnot();
-                }else if (PDFCanSave() && m_annot.GetComboItemCount() >= 0)//if form choice
+                } else if (PDFCanSave() && m_annot.GetComboItemCount() >= 0)//if form choice
                 {
                     try {
                         int[] location = new int[2];
@@ -407,7 +442,7 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
                             m_pCombo.setHeight(250);
                         else
                             m_pCombo.setHeight((int) (m_annot_rect[3] - m_annot_rect[1] - 4) * opts.length);
-                        ComboList combo = (ComboList)m_pCombo.getContentView().findViewById(R.id.annot_combo);
+                        ComboList combo = (ComboList) m_pCombo.getContentView().findViewById(R.id.annot_combo);
                         combo.set_opts(opts);
                         combo.setOnItemClickListener(new OnItemClickListener() {
                             @Override
@@ -444,21 +479,19 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
                     }
                 } else if (PDFCanSave() && m_annot.GetListItemCount() >= 0) {  //if list choice
                     onListAnnot();
-                }else if (PDFCanSave() && m_annot.GetFieldType() == 4 &&
+                } else if (PDFCanSave() && m_annot.GetFieldType() == 4 &&
                         m_annot.GetSignStatus() == 0 && Global.g_hand_signature) {  //signature field
                     handleSignatureField();
-                }else if(m_annot.GetURI() != null && Global.g_auto_launch_link && m_listener != null) { // launch link automatically
+                } else if (m_annot.GetURI() != null && Global.g_auto_launch_link && m_listener != null) { // launch link automatically
                     m_listener.OnPDFOpenURI(m_annot.GetURI());
                     PDFEndAnnot();
                 } else if (m_listener != null) {
-                    Log.i("leon","onSingleTapConfirmed 222 PDFCanSave()=" + PDFCanSave());
-                    Log.i("leon","onSingleTapConfirmed 222 m_aMenu=" + m_aMenu);
+                    Log.i("leon", "onSingleTapConfirmed 222 PDFCanSave()=" + PDFCanSave());
+                    Log.i("leon", "onSingleTapConfirmed 222 m_aMenu=" + m_aMenu);
+                    Log.d("bruce", "m_annot GetType: " + m_annot.GetType());
                     m_listener.OnPDFAnnotTapped(m_annot_pos.pageno, m_annot);
                     if (PDFCanSave() && m_aMenu != null) {
-                        Log.i("leon","onSingleTapConfirmed m_aMenu.show");
-
-                        Log.d("bruce","m_annot GetType: "+m_annot.GetType());
-
+                        Log.i("leon", "onSingleTapConfirmed m_aMenu.show");
                         m_aMenu.show(m_annot, m_annot_rect, new UIAnnotMenu.IMemnuCallback() {
                             //the update need new operator in OPStack
                             @Override
@@ -486,7 +519,7 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
                             }
 
                             @Override
-                            public void onMenuClicked(int whichBtn, long ref){
+                            public void onMenuClicked(int whichBtn, long ref) {
                                 Log.i("leon", "PDFLayoutView onMenuClicked whichBtn=" + whichBtn + ", ref=" + ref);
                                 if (m_listener != null) {
 
@@ -498,7 +531,7 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
                                         jsonObject.put("axis", "");
                                         jsonObject.put("content", "");
                                     } catch (JSONException e) {
-                                        Log.i("leon","PDFLayoutView onMenuClicked edit annot failed!");
+                                        Log.i("leon", "PDFLayoutView onMenuClicked edit annot failed!");
                                     }
 
                                     String jsonString = jsonObject.toString();
@@ -521,31 +554,33 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
 
         private void handleSignatureField() {
             int ssta = m_annot.GetSignStatus();
-            if (ssta < 0) Toast.makeText(getContext(), "only premium licese support signature", Toast.LENGTH_LONG).show();
-            else if (m_annot.GetSignStatus() == 1)
-            {
+            if (ssta < 0)
+                Toast.makeText(getContext(), "only premium licese support signature", Toast.LENGTH_LONG).show();
+            else if (m_annot.GetSignStatus() == 1) {
                 UIAnnotDlgSignProp dlg = new UIAnnotDlgSignProp(getContext());
                 dlg.show(m_annot, m_doc, new UIAnnotMenu.IMemnuCallback() {
                     @Override
                     public void onUpdate() {
                     }
+
                     @Override
                     public void onRemove() {
                     }
+
                     @Override
                     public void onPerform() {
                     }
+
                     @Override
                     public void onCancel() {
                     }
+
                     @Override
                     public void onMenuClicked(int whichBtn, long ref) {
 
                     }
                 });
-            }
-            else
-            {
+            } else {
                 UIAnnotDlgSign dlg = new UIAnnotDlgSign(getContext());
                 dlg.show(m_annot, m_doc, new UIAnnotMenu.IMemnuCallback() {
                     @Override
@@ -555,15 +590,19 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
                             m_listener.OnPDFPageModified(m_annot_page.GetPageNo());
                         PDFEndAnnot();
                     }
+
                     @Override
                     public void onRemove() {
                     }
+
                     @Override
                     public void onPerform() {
                     }
+
                     @Override
                     public void onCancel() {
                     }
+
                     @Override
                     public void onMenuClicked(int whichBtn, long ref) {
 
@@ -882,12 +921,13 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
             }
         }
     }
+
     private static int dp2px(Context context, float dpValue) {
-        return (int)(dpValue * context.getResources().getDisplayMetrics().density);
+        return (int) (dpValue * context.getResources().getDisplayMetrics().density);
     }
-    private void onDrawPolygon(Canvas canvas)
-    {
-        if(m_status != STA_POLYGON || m_polygon == null) return;
+
+    private void onDrawPolygon(Canvas canvas) {
+        if (m_status != STA_POLYGON || m_polygon == null) return;
         Paint paint = new Paint();
         paint.setStyle(Paint.Style.STROKE);
         paint.setColor(Global.g_line_annot_color);
@@ -898,14 +938,13 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
 
         paint.setStyle(Paint.Style.FILL);
         paint.setColor(Global.g_line_annot_fill_color);
-        if(m_polygon.GetNodeCount() > 2)
+        if (m_polygon.GetNodeCount() > 2)
             m_polygon.OnDraw(canvas, 0, 0, paint);
         m_polygon.onDrawPoint(canvas, 0, 0, dp2px(getContext(), 4), paint);
     }
 
-    private void onDrawPolyline(Canvas canvas)
-    {
-        if(m_status != STA_POLYLINE || m_polygon == null) return;
+    private void onDrawPolyline(Canvas canvas) {
+        if (m_status != STA_POLYLINE || m_polygon == null) return;
         Paint paint = new Paint();
         paint.setStyle(Paint.Style.STROKE);
         paint.setColor(Global.g_line_annot_color);
@@ -921,6 +960,7 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
 
     /**
      * the draw function invoke onDraw and then call dispatchDraw. so we override only to draw on Canvas to reduce drawing time.
+     *
      * @param canvas Canvas object
      */
     @SuppressLint("MissingSuperCall")
@@ -971,7 +1011,7 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
                 float[] rects = new float[len + 4];
                 for (cur = 0; cur < len; cur++)
                     rects[cur] = m_rects[cur];
-                rects[cur    ] = event.getX();
+                rects[cur] = event.getX();
                 rects[cur + 1] = event.getY();
                 rects[cur + 2] = event.getX();
                 rects[cur + 3] = event.getY();
@@ -992,8 +1032,8 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
             {//popup editbox from UI.
                 m_annot_pg.ObjsStart();
                 m_annot = m_annot_pg.GetAnnot(m_annot_pg.GetAnnotCount() - 1);
-                if(m_annot == null){
-                    Log.e("bdd","m_annot is null : "+m_annot);
+                if (m_annot == null) {
+                    Log.e("bdd", "m_annot is null : " + m_annot);
                     return false;
                 }
                 m_annot_rect = m_annot.GetRect();
@@ -1002,7 +1042,7 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
                 m_annot_rect[1] = m_annot_page.GetVY(m_annot_rect[3]) - m_layout.vGetY();
                 m_annot_rect[2] = m_annot_page.GetVX(m_annot_rect[2]) - m_layout.vGetX();
                 m_annot_rect[3] = m_annot_page.GetVY(tmp) - m_layout.vGetY();
-                if(m_listener != null)
+                if (m_listener != null)
                     m_listener.OnPDFAnnotTapped(m_annot_page.GetPageNo(), m_annot);
                 m_status = STA_ANNOT;
                 if (m_pEdit == null) m_pEdit = new UIAnnotPopEdit(this);
@@ -1041,6 +1081,7 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
         invalidate();
         return true;
     }
+
     private boolean onTouchPolygon(MotionEvent event) {
         if (m_status != STA_POLYGON) return false;
         switch (event.getActionMasked()) {
@@ -1050,7 +1091,7 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
                     PDFPos pos = m_layout.vGetPos((int) event.getX(), (int) event.getY());
                     m_annot_page = m_layout.vGetPage(pos.pageno);
                 }
-                if(m_polygon.GetNodeCount() < 1)
+                if (m_polygon.GetNodeCount() < 1)
                     m_polygon.MoveTo(event.getX(), event.getY());
                 else
                     m_polygon.LineTo(event.getX(), event.getY());
@@ -1069,7 +1110,7 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
                     PDFPos pos = m_layout.vGetPos((int) event.getX(), (int) event.getY());
                     m_annot_page = m_layout.vGetPage(pos.pageno);
                 }
-                if(m_polygon.GetNodeCount() < 1)
+                if (m_polygon.GetNodeCount() < 1)
                     m_polygon.MoveTo(event.getX(), event.getY());
                 else
                     m_polygon.LineTo(event.getX(), event.getY());
@@ -1254,7 +1295,7 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
                 float[] rects = new float[len + 4];
                 for (cur = 0; cur < len; cur++)
                     rects[cur] = m_rects[cur];
-                rects[cur    ] = event.getX();
+                rects[cur] = event.getX();
                 rects[cur + 1] = event.getY();
                 rects[cur + 2] = event.getX();
                 rects[cur + 3] = event.getY();
@@ -1281,7 +1322,7 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
                 float[] rects = new float[len + 4];
                 for (cur = 0; cur < len; cur++)
                     rects[cur] = m_rects[cur];
-                rects[cur    ] = event.getX();
+                rects[cur] = event.getX();
                 rects[cur + 1] = event.getY();
                 rects[cur + 2] = event.getX();
                 rects[cur + 3] = event.getY();
@@ -1299,7 +1340,7 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
     }
 
     private boolean onTouchAnnot(MotionEvent event) {
-        Log.i("leon", "onTouchAnnot x=" + event.getX() + ", y=" + event.getY() );
+        Log.i("leon", "onTouchAnnot x=" + event.getX() + ", y=" + event.getY());
         if (m_status != STA_ANNOT) return false;
         switch (event.getActionMasked()) {
             case MotionEvent.ACTION_DOWN:
@@ -1392,11 +1433,11 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
                 float[] rects = new float[len + 4];
                 for (cur = 0; cur < len; cur++)
                     rects[cur] = m_rects[cur];
-                rects[cur    ] = event.getX();
+                rects[cur] = event.getX();
                 rects[cur + 1] = event.getY();
                 rects[cur + 2] = event.getX();
                 rects[cur + 3] = event.getY();
-                Log.i("bdd", " bruce:  rects[0]" + rects[0]+"   "+ rects[1]+"   "+rects[2]+"   "+rects[3]);
+                Log.i("bdd", " bruce:  rects[0]" + rects[0] + "   " + rects[1] + "   " + rects[2] + "   " + rects[3]);
                 m_rects = rects;
                 break;
             case MotionEvent.ACTION_MOVE:
@@ -1404,7 +1445,7 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
             case MotionEvent.ACTION_CANCEL:
                 m_rects[len - 2] = event.getX();
                 m_rects[len - 1] = event.getY();
-                Log.i("bdd", " bruce:  m_rects[2]" + m_rects[2]+"   "+ m_rects[3]);
+                Log.i("bdd", " bruce:  m_rects[2]" + m_rects[2] + "   " + m_rects[3]);
                 break;
         }
         invalidate();
@@ -1421,7 +1462,7 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
                 float[] rects = new float[len + 4];
                 for (cur = 0; cur < len; cur++)
                     rects[cur] = m_rects[cur];
-                rects[cur    ] = event.getX();
+                rects[cur] = event.getX();
                 rects[cur + 1] = event.getY();
                 rects[cur + 2] = event.getX();
                 rects[cur + 3] = event.getY();
@@ -1476,6 +1517,10 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
                     float[] pt = new float[2];
                     pt[0] = pos.x;
                     pt[1] = pos.y;
+                    Log.d("bruce", "x " + pos.x + " ; y " + pos.y);
+                    mMarkPDFPos = pos;
+                    mMarkX = event.getX();
+                    mMarkY = event.getY();
                     page.AddAnnotText(pt);
                     onAnnotCreated(page.GetAnnot(page.GetAnnotCount() - 1));
                     //add to redo/undo stack.
@@ -1485,10 +1530,10 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
                     //page.Close();
                     m_annot_pg = page;
 
-                    if(m_annot == null)
-                        Log.d("bdd","onTouchNote m_annot is NULL");
+                    if (m_annot == null)
+                        Log.d("bruce", "onTouchNote m_annot is NULL");
                     else
-                        Log.d("bdd","onTouchNote m_annot is NOT NULL ");
+                        Log.d("bruce", "onTouchNote m_annot is NOT NULL ");
 
                     m_annot = m_annot_pg.GetAnnot(m_annot_pg.GetAnnotCount() - 1);
                     m_annot_rect = m_annot.GetRect();
@@ -1498,7 +1543,9 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
                     m_annot_rect[1] = m_annot_page.GetVY(m_annot_rect[3]) - m_layout.vGetY();
                     m_annot_rect[2] = m_annot_page.GetVX(m_annot_rect[2]) - m_layout.vGetX();
                     m_annot_rect[3] = m_annot_page.GetVY(tmp) - m_layout.vGetY();
-                    if(m_listener != null)
+
+                    Log.d("bruce", "m_annot_rect " + m_annot_rect[0] + " ; " + m_annot_rect[1] + " ; " + m_annot_rect[2] + " ; " + m_annot_rect[3]);
+                    if (m_listener != null)
                         m_listener.OnPDFAnnotTapped(m_annot_page.GetPageNo(), m_annot);
                     m_status = STA_ANNOT;
                     PDFEditAnnot();
@@ -1510,21 +1557,29 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
         return true;
     }
 
+    public float[] getCurrentRect() {
+        return new float[]{m_annot_rect[0], m_annot_rect[1], m_annot_rect[2], m_annot_rect[3]};
+    }
+
+    private static int mIcon = 0;
+
     private void onAnnotCreated(Annotation annot) {
-        Log.i("leon","PDFLayoutView onAnnotCreated in, m_status=" + m_status);
+        Log.i("leon", "PDFLayoutView onAnnotCreated in, m_status=" + m_status);
         if (annot != null) {
 
             //leon add start
-            if(m_status == STA_NOTE) {
-                annot.SetIcon(8);//13 means star
+            if (m_status == STA_NOTE) {
+                Log.d("bruce", "onAnnotCreated SetIcon： " + mIcon);
+                annot.SetIcon(mIcon);//13 means star
                 int fillColor = (255 << 24) | mNewAnnotColor;
-                Log.d("bruce","mNewAnnotColor: "+ mNewAnnotColor);
+                Log.d("bruce", "mNewAnnotColor: " + mNewAnnotColor);
                 annot.SetFillColor(fillColor);
                 annot.SetStrokeWidth(Global.g_oval_annot_width);
+                mIcon += 1;
             }
             //leon add end
 
-            if(m_status == STA_LINE){
+            if (m_status == STA_LINE) {
                 int endStyle = 9;//ROpenArrow, refer UILHeadButton.java
                 int startStyle = 9;//ROpenArrow, refer UILHeadButton.java
                 int style = 9;
@@ -1544,7 +1599,7 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
             if (!TextUtils.isEmpty(Global.g_annot_def_author))
                 annot.SetPopupLabel(Global.g_annot_def_author);
             //Leon add start
-            if (m_status == STA_NOTE && m_listener != null){
+            if (m_status == STA_NOTE && m_listener != null) {
                 Long ref = annot.GetRef();
                 JSONObject jsonObject = new JSONObject();
                 try {
@@ -1558,7 +1613,7 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
                 }
 
                 String jsonString = jsonObject.toString();
-                Log.i("leon","PDFLayoutView onAnnotCreated jsonString =" + jsonString);
+                Log.i("leon", "PDFLayoutView onAnnotCreated jsonString =" + jsonString);
                 m_listener.onPDFNoteAdded(jsonString);
             }
             //Leon add end
@@ -1591,7 +1646,10 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
             invalidate();
     }
 
-    public int PDFGetView() { return m_view_mode; }
+    public int PDFGetView() {
+        return m_view_mode;
+    }
+
     public void PDFSetView(int style) {
         PDFPos pos = null;
         if (m_layout != null)
@@ -1650,7 +1708,7 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
                 m_goto_pos = null;
                 invalidate();
             } else if (pos != null) {
-                if(style == 3 || style == 4 || style == 6)
+                if (style == 3 || style == 4 || style == 6)
                     m_layout.vGotoPage(pos.pageno);
                 else
                     m_layout.vSetPos(0, 0, pos);
@@ -1659,10 +1717,11 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
         }
         invalidate();
     }
+
     private int m_view_mode;
     private PDFLayout.PDFPos m_save_pos;
-    public void PDFSaveView()
-    {
+
+    public void PDFSaveView() {
         int w = getWidth();
         int h = getHeight();
         if (m_layout != null) m_save_pos = m_layout.vGetPos(w >> 1, h >> 1);
@@ -1674,8 +1733,8 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
             layout.vClose();
         }
     }
-    public void PDFRestoreView()
-    {
+
+    public void PDFRestoreView() {
         //reset stack.
         m_opstack = new PDFLayoutOPStack();
         switch (m_view_mode) {
@@ -1730,7 +1789,7 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
                 m_goto_pos = null;
                 invalidate();
             } else if (m_save_pos != null) {
-                if(m_view_mode == 3 || m_view_mode == 4 || m_view_mode == 6)
+                if (m_view_mode == 3 || m_view_mode == 4 || m_view_mode == 6)
                     m_layout.vGotoPage(m_save_pos.pageno);
                 else
                     m_layout.vSetPos(0, 0, m_save_pos);
@@ -1774,8 +1833,8 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
             invalidate();
         }
     }
-    public void PDFScrolltoPage(int pageno)
-    {
+
+    public void PDFScrolltoPage(int pageno) {
         if (m_layout == null) return;
         if (m_layout.vGetHeight() <= 0 || m_layout.vGetWidth() <= 0) {
             m_goto_pos = new PDFPos();
@@ -1788,14 +1847,13 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
         }
     }
 
-    public void PDFCloseOnUI()
-    {
-        if (m_layout != null)
-        {
+    public void PDFCloseOnUI() {
+        if (m_layout != null) {
             PDFCancelAnnot();
             PDFEndAnnot();
         }
     }
+
     public void PDFClose() {
         if (m_layout != null) {
             m_layout.vClose();
@@ -1936,6 +1994,7 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
             invalidate();
         }
     }
+
     public void PDFSetPolyline(int code) {
         if (code == 0)//start
         {
@@ -1982,7 +2041,7 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
             m_status = STA_RECT;
         } else if (code == 1)//end
         {
-            Log.d("bdd","m_rects: "+m_rects);
+            Log.d("bdd", "m_rects: " + m_rects);
             if (m_rects != null) {
                 int len = m_rects.length;
                 int cur;
@@ -1991,7 +2050,7 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
                     PDFPos pos = m_layout.vGetPos((int) m_rects[cur], (int) m_rects[cur + 1]);
                     VPage vpage = m_layout.vGetPage(pos.pageno);
                     Page page = m_doc.GetPage(vpage.GetPageNo());
-                    Log.d("bdd","page: "+page);
+                    Log.d("bdd", "page: " + page);
                     if (page != null) {
                         page.ObjsStart();
                         Matrix mat = vpage.CreateInvertMatrix(m_layout.vGetX(), m_layout.vGetY());
@@ -2187,20 +2246,20 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
                     pt1[1] = m_rects[cur + 1];
                     pt2[0] = m_rects[cur + 2];
                     pt2[1] = m_rects[cur + 3];
-                    Log.i("bruce", "第一次  "+pt1[0]+ " pt1[1] "+pt1[1]+
-                            "pt2[0] "+pt2[0]+ " pt2[1] "+pt2[1]);
+                    Log.i("bruce", "第一次  " + pt1[0] + " pt1[1] " + pt1[1] +
+                            "pt2[0] " + pt2[0] + " pt2[1] " + pt2[1]);
                     Page page = m_doc.GetPage(vpage.GetPageNo());
                     if (page != null) {
                         page.ObjsStart();
-                        Log.i("bruce", "m_layout.vGetX()  "+m_layout.vGetX()+"-----------"+
+                        Log.i("bruce", "m_layout.vGetX()  " + m_layout.vGetX() + "-----------" +
                                 m_layout.vGetY());
 
                         Matrix mat = vpage.CreateInvertMatrix(m_layout.vGetX(), m_layout.vGetY());
                         mat.TransformPoint(pt1);
                         mat.TransformPoint(pt2);
-                        Log.i("bruce", "第二次 pt1[0] "+pt1[0]+ " pt1[1] "+pt1[1]+
-                                "pt2[0] "+pt2[0]+ " pt2[1] "+pt2[1]);
-                        page.AddAnnotLine(pt1, pt2,Global.g_line_annot_style1 , Global.g_line_annot_style2, vpage.ToPDFSize(Global.g_line_annot_width), Global.g_line_annot_color, Global.g_line_annot_fill_color);
+                        Log.i("bruce", "第二次 pt1[0] " + pt1[0] + " pt1[1] " + pt1[1] +
+                                "pt2[0] " + pt2[0] + " pt2[1] " + pt2[1]);
+                        page.AddAnnotLine(pt1, pt2, Global.g_line_annot_style1, Global.g_line_annot_style2, vpage.ToPDFSize(Global.g_line_annot_width), Global.g_line_annot_color, Global.g_line_annot_fill_color);
                         mat.Destroy();
                         onAnnotCreated(page.GetAnnot(page.GetAnnotCount() - 1));
                         //add to redo/undo stack.
@@ -2302,8 +2361,7 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
         }
     }
 
-    public void PDFSetEditbox(int code)
-    {
+    public void PDFSetEditbox(int code) {
         if (code == 0)//start
         {
             m_status = STA_EDITBOX;
@@ -2336,8 +2394,8 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
                             rect[3] = m_rects[cur + 3];
                         }
                         mat.TransformRect(rect);
-                        if(rect[2] - rect[0] < 80) rect[2] = rect[0] + 80;
-                        if(rect[3] - rect[1] < 16) rect[1] = rect[3] - 16;
+                        if (rect[2] - rect[0] < 80) rect[2] = rect[0] + 80;
+                        if (rect[3] - rect[1] < 16) rect[1] = rect[3] - 16;
                         page.AddAnnotEditbox(rect, 0xFFFF0000, vpage.ToPDFSize(3), 0, 12, 0xFFFF0000);
                         mat.Destroy();
                         //add to redo/undo stack.
@@ -2378,7 +2436,7 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
 
     public void PDFRemoveAnnot() {
         if (m_status != STA_ANNOT) return;
-        if(!PDFCanSave() || (Global.g_annot_readonly && m_annot.IsReadOnly())
+        if (!PDFCanSave() || (Global.g_annot_readonly && m_annot.IsReadOnly())
                 || (Global.g_annot_lock && m_annot.IsLocked())) {
             Toast.makeText(getContext(), R.string.cannot_write_or_encrypted, Toast.LENGTH_SHORT).show();
             PDFEndAnnot();
@@ -2413,7 +2471,8 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
         try {
             if (m_pEdit != null && m_pEdit.isShowing()) m_pEdit.dismiss();
             if (m_pCombo != null && m_pCombo.isShowing()) m_pCombo.dismiss();
-        } catch (Exception ignored) {  }
+        } catch (Exception ignored) {
+        }
         if (m_listener != null)
             m_listener.OnPDFAnnotTapped(-1, null);
     }
@@ -2421,7 +2480,7 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
     public void PDFEditAnnot() {
         Log.i("leon", "PDFLayoutView PDFEditAnnot in");
         if (m_status != STA_ANNOT) return;
-        if(!PDFCanSave()) {
+        if (!PDFCanSave()) {
             Toast.makeText(getContext(), R.string.cannot_write_or_encrypted, Toast.LENGTH_SHORT).show();
             PDFEndAnnot();
             return;
@@ -2435,13 +2494,13 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
      */
     private V3DamagePopupWindow.PopupCallback popupCallback = new V3DamagePopupWindow.PopupCallback() {
         @Override
-        public void onSelect(int position,int color) {
-            Log.d("bruce","当前选择损伤: "+mV3DamageType.get(position) + "color: "+color);
+        public void onSelect(int position, int color) {
+            Log.d("bruce", "当前选择损伤: " + mV3DamageType.get(position) + "color: " + color);
             mSelectedDamageType = mV3DamageType.get(position);
             PDFSetNote(0);
             mNewAnnotColor = color;
             onTouchNote(mCacheMotionEvent);
-            if(mV3SelectDamageTypeCallback != null){
+            if (mV3SelectDamageTypeCallback != null) {
                 mV3SelectDamageTypeCallback.onSelect(mV3DamageType.get(position));
             }
         }
@@ -2449,35 +2508,59 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
 
     private V3SelectDamageTypeCallback mV3SelectDamageTypeCallback;
 
-    public void setV3SelectDamageCallback(V3SelectDamageTypeCallback mV3SelectDamageTypeCallback){
+    public void setV3SelectDamageCallback(V3SelectDamageTypeCallback mV3SelectDamageTypeCallback) {
         this.mV3SelectDamageTypeCallback = mV3SelectDamageTypeCallback;
     }
 
-    public interface V3SelectDamageTypeCallback{
+    public interface V3SelectDamageTypeCallback {
         void onSelect(String type);
     }
 
     private V3DamagePopupWindow v3DamagePopupWindow;
-    private int mV3DefaultColor  = 65408;
-    public void setMarkV3DefaultColor(int color){
+    private int mV3DefaultColor = 65408;
+
+    public void setMarkV3DefaultColor(int color) {
         mV3DefaultColor = color;
     }
+
     private void showV3DamagePopupWindow() {
-        if(v3DamagePopupWindow == null){
-            v3DamagePopupWindow = new V3DamagePopupWindow(getContext(),90, mV3DamageType
-            ,popupCallback);
+        if (v3DamagePopupWindow == null) {
+            v3DamagePopupWindow = new V3DamagePopupWindow(getContext(), dp2px(getContext(),90), mV3DamageType
+                    , popupCallback);
             v3DamagePopupWindow.initFirstColor(mV3DefaultColor);
         }
-        v3DamagePopupWindow.showAsDropDown(this,(int)(Math.round(m_annot_note_x0)),(int)(Math.round(m_annot_note_y0)));
+        v3DamagePopupWindow.showAtLocation(this, Gravity.NO_GRAVITY, (int) calculateX(), (int) mMarkY);
+        //   v3DamagePopupWindow.showAsDropDown(this,(int)(Math.round(m_annot_note_x0)),(Math.round(m_annot_note_x0)));
     }
 
-    private void promptSelectDamageTypeDialog(){
+    /**
+     *  dp 2 px
+     * @param context
+     * @param dpVal
+     * @return
+     */
+    public static int dp2px(Context context, int dpVal) {
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                dpVal, context.getResources().getDisplayMetrics());
+    }
+
+    private float calculateX() {
+        float screenWidth = getContext().getResources().getDisplayMetrics().widthPixels;
+        float menuWidth = dp2px(getContext(),90);
+        float x = mMarkX+menuWidth*2;
+        if (x + menuWidth >= screenWidth)
+            x -= (x + menuWidth) - screenWidth;
+
+        return x;
+    }
+
+    private void promptSelectDamageTypeDialog() {
 //        PhoneUtil.getPhoneWidth();
         DamageTypeSelectDialog dialog = new DamageTypeSelectDialog(getContext(), dialogClick);
         Window window = dialog.getWindow();
         WindowManager.LayoutParams params = window.getAttributes();
-        params.x = (int)(Math.round(m_annot_note_x0)) - 340;
-        params.y = (int)(Math.round(m_annot_note_y0)) - 270;
+        params.x = (int) (Math.round(m_annot_note_x0)) - 340;
+        params.y = (int) (Math.round(m_annot_note_y0)) - 270;
 //        Log.i("leon", "PDFEditAnnot x=" + params.x + ", y=" + params.y );
         params.width = 0;
         params.height = 0;
@@ -2491,7 +2574,7 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
     private DamageTypeSelectDialog.IClickCallback dialogClick = new DamageTypeSelectDialog.IClickCallback() {
         @Override
         public void onViewClicked(int selectIndex, boolean checked, int color) {
-            String[] items = {"结构构件损伤","耐久性损伤","渗漏水","填充墙斜裂缝","高坠隐患","附属构件损坏","其它/不稳定","裂缝监测点"};
+            String[] items = {"结构构件损伤", "耐久性损伤", "渗漏水", "填充墙斜裂缝", "高坠隐患", "附属构件损坏", "其它/不稳定", "裂缝监测点"};
 //            long ref = m_annot.GetRef();
             Log.i("leon", "dialogClick item index=" + selectIndex + ", isCheck=" + checked);
             if (selectIndex >= 0 && checked) {
@@ -2728,8 +2811,7 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
         return m_layout != null ? m_layout.vGetY() : 0;
     }
 
-    public void PDFUpdatePage(int pageno)
-    {
+    public void PDFUpdatePage(int pageno) {
         if (m_layout != null)
             m_layout.vRenderSync(m_layout.vGetPage(pageno));
     }
@@ -2739,7 +2821,7 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
     }
 
     public void PDFSetZoom(int vx, int vy, PDFPos pos, float zoom) {
-        if(m_layout != null) m_layout.vZoomSet(vx, vy, pos, zoom);
+        if (m_layout != null) m_layout.vZoomSet(vx, vy, pos, zoom);
     }
 
     public float PDFGetZoom() {
@@ -2747,7 +2829,7 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
     }
 
     public float[] toPDFRect(float[] viewRect) {
-        if(m_layout != null) {
+        if (m_layout != null) {
             VPage vpage = m_layout.vGetPage(m_pageno);
             Matrix mat = vpage.CreateInvertMatrix(m_layout.vGetX(), m_layout.vGetY());
             mat.TransformRect(viewRect);
@@ -2825,7 +2907,7 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
     }
     */
 
-    public void addTextBox(float x, float y){
+    public void addTextBox(float x, float y) {
         float[] rect = new float[4];
         rect[0] = x;
         rect[1] = y;
@@ -2833,9 +2915,9 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
         rect[3] = y + 50;
 
         VPage vpage = m_layout.vGetPage(m_pageno);
-        if( vpage == null ) return;
+        if (vpage == null) return;
         Page page = m_doc.GetPage(vpage.GetPageNo());
-        if (page == null ) return;
+        if (page == null) return;
 
         Matrix mat = vpage.CreateInvertMatrix(m_layout.vGetX(), m_layout.vGetY());
         mat.TransformRect(rect);
@@ -2864,15 +2946,15 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
     //leon add start
     @Override
     public void onButtonPrevClicked() {
-        Log.i("leon","PDFViewView prev pressed");
-        if(m_listener != null)
+        Log.i("leon", "PDFViewView prev pressed");
+        if (m_listener != null)
             m_listener.onButtonPrevPressed();
     }
 
     @Override
     public void onButtonNextClicked() {
-        Log.i("leon","PDFViewView next pressed");
-        if(m_listener != null)
+        Log.i("leon", "PDFViewView next pressed");
+        if (m_listener != null)
             m_listener.onButtonNextPressed();
     }
     //leon add end

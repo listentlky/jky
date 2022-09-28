@@ -9,7 +9,7 @@ import java.io.Serializable
  */
 class RelativeHDiffTableModule : Serializable{
 
-    var type:String?=null
-    var dh:String?=null
+    var pointName:String?=null
+    var annotRef:Long = -1
 
 }

@@ -57,7 +57,7 @@ class OPAdd extends OPItem
     OPAdd(int pgno, Page page, int idx)
     {
         super(pgno, idx);
-        Log.d("bdd","pgno: "+pgno+" ; page: "+page+" ; idx: "+idx);
+        Log.d("bruce","pgno: "+pgno+" ; page: "+page+" ; idx: "+idx);
         try {
             hand = page.GetAnnot(idx).GetRef();
         }catch (Exception e){

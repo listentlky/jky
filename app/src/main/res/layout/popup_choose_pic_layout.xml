@@ -9,7 +9,7 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/popup_recyclerView"
-        android:minHeight="@dimen/_60sdp"
+        android:minHeight="@dimen/_80sdp"
         android:paddingLeft="@dimen/_4sdp"
         android:paddingRight="@dimen/_4sdp"
         android:paddingTop="@dimen/_10sdp"
@@ -30,29 +30,29 @@
             app:layout_constraintRight_toLeftOf="@id/popup_confirm"
             app:layout_constraintBottom_toBottomOf="parent"
             android:text="取消"
-            android:paddingTop="@dimen/_4sdp"
-            android:paddingBottom="@dimen/_4sdp"
+            android:paddingTop="@dimen/_6sdp"
+            android:paddingBottom="@dimen/_6sdp"
             android:gravity="center"
-            android:textSize="@dimen/_6sdp"
+            android:textSize="@dimen/_8sdp"
             android:textColor="@color/black_500"
-            android:layout_height="match_parent"/>
+            android:layout_height="wrap_content"/>
 
         <TextView
             android:id="@+id/popup_confirm"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:text="确定"
-            android:paddingTop="@dimen/_4sdp"
-            android:paddingBottom="@dimen/_4sdp"
+            android:paddingTop="@dimen/_6sdp"
+            android:paddingBottom="@dimen/_6sdp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toRightOf="@id/popup_cancel"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintHorizontal_weight="1"
             android:background="@drawable/choose_pic_confirm_bg"
             android:gravity="center"
-            android:textSize="@dimen/_6sdp"
+            android:textSize="@dimen/_8sdp"
             android:textColor="@color/white"
-            android:layout_height="match_parent"/>
+            android:layout_height="wrap_content"/>
 
         <View
             android:layout_width="0dp"

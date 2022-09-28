@@ -140,29 +140,6 @@
         <entry key="..\:/android/project/bdd-android/bdd-android/app/src/main/res/layout/popup_item.xml" value="0.13707865168539327" />
         <entry key="..\:/android/project/bdd-android/bdd-android/app/src/main/res/layout/popup_layout.xml" value="0.25" />
         <entry key="..\:/android/project/bdd-android/bdd-android/whiteboardlib/src/main/res/layout/include_draw_content_layout.xml" value="0.24365942028985507" />
-        <entry key="..\:/android/project/jky/app/src/main/res/drawable/circle_blue800.xml" value="0.2361111111111111" />
-        <entry key="..\:/android/project/jky/app/src/main/res/drawable/radio_selector.xml" value="0.2361111111111111" />
-        <entry key="..\:/android/project/jky/app/src/main/res/layout/activity_check_oblique_deformation.xml" value="0.1405775075987842" />
-        <entry key="..\:/android/project/jky/app/src/main/res/layout/check_title_menu.xml" value="0.18432971014492755" />
-        <entry key="..\:/android/project/jky/app/src/main/res/layout/floor_drawing_spinner.xml" value="0.1405775075987842" />
-        <entry key="..\:/android/project/jky/app/src/main/res/layout/fragment_check_build_structure_floor.xml" value="0.18432971014492755" />
-        <entry key="..\:/android/project/jky/app/src/main/res/layout/fragment_check_build_structure_grid.xml" value="0.5" />
-        <entry key="..\:/android/project/jky/app/src/main/res/layout/fragment_check_obliquedeformation.xml" value="0.1405775075987842" />
-        <entry key="..\:/android/project/jky/app/src/main/res/layout/popup_choose_pic_item.xml" value="0.1405775075987842" />
-        <entry key="..\:/android/project/jky/app/src/main/res/layout/popup_choose_pic_layout.xml" value="0.1" />
-        <entry key="..\:/android/project/jky/lib_pdf/src/main/res/drawable/circle_black.xml" value="0.2611111111111111" />
-        <entry key="..\:/android/project/jky/lib_pdf/src/main/res/drawable/circle_blue.xml" value="0.2611111111111111" />
-        <entry key="..\:/android/project/jky/lib_pdf/src/main/res/drawable/circle_blue800.xml" value="0.2111111111111111" />
-        <entry key="..\:/android/project/jky/lib_pdf/src/main/res/drawable/circle_gray.xml" value="0.2611111111111111" />
-        <entry key="..\:/android/project/jky/lib_pdf/src/main/res/drawable/circle_green.xml" value="0.2611111111111111" />
-        <entry key="..\:/android/project/jky/lib_pdf/src/main/res/drawable/circle_indigo.xml" value="0.2611111111111111" />
-        <entry key="..\:/android/project/jky/lib_pdf/src/main/res/drawable/circle_pink.xml" value="0.2611111111111111" />
-        <entry key="..\:/android/project/jky/lib_pdf/src/main/res/drawable/circle_red.xml" value="0.2611111111111111" />
-        <entry key="..\:/android/project/jky/lib_pdf/src/main/res/drawable/circle_yellow.xml" value="0.2611111111111111" />
-        <entry key="..\:/android/project/jky/lib_pdf/src/main/res/drawable/v3_choose_pic_layout_bg.xml" value="0.30520833333333336" />
-        <entry key="..\:/android/project/jky/lib_pdf/src/main/res/layout/pop_damage_type_choice.xml" value="0.1405775075987842" />
-        <entry key="..\:/android/project/jky/lib_pdf/src/main/res/layout/v3_popup_item.xml" value="0.1802536231884058" />
-        <entry key="..\:/android/project/jky/lib_pdf/src/main/res/layout/v3_popup_layout.xml" value="0.25" />
         <entry key="..\:/android/project/sribs03-android/sribs03-android/bdd-android/app/src/main/res/drawable/check_gray_storke_bg.xml" value="0.2935185185185185" />
         <entry key="..\:/android/project/sribs03-android/sribs03-android/bdd-android/app/src/main/res/drawable/ic_bk_damage_point_green.xml" value="0.1" />
         <entry key="..\:/android/project/sribs03-android/sribs03-android/bdd-android/app/src/main/res/drawable/radio_selector.xml" value="0.2935185185185185" />
@@ -321,7 +298,10 @@
         <entry key="..\:/jiankeyuan/20220909/bdd-android/app/src/main/res/layout/spinner_layout.xml" value="0.20560109289617487" />
         <entry key="..\:/jiankeyuan/20220909/bdd-android/lib_pdf/src/main/res/layout/pdf_layout.xml" value="0.20560109289617487" />
         <entry key="..\:/jiankeyuan/20220909/bdd-android/lib_pdf/src/main/res/layout/pop_annot.xml" value="0.20560109289617487" />
+        <entry key="..\:/jiankeyuan/2022915/app/src/main/res/drawable/blue_line_back.xml" value="0.1315" />
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/drawable/check_blue_stroke_bg.xml" value="0.1445" />
+        <entry key="..\:/jiankeyuan/2022915/app/src/main/res/drawable/check_gray_is_edit_selector.xml" value="0.195" />
+        <entry key="..\:/jiankeyuan/2022915/app/src/main/res/drawable/check_gray_no_edit_sroke_bg.xml" value="0.1" />
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/drawable/check_gray_stroke_bg.xml" value="0.1445" />
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/drawable/choose_pic_confirm_bg.xml" value="0.1485" />
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/drawable/choose_pic_layout_bg.xml" value="0.1485" />
@@ -336,20 +316,35 @@
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/drawable/popup_bg_selector.xml" value="0.1485" />
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/drawable/popup_textcolor_selector.xml" value="0.1485" />
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/drawable/radio_selector.xml" value="0.13" />
+        <entry key="..\:/jiankeyuan/2022915/app/src/main/res/drawable/rhd_blue_stroke_bg.xml" value="0.189" />
+        <entry key="..\:/jiankeyuan/2022915/app/src/main/res/drawable/round_blue_bg.xml" value="0.1" />
+        <entry key="..\:/jiankeyuan/2022915/app/src/main/res/drawable/round_red_table_menu_false_bg.xml" value="0.133" />
+        <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/activity_check_build_structure.xml" value="0.22" />
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/activity_create_project_type.xml" value="0.27355072463768115" />
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/activity_damage_main.xml" value="0.271286231884058" />
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/activity_draw_pdfactivity.xml" value="0.28804347826086957" />
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/activity_floor_list.xml" value="0.271286231884058" />
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/activity_unit_list.xml" value="0.15355086372360843" />
-        <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/check_table_item.xml" value="0.20244565217391305" />
+        <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/check_edit_item.xml" value="0.3541666666666667" />
+        <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/check_rhd_table_title.xml" value="0.22604166666666667" />
+        <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/check_table_item.xml" value="0.67" />
+        <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/check_title_menu.xml" value="0.3421875" />
+        <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/chooserhd_point_down_item.xml" value="0.33" />
+        <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/chooserhd_point_item1.xml" value="0.34791666666666665" />
+        <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/chooserhd_point_popup_layout.xml" value="0.346875" />
+        <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/dialog_check_rhd_edit.xml" value="0.34791666666666665" />
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/dialog_chose_pic.xml" value="0.271286231884058" />
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/dialog_common_bottom_building_select.xml" value="0.26766304347826086" />
+        <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/double_edit_item.xml" value="0.3421875" />
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/draw_pdf_menu.xml" value="0.22" />
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/draw_pdf_menu_item.xml" value="0.5" />
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/floor_drawing_spinner.xml" value="0.18" />
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/floor_drawing_spinner_child_item.xml" value="0.286231884057971" />
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/floor_drawing_spinner_item.xml" value="0.75" />
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/fragment_check_build_structure.xml" value="0.286231884057971" />
+        <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/fragment_check_build_structure_floor.xml" value="0.3421875" />
+        <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/fragment_check_build_structure_grid.xml" value="0.33" />
+        <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/fragment_check_obliquedeformation.xml" value="0.34791666666666665" />
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/fragment_relative_h_diff.xml" value="0.286231884057971" />
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/item_floor_list.xml" value="0.33" />
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/item_floor_pic.xml" value="0.271286231884058" />
@@ -360,21 +355,39 @@
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/popup_choose_pic_layout.xml" value="0.286231884057971" />
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/popup_item.xml" value="0.286231884057971" />
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/popup_layout.xml" value="0.20244565217391305" />
+        <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/rhd_add_point_layout.xml" value="0.5227963525835866" />
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/spinner_layout.xml" value="0.286231884057971" />
+        <entry key="..\:/jiankeyuan/2022915/app/src/main/res/menu/menu_floor.xml" value="0.34791666666666665" />
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/menu/menu_main.xml" value="0.3234375" />
+        <entry key="..\:/jiankeyuan/2022915/app/src/main/res/menu/menu_unit_vp.xml" value="0.34791666666666665" />
+        <entry key="..\:/jiankeyuan/2022915/lib_pdf/src/main/res/drawable/check_ehd_edit_bg.xml" value="0.1" />
         <entry key="..\:/jiankeyuan/2022915/lib_pdf/src/main/res/drawable/choose_pic_textcolor_selector.xml" value="0.112" />
+        <entry key="..\:/jiankeyuan/2022915/lib_pdf/src/main/res/drawable/circle_blue.xml" value="0.112" />
+        <entry key="..\:/jiankeyuan/2022915/lib_pdf/src/main/res/drawable/circle_green.xml" value="0.112" />
+        <entry key="..\:/jiankeyuan/2022915/lib_pdf/src/main/res/drawable/circle_orange.xml" value="0.207" />
+        <entry key="..\:/jiankeyuan/2022915/lib_pdf/src/main/res/drawable/circle_pink.xml" value="0.112" />
+        <entry key="..\:/jiankeyuan/2022915/lib_pdf/src/main/res/drawable/circle_red.xml" value="0.207" />
+        <entry key="..\:/jiankeyuan/2022915/lib_pdf/src/main/res/drawable/circle_yellow.xml" value="0.207" />
+        <entry key="..\:/jiankeyuan/2022915/lib_pdf/src/main/res/drawable/rhd_blue_bg.xml" value="0.1" />
+        <entry key="..\:/jiankeyuan/2022915/lib_pdf/src/main/res/drawable/rhd_blue_stroke_bg.xml" value="0.195" />
+        <entry key="..\:/jiankeyuan/2022915/lib_pdf/src/main/res/drawable/rhd_delete_bg.xml" value="0.1" />
         <entry key="..\:/jiankeyuan/2022915/lib_pdf/src/main/res/drawable/v3_choose_pic_confirm_bg.xml" value="0.112" />
         <entry key="..\:/jiankeyuan/2022915/lib_pdf/src/main/res/drawable/v3_choose_pic_layout_bg.xml" value="0.112" />
         <entry key="..\:/jiankeyuan/2022915/lib_pdf/src/main/res/drawable/v3_radio_selector.xml" value="0.112" />
         <entry key="..\:/jiankeyuan/2022915/lib_pdf/src/main/res/drawable/v3popup_textcolor_selector.xml" value="0.256" />
         <entry key="..\:/jiankeyuan/2022915/lib_pdf/src/main/res/layout/pop_annot.xml" value="0.34322916666666664" />
+        <entry key="..\:/jiankeyuan/2022915/lib_pdf/src/main/res/layout/pop_combo.xml" value="0.3463541666666667" />
+        <entry key="..\:/jiankeyuan/2022915/lib_pdf/src/main/res/layout/pop_damage_type_choice.xml" value="0.3421875" />
         <entry key="..\:/jiankeyuan/2022915/lib_pdf/src/main/res/layout/pop_edit.xml" value="0.34322916666666664" />
         <entry key="..\:/jiankeyuan/2022915/lib_pdf/src/main/res/layout/popup_item.xml" value="0.34322916666666664" />
+        <entry key="..\:/jiankeyuan/2022915/lib_pdf/src/main/res/layout/rhd_add_point_layout.xml" value="0.4915254237288136" />
         <entry key="..\:/jiankeyuan/2022915/lib_pdf/src/main/res/layout/v3_popup_item.xml" value="0.34322916666666664" />
-        <entry key="..\:/jiankeyuan/2022915/lib_pdf/src/main/res/layout/v3_popup_layout.xml" value="0.34322916666666664" />
+        <entry key="..\:/jiankeyuan/2022915/lib_pdf/src/main/res/layout/v3_popup_layout.xml" value="0.1" />
         <entry key="..\:/jiankeyuan/2022915/lib_pdf/src/main/res/layout/v3_popup_recyclerview.xml" value="0.3421875" />
         <entry key="..\:/jiankeyuan/2022915/module_common/src/main/res/layout/dialog_common_bottom_select.xml" value="0.5477293790546802" />
         <entry key="..\:/jiankeyuan/2022915/module_common/src/main/res/layout/dialog_common_bottom_select2.xml" value="0.3161231884057971" />
+        <entry key="..\:/jiankeyuan/2022915/module_common/src/main/res/layout/dialog_common_msg.xml" value="0.3463541666666667" />
+        <entry key="..\:/jiankeyuan/2022915/module_common/src/main/res/layout/layout_common_toolbar.xml" value="0.34791666666666665" />
         <entry key="..\:/jiankeyuan/2022915/whiteboardlib/src/main/res/layout/popup_sketch_stroke.xml" value="0.24592391304347827" />
         <entry key="..\:/jiankeyuan/now/bdd-android/app/src/main/res/drawable/check_blue_stroke_bg.xml" value="0.26666666666666666" />
         <entry key="..\:/jiankeyuan/now/bdd-android/app/src/main/res/drawable/check_gray_stroke_bg.xml" value="0.26666666666666666" />

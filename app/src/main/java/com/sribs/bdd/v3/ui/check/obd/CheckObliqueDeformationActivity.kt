@@ -47,6 +47,9 @@ import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
+/**
+ * 倾斜测量
+ */
 @Route(path = com.sribs.common.ARouterPath.CHECK_OBLIQUE_DEFORMATION_ACTIVITY)
 class CheckObliqueDeformationActivity : BaseActivity(),ICheckOBDContrast.ICheckOBDView,
     ILayoutView.PDFLayoutListener {
@@ -76,7 +79,7 @@ class CheckObliqueDeformationActivity : BaseActivity(),ICheckOBDContrast.ICheckO
 
     private val mPresenter by lazy { CheckOBDPresenter() }
 
-    private val mFragments by lazy {
+    public val mFragments by lazy {
         listOf(
             ARouter.getInstance()
                 .build(com.sribs.common.ARouterPath.CHECK_OBLIQUE_DEFORMATION_FRAGMENT)
@@ -264,6 +267,7 @@ class CheckObliqueDeformationActivity : BaseActivity(),ICheckOBDContrast.ICheckO
          * 初始化选择窗图纸列表
          */
         (mFragments[0] as CheckOBDFragment).initFloorDrawData(checkOBDMainBean)
+
     }
 
     /**
@@ -277,6 +281,7 @@ class CheckObliqueDeformationActivity : BaseActivity(),ICheckOBDContrast.ICheckO
                     mBinding.checkMenuLayout.root.visibility = View.GONE
                     when (type) {
                         mCurrentDamageType[0] -> { // 点位
+                            (mFragments[0] as CheckOBDFragment).setGuide(damageV3Bean)
                             (mFragments[1] as CheckEditOBDFragment).resetView(damageV3Bean)
                             mBinding.checkVp.currentItem = 1
                         }
@@ -290,6 +295,7 @@ class CheckObliqueDeformationActivity : BaseActivity(),ICheckOBDContrast.ICheckO
         }else{
             when (type) {
                 mCurrentDamageType[0] -> { // 点位
+                    (mFragments[0] as CheckOBDFragment).setGuide(damageV3Bean)
                     (mFragments[1] as CheckEditOBDFragment).resetView(damageV3Bean)
                     mBinding.checkVp.currentItem = 1
                 }
@@ -431,6 +437,10 @@ class CheckObliqueDeformationActivity : BaseActivity(),ICheckOBDContrast.ICheckO
             .show()
     }
 
+    var mGuideText:String?="北"
+
+    var mGuideRotate:Int = 0
+
 
     private var mDoc: Document = Document()
 
@@ -442,7 +452,7 @@ class CheckObliqueDeformationActivity : BaseActivity(),ICheckOBDContrast.ICheckO
 
     private var m_cur_page = 0
 
-    private var mView: PDFLayoutView? = null
+    public var mView: PDFLayoutView? = null
 
     private var mViewParent: RelativeLayout? = null
     /**
@@ -596,7 +606,7 @@ class CheckObliqueDeformationActivity : BaseActivity(),ICheckOBDContrast.ICheckO
     }
 
     override fun OnPDFZoomEnd() {
-        LogUtils.d("OnPDFZoomEnd")
+        LogUtils.d("OnPDFZoomEnd "+mView?.PDFGetZoom())
     }
 
     override fun OnPDFDoubleTapped(pagebo: Int, x: Float, y: Float): Boolean {
@@ -643,11 +653,13 @@ class CheckObliqueDeformationActivity : BaseActivity(),ICheckOBDContrast.ICheckO
         var damageBean = Gson().fromJson(annotPoint, DamageV3Bean::class.java)
         mCurrentAddAnnotReF = damageBean.annotRef
         resetDamageInfo(null, damageBean.type)
-        when (damageBean.type) {
+       /* when (damageBean.type) {
             mCurrentDamageType[0] -> {
+                mController?.savePDF()
+                (mFragments[1] as CheckEditOBDFragment).openPDF(mCurrentLocalPDF)
                 mBinding.checkVp.currentItem = 1
             }
-        }
+        }*/
     }
 
     override fun onPDFNoteEdited(annotPoint: String?) {
@@ -664,16 +676,16 @@ class CheckObliqueDeformationActivity : BaseActivity(),ICheckOBDContrast.ICheckO
                     if (damageBean.annotRef == it.annotRef) {
                         isMatch = true
                         resetDamageInfo(it, it.type)
-                        when (it.type) {
+                       /* when (it.type) {
                             mCurrentDamageType[0] -> {
                                 mBinding.checkVp.currentItem = 1
                             }
-                        }
+                        }*/
                     }
                 }
                 if(!isMatch){
                     resetDamageInfo(null, mCurrentDamageType[0])
-                    mBinding.checkVp.currentItem = 1
+                //    mBinding.checkVp.currentItem = 1
                 }
             }
             Constant.BUTTON_POPMENU_DEL -> {

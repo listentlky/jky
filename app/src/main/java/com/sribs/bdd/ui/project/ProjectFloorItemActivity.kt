@@ -2,6 +2,7 @@ package com.sribs.bdd.ui.project
 
 import android.content.Context
 import android.content.DialogInterface
+import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ListView
@@ -73,6 +74,9 @@ class ProjectFloorItemActivity : BaseActivity(), IProjectContrast.IProjectFloorD
         bindPresenter()
         mBinding.toolbar.tbTitle.text = mTitle
         mBinding.toolbar.tb.setNavigationIcon(R.mipmap.icon_back)
+        mBinding.toolbar.tb.showOverflowMenu()
+        setSupportActionBar(mBinding.toolbar.tb)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
         mBinding.toolbar.tb.setNavigationOnClickListener {
             finish()
         }
@@ -176,9 +180,15 @@ class ProjectFloorItemActivity : BaseActivity(), IProjectContrast.IProjectFloorD
         mBinding.floorItem.adapter = mAdapter
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        super.onCreateOptionsMenu(menu)
+        menuInflater.inflate(R.menu.menu_unit_vp, menu)
+        return true
+    }
+
+
     override fun handlItemList(list: ArrayList<BuildingFloorItem>) {
         mAdapter.setData(list)
-
     }
 
     override fun addItem(bean: BuildingFloorItem) {
