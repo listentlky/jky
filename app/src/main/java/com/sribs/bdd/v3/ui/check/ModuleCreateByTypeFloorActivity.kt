@@ -147,15 +147,11 @@ class ModuleCreateByTypeFloorActivity : BaseActivity(), IProjectContrast.IModule
 
             moduleCreateTypePresenter.createLocalModule(
                 this,
-                mLocalProjectId,
+                mLocalProjectId.toInt(),
                 mBuildingId,
                 mModuleId,
                 mRemoteId,
                 mModuleName,
-                mLeaderName,
-                mInspector,
-                aboveNumber,
-                afterNumber,
             )
         }
 

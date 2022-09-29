@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="@dimen/_20sdp"
+    android:layout_width="match_parent"
+    android:id="@+id/content"
+    android:layout_height="wrap_content"
     android:orientation="horizontal">
 
 
 
     <LinearLayout
-        android:layout_width="@dimen/_40sdp"
+        android:layout_width="@dimen/_35sdp"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
@@ -19,7 +20,7 @@
             android:textSize="@dimen/_5ssp"></TextView>
 
         <EditText
-            android:id="@+id/check_edit"
+            android:id="@+id/check_edit_1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/check_gray_stroke_bg"
@@ -47,8 +48,8 @@
 
 
     <LinearLayout
-        android:layout_width="@dimen/_40sdp"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/_35sdp"
+        android:layout_height="match_parent"
         android:orientation="vertical">
 
         <TextView
@@ -59,9 +60,9 @@
             android:textSize="@dimen/_5ssp"></TextView>
 
         <EditText
-            android:id="@+id/check_edit_234"
+            android:id="@+id/check_edit_2"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_12sdp"
+            android:layout_height="match_parent"
             android:background="@drawable/check_gray_stroke_bg"
             android:gravity="center_vertical"
             android:minWidth="@dimen/_90sdp"
@@ -85,21 +86,21 @@
         android:textSize="@dimen/_5ssp"></TextView>
 
     <LinearLayout
-        android:layout_width="@dimen/_40sdp"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/_35sdp"
+        android:layout_height="match_parent"
         android:orientation="vertical">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/_5sdp"
+            android:layout_marginLeft="@dimen/_7sdp"
             android:text="角筋规格"
             android:textSize="@dimen/_5ssp"></TextView>
 
         <EditText
-            android:id="@+id/check_edit_2325"
+            android:id="@+id/check_edit_3"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_12sdp"
+            android:layout_height="match_parent"
             android:background="@drawable/check_gray_stroke_bg"
             android:gravity="center_vertical"
             android:minWidth="@dimen/_90sdp"
@@ -123,21 +124,21 @@
         android:textColor="@color/black"
         android:textSize="@dimen/_5ssp"></TextView>
     <LinearLayout
-        android:layout_width="@dimen/_40sdp"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/_35sdp"
+        android:layout_height="match_parent"
         android:orientation="vertical">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/_5sdp"
+            android:layout_marginLeft="@dimen/_2sdp"
             android:text="南北钢筋规格"
             android:textSize="@dimen/_5ssp"></TextView>
 
         <EditText
-            android:id="@+id/check_edit_22235"
+            android:id="@+id/check_edit_4"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_12sdp"
+            android:layout_height="match_parent"
             android:background="@drawable/check_gray_stroke_bg"
             android:gravity="center_vertical"
             android:minWidth="@dimen/_90sdp"
@@ -161,21 +162,21 @@
         android:textColor="@color/black"
         android:textSize="@dimen/_5ssp"></TextView>
     <LinearLayout
-        android:layout_width="@dimen/_40sdp"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/_35sdp"
+        android:layout_height="match_parent"
         android:orientation="vertical">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/_5sdp"
+            android:layout_marginLeft="@dimen/_2sdp"
             android:text="东西钢筋规格"
             android:textSize="@dimen/_5ssp"></TextView>
 
         <EditText
-            android:id="@+id/check_edit_235"
+            android:id="@+id/check_edit_5"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_12sdp"
+            android:layout_height="match_parent"
             android:background="@drawable/check_gray_stroke_bg"
             android:gravity="center_vertical"
             android:minWidth="@dimen/_90sdp"

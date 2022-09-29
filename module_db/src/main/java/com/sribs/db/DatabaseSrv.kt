@@ -128,6 +128,32 @@ class DatabaseSrv : IDatabaseService {
         }
     }
 
+    override fun getv3BuildingModule(
+        projectId: Long,
+        buildingId: String
+    ): Flowable<List<v3BuildingModuleDbBean>> {
+        var dao = mDb!!.v3BuildingModuleDao()
+        return dao.getProject(projectId, buildingId.toLong()).run {
+            ConverterHelper.convertv3BuildingModuleBean(this)
+        }
+    }
+
+    override fun getv3BuildingModule(
+        moduleId: Long,
+    ): Single<v3BuildingModuleDbBean> {
+        var dao = mDb!!.v3BuildingModuleDao()
+        return dao.getProject(moduleId).run {
+            ConverterHelper.convertOnlyv3BuildingModuleBeanOnce(this)
+        }
+    }
+
+    override fun getv3BuildingModuleOnce(buildingId: String): Single<List<v3BuildingModuleDbBean>> {
+        var dao = mDb!!.v3BuildingModuleDao()
+        return dao.getProjectOnce(buildingId.toLong()).run {
+            ConverterHelper.convertOnlyv3BuildingModuleBean(this)
+        }
+    }
+
     override fun getv3BuildingModuleOnce(
         buildingId: Long,
         projectId: Long

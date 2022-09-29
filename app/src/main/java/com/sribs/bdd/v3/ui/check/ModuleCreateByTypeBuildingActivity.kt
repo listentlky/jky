@@ -16,23 +16,20 @@ import com.cbj.sdk.libui.mvp.BaseActivity
 import com.cbj.sdk.libui.mvp.inflate
 import com.donkingliang.imageselector.utils.ImageSelector
 import com.sribs.bdd.R
-import com.sribs.bdd.bean.BuildingFloorBean
-import com.sribs.bdd.bean.BuildingFloorPictureBean
-import com.sribs.bdd.bean.data.ModuleFloorBean
 import com.sribs.bdd.bean.data.ModuleFloorPictureBean
 import com.sribs.bdd.databinding.ActivityCreateModuleTypeBuildingBinding
 import com.sribs.bdd.module.project.IProjectContrast
 import com.sribs.bdd.utils.ChoseModulePicDialog
-import com.sribs.bdd.utils.ChosePicDialog
 import com.sribs.bdd.v3.util.LogUtils
-import com.sribs.common.bean.v3.v3ModuleFloorDbBean
+
 import com.sribs.common.utils.FileUtil
 
 /**
  *
  */
 @Route(path = com.sribs.common.ARouterPath.CHECK_MODULE_CONFIG_TYPE_BUILDING_ACTIVITY)
-class ModuleCreateByTypeBuildingActivity:BaseActivity(), IProjectContrast.IModuleCreateTypeBuildingView {
+class ModuleCreateByTypeBuildingActivity : BaseActivity(),
+    IProjectContrast.IModuleCreateTypeBuildingView {
 
     @JvmField
     @Autowired(name = com.sribs.common.ARouterPath.VAL_PROJECT_ID)
@@ -71,7 +68,7 @@ class ModuleCreateByTypeBuildingActivity:BaseActivity(), IProjectContrast.IModul
     var mTitle = ""
 
 
-    private val mBinding:ActivityCreateModuleTypeBuildingBinding by inflate()
+    private val mBinding: ActivityCreateModuleTypeBuildingBinding by inflate()
 
     private val moduleCreateTypeBuildingPresenter by lazy { ModuleFloorCreateTypeBuildingPresenter() }
 
@@ -97,7 +94,9 @@ class ModuleCreateByTypeBuildingActivity:BaseActivity(), IProjectContrast.IModul
         mBinding.toolbar.tb.setNavigationOnClickListener {
             finish()
         }
-       mBinding.toolbar.tbTitle.text = mTitle
+        mBinding.toolbar.tbTitle.text = mTitle
+
+        moduleCreateTypeBuildingPresenter.initLocalData(mModuleId)
 
         mBinding.chosePic.setOnClickListener {//选择图片
             openPdfOrImgSelector()
@@ -106,18 +105,18 @@ class ModuleCreateByTypeBuildingActivity:BaseActivity(), IProjectContrast.IModul
 
         mBinding.chosePicList.setOnClickListener {
 
-            if (selected.size==0){
+            if (selected.size == 0) {
                 ToastUtil.getInstance()._short(getContext(), "请先上传图片")
                 return@setOnClickListener
             }
             selectedPic.clear()
             selected.forEach {
-                var name = FileUtil.uriToFileName(Uri.parse(it),this)
+                var name = FileUtil.uriToFileName(Uri.parse(it), this)
                 name = name ?: it
-                selectedPic.add(ModuleFloorPictureBean(name,it,null))
+                selectedPic.add(ModuleFloorPictureBean(name, it, null))
             }
 
-            var dialog = ChoseModulePicDialog(this,selectedPic){
+            var dialog = ChoseModulePicDialog(this, selectedPic) {
                 moduleCreateTypeBuildingPresenter.refreshPicList(it)
             }
             dialog.show()
@@ -133,18 +132,25 @@ class ModuleCreateByTypeBuildingActivity:BaseActivity(), IProjectContrast.IModul
 
         mBinding.choseWhiteList.setOnClickListener {
             ARouter.getInstance().build(com.sribs.common.ARouterPath.DRAW_WHITE)
-                .navigation(this,REQUEST_CODE_WHITE_BUILDING)
+                .navigation(this, REQUEST_CODE_WHITE_BUILDING)
         }
 
         mBinding.createComplete.setOnClickListener {//保存到数据库中Building
-            moduleCreateTypeBuildingPresenter.createLocalModule(mModuleId)
+            moduleCreateTypeBuildingPresenter.createLocalBuildingsInTheModule(
+                this,
+                mLocalProjectId.toInt(),
+                mModuleName,
+                mBuildingId,
+                mModuleId,
+                mRemoteId
+            )
 
         }
     }
 
-    fun openPdfOrImgSelector(){
+    fun openPdfOrImgSelector() {
         val supportedMimeTypes = arrayOf("application/pdf", "image/*")
-        var intent:Intent = Intent()
+        var intent: Intent = Intent()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             intent.type = if (supportedMimeTypes.size === 1) supportedMimeTypes[0] else "*/*"
             if (supportedMimeTypes.size > 0) {
@@ -168,37 +174,47 @@ class ModuleCreateByTypeBuildingActivity:BaseActivity(), IProjectContrast.IModul
         if (requestCode == REQUEST_CODE && data != null) { //上传图片
             var uri = data.data
             selected.add(uri.toString())
-        }
-        else if (requestCode == REQUEST_CODE_PIC_BUIlDING && data != null){
-            var  isCameraImage = data.getBooleanExtra(ImageSelector.IS_CAMERA_IMAGE, false)
-            if (isCameraImage){
+        } else if (requestCode == REQUEST_CODE_PIC_BUIlDING && data != null) {
+            var isCameraImage = data.getBooleanExtra(ImageSelector.IS_CAMERA_IMAGE, false)
+            if (isCameraImage) {
                 var images = data.getStringArrayListExtra(ImageSelector.SELECT_RESULT)
-                if (images!=null&&images.size>0){
+                if (images != null && images.size > 0) {
                     var name = FileUtil.getFileName(images[0])
                     name = name ?: images[0]
-                    LogUtils.d("基于楼拍照返回: "+images[0])
-                    moduleCreateTypeBuildingPresenter.refreshPicList(arrayListOf(ModuleFloorPictureBean(name!!,null,images[0])))
+                    LogUtils.d("基于楼拍照返回: " + images[0])
+                    moduleCreateTypeBuildingPresenter.refreshPicList(
+                        arrayListOf(
+                            ModuleFloorPictureBean(name!!, null, images[0])
+                        )
+                    )
                 }
             }
-        }else if (requestCode == REQUEST_CODE_WHITE_BUILDING && data != null){//
-                var file = data.getStringExtra("File")
-            LogUtils.d("基于楼白板："+file)
+        } else if (requestCode == REQUEST_CODE_WHITE_BUILDING && data != null) {//
+            var file = data.getStringExtra("File")
+            LogUtils.d("基于楼白板：" + file)
             if (file != null) {
                 var name = FileUtil.getFileName(file)
                 name = name ?: file
-                moduleCreateTypeBuildingPresenter.refreshPicList(arrayListOf(ModuleFloorPictureBean(name,null,file)))
+                moduleCreateTypeBuildingPresenter.refreshPicList(
+                    arrayListOf(
+                        ModuleFloorPictureBean(
+                            name,
+                            null,
+                            file
+                        )
+                    )
+                )
             }
         }
 
     }
 
+    override fun initLocalData(any: Any) {
 
-
-    override fun initLocalData(beanList: List<v3ModuleFloorDbBean>) {
-        moduleCreateTypeBuildingPresenter
     }
 
-    override fun getPicRecycleView(): RecyclerView  = mBinding.picRecycleview
+
+    override fun getPicRecycleView(): RecyclerView = mBinding.picRecycleview
 
 
     override fun createModuleConfigSuccess() {
@@ -209,14 +225,14 @@ class ModuleCreateByTypeBuildingActivity:BaseActivity(), IProjectContrast.IModul
     override fun getContext(): Context? = this
 
     override fun bindPresenter() {
-       moduleCreateTypeBuildingPresenter.bindView(this)
+        moduleCreateTypeBuildingPresenter.bindView(this)
     }
 
     override fun onMsg(msg: String) {
-      showToast(msg)
+        showToast(msg)
     }
 
     override fun unbindPresenter() {
-       moduleCreateTypeBuildingPresenter.unbindView()
+        moduleCreateTypeBuildingPresenter.unbindView()
     }
 }

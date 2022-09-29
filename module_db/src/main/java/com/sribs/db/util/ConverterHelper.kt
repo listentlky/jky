@@ -184,6 +184,31 @@ object ConverterHelper {
             }
         }
 
+
+    fun convertOnlyv3BuildingModuleBeanOnce(l: Single<v3BuildingModuleRoom>): Single<v3BuildingModuleDbBean> =
+        l.map {
+             b ->
+                v3BuildingModuleDbBean(
+                    b.id,
+                    b.buildingId,
+                    b.projectId,
+                    b.moduleName,
+                    b.leaderId,
+                    b.leaderName,
+                    b.isDeleted,
+                    b.aboveGroundNumber,
+                    b.underGroundNumber,
+                    b.drawings,
+                    b.inspectors,
+                    b.deleteTime,
+                    b.createTime,
+                    b.updateTime,
+                    b.remoteId
+                )
+
+        }
+
+
     fun convertv3BuildingModuleRoom(b: v3BuildingModuleDbBean): v3BuildingModuleRoom =
         v3BuildingModuleRoom(
             buildingId = b.buildingId,

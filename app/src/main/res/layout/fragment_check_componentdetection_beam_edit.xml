@@ -5,49 +5,13 @@
     android:layout_height="match_parent"
     android:background="@color/white">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/check_obd_menu_layout"
+    <include
+        android:id="@+id/check_menu_layout"
+        layout="@layout/check_title_menu"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_12sdp"
         android:layout_marginTop="1dp"
-        android:background="@color/blue_800"
-        android:paddingTop="@dimen/_1sdp"
-        android:paddingBottom="@dimen/_1sdp"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <TextView
-            android:id="@+id/check_obd_menu_scale"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginRight="@dimen/_10sdp"
-            android:background="@drawable/round_white_stroke_bg"
-            android:gravity="center"
-            android:includeFontPadding="false"
-            android:text="-"
-            android:textColor="@color/white"
-            android:textSize="@dimen/_6ssp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintRight_toLeftOf="@id/check_obd_menu_close"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/check_obd_menu_close"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginRight="@dimen/_10sdp"
-            android:background="@drawable/round_white_stroke_bg"
-            android:gravity="center"
-            android:includeFontPadding="false"
-            android:text="x"
-            android:textColor="@color/white"
-            android:textSize="@dimen/_6ssp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -56,14 +20,14 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/check_obd_menu_layout">
+        app:layout_constraintTop_toBottomOf="@id/check_menu_layout">
 
 
         <include
             android:id="@+id/check_cpd_subtitle1"
             layout="@layout/check_edit_item"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/_12sdp"
             android:layout_marginLeft="@dimen/_10sdp"
             android:layout_marginTop="@dimen/_20sdp"
             android:layout_marginBottom="@dimen/_5sdp"
@@ -73,27 +37,26 @@
 
         <include
             android:id="@+id/check_cpd_subtitle2"
-            layout="@layout/check_component_detection_beam_subtitle_item"
+            layout="@layout/check_component_detection_wall_subtitle_item"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/_12sdp"
             android:layout_marginLeft="@dimen/_10sdp"
             android:layout_marginTop="@dimen/_20sdp"
             android:layout_marginBottom="@dimen/_5sdp"
             app:layout_constraintLeft_toRightOf="@id/check_cpd_subtitle1"
             app:layout_constraintTop_toTopOf="parent" />
+
 
         <include
             android:id="@+id/check_cpd_subtitle2_second"
             layout="@layout/check_edit_item"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/_10sdp"
-            android:layout_marginTop="@dimen/_20sdp"
+            android:layout_height="@dimen/_12sdp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="24dp"
             android:visibility="invisible"
-            android:layout_marginBottom="@dimen/_5sdp"
             app:layout_constraintLeft_toRightOf="@id/check_cpd_subtitle1"
             app:layout_constraintTop_toTopOf="parent" />
-
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/check_cpd_subtitle_change"
@@ -192,10 +155,12 @@
             layout="@layout/fragment_check_componentdetection_beam_right_design_edit"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:layout_marginTop="@dimen/_7sdp"
+
             android:layout_marginLeft="@dimen/_10sdp"
             android:layout_marginRight="@dimen/_10sdp"
             android:layout_marginBottom="@dimen/_5sdp"
-            android:visibility="gone"
+
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintHorizontal_weight="1"
 

@@ -27,7 +27,7 @@
 
         <include
             android:id="@+id/check_cpd_subtitle1"
-            layout="@layout/check_edit_item"
+            layout="@layout/check_edit_item_2"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/_12sdp"
             android:layout_marginLeft="@dimen/_10sdp"
@@ -39,13 +39,11 @@
 
         <include
             android:id="@+id/check_cpd_subtitle2"
-            layout="@layout/check_component_detection_beam_subtitle_item"
+            layout="@layout/check_component_detection_wall_subtitle_item"
             android:layout_width="0dp"
             android:layout_height="@dimen/_12sdp"
             android:layout_marginLeft="@dimen/_10sdp"
             android:layout_marginTop="@dimen/_25sdp"
-            android:layout_marginBottom="@dimen/_5sdp"
-
             app:layout_constraintLeft_toRightOf="@id/check_cpd_subtitle1"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -55,7 +53,6 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/_12sdp"
             android:layout_marginTop="@dimen/_25sdp"
-            android:layout_marginBottom="@dimen/_5sdp"
             app:layout_constraintLeft_toLeftOf="@id/check_cpd_subtitle2"
             app:layout_constraintRight_toRightOf="@id/check_cpd_subtitle2"
             app:layout_constraintTop_toTopOf="parent" />
@@ -65,7 +62,6 @@
             android:id="@+id/check_cpd_subtitle_change"
             android:layout_width="@dimen/_40sdp"
             android:layout_height="@dimen/_12sdp"
-            android:layout_marginLeft="@dimen/_3sdp"
             android:layout_marginTop="@dimen/_25sdp"
             android:insetTop="0dp"
             android:insetBottom="0dp"
@@ -76,6 +72,7 @@
             android:theme="@style/Theme.MaterialComponents.Light"
             app:backgroundTint="@color/blue_800"
             app:cornerRadius="@dimen/_2sdp"
+            android:layout_marginLeft="@dimen/_3sdp"
             app:layout_constraintLeft_toRightOf="@id/check_cpd_subtitle2"
             app:layout_constraintTop_toTopOf="parent"
             app:rippleColor="@color/rippleColor" />
@@ -101,8 +98,8 @@
             app:rippleColor="@color/rippleColor" />
 
         <include
-            android:id="@+id/check_cpd_column_left_real_ui"
-            layout="@layout/fragment_check_componentdetection_column_left_real_edit"
+            android:id="@+id/check_cpd_beam_left_real_ui"
+            layout="@layout/fragment_check_componentdetection_beam_left_real_edit"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginLeft="@dimen/_10sdp"
@@ -112,30 +109,30 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintHorizontal_weight="1"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@id/check_cpd_column_right_real_ui"
+            app:layout_constraintRight_toLeftOf="@id/check_cpd_beam_right_real_ui"
             app:layout_constraintTop_toBottomOf="@id/check_cpd_subtitle1" />
 
 
         <include
-            android:id="@+id/check_cpd_column_left_design_ui"
-            layout="@layout/fragment_check_componentdetection_column_left_design_edit"
+            android:id="@+id/check_cpd_beam_left_design_ui"
+            layout="@layout/fragment_check_componentdetection_beam_left_design_edit"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginLeft="@dimen/_10sdp"
             android:layout_marginRight="@dimen/_10sdp"
             android:layout_marginTop="@dimen/_7sdp"
             android:layout_marginBottom="@dimen/_5sdp"
-
+            android:visibility="gone"
 
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintHorizontal_weight="1"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@id/check_cpd_column_right_real_ui"
+            app:layout_constraintRight_toLeftOf="@id/check_cpd_beam_right_real_ui"
             app:layout_constraintTop_toBottomOf="@id/check_cpd_subtitle1" />
 
         <include
-            android:id="@+id/check_cpd_column_right_real_ui"
-            layout="@layout/fragment_check_componentdetection_column_right_real_edit"
+            android:id="@+id/check_cpd_beam_right_real_ui"
+            layout="@layout/fragment_check_componentdetection_beam_right_real_edit"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginLeft="@dimen/_10sdp"
@@ -147,24 +144,26 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintHorizontal_weight="1"
 
-            app:layout_constraintLeft_toRightOf="@id/check_cpd_column_left_real_ui"
+            app:layout_constraintLeft_toRightOf="@id/check_cpd_beam_left_real_ui"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/check_cpd_subtitle1" />
+            app:layout_constraintTop_toBottomOf="@id/check_cpd_subtitle1"
+            app:layout_constraintVertical_bias="0.0" />
 
         <include
-            android:id="@+id/check_cpd_column_right_design_ui"
-            layout="@layout/fragment_check_componentdetection_column_right_design_edit"
+            android:id="@+id/check_cpd_beam_right_design_ui"
+            layout="@layout/fragment_check_componentdetection_beam_right_design_edit"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginLeft="@dimen/_10sdp"
             android:layout_marginTop="@dimen/_7sdp"
             android:layout_marginRight="@dimen/_10sdp"
+
             android:layout_marginBottom="@dimen/_5sdp"
-            android:visibility="invisible"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintHorizontal_weight="1"
 
-            app:layout_constraintLeft_toRightOf="@id/check_cpd_column_left_real_ui"
+            app:layout_constraintLeft_toRightOf="@id/check_cpd_beam_left_real_ui"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/check_cpd_subtitle1"/>
 

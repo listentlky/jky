@@ -1,23 +1,35 @@
 package com.sribs.bdd.v3.ui.check
 
+import android.app.Activity
 import android.content.Context
 import android.content.SharedPreferences
+import android.net.Uri
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.android.arouter.launcher.ARouter
+import com.baidu.mapapi.ModuleName
 import com.cbj.sdk.libui.mvp.moudles.IBasePresenter
 import com.sribs.common.module.BasePresenter
 import com.cbj.sdk.libui.mvp.moudles.IBaseView
 
 import com.sribs.bdd.bean.*
+import com.sribs.bdd.bean.data.ModuleFloor
 import com.sribs.bdd.bean.data.ModuleFloorBean
 import com.sribs.bdd.bean.data.ModuleFloorPictureBean
 import com.sribs.bdd.module.project.IProjectContrast
 import com.sribs.bdd.v3.adapter.CreateModuleFloorPictureAdapter
 import com.sribs.bdd.utils.ModuleHelper
+import com.sribs.bdd.v3.util.LogUtils
 import com.sribs.common.bean.db.DrawingV3Bean
 import com.sribs.common.bean.db.v3.project.v3BuildingModuleDbBean
+import com.sribs.common.bean.v3.v3ModuleFloorDbBean
 import com.sribs.common.server.IDatabaseService
+import com.sribs.common.utils.FileUtil
+import com.sribs.common.utils.TimeUtil
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import java.io.File
+import java.util.*
 import kotlin.collections.ArrayList
 
 class ModuleFloorCreateTypeBuildingPresenter : BasePresenter(), IBasePresenter {
@@ -29,6 +41,11 @@ class ModuleFloorCreateTypeBuildingPresenter : BasePresenter(), IBasePresenter {
 
     private var mProLeader: String? = ""
 
+
+    var beanList: ArrayList<ModuleFloorBean>? = ArrayList()
+    var modulePicBeanList: ArrayList<ModuleFloorPictureBean>? = ArrayList()
+
+    private var currentBean = v3BuildingModuleDbBean()
     private val picAdapter by lazy {
         CreateModuleFloorPictureAdapter()
     }
@@ -43,10 +60,17 @@ class ModuleFloorCreateTypeBuildingPresenter : BasePresenter(), IBasePresenter {
         var manager = LinearLayoutManager(mView?.getContext())
         mView?.getPicRecycleView()?.layoutManager = manager
         picList = ArrayList()
+        array = ArrayList()
         picAdapter.setData(picList!!)
         mView?.getPicRecycleView()?.adapter = picAdapter
 
     }
+
+
+    fun getFloorList(activity: Activity, mLocalProjectId: Int, mBuildingId: Long) {
+
+    }
+
 
     fun refreshPicList(mData: ArrayList<ModuleFloorPictureBean>) {
         picList?.addAll(mData)
@@ -56,35 +80,158 @@ class ModuleFloorCreateTypeBuildingPresenter : BasePresenter(), IBasePresenter {
 
     private var mBldId: Long? = -1
 
-    fun createLocalModule(
+    fun createLocalBuildingsInTheModule(
+        activity: Activity,
+        mLocalProjectId: Int,
+        moduleName: String,
+        mBuildingId: Long,
         mModuleId: Long,
+        remoteId: String
     ) {
-        var bean = v3BuildingModuleDbBean(
-            drawings = ArrayList(),
-            id = mModuleId
-            )
+        if (picList.isNullOrEmpty()) {
+            mView?.onMsg("图纸不能为空")
+            return
+        }
 
-        addDisposable(mDb.updatev3BuildingModuleDrawing(bean)
-            .subscribeOn(Schedulers.computation())
-            .observeOn(Schedulers.computation())
+        createLocalFacadesDrawingInTheBuilding(activity, mLocalProjectId, mBuildingId, moduleName)
+
+        var bean = v3BuildingModuleDbBean()
+
+        bean.drawings = mAppFacadeDrawingList
+        bean.buildingId = mBuildingId
+        bean.projectId = mLocalProjectId.toLong()
+        bean.moduleName = moduleName
+        bean.id = mModuleId
+        bean.updateTime = TimeUtil.YMD_HMS.format(Date())
+        bean.remoteId = remoteId
+
+
+        addDisposable(
+            mDb.updatev3BuildingModuleDrawing(bean)
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    mView?.onMsg("success")
+                    mView?.createModuleConfigSuccess()
+
+                }, {
+                    mView?.onMsg("gg")
+                    it.printStackTrace()
+                })
+        )
+    }
+
+    private fun copyDrawingsToLocalCache(
+        activity: Activity,
+        pictureBean: ArrayList<ModuleFloorPictureBean>,
+        floorName: String?,
+        cacheRootDir: String
+    ) {
+        LogUtils.d("copyDrawingsToLocalCache: " + pictureBean.size)
+        var filters = pictureBean.filter {
+            it.uri != null
+        }
+        addDisposable(Observable.fromIterable(filters)
+            .subscribeOn(Schedulers.io())
+            .observeOn(Schedulers.io())
+            .flatMap {
+                var cacheFileParent = File(cacheRootDir + mCurDrawingsDir)
+                if (!floorName.isNullOrEmpty()) { // 不为空认为是楼图纸   为空认为是楼层图纸
+                    cacheFileParent = File(cacheRootDir + mCurDrawingsDir + floorName)
+                }
+                cacheFileParent.mkdirs()
+                var cacheFile = File(cacheFileParent, it.name)
+                LogUtils.d("图纸缓存目录： " + cacheFile.toString())
+                if (cacheFile != null) {
+                    FileUtil.copyFileTo(activity, Uri.parse(it.uri), cacheFile.absolutePath)
+                }
+                Observable.just("Done")
+            }
+            .subscribeOn(Schedulers.io())
+            .observeOn(Schedulers.io())
             .subscribe({
-                mView?.onMsg("success")
-                mView?.createModuleConfigSuccess()
-
+                LogUtils.d("复制图纸到缓存目录: ${it}")
             }, {
-                mView?.onMsg("gg")
                 it.printStackTrace()
             })
         )
     }
 
+
+    private fun createLocalFacadesDrawingInTheBuilding(
+        activity: Activity,
+        mLocalProjectId: Int,
+        mBuildingId: Long,
+        moduleName: String
+    ) {
+        println("leon createLocalFloorsInTheBuilding mBldId=${mBldId}")
+        mAppFacadeDrawingList!!.clear()
+
+
+        //赋值模块名作为图纸上级目录
+        mCurDrawingsDir =
+            "/" + ModuleHelper.DRAWING_CACHE_FOLDER + "/" + mProName + "/" + moduleName + "/"
+
+
+        if (picList != null && picList!!.size > 0) {
+            var cacheRootDir: String = FileUtil.getDrawingCacheRootDir(mView!!.getContext()!!)
+
+            copyDrawingsToLocalCache(activity, picList!!, null, cacheRootDir)
+
+            picList!!.forEach {
+
+                var cacheFilePath = File(cacheRootDir + mCurDrawingsDir, it.name)
+
+                var drawingV3ToBuild = DrawingV3Bean(
+                    -1,
+                    it.name,
+                    FileUtil.getFileExtension(it.name),
+                    "overall",
+                    if (it.url != null) it.url else cacheFilePath.absolutePath,
+                    "",
+                    ArrayList()
+                )
+                mAppFacadeDrawingList!!.add(drawingV3ToBuild)
+            }
+        }
+    }
+
+
+    fun initLocalData(mModuleId: Long) {
+        beanList!!.clear()
+        picList!!.clear()
+        addDisposable(
+            mDb.getv3BuildingModule(mModuleId)
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    it.drawings?.forEach { b ->
+                        var bean = ModuleFloorPictureBean(
+                            name = b.fileName!!,
+                            uri = b.localAbsPath,
+                            url = b.remoteAbsPath,
+                        )
+                        LogUtils.d(bean.name + b.localAbsPath)
+                        picList!!.add(bean)
+                    }
+                    currentBean = it
+
+                    LogUtils.d(picList!!.get(0).name)
+                    picAdapter.setData(picList!!)
+
+
+                }, {
+                    mView?.onMsg("gg")
+                    it.printStackTrace()
+                })
+        )
+    }
+
+
     private var mAppFacadeDrawingList: ArrayList<DrawingV3Bean>? = ArrayList<DrawingV3Bean>()
 
 
     var floorList: ArrayList<Floor> = ArrayList<Floor>()
-
-
-
 
 
     private lateinit var mPrefs: SharedPreferences

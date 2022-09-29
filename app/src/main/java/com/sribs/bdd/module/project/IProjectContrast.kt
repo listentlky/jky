@@ -13,6 +13,7 @@ import com.sribs.common.bean.HistoryBean
 import com.sribs.common.bean.db.ConfigBean
 import com.sribs.common.bean.db.ProjectBean
 import com.sribs.common.bean.db.UnitBean
+import com.sribs.common.bean.db.v3.project.v3BuildingModuleDbBean
 import com.sribs.common.bean.v3.v3ModuleFloorDbBean
 
 /**
@@ -95,7 +96,7 @@ interface IProjectContrast {
 
 
     interface IModuleCreateTypeBuildingView:IView{
-        fun initLocalData(beanList:List<v3ModuleFloorDbBean> )
+        fun initLocalData(any: Any )
         fun getPicRecycleView():RecyclerView
         fun createModuleConfigSuccess()
     }

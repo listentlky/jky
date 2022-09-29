@@ -12,6 +12,10 @@ interface v3BuildingModuleDao {
     @Query("Select * from v3_building_module")
     fun getAllProject(): Flowable<List<v3BuildingModuleRoom>>
 
+    @Query("Select * from v3_building_module where id = :moduleId")
+    fun getProject(moduleId: Long): Single<v3BuildingModuleRoom>
+
+
     @Query("Select * from v3_building_module where project_id = :projectId and building_id = :buildingId")
     fun getProject(projectId: Long,buildingId: Long): Flowable<List<v3BuildingModuleRoom>>
 

@@ -41,8 +41,6 @@ class CreateModuleFloorPictureAdapter :
 
     fun setData(list: ArrayList<ModuleFloorPictureBean>) {
         mList = list
-        mList?.clear()
-        mList?.addAll(list)
         notifyDataSetChanged()
     }
 }

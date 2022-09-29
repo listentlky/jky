@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="@dimen/_20sdp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/check_edit_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_7ssp"
+        android:gravity="center"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="实测纵筋"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_6ssp" />
+
+
+    <com.sribs.bdd.v3.view.OneChooseSpinnerView
+        app:layout_constraintLeft_toRightOf="@id/check_edit_name"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="@dimen/_4sdp"
+        android:layout_marginLeft="@dimen/_5sdp"
+        android:id="@+id/check_cpd_left_real_spinner_2"
+        android:layout_width="@dimen/_70sdp"
+        android:layout_height="wrap_content"
+
+        ></com.sribs.bdd.v3.view.OneChooseSpinnerView>
+
+
+
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

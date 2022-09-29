@@ -52,6 +52,11 @@ interface IDatabaseService:IProvider {
     fun getv3AllBuildingModule(): Flowable<List<v3BuildingModuleDbBean>>
 
     fun getv3BuildingModule(projectId: Long,buildingId: Long): Flowable<List<v3BuildingModuleDbBean>>
+    fun getv3BuildingModule(projectId: Long,buildingId: String): Flowable<List<v3BuildingModuleDbBean>>
+
+    fun getv3BuildingModule(moduleId: Long): Single<v3BuildingModuleDbBean>
+
+    fun getv3BuildingModuleOnce(buildingId: String): Single<List<v3BuildingModuleDbBean>>
 
     fun getv3BuildingModuleOnce(
         buildingId: Long,

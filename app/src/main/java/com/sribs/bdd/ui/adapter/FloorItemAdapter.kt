@@ -32,8 +32,8 @@ class FloorItemAdapter : BaseListAdapter<BuildingFloorItem, ItemFloorDetailBindi
                 text = "相对高差测量"
                 routing = com.sribs.common.ARouterPath.CHECK_RELATIVE_H_DIFF_ACTIVITY
             }
-            "构建测量" -> {
-                text = "构建测量"
+            "构建检测" -> {
+                text = "构建检测"
                 routing = com.sribs.common.ARouterPath.CHECK_COMPONENT_DETECTION_ACTIVITY
             }
             "居民类检测测量" -> {

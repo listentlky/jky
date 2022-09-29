@@ -8,6 +8,7 @@
     android:layout_marginTop="@dimen/_25sdp"
     android:layout_marginRight="@dimen/_10sdp"
     android:layout_marginBottom="@dimen/_5sdp"
+    android:id="@+id/parent"
     app:cardElevation="@dimen/_2sdp"
     app:layout_constraintLeft_toLeftOf="parent"
     app:layout_constraintTop_toTopOf="parent">
@@ -17,20 +18,20 @@
         android:layout_height="match_parent">
 
         <include
-            android:id="@+id/check_cpd_left_menu"
-            layout="@layout/item_component_detection_menu"
+            android:id="@+id/check_cdp_right_menu"
+            layout="@layout/item_component_detection_menu_2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
         <include
-            android:id="@+id/check_cpd_beam_right_real_single"
+            android:id="@+id/check_cdp_beam_right_desin_single"
             layout="@layout/item_component_detection_wall_right_design_design_edit"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/_15sdp"
             android:layout_marginTop="@dimen/_5sdp"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/check_cpd_left_menu" />
+            app:layout_constraintTop_toBottomOf="@id/check_cdp_right_menu" />
 
 
 
@@ -44,10 +45,10 @@
             android:layout_marginTop="@dimen/_10sdp"
             android:layout_marginRight="@dimen/_15sdp"
             android:background="@color/gray_400"
-            app:layout_constraintTop_toBottomOf="@id/check_cpd_beam_right_real_single" />
+            app:layout_constraintTop_toBottomOf="@id/check_cdp_beam_right_desin_single" />
 
         <include
-            android:id="@+id/check_cpd_beam_right_real_measured"
+            android:id="@+id/check_cdp_beam_right_desin_measured"
             layout="@layout/item_component_detection_wall_right_design_design_edit"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -65,12 +66,15 @@
             android:layout_marginTop="@dimen/_10sdp"
             android:background="@color/gray_400"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/check_cpd_beam_right_real_measured"
-             />
+            app:layout_constraintTop_toBottomOf="@id/check_cdp_beam_right_desin_measured"
+            />
+
+
+
 
 
         <TextView
-            android:id="@+id/check_cpd_beam_right_remark"
+            android:id="@+id/check_cdp_beam_right_remark"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/_15sdp"
@@ -78,64 +82,58 @@
             android:text="备注"
 
             android:textColor="@color/black"
-            android:textSize="@dimen/_7ssp"
+            android:textSize="@dimen/_6ssp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@id/second_line"></TextView>
 
-        <ScrollView
+        <EditText
 
-            android:id="@+id/check_cpd_beam_right_scroll_view"
+            android:id="@+id/check_cdp_left_real_remark_content"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:paddingLeft="@dimen/_4sdp"
             android:layout_marginLeft="@dimen/_15sdp"
             android:layout_marginTop="@dimen/_2sdp"
             android:layout_marginRight="@dimen/_10sdp"
-            android:layout_marginBottom="@dimen/_15sdp"
+            android:layout_marginBottom="@dimen/_40sdp"
             android:background="@drawable/check_gray_stroke_bg"
             android:scrollbars="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintDimensionRatio="3:1"
+            app:layout_constraintDimensionRatio="2:1"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/check_cpd_beam_right_remark">
+            android:gravity="start"
+            android:hint="请输入内容"
+            android:textSize="@dimen/_6ssp"
+            app:layout_constraintTop_toBottomOf="@id/check_cdp_beam_right_remark">
 
-            <EditText
-                android:id="@+id/check_cpd_left_real_remark_content"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@null"
-                android:gravity="start"
-                android:minHeight="@dimen/_50sdp"
-                android:hint="请输入内容"
-                android:textSize="@dimen/_7ssp">
-
-            </EditText>
-
-        </ScrollView>
+        </EditText>
 
 
         <ImageView
-            android:id="@+id/check_cpd_beam_pic"
+            android:id="@+id/check_cdp_plate_pic"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginLeft="@dimen/_10sdp"
+            android:layout_marginLeft="@dimen/_5sdp"
+            android:layout_marginRight="@dimen/_10sdp"
             android:background="@mipmap/ic_launcher"
-            app:layout_constraintBottom_toBottomOf="@id/check_cpd_beam_right_scroll_view"
+            app:layout_constraintBottom_toBottomOf="@id/check_cdp_left_real_remark_content"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintHorizontal_weight="1"
-            app:layout_constraintLeft_toRightOf="@id/check_cpd_beam_right_scroll_view"
+            app:layout_constraintLeft_toRightOf="@id/check_cdp_left_real_remark_content"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="@id/check_cpd_beam_right_scroll_view"
+            app:layout_constraintTop_toTopOf="@id/check_cdp_left_real_remark_content"
             app:layout_constraintVertical_bias="0.0">
 
         </ImageView>
 
+
         <TextView
-            app:layout_constraintTop_toTopOf="@id/check_cpd_beam_right_remark"
-            app:layout_constraintLeft_toLeftOf="@id/check_cpd_beam_pic"
+            app:layout_constraintTop_toTopOf="@id/check_cdp_beam_right_remark"
+            app:layout_constraintLeft_toLeftOf="@id/check_cdp_plate_pic"
             android:text="图片"
             android:textColor="@color/black"
-            android:textSize="@dimen/_7ssp"
+            android:textSize="@dimen/_6ssp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"></TextView>
 

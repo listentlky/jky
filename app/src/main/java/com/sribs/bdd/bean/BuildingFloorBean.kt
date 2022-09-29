@@ -1,10 +1,9 @@
 package com.sribs.bdd.bean
 
-import com.facebook.stetho.inspector.protocol.module.Inspector
 import com.sribs.common.bean.db.UnitBean
 
 //楼层
-data class BuildingFloorBean(var name:String,var pictureList: ArrayList<BuildingFloorPictureBean>?)
+data class BuildingFloorBean(var name:String, var pictureList: ArrayList<BuildingFloorPictureBean>?)
 
 data class BuildingFloorIndexBean(var name:String,var floor:String,var pictureList: ArrayList<BuildingFloorPictureBean>?)
 //楼层配置图片
@@ -16,9 +15,9 @@ data class BuildingFloor(val projectId:Long?,
                          var unitNo:String?=null,
                          var remoteId:String?=null,
                          var version:Int?=null,
-                         var localId:Long=-1,var name: String,var inspector: String,
-                         var time:String,var floorList:ArrayList<BuildingFloorBean>?,
-                         var above:Int,var after:Int, var status: Int){
+                         var localId:Long=-1, var name: String, var inspector: String,
+                         var time:String, var floorList:ArrayList<BuildingFloorBean>?,
+                         var above:Int, var after:Int, var status: Int){
     var isCardSel:Boolean = false
     var isMenuChecked:Boolean = false
     var isFinish:Boolean = false

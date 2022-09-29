@@ -159,6 +159,7 @@ class ModuleCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCrea
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     if (it != null)
+
                         mView?.initLocalData(it)
                 }, {
                     it.printStackTrace()
@@ -170,15 +171,11 @@ class ModuleCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCrea
 
     fun createLocalModule(
         activity: Activity,
-        mLocalProjectId: Long,
+        mLocalProjectId: Int,
         mBuildingId: Long,
         mModuleId: Long,
         remoteId: String,
         moduleName: String,
-        leaderName: String,
-        inspector: String,
-        aboveGroundNumber: Int,
-        underGroundNumber: Int
     ) {
 
         if (array.isNullOrEmpty()) {
@@ -192,6 +189,11 @@ class ModuleCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCrea
                 return
             }
         }
+
+        //赋值模块名作为图纸上级目录
+        mCurDrawingsDir = "/" + ModuleHelper.DRAWING_CACHE_FOLDER + "/" + mProName + "/" + moduleName + "/"
+
+
         var bean = v3BuildingModuleDbBean(
             id = mModuleId,
             buildingId = mBuildingId,
@@ -199,8 +201,8 @@ class ModuleCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCrea
             moduleName = moduleName,
             updateTime = TimeUtil.YMD_HMS.format(Date()),
             drawings = ArrayList(),
-            aboveGroundNumber = aboveGroundNumber,
-            underGroundNumber = underGroundNumber,
+            aboveGroundNumber = above.size,
+            underGroundNumber = after.size,
             inspectors = "",
             remoteId = remoteId,
 
@@ -215,15 +217,15 @@ class ModuleCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCrea
             }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                mLocalModuleId = it
+                mLocalModuleId = it.toLong()
                 LogUtils.d("llf createLocalModule new building id=${mLocalModuleId}")
                 createLocalFloorsInTheModule(
                     activity,
                     mLocalProjectId,
                     mBuildingId,
-                    mLocalModuleId!!,
-                    aboveGroundNumber,
-                    underGroundNumber
+                    mLocalModuleId!!.toInt(),
+                    above.size,
+                    after.size
                 )
             }, {
                 mView?.onMsg("gg")
@@ -234,9 +236,9 @@ class ModuleCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCrea
 
     private fun createLocalFloorsInTheModule(
         activity: Activity,
-        mLocalProjectId: Long,
+        mLocalProjectId: Int,
         mBuildingId: Long,
-        moduleId: Long,
+        moduleId: Int,
         aboveGroundNumber: Int,
         underGroundNumber: Int
     ) {
@@ -295,9 +297,9 @@ class ModuleCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCrea
 
     fun getFloorList(
         activity: Activity,
-        mLocalProjectId: Long,
+        mLocalProjectId: Int,
         mBuildingId: Long,
-        moduleId: Long,
+        moduleId: Int,
         aboveGroundNumber: Int,
         underGroundNumber: Int
     ) {
@@ -326,7 +328,7 @@ class ModuleCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCrea
     fun getDrawingList(
         activity: Activity,
         floorBean: ModuleFloorBean,
-        mLocalProjectId: Long,
+        mLocalProjectId: Int,
         mBuildingId: Long,
     ): ArrayList<DrawingV3Bean>? {
         if (floorBean.pictureList != null && floorBean.pictureList!!.size > 0) {
@@ -337,11 +339,11 @@ class ModuleCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCrea
             var drawingItem: DrawingV3Bean
             var curTime: Long = System.currentTimeMillis()
 
-            copyDrawingsToLocalCache(activity, originList!!, cacheRootDir)
+            copyDrawingsToLocalCache(activity, originList!!,floorBean.name, cacheRootDir)
 
             for (i in originList!!.indices) {
                 var item = originList!![i]
-                var cacheFilePath = File(cacheRootDir + mCurDrawingsDir, item.name)
+                var cacheFilePath = File(cacheRootDir + mCurDrawingsDir+floorBean.name, item.name)
                 cachePath = cacheRootDir + mCurDrawingsDir + item.name
                 LogUtils.d("楼层图纸缓存目录：" + cachePath)
 
@@ -366,6 +368,7 @@ class ModuleCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCrea
     private fun copyDrawingsToLocalCache(
         activity: Activity,
         pictureBean: ArrayList<ModuleFloorPictureBean>,
+        floorName:String?,
         cacheRootDir: String
     ) {
         LogUtils.d("copyDrawingsToLocalCache: " + pictureBean.size)
@@ -378,12 +381,15 @@ class ModuleCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCrea
             .subscribeOn(Schedulers.io())
             .observeOn(Schedulers.io())
             .flatMap {
-                val cacheFileParent = File(cacheRootDir + mCurDrawingsDir)
+                var cacheFileParent = File(cacheRootDir + mCurDrawingsDir)
+                if(!floorName.isNullOrEmpty()) { // 为空认为是楼图纸   不为空认为是楼层图纸
+                    cacheFileParent = File(cacheRootDir + mCurDrawingsDir + floorName)
+                }
                 cacheFileParent.mkdirs()
-                val cacheFilePath = cacheFileParent.absolutePath + it.name
-                LogUtils.d("图纸缓存目录: ${cacheFilePath}")
-                if (cacheFilePath != null) {
-                    FileUtil.copyFileTo(activity, Uri.parse(it.uri), cacheFilePath)
+                var cacheFile = File(cacheFileParent,it.name)
+                LogUtils.d("图纸缓存目录： "+cacheFile.toString())
+                if (cacheFile != null) {
+                    FileUtil.copyFileTo(activity, Uri.parse(it.uri),cacheFile.absolutePath)
                 }
                 Observable.just("Done")
             }
@@ -403,7 +409,7 @@ class ModuleCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCrea
             var cacheRootDir: String = FileUtil.getDrawingCacheRootDir(mView!!.getContext()!!)
             var curTime: Long = System.currentTimeMillis()
 
-            copyDrawingsToLocalCache(activity, picList!!, cacheRootDir)
+            copyDrawingsToLocalCache(activity, picList!!,null, cacheRootDir)
 
             picList!!.forEach {
                 cachePath = cacheRootDir + mCurDrawingsDir + it.name

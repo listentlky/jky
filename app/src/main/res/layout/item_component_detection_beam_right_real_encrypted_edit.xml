@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:id="@+id/content"
     android:orientation="horizontal">
 
     <TextView
@@ -57,7 +58,7 @@
 
     <LinearLayout
         android:layout_width="@dimen/_50sdp"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical">
 
         <TextView
@@ -68,9 +69,9 @@
             android:textSize="@dimen/_5ssp"></TextView>
 
         <EditText
-            android:id="@+id/check_edit_2222"
+            android:id="@+id/check_edit_2"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_12sdp"
+            android:layout_height="match_parent"
             android:background="@drawable/check_gray_stroke_bg"
             android:gravity="center_vertical"
             android:minWidth="@dimen/_90sdp"
@@ -96,7 +97,7 @@
 
     <LinearLayout
         android:layout_width="@dimen/_50sdp"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical">
 
         <TextView
@@ -107,7 +108,7 @@
             android:textSize="@dimen/_5ssp"></TextView>
 
         <EditText
-            android:id="@+id/check_edit_2"
+            android:id="@+id/check_edit_3"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_12sdp"
             android:background="@drawable/check_gray_stroke_bg"

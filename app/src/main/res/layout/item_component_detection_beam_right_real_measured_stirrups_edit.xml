@@ -1,50 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+ <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="horizontal">
 
     <TextView
         android:id="@+id/check_edit_name"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/_7ssp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_10ssp"
         android:layout_marginRight="@dimen/_5sdp"
         android:gravity="center"
         android:text="实测箍筋"
         android:textColor="@color/black"
-        android:textSize="@dimen/_6ssp" />
+        android:textSize="@dimen/_6ssp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <LinearLayout
-        android:layout_width="@dimen/_40sdp"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+    <com.sribs.bdd.v3.view.OneChooseSpinnerView
+        app:layout_constraintLeft_toRightOf="@id/check_edit_name"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="@dimen/_7sdp"
+        android:layout_marginLeft="@dimen/_5sdp"
+        android:id="@+id/check_cpd_left_real_spinner_2"
+        android:layout_width="@dimen/_50sdp"
+        android:layout_height="wrap_content"
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/_5sdp"
-            android:text=""
-            android:textSize="@dimen/_5ssp"></TextView>
-
-        <EditText
-            android:id="@+id/check_edit"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/check_gray_stroke_bg"
-            android:gravity="center_vertical"
-            android:minWidth="@dimen/_80sdp"
-            android:paddingLeft="@dimen/_4sdp"
-            android:paddingRight="@dimen/_4sdp"
-            android:textColor="@color/black"
-            android:textColorHint="@color/gray_600"
-            android:textSize="@dimen/_6ssp" />
-
-
-    </LinearLayout>
+        ></com.sribs.bdd.v3.view.OneChooseSpinnerView>
 
     <TextView
+        android:id="@+id/tv_1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="@dimen/_3sdp"
+
+        app:layout_constraintLeft_toRightOf="@id/check_cpd_left_real_spinner_2"
         android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="@dimen/_2sdp"
+        android:layout_marginTop="@dimen/_3sdp"
+        android:layout_marginRight="@dimen/_3sdp"
+        android:text=","
+        android:textColor="@color/black"
+        android:textSize="@dimen/_5ssp"></TextView>
+
+
+    <com.sribs.bdd.v3.view.OneChooseSpinnerView
+        app:layout_constraintLeft_toRightOf="@id/tv_1"
+        android:id="@+id/check_cpd_left_real_spinner_3"
+        android:layout_width="@dimen/_35sdp"
+        android:layout_marginTop="@dimen/_7sdp"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginLeft="@dimen/_2sdp"
+        android:layout_height="wrap_content"
+        ></com.sribs.bdd.v3.view.OneChooseSpinnerView>
+
+
+
+    <TextView
+        android:id="@+id/tv_2"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="@dimen/_3sdp"
+        app:layout_constraintLeft_toRightOf="@id/check_cpd_left_real_spinner_3"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginLeft="@dimen/_2sdp"
@@ -55,71 +74,32 @@
         android:textSize="@dimen/_5ssp"></TextView>
 
 
-    <LinearLayout
-        android:layout_width="@dimen/_20sdp"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/_5sdp"
-            android:text=""
-            android:textSize="@dimen/_5ssp"></TextView>
-
-        <EditText
-            android:id="@+id/check_edit_233"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/_12sdp"
-            android:background="@drawable/check_gray_stroke_bg"
-            android:gravity="center_vertical"
-            android:minWidth="@dimen/_90sdp"
-            android:paddingLeft="@dimen/_4sdp"
-            android:paddingRight="@dimen/_4sdp"
-            android:textColor="@color/black"
-            android:textColorHint="@color/gray_600"
-            android:textSize="@dimen/_6ssp" />
 
 
-    </LinearLayout>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginLeft="@dimen/_2sdp"
-        android:layout_marginTop="@dimen/_3sdp"
-        android:layout_marginRight="@dimen/_2sdp"
-        android:text=","
+    <EditText
+        android:id="@+id/check_edit_2"
+        android:layout_width="@dimen/_45sdp"
+        android:layout_height="@dimen/_14sdp"
+        android:layout_marginLeft="4dp"
+        android:background="@drawable/check_gray_stroke_bg"
+        android:minWidth="@dimen/_90sdp"
         android:textColor="@color/black"
-        android:textSize="@dimen/_5ssp"></TextView>
-
-    <LinearLayout
-        android:layout_width="@dimen/_40sdp"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/_5sdp"
-            android:text="角筋规格"
-            android:textSize="@dimen/_5ssp"></TextView>
-
-        <EditText
-            android:id="@+id/check_edit_2"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/_12sdp"
-            android:background="@drawable/check_gray_stroke_bg"
-            android:gravity="center_vertical"
-            android:minWidth="@dimen/_90sdp"
-            android:paddingLeft="@dimen/_4sdp"
-            android:paddingRight="@dimen/_4sdp"
-            android:textColor="@color/black"
-            android:textColorHint="@color/gray_600"
-            android:textSize="@dimen/_6ssp" />
+        android:paddingLeft="@dimen/_4sdp"
+        android:paddingRight="@dimen/_4sdp"
+        android:textColorHint="@color/gray_600"
+        android:textSize="@dimen/_6ssp"
+        app:layout_constraintLeft_toRightOf="@id/tv_2"
+        app:layout_constraintTop_toTopOf="@id/check_cpd_left_real_spinner_3" />
 
 
-    </LinearLayout>
+   <TextView
+       app:layout_constraintTop_toTopOf="parent"
+       app:layout_constraintLeft_toLeftOf="@id/check_edit_2"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:id="@+id/check_edit_name_2"
+       android:layout_marginLeft="@dimen/_5sdp"
+       android:text="角筋规格"
+       android:textSize="@dimen/_5ssp"></TextView>
 
-
-</LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
