@@ -51,11 +51,11 @@ import kotlin.collections.HashMap
  * 倾斜测量
  */
 @Route(path = com.sribs.common.ARouterPath.CHECK_OBLIQUE_DEFORMATION_ACTIVITY)
-class CheckObliqueDeformationActivity : BaseActivity(),ICheckOBDContrast.ICheckOBDView,
+class CheckObliqueDeformationActivity : BaseActivity(), ICheckOBDContrast.ICheckOBDView,
     ILayoutView.PDFLayoutListener {
 
     @JvmField
-    @Autowired(name= com.sribs.common.ARouterPath.VAL_COMMON_TITLE)
+    @Autowired(name = com.sribs.common.ARouterPath.VAL_COMMON_TITLE)
     var mTitle = ""
 
     @JvmField
@@ -117,7 +117,7 @@ class CheckObliqueDeformationActivity : BaseActivity(),ICheckOBDContrast.ICheckO
             mBinding.checkMenuLayout.root.visibility = View.GONE
         }
         Global.Init(this)
-        mPresenter.getModuleInfo(mLocalProjectId,mBuildingId,mModuleId)
+        mPresenter.getModuleInfo(mLocalProjectId, mBuildingId, mModuleId)
         RxBus.getDefault().toObservable<RefreshPDFEvent>(RefreshPDFEvent::class.java)
             .subscribe {
                 if (it.isRefresh) {
@@ -136,11 +136,11 @@ class CheckObliqueDeformationActivity : BaseActivity(),ICheckOBDContrast.ICheckO
         setSupportActionBar(mBinding.toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
         mBinding.toolbar.setNavigationOnClickListener {
-               if(mBinding.checkVp.currentItem != 0){
-                   mBinding.checkVp.currentItem = 0
-               }else{
-                   ExitToSave()
-               }
+            if (mBinding.checkVp.currentItem != 0) {
+                mBinding.checkVp.currentItem = 0
+            } else {
+                ExitToSave()
+            }
         }
     }
 
@@ -217,7 +217,7 @@ class CheckObliqueDeformationActivity : BaseActivity(),ICheckOBDContrast.ICheckO
         mBinding.checkVp.currentItem = item
     }
 
-    var mCheckOBDMainBean:ArrayList<CheckOBDMainBean>? = ArrayList()
+    var mCheckOBDMainBean: ArrayList<CheckOBDMainBean>? = ArrayList()
 
     /**
      * 当前层图纸数据
@@ -274,7 +274,7 @@ class CheckObliqueDeformationActivity : BaseActivity(),ICheckOBDContrast.ICheckO
      * 设置损伤页面详情，并展示
      */
     fun resetDamageInfo(damageV3Bean: DamageV3Bean?, type: String?) {
-        if(mBinding.checkMenuLayout.root.visibility == View.VISIBLE){
+        if (mBinding.checkMenuLayout.root.visibility == View.VISIBLE) {
             AlertDialog.Builder(this).setTitle("提示")
                 .setMessage("当前有缩小详情页，是否移除？")
                 .setPositiveButton(R.string.dialog_ok) { dialog, which ->
@@ -292,7 +292,7 @@ class CheckObliqueDeformationActivity : BaseActivity(),ICheckOBDContrast.ICheckO
 
                 }
                 .show()
-        }else{
+        } else {
             when (type) {
                 mCurrentDamageType[0] -> { // 点位
                     (mFragments[0] as CheckOBDFragment).setGuide(damageV3Bean)
@@ -306,7 +306,7 @@ class CheckObliqueDeformationActivity : BaseActivity(),ICheckOBDContrast.ICheckO
     /**
      * 删除某个损伤
      */
-    fun removeDamage(damageV3Bean: DamageV3Bean?, type: String?){
+    fun removeDamage(damageV3Bean: DamageV3Bean?, type: String?) {
         var exitDamageBeanList = mDamageBeanList!!.get(mCurrentLocalPDF)
         LogUtils.d("删除前损伤数据: " + exitDamageBeanList)
 
@@ -330,7 +330,7 @@ class CheckObliqueDeformationActivity : BaseActivity(),ICheckOBDContrast.ICheckO
 
 
         LogUtils.d("当前数据：" + damageInfo)
-        if(exitDamageBeanList == null){
+        if (exitDamageBeanList == null) {
             exitDamageBeanList = ArrayList()
         }
         LogUtils.d("过滤前损伤数据：" + exitDamageBeanList)
@@ -364,10 +364,10 @@ class CheckObliqueDeformationActivity : BaseActivity(),ICheckOBDContrast.ICheckO
      */
     fun saveDamageDrawingToDb() {
         mCheckOBDMainBean!!.forEach {
-            it.drawing!!.forEach { b->
+            it.drawing!!.forEach { b ->
                 b.damage = mDamageBeanList!!.get(b.localAbsPath)!!
             }
-            mPresenter.saveDamageToDb(it.drawing!!,it.moduleId!!)
+            mPresenter.saveDamageToDb(it.drawing!!, it.moduleId!!)
         }
     }
 
@@ -439,9 +439,9 @@ class CheckObliqueDeformationActivity : BaseActivity(),ICheckOBDContrast.ICheckO
             .show()
     }
 
-    var mGuideText:String?="北"
+    var mGuideText: String? = "北"
 
-    var mGuideRotate:Int = 0
+    var mGuideRotate: Int = 0
 
 
     private var mDoc: Document = Document()
@@ -457,6 +457,7 @@ class CheckObliqueDeformationActivity : BaseActivity(),ICheckOBDContrast.ICheckO
     public var mView: PDFLayoutView? = null
 
     private var mViewParent: RelativeLayout? = null
+
     /**
      * 当前编辑的pdf
      */
@@ -499,18 +500,20 @@ class CheckObliqueDeformationActivity : BaseActivity(),ICheckOBDContrast.ICheckO
                 mView?.PDFOpen(mDoc, this)
                 mView?.setReadOnly(false)
                 mView?.setAnnotMenu(UIAnnotMenu(mViewParent))
-                mController = PDFViewController(
-                    mViewParent,
-                    mView,
-                    pdfPath,
-                    mAssetStream != null || mHttpStream != null
-                )
-                mController!!.SetPagesListener(View.OnClickListener {
-                    val intent = Intent()
-                    intent.setClass(this, PDFPagesAct::class.java)
-                    PDFPagesAct.SetTranDoc(mDoc)
-                    startActivityForResult(intent, 10000)
-                })
+                if (mController == null) {
+                    mController = PDFViewController(
+                        mViewParent,
+                        mView,
+                        pdfPath,
+                        mAssetStream != null || mHttpStream != null
+                    )
+                    mController!!.SetPagesListener(View.OnClickListener {
+                        val intent = Intent()
+                        intent.setClass(this, PDFPagesAct::class.java)
+                        PDFPagesAct.SetTranDoc(mDoc)
+                        startActivityForResult(intent, 10000)
+                    })
+                }
             }, {
                 LogUtils.d(" not granted ${Permission.MANAGE_EXTERNAL_STORAGE}")
             })
@@ -608,7 +611,7 @@ class CheckObliqueDeformationActivity : BaseActivity(),ICheckOBDContrast.ICheckO
     }
 
     override fun OnPDFZoomEnd() {
-        LogUtils.d("OnPDFZoomEnd "+mView?.PDFGetZoom())
+        LogUtils.d("OnPDFZoomEnd " + mView?.PDFGetZoom())
     }
 
     override fun OnPDFDoubleTapped(pagebo: Int, x: Float, y: Float): Boolean {
@@ -655,13 +658,13 @@ class CheckObliqueDeformationActivity : BaseActivity(),ICheckOBDContrast.ICheckO
         var damageBean = Gson().fromJson(annotPoint, DamageV3Bean::class.java)
         mCurrentAddAnnotReF = damageBean.annotRef
         resetDamageInfo(null, damageBean.type)
-       /* when (damageBean.type) {
-            mCurrentDamageType[0] -> {
-                mController?.savePDF()
-                (mFragments[1] as CheckEditOBDFragment).openPDF(mCurrentLocalPDF)
-                mBinding.checkVp.currentItem = 1
-            }
-        }*/
+        /* when (damageBean.type) {
+             mCurrentDamageType[0] -> {
+                 mController?.savePDF()
+                 (mFragments[1] as CheckEditOBDFragment).openPDF(mCurrentLocalPDF)
+                 mBinding.checkVp.currentItem = 1
+             }
+         }*/
     }
 
     override fun onPDFNoteEdited(annotPoint: String?) {
@@ -678,25 +681,25 @@ class CheckObliqueDeformationActivity : BaseActivity(),ICheckOBDContrast.ICheckO
                     if (damageBean.annotRef == it.annotRef) {
                         isMatch = true
                         resetDamageInfo(it, it.type)
-                       /* when (it.type) {
-                            mCurrentDamageType[0] -> {
-                                mBinding.checkVp.currentItem = 1
-                            }
-                        }*/
+                        /* when (it.type) {
+                             mCurrentDamageType[0] -> {
+                                 mBinding.checkVp.currentItem = 1
+                             }
+                         }*/
                     }
                 }
-                if(!isMatch){
+                if (!isMatch) {
                     AlertDialog.Builder(this).setTitle("提示")
                         .setMessage("当前损伤信息已被删除，移除标记点")
                         .setPositiveButton(R.string.dialog_ok) { dialog, which ->
                             try {
                                 mView?.PDFRemoveAnnot()
-                            }catch (e:Exception){
+                            } catch (e: Exception) {
                             }
                         }
                         .show()
-               //     resetDamageInfo(null, mCurrentDamageType[0])
-                //    mBinding.checkVp.currentItem = 1
+                    //     resetDamageInfo(null, mCurrentDamageType[0])
+                    //    mBinding.checkVp.currentItem = 1
                 }
             }
             Constant.BUTTON_POPMENU_DEL -> {

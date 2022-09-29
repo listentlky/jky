@@ -283,18 +283,20 @@ class CheckBuildStructureActivity : BaseActivity(), ICheckBSContrast.ICheckBSVie
                 mView?.setReadOnly(false)
                 mView?.setAnnotMenu(UIAnnotMenu(mViewParent))
                 mView?.setV3SelectDamageCallback(this)
-                mController = PDFViewController(
-                    mViewParent,
-                    mView,
-                    pdfPath,
-                    mAssetStream != null || mHttpStream != null
-                )
-                mController!!.SetPagesListener(View.OnClickListener {
-                    val intent = Intent()
-                    intent.setClass(this, PDFPagesAct::class.java)
-                    PDFPagesAct.SetTranDoc(mDoc)
-                    startActivityForResult(intent, 10000)
-                })
+                if(mController == null) {
+                    mController = PDFViewController(
+                        mViewParent,
+                        mView,
+                        pdfPath,
+                        mAssetStream != null || mHttpStream != null
+                    )
+                    mController!!.SetPagesListener(View.OnClickListener {
+                        val intent = Intent()
+                        intent.setClass(this, PDFPagesAct::class.java)
+                        PDFPagesAct.SetTranDoc(mDoc)
+                        startActivityForResult(intent, 10000)
+                    })
+                }
             }, {
                 LogUtils.d(" not granted ${Permission.MANAGE_EXTERNAL_STORAGE}")
             })
@@ -712,11 +714,10 @@ class CheckBuildStructureActivity : BaseActivity(), ICheckBSContrast.ICheckBSVie
                         .setPositiveButton(R.string.dialog_ok) { dialog, which ->
                             try {
                                 mView?.PDFRemoveAnnot()
-                            }catch (e:Exception){
+                            } catch (e: Exception) {
                             }
                         }
                         .show()
-                 //   resetDamageInfo(null, damageBean.type)
                 }
             }
             Constant.BUTTON_POPMENU_DEL -> {

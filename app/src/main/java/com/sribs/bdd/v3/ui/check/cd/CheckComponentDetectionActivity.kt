@@ -451,18 +451,20 @@ class CheckComponentDetectionActivity : BaseActivity(), ICheckCDContrast.ICheckC
                 mView?.setReadOnly(false)
                 mView?.setAnnotMenu(UIAnnotMenu(mViewParent))
                 mView?.setV3SelectDamageCallback(this)
-                mController = PDFViewController(
-                    mViewParent,
-                    mView,
-                    pdfPath,
-                    mAssetStream != null || mHttpStream != null
-                )
-                mController!!.SetPagesListener(View.OnClickListener {
-                    val intent = Intent()
-                    intent.setClass(this, PDFPagesAct::class.java)
-                    PDFPagesAct.SetTranDoc(mDoc)
-                    startActivityForResult(intent, 10000)
-                })
+                if(mController == null) {
+                    mController = PDFViewController(
+                        mViewParent,
+                        mView,
+                        pdfPath,
+                        mAssetStream != null || mHttpStream != null
+                    )
+                    mController!!.SetPagesListener(View.OnClickListener {
+                        val intent = Intent()
+                        intent.setClass(this, PDFPagesAct::class.java)
+                        PDFPagesAct.SetTranDoc(mDoc)
+                        startActivityForResult(intent, 10000)
+                    })
+                }
             }, {
                 LogUtils.d(" not granted ${Permission.MANAGE_EXTERNAL_STORAGE}")
             })
@@ -712,7 +714,7 @@ class CheckComponentDetectionActivity : BaseActivity(), ICheckCDContrast.ICheckC
         var damageBean = Gson().fromJson(annotPoint, DamageV3Bean::class.java)
         mCurrentAddAnnotReF = damageBean.annotRef
         resetDamageInfo(null, damageBean.type)
-        when (damageBean.type) {
+       /* when (damageBean.type) {
             mCurrentDamageType[0] -> {
                 mBinding.checkVp.currentItem = 1
             }
@@ -725,7 +727,7 @@ class CheckComponentDetectionActivity : BaseActivity(), ICheckCDContrast.ICheckC
             mCurrentDamageType[3] -> {
                 mBinding.checkVp.currentItem = 4
             }
-        }
+        }*/
     }
 
     override fun onPDFNoteEdited(annotPoint: String?) {
@@ -742,7 +744,7 @@ class CheckComponentDetectionActivity : BaseActivity(), ICheckCDContrast.ICheckC
                     if (damageBean.annotRef == it.annotRef) {
                         isMatch = true
                         resetDamageInfo(it, it.type)
-                        when (it.type) {
+                      /*  when (it.type) {
                             mCurrentDamageType[0] -> {
                                 mBinding.checkVp.currentItem = 1
                             }
@@ -755,12 +757,11 @@ class CheckComponentDetectionActivity : BaseActivity(), ICheckCDContrast.ICheckC
                             mCurrentDamageType[3] -> {
                                 mBinding.checkVp.currentItem = 4
                             }
-                        }
+                        }*/
                     }
                 }
                 if (!isMatch) {
-                    resetDamageInfo(null, damageBean.type)
-                    when (damageBean.type) {
+                  /*  when (damageBean.type) {
                         mCurrentDamageType[0] -> {
                             mBinding.checkVp.currentItem = 1
                         }
@@ -773,7 +774,16 @@ class CheckComponentDetectionActivity : BaseActivity(), ICheckCDContrast.ICheckC
                         mCurrentDamageType[3] -> {
                             mBinding.checkVp.currentItem = 4
                         }
-                    }
+                    }*/
+                    AlertDialog.Builder(this).setTitle("提示")
+                        .setMessage("当前损伤信息已被删除，移除标记点")
+                        .setPositiveButton(R.string.dialog_ok) { dialog, which ->
+                            try {
+                                mView?.PDFRemoveAnnot()
+                            } catch (e: Exception) {
+                            }
+                        }
+                        .show()
                 }
             }
             Constant.BUTTON_POPMENU_DEL -> {

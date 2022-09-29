@@ -319,6 +319,7 @@ class RelativeHDiffActivity : BaseActivity() ,ICheckRHDiffContrast.ICheckRHDiffV
         LogUtils.d("choosePDF: "+data)
         saveDamage()
         mController?.savePDF()
+        mController?.onDestroy()
         (mFragments[0] as RelativeHDiffFragment).mBinding.checkSelectIndex.text =
             data.fileName
         openPDF(data)
@@ -398,18 +399,20 @@ class RelativeHDiffActivity : BaseActivity() ,ICheckRHDiffContrast.ICheckRHDiffV
                 mView?.PDFOpen(mDoc, this)
                 mView?.setReadOnly(false)
      /*           mView?.setAnnotMenu(UIAnnotMenu(mViewParent))*/
-                mController = PDFViewController(
-                    mViewParent,
-                    mView,
-                    pdfPath,
-                    mAssetStream != null || mHttpStream != null
-                )
-                mController!!.SetPagesListener(View.OnClickListener {
-                    val intent = Intent()
-                    intent.setClass(this, PDFPagesAct::class.java)
-                    PDFPagesAct.SetTranDoc(mDoc)
-                    startActivityForResult(intent, 10000)
-                })
+                if(mController == null) {
+                    mController = PDFViewController(
+                        mViewParent,
+                        mView,
+                        pdfPath,
+                        mAssetStream != null || mHttpStream != null
+                    )
+                    mController!!.SetPagesListener(View.OnClickListener {
+                        val intent = Intent()
+                        intent.setClass(this, PDFPagesAct::class.java)
+                        PDFPagesAct.SetTranDoc(mDoc)
+                        startActivityForResult(intent, 10000)
+                    })
+                }
             }, {
                 LogUtils.d(" not granted ${Permission.MANAGE_EXTERNAL_STORAGE}")
             })
@@ -525,11 +528,11 @@ class RelativeHDiffActivity : BaseActivity() ,ICheckRHDiffContrast.ICheckRHDiffV
 
     private fun calculateY(annot_rect: FloatArray): Float {
         var y: Float
-        y = annot_rect[1]- getResources().getDimensionPixelOffset(R.dimen._10sdp)
-        if (y < 0) {
+        y = annot_rect[1]/*- getResources().getDimensionPixelOffset(R.dimen._10sdp)*/
+       /* if (y < 0) {
             y = annot_rect[3] + getResources()
                 .getDimensionPixelOffset(R.dimen._10sdp)
-        }
+        }*/
         return y
     }
 
