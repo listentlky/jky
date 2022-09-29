@@ -15,13 +15,14 @@ import com.sribs.bdd.R;
 import com.sribs.bdd.v3.util.LogUtils;
 import com.sribs.common.bean.db.DrawingV3Bean;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ChoosePicPopupAdapter  extends RecyclerView.Adapter<ChoosePicPopupAdapter.ItemViewHolder> {
 
     private Context mContext;
 
-    private List<DrawingV3Bean> datas;
+    private List<DrawingV3Bean> data = new ArrayList<>();
 
     private int select = 0;
 
@@ -29,7 +30,17 @@ public class ChoosePicPopupAdapter  extends RecyclerView.Adapter<ChoosePicPopupA
 
     public ChoosePicPopupAdapter(Context mContext, List<DrawingV3Bean> datas) {
         this.mContext = mContext;
-        this.datas = datas;
+        data = datas;
+        LogUtils.INSTANCE.d("ChoosePicPopupAdapter： "+data);
+    }
+
+    public void notifyData(List<DrawingV3Bean> datas){
+        if(datas != null && datas.size()>0){
+            data.clear();
+            data.addAll(datas);
+        }
+        LogUtils.INSTANCE.d("notifyData： "+data);
+        notifyDataSetChanged();
     }
 
     public ChoosePicPopupAdapter setmItemClickCallback(ChoosePicPopupAdapter.ItemClickCallback mItemClickCallback) {
@@ -46,7 +57,7 @@ public class ChoosePicPopupAdapter  extends RecyclerView.Adapter<ChoosePicPopupA
     @Override
     public void onBindViewHolder(@NonNull ChoosePicPopupAdapter.ItemViewHolder holder, int position) {
         if (holder instanceof ChoosePicPopupAdapter.ItemViewHolder) {
-            DrawingV3Bean drawingV3Bean = datas.get(position);
+            DrawingV3Bean drawingV3Bean = data.get(position);
             holder.text.setText(drawingV3Bean.getFileName());
             if(select != -1 && select == position){
                 holder.choose.setBackgroundResource(R.drawable.circle_blue800);
@@ -70,7 +81,8 @@ public class ChoosePicPopupAdapter  extends RecyclerView.Adapter<ChoosePicPopupA
 
     @Override
     public int getItemCount() {
-        return datas != null ? datas.size() : 0;
+        LogUtils.INSTANCE.d("getItemCount： "+data.size());
+        return data != null ? data.size() : 0;
     }
 
     class ItemViewHolder extends RecyclerView.ViewHolder {

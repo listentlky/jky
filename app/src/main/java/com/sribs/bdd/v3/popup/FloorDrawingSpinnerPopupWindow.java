@@ -26,18 +26,12 @@ public class FloorDrawingSpinnerPopupWindow extends PopupWindow {
 
     private FloorDrawingSpinnerView mFloorDrawingSpinnerView;
 
-    private List<FloorDrawingModule> mData = new ArrayList<>();
-
     private DrawingV3Bean mSelectData;
 
     public FloorDrawingSpinnerPopupWindow(Context context, int width,
                                           List<FloorDrawingModule> data,
                                           FloorDrawItemClickCallback callback) {
         super(context);
-        if(data != null){
-            mData.addAll(data);
-        }
-
         View view = LayoutInflater.from(context).inflate(R.layout.floor_drawing_spinner,null);
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(width,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -67,7 +61,7 @@ public class FloorDrawingSpinnerPopupWindow extends PopupWindow {
                 dismiss();
             }
         });
-        mFloorDrawingSpinnerView.setData(mData).setCallback(new FloorDrawItemClickCallback() {
+        mFloorDrawingSpinnerView.setData(data).setCallback(new FloorDrawItemClickCallback() {
             @Override
             public void onClick(DrawingV3Bean data) {
                 mSelectData = data;

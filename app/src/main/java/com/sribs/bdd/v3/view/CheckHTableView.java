@@ -143,12 +143,12 @@ public class CheckHTableView extends LinearLayout {
         layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 mContext.getResources().getDimensionPixelSize(R.dimen._15sdp));
         setOrientation(VERTICAL);
-        initTitleTable();
         if (mChoosePointList.size() <= 0) {
             RelativeHDiffPointBean pointBean = new RelativeHDiffPointBean();
             pointBean.setName("闭合点");
             mChoosePointList.add(pointBean);
         }
+        initTitleTable();
     }
 
     public void build() {

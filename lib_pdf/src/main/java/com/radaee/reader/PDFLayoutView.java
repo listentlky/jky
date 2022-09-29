@@ -530,6 +530,8 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
                                         jsonObject.put("type", mSelectedDamageType);
                                         jsonObject.put("axis", "");
                                         jsonObject.put("content", "");
+                                        jsonObject.put("annotX",(int) e.getX());
+                                        jsonObject.put("annotY",(int) e.getY());
                                     } catch (JSONException e) {
                                         Log.i("leon", "PDFLayoutView onMenuClicked edit annot failed!");
                                     }
@@ -1522,7 +1524,8 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
                     mMarkX = event.getX();
                     mMarkY = event.getY();
                     page.AddAnnotText(pt);
-                    onAnnotCreated(page.GetAnnot(page.GetAnnotCount() - 1));
+                    m_annot = page.GetAnnot(page.GetAnnotCount() - 1);
+                    onAnnotCreated(m_annot);
                     //add to redo/undo stack.
                     m_opstack.push(new OPAdd(pos.pageno, page, page.GetAnnotCount() - 1));
                     m_layout.vRenderSync(vpage);
@@ -1561,7 +1564,7 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
         return new float[]{m_annot_rect[0], m_annot_rect[1], m_annot_rect[2], m_annot_rect[3]};
     }
 
-    private static int mIcon = 0;
+   // private static int mIcon = 0;
 
     private void onAnnotCreated(Annotation annot) {
         Log.i("leon", "PDFLayoutView onAnnotCreated in, m_status=" + m_status);
@@ -1569,13 +1572,13 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
 
             //leon add start
             if (m_status == STA_NOTE) {
-                Log.d("bruce", "onAnnotCreated SetIcon： " + mIcon);
-                annot.SetIcon(mIcon);//13 means star
+           //     Log.d("bruce", "onAnnotCreated SetIcon： " + mIcon);
+                annot.SetIcon(8);//13 means star
                 int fillColor = (255 << 24) | mNewAnnotColor;
                 Log.d("bruce", "mNewAnnotColor: " + mNewAnnotColor);
                 annot.SetFillColor(fillColor);
                 annot.SetStrokeWidth(Global.g_oval_annot_width);
-                mIcon += 1;
+           //     mIcon += 1;
             }
             //leon add end
 
@@ -1608,6 +1611,8 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
                     jsonObject.put("type", mSelectedDamageType);
                     jsonObject.put("axis", "");
                     jsonObject.put("content", "");
+                    jsonObject.put("annotX",(int) mMarkX);
+                    jsonObject.put("annotY",(int) mMarkY);
                 } catch (JSONException e) {
 //                        Log.i("leon","PDFLayoutView onMenuClicked edit annot failed!");
                 }
@@ -2434,6 +2439,24 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
         invalidate();
     }
 
+    public void removeCurrentNone(){
+     //   Log.d("bruce","removeCurrentNone: "+x+" ; "+y);
+       /* m_annot_pos = m_layout.vGetPos(x, y);
+        m_annot_page = m_layout.vGetPage(m_annot_pos.pageno);
+        m_annot_pg = m_doc.GetPage(m_annot_page.GetPageNo());
+        m_annot = m_annot_pg.GetAnnotFromPoint(m_annot_pos.x, m_annot_pos.y);
+
+        m_annot_rect = m_annot.GetRect();
+        float tmp = m_annot_rect[1];
+        m_annot_rect[0] = m_annot_page.GetVX(m_annot_rect[0]) - m_layout.vGetX();
+        m_annot_rect[1] = m_annot_page.GetVY(m_annot_rect[3]) - m_layout.vGetY();
+        m_annot_rect[2] = m_annot_page.GetVX(m_annot_rect[2]) - m_layout.vGetX();
+        m_annot_rect[3] = m_annot_page.GetVY(tmp) - m_layout.vGetY();*/
+        m_status = STA_ANNOT;
+        PDFRemoveAnnot();
+    }
+
+
     public void PDFRemoveAnnot() {
         if (m_status != STA_ANNOT) return;
         if (!PDFCanSave() || (Global.g_annot_readonly && m_annot.IsReadOnly())
@@ -2442,6 +2465,7 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
             PDFEndAnnot();
             return;
         }
+        Log.d("bruce","PDFRemoveAnnot:3333333 ");
         //add to redo/undo stack.
         Page page = m_doc.GetPage(m_annot_page.GetPageNo());
         page.ObjsStart();
@@ -2454,6 +2478,7 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
         if (m_listener != null)
             m_listener.OnPDFPageModified(m_annot_page.GetPageNo());
         PDFEndAnnot();
+
     }
 
     public void PDFEndAnnot() {

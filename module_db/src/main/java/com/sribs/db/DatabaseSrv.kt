@@ -155,8 +155,8 @@ class DatabaseSrv : IDatabaseService {
     }
 
     override fun getv3BuildingModuleOnce(
-        buildingId: Long,
-        projectId: Long
+        projectId: Long,
+        buildingId: Long
     ): Single<List<v3BuildingModuleDbBean>> {
         var dao = mDb!!.v3BuildingModuleDao()
         return dao.getProjectOnce(projectId, buildingId).run {
@@ -165,8 +165,8 @@ class DatabaseSrv : IDatabaseService {
     }
 
     override fun getv3BuildingModuleOnce(
-        buildingId: Long,
         projectId: Long,
+        buildingId: Long,
         moduleId: Long
     ): Single<List<v3BuildingModuleDbBean>> {
         var dao = mDb!!.v3BuildingModuleDao()

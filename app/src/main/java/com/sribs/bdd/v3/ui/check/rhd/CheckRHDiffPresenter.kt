@@ -25,6 +25,7 @@ class CheckRHDiffPresenter :BasePresenter(),ICheckRHDiffContrast.ICheckRHDiffPre
     }
 
     override fun getModuleInfo(localProjectId: Long, localBuildingId: Long, localModuleId: Long) {
+        LogUtils.d("${localProjectId}  ${localBuildingId}  ${localModuleId}")
         addDisposable(mDb.getv3BuildingModuleOnce(localProjectId,localBuildingId,localModuleId)
             .subscribeOn(Schedulers.computation())
             .observeOn(AndroidSchedulers.mainThread())

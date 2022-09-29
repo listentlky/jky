@@ -10,6 +10,7 @@ import com.cbj.sdk.libui.mvp.BaseFragment
 import com.cbj.sdk.libui.mvp.bindView
 import com.radaee.reader.PDFLayoutView
 import com.sribs.bdd.R
+import com.sribs.bdd.databinding.FragmentCheckComponentdetectionBinding
 import com.sribs.bdd.databinding.FragmentCheckObliquedeformationBinding
 import com.sribs.bdd.v3.bean.CheckCDMainBean
 import com.sribs.bdd.v3.module.CheckMenuModule
@@ -27,7 +28,7 @@ import com.sribs.common.bean.db.DrawingV3Bean
 class CheckCDFragment : BaseFragment(R.layout.fragment_check_componentdetection),
     FloorDrawingSpinnerPopupWindow.FloorDrawItemClickCallback {
 
-     val mBinding: FragmentCheckObliquedeformationBinding by bindView()
+     val mBinding: FragmentCheckComponentdetectionBinding by bindView()
 
     private var mMenuList: ArrayList<CheckMenuModule> = ArrayList()
 

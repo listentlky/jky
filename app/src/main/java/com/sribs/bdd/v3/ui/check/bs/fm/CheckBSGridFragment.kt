@@ -32,6 +32,10 @@ class CheckBSGridFragment : BaseFragment(R.layout.fragment_check_build_structure
      */
     var mAddAnnotReF:Long = -1L
 
+    var mAddAnnotX:Int = 0
+
+    var mAddAnnotY:Int = 0
+
     override fun deinitView() {
 
     }
@@ -113,6 +117,8 @@ class CheckBSGridFragment : BaseFragment(R.layout.fragment_check_build_structure
             }
 
             mAddAnnotReF =  (activity as CheckBuildStructureActivity).mCurrentAddAnnotReF
+            mAddAnnotX =  (activity as CheckBuildStructureActivity).mCurrentAddAnnotX
+            mAddAnnotY =  (activity as CheckBuildStructureActivity).mCurrentAddAnnotY
 
             var damage = DamageV3Bean(
                 -1,
@@ -122,6 +128,8 @@ class CheckBSGridFragment : BaseFragment(R.layout.fragment_check_build_structure
                 mAddAnnotReF,
                 mBinding.checkBsFloorHintText.text.toString(),
                 if(mDamageCreateTime<0) System.currentTimeMillis() else mDamageCreateTime,
+                mAddAnnotX,
+                mAddAnnotY,
                 mAxisNote,
                 mAxisNoteList,
                 (context as CheckBuildStructureActivity).mCurrentDrawing!!.floorName,
@@ -146,6 +154,7 @@ class CheckBSGridFragment : BaseFragment(R.layout.fragment_check_build_structure
             mBinding.checkBsFloorEdit2.root.check_edit.setText("")
             mBinding.checkBsFloorEdit2.root.check_edit_flag.setText("")
             mBinding.checkBsFloorZxEdit.visibility = View.GONE
+            mBinding.checkBsFloorZxEdit.setText("")
             mBinding.checkBsFloorZwsjz.checkEdit.setText("")
             mBinding.checkBsFloorZwscz.checkEdit.setText("")
             mBinding.checkBsFloorHintText.setText("")

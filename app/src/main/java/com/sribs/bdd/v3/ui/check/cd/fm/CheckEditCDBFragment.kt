@@ -862,7 +862,7 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
 
             rightRealView.checkCpdLeftRealRemarkContent.setText("")
 
-            rightRealView.checkCpdBeamPic.setBackgroundResource(R.color.red)
+       //     rightRealView.checkCpdBeamPic.setBackgroundResource(R.color.red)
 
             rightDesignView.checkCpdBeamRightRealMeasured.checkEdit2.setText("")
             rightDesignView.checkCpdBeamRightRealMeasured.checkCpdLeftRealSpinner2.setSelect(0)
@@ -877,7 +877,7 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
             )
             rightDesignView.checkEdit.setText("")
             rightDesignView.checkCpdLeftRealRemarkContent.setText("")
-            rightDesignView.checkCpdBeamPic.setBackgroundResource(R.color.red)
+    //        rightDesignView.checkCpdBeamPic.setBackgroundResource(R.color.red)
         } else {
             LogUtils.d("子控件进去的Damage梁bean"+damageV3Bean.toBeamString())
             mBinding.checkCpdSubtitle1.checkEdit.setText(damageV3Bean.beamName)

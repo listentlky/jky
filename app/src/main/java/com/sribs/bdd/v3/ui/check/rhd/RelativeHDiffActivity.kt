@@ -308,6 +308,7 @@ class RelativeHDiffActivity : BaseActivity() ,ICheckRHDiffContrast.ICheckRHDiffV
      */
     fun resetDamageList() {
         //添加到损伤模块
+        LogUtils.d("mCurrentLocalPDF: "+mCurrentLocalPDF)
         (mFragments[0] as RelativeHDiffFragment).resetView(mDamageBeanList!!.get(mCurrentLocalPDF))
     }
 
@@ -315,6 +316,7 @@ class RelativeHDiffActivity : BaseActivity() ,ICheckRHDiffContrast.ICheckRHDiffV
      * 选择pdf图片
      */
     fun choosePDF(data: DrawingV3Bean) {
+        LogUtils.d("choosePDF: "+data)
         saveDamage()
         mController?.savePDF()
         (mFragments[0] as RelativeHDiffFragment).mBinding.checkSelectIndex.text =
@@ -477,14 +479,14 @@ class RelativeHDiffActivity : BaseActivity() ,ICheckRHDiffContrast.ICheckRHDiffV
             LogUtils.d("group： ${group}  ${pointName}")
             if(rHDiffAddPointPopupWindow == null){
                 rHDiffAddPointPopupWindow = RHDiffAddPointPopupWindow(this,getResources()
-                    .getDimensionPixelOffset(R.dimen._150sdp),annot.GetRef(),object :RHDiffAddPointPopupWindow.RHDiffAddPointCallback{
+                    .getDimensionPixelOffset(R.dimen._200sdp),annot.GetRef(),object :RHDiffAddPointPopupWindow.RHDiffAddPointCallback{
                     override fun onAddPoint(group: String, point: String,annotRef: Long) {
                         LogUtils.d("group： ${group}  ${pointName}  ${annotRef}")
                         (mFragments[0] as RelativeHDiffFragment).addPointBean(group,point,annotRef)
                     }
 
                     override fun onDeletePoint(group: String, point: String,annotRef: Long) {
-                        mView!!.PDFRemoveAnnot()
+                        mView?.PDFRemoveAnnot()
                         (mFragments[0] as RelativeHDiffFragment).removePointBean(group,point,annotRef)
                     }
 
@@ -511,7 +513,7 @@ class RelativeHDiffActivity : BaseActivity() ,ICheckRHDiffContrast.ICheckRHDiffV
             getResources().getDisplayMetrics().widthPixels.toFloat()
         val annotWidth = annot_rect[2] - annot_rect[0]
         val menuWidth: Float = getResources()
-            .getDimensionPixelOffset(R.dimen._150sdp).toFloat()
+            .getDimensionPixelOffset(R.dimen._200sdp).toFloat()
         var x = annot_rect[0] + (annotWidth - menuWidth) / 2
         if (x + menuWidth >= screenWidth) x -= x + menuWidth - screenWidth +
             getResources()
@@ -523,11 +525,10 @@ class RelativeHDiffActivity : BaseActivity() ,ICheckRHDiffContrast.ICheckRHDiffV
 
     private fun calculateY(annot_rect: FloatArray): Float {
         var y: Float
-        y = annot_rect[1]
-              /*  getResources().getDimensionPixelOffset(R.dimen.annot_menu_bar_margin)*/
+        y = annot_rect[1]- getResources().getDimensionPixelOffset(R.dimen._10sdp)
         if (y < 0) {
             y = annot_rect[3] + getResources()
-                .getDimensionPixelOffset(com.radaee.viewlib.R.dimen.annot_menu_bar_margin)
+                .getDimensionPixelOffset(R.dimen._10sdp)
         }
         return y
     }

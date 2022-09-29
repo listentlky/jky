@@ -392,6 +392,7 @@ class CheckBuildStructureActivity : BaseActivity(), ICheckBSContrast.ICheckBSVie
      * 设置损伤页面详情，并展示
      */
     fun resetDamageInfo(damageV3Bean: DamageV3Bean?, type: String?) {
+        LogUtils.d("resetDamageInfo： "+damageV3Bean+" ; type:"+type)
         if(mBinding.checkMenuLayout.root.visibility == View.VISIBLE){
             AlertDialog.Builder(this).setTitle("提示")
                 .setMessage("当前有缩小详情页，是否移除？")
@@ -442,6 +443,11 @@ class CheckBuildStructureActivity : BaseActivity(), ICheckBSContrast.ICheckBSVie
 
         mDamageBeanList!!.put(mCurrentLocalPDF, exitDamageBeanList)
         resetDamageList()
+       /* try {
+            mView?.removeCurrentNone(damageV3Bean!!.annotX,damageV3Bean!!.annotY)
+        }catch (e:Exception){
+
+        }*/
     }
 
     /**
@@ -453,7 +459,9 @@ class CheckBuildStructureActivity : BaseActivity(), ICheckBSContrast.ICheckBSVie
 
 
         LogUtils.d("当前数据：" + damageInfo)
-
+        if(exitDamageBeanList == null){
+            exitDamageBeanList = ArrayList()
+        }
         LogUtils.d("过滤前损伤数据：" + exitDamageBeanList)
         /**
          * 先过滤相同损伤
@@ -656,6 +664,10 @@ class CheckBuildStructureActivity : BaseActivity(), ICheckBSContrast.ICheckBSVie
      */
     var mCurrentAddAnnotReF = -1L
 
+    var mCurrentAddAnnotX = 0
+
+    var mCurrentAddAnnotY = 0
+
     fun setAddAnnotReF(addAnnotReF: Long) {
         mCurrentAddAnnotReF = addAnnotReF
     }
@@ -664,6 +676,8 @@ class CheckBuildStructureActivity : BaseActivity(), ICheckBSContrast.ICheckBSVie
         LogUtils.d("onPDFNoteAdded " + annotPoint)
         var damageBean = Gson().fromJson(annotPoint, DamageV3Bean::class.java)
         mCurrentAddAnnotReF = damageBean.annotRef
+        mCurrentAddAnnotX = damageBean.annotX
+        mCurrentAddAnnotY = damageBean.annotY
         resetDamageInfo(null, damageBean.type)
         when (damageBean.type) {
             mCurrentDamageType[0] -> {
@@ -689,26 +703,20 @@ class CheckBuildStructureActivity : BaseActivity(), ICheckBSContrast.ICheckBSVie
                     if (damageBean.annotRef == it.annotRef) {
                         isMatch = true
                         resetDamageInfo(it, it.type)
-                        when (it.type) {
-                            mCurrentDamageType[0] -> {
-                                mBinding.checkVp.currentItem = 1
-                            }
-                            mCurrentDamageType[1] -> {
-                                mBinding.checkVp.currentItem = 2
-                            }
-                        }
                     }
                 }
+                LogUtils.d("isMatch： "+isMatch)
                 if(!isMatch){
-                    resetDamageInfo(null, damageBean.type)
-                    when (damageBean.type) {
-                        mCurrentDamageType[0] -> {
-                            mBinding.checkVp.currentItem = 1
+                    AlertDialog.Builder(this).setTitle("提示")
+                        .setMessage("当前损伤信息已被删除，移除标记点")
+                        .setPositiveButton(R.string.dialog_ok) { dialog, which ->
+                            try {
+                                mView?.PDFRemoveAnnot()
+                            }catch (e:Exception){
+                            }
                         }
-                        mCurrentDamageType[1] -> {
-                            mBinding.checkVp.currentItem = 2
-                        }
-                    }
+                        .show()
+                 //   resetDamageInfo(null, damageBean.type)
                 }
             }
             Constant.BUTTON_POPMENU_DEL -> {

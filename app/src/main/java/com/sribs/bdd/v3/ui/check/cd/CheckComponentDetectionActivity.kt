@@ -422,6 +422,7 @@ class CheckComponentDetectionActivity : BaseActivity(), ICheckCDContrast.ICheckC
             showToast("该图纸类型不是pdf，无法加载")
             return
         }
+        LogUtils.d("openPDF "+pdfPath)
         this.mView = (mFragments[0] as CheckCDFragment).getPDFView()
         mView!!.setV3Version(true)
         this.mViewParent = (mFragments[0] as CheckCDFragment).getPDFParentView()
@@ -486,7 +487,7 @@ class CheckComponentDetectionActivity : BaseActivity(), ICheckCDContrast.ICheckC
             .setMessage(R.string.is_save_hint)
             .setPositiveButton(R.string.dialog_ok) { dialog, which ->
                 mController?.savePDF()
-                saveDamageDrawingToDb();
+                saveDamageDrawingToDb()
                 finish()
             }.setNegativeButton(
                 R.string.dialog_cancel
@@ -528,16 +529,17 @@ class CheckComponentDetectionActivity : BaseActivity(), ICheckCDContrast.ICheckC
     override fun onModuleInfo(checkMainBean: List<CheckCDMainBean>) {
         this.mCheckCDMainBeanList!!.clear()
         mCheckCDMainBeanList!!.addAll(checkMainBean)
-        LogUtils.d("回调到view层数据")
+        LogUtils.d("回调到view层数据 "+mCheckCDMainBeanList)
 
         /**
          * 初始化并加载第一张图纸
          */
         mCurrentDrawing = checkMainBean[0].drawing!![0]
+        LogUtils.d("mCurrentDrawing "+mCurrentDrawing)
         if (mCurrentDrawing != null) {
             openPDF(mCurrentDrawing!!)
         }
-
+        LogUtils.d("初始化损伤列表11111 ")
         /**
          * 初始化损伤列表
          *

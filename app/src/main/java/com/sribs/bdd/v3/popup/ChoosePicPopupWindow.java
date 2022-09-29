@@ -27,15 +27,10 @@ public class ChoosePicPopupWindow extends android.widget.PopupWindow {
 
     private ChoosePicPopupWindow.PopupCallback mPopupCallback;
 
-    private List<DrawingV3Bean> datas= new ArrayList<DrawingV3Bean>();
-
     public ChoosePicPopupWindow(Context context, int width, List<DrawingV3Bean> list, ChoosePicPopupWindow.PopupCallback popupCallback) {
         super(context);
         this.mContext = context;
         this.mPopupCallback = popupCallback;
-        if(list != null){
-            this.datas.addAll(list);
-        }
         View view = LayoutInflater.from(mContext).inflate(R.layout.popup_choose_pic_layout,null);
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(width,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -47,7 +42,7 @@ public class ChoosePicPopupWindow extends android.widget.PopupWindow {
 
         mRecyclerView = (RecyclerView)view.findViewById(R.id.popup_recyclerView);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
-        mChoosePicPopupAdapter = new ChoosePicPopupAdapter(mContext,datas).setmItemClickCallback(new ChoosePicPopupAdapter.ItemClickCallback() {
+        mChoosePicPopupAdapter = new ChoosePicPopupAdapter(mContext,list).setmItemClickCallback(new ChoosePicPopupAdapter.ItemClickCallback() {
             @Override
             public void onItemClick(DrawingV3Bean drawingV3Bean) {
                 mDrawingV3Bean = drawingV3Bean;
@@ -69,6 +64,12 @@ public class ChoosePicPopupWindow extends android.widget.PopupWindow {
                 dismiss();
             }
         });
+    }
+
+    public void notifyAdapter(){
+        if(mChoosePicPopupAdapter != null){
+            mChoosePicPopupAdapter.notifyDataSetChanged();
+        }
     }
 
     public interface PopupCallback{

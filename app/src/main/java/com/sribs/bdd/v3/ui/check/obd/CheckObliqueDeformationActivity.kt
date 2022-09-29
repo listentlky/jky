@@ -330,7 +330,9 @@ class CheckObliqueDeformationActivity : BaseActivity(),ICheckOBDContrast.ICheckO
 
 
         LogUtils.d("当前数据：" + damageInfo)
-
+        if(exitDamageBeanList == null){
+            exitDamageBeanList = ArrayList()
+        }
         LogUtils.d("过滤前损伤数据：" + exitDamageBeanList)
         /**
          * 先过滤相同损伤
@@ -684,7 +686,16 @@ class CheckObliqueDeformationActivity : BaseActivity(),ICheckOBDContrast.ICheckO
                     }
                 }
                 if(!isMatch){
-                    resetDamageInfo(null, mCurrentDamageType[0])
+                    AlertDialog.Builder(this).setTitle("提示")
+                        .setMessage("当前损伤信息已被删除，移除标记点")
+                        .setPositiveButton(R.string.dialog_ok) { dialog, which ->
+                            try {
+                                mView?.PDFRemoveAnnot()
+                            }catch (e:Exception){
+                            }
+                        }
+                        .show()
+               //     resetDamageInfo(null, mCurrentDamageType[0])
                 //    mBinding.checkVp.currentItem = 1
                 }
             }

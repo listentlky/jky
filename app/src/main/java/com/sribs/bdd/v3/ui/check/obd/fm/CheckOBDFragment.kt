@@ -44,17 +44,17 @@ class CheckOBDFragment : BaseFragment(R.layout.fragment_check_obliquedeformation
     override fun initView() {
 
         var popupWidth = resources.getDimensionPixelOffset(R.dimen._70sdp)
+        if(mChoosePicPopupWindow == null){
+            mChoosePicPopupWindow = ChoosePicPopupWindow(context,popupWidth,mDrawingV3Bean,object: ChoosePicPopupWindow.PopupCallback{
+                override fun onSelect(mDrawingV3Bean: DrawingV3Bean) {
+                    (activity as CheckObliqueDeformationActivity).choosePDF(mDrawingV3Bean)
+                }
+
+            })
+        }
         mBinding.checkSelectIndex.setOnClickListener {
-            if(mChoosePicPopupWindow == null){
-                mChoosePicPopupWindow = ChoosePicPopupWindow(context,popupWidth,mDrawingV3Bean,object: ChoosePicPopupWindow.PopupCallback{
-                    override fun onSelect(mDrawingV3Bean: DrawingV3Bean) {
-                        (activity as CheckObliqueDeformationActivity).choosePDF(mDrawingV3Bean)
-                    }
-
-                })
-            }
-            mChoosePicPopupWindow!!.showAsDropDown(mBinding.checkSelectIndex,-popupWidth-10,-mBinding.checkSelectIndex.height)
-
+            mChoosePicPopupWindow?.notifyAdapter()
+            mChoosePicPopupWindow?.showAsDropDown(mBinding.checkSelectIndex,-popupWidth-10,-mBinding.checkSelectIndex.height)
         }
 
         mBinding.checkFab.setOnClickListener {
@@ -81,6 +81,7 @@ class CheckOBDFragment : BaseFragment(R.layout.fragment_check_obliquedeformation
             mBinding.checkSelectIndex.text = mDrawingV3Bean!![0].fileName
             setGuide(mDrawingV3Bean!![0].damage[0])
         }
+        LogUtils.d("initFloorDrawData： "+mDrawingV3Bean)
     }
 
     /**

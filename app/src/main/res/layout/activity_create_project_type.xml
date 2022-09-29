@@ -33,7 +33,7 @@
                 android:layout_height="wrap_content">
                 <com.sribs.common.ui.widget.TagEditView
                     android:id="@+id/builder_name"
-                    android:layout_width="200dp"
+                    android:layout_width="@dimen/_150sdp"
                     android:layout_height="@dimen/login_input_height"
                     android:layout_marginTop="@dimen/_10sdp"
                     app:TagText="楼名称"
@@ -91,7 +91,7 @@
                 android:layout_height="wrap_content">
                 <com.sribs.common.ui.widget.TagEditView
                     android:id="@+id/after_number"
-                    android:layout_width="210dp"
+                    android:layout_width="@dimen/_180sdp"
                     android:layout_height="@dimen/login_input_height"
                     android:layout_marginTop="@dimen/_10sdp"
                     app:TagText="地下楼层总数"
@@ -104,7 +104,7 @@
                 <com.sribs.common.ui.widget.TagEditView
                     android:id="@+id/above_number"
                     android:layout_marginLeft="@dimen/_10sdp"
-                    android:layout_width="210dp"
+                    android:layout_width="@dimen/_180sdp"
                     android:layout_height="@dimen/login_input_height"
                     android:layout_marginTop="@dimen/_10sdp"
                     app:TagText="地上楼层总数"

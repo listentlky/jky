@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -98,6 +99,14 @@ public class OneChooseSpinnerView extends LinearLayout {
                         }
                     });
                 }
+                mOneChoosePopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+                    @Override
+                    public void onDismiss() {
+                        if(mSpinnerArrow != null){
+                            mSpinnerArrow.setRotation(0f);
+                        }
+                    }
+                });
                 chooseSpinnerStatus();
             }
         });
@@ -127,7 +136,7 @@ public class OneChooseSpinnerView extends LinearLayout {
             mOneChoosePopupWindow.showAsDropDown(inflate);
             mIsOpen = true;
         }else {
-            mSpinnerArrow.setRotation(360f);
+            mSpinnerArrow.setRotation(0f);
             mOneChoosePopupWindow.dismiss();
             mIsOpen = false;
         }

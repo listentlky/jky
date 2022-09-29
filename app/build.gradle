@@ -89,7 +89,7 @@ android {
             debuggable true
            // proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.config
-            buildConfigField("int", "build_level", "2")
+            buildConfigField("int", "build_level", "1")
             buildConfigField("String","pgy","\"https://www.pgyer.com/U6EB\"")
             manifestPlaceholders = [
                     app_name:"@string/app_name",

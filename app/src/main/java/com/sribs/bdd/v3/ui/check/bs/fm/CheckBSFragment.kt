@@ -99,13 +99,41 @@ class CheckBSFragment : BaseFragment(R.layout.fragment_check_build_structure),
                 when (it.type) {
                     (activity as CheckBuildStructureActivity).mCurrentDamageType[0] -> { // 层高
                         mMenuList!![0].menu!![0].item!!.add(CheckMenuModule.Item.Mark().also { b->
-                            b.name = it.pointName
+                            var nameText:String?=""
+                            if(it.axisNote.isNullOrEmpty()){
+                                it.axisNoteList?.forEachIndexed { index, s ->
+                                    if(index == 0){
+                                        nameText+=s
+                                    }else if(index == 2){
+                                        nameText+="/"+s
+                                    }else{
+                                        nameText+="-"+s
+                                    }
+                                }
+                            }else{
+                                nameText = it.axisNote
+                            }
+                            b.name = nameText
                             b.damage = it
                         })
                     }
                     (activity as CheckBuildStructureActivity).mCurrentDamageType[1] -> { //轴网
                         mMenuList!![0].menu!![1].item!!.add(CheckMenuModule.Item.Mark().also { c->
-                            c.name = it.pointName
+                            var nameText:String?=""
+                            if(it.axisNote.isNullOrEmpty()){
+                                it.axisNoteList?.forEachIndexed { index, s ->
+                                    if(index == 0){
+                                        nameText+=s
+                                    }else if(index == 2){
+                                        nameText+="/"+s
+                                    }else{
+                                        nameText+="-"+s
+                                    }
+                                }
+                            }else{
+                                nameText = it.axisNote
+                            }
+                            c.name = nameText
                             c.damage = it
                         })
                     }

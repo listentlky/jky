@@ -34,6 +34,8 @@ public class RHDiffAddPointPopupWindow extends PopupWindow {
 
     private TextView mCancel,mConfirm,mDelete;
 
+    private boolean isClickDismiss;
+
     public RHDiffAddPointPopupWindow(Context context,int width,Long annotRef,RHDiffAddPointCallback rhDiffAddPointCallback) {
         super(context);
         this.mAnnotRef = annotRef;
@@ -43,7 +45,7 @@ public class RHDiffAddPointPopupWindow extends PopupWindow {
         view.setLayoutParams(layoutParams);
         setContentView(view);
         setBackgroundDrawable(null);
-        setOutsideTouchable(true);
+    //    setOutsideTouchable(false);
         setFocusable(true);
         setWidth(width);
         mGroupEdit = view.findViewById(R.id.check_zm_edit);
@@ -55,6 +57,7 @@ public class RHDiffAddPointPopupWindow extends PopupWindow {
         mCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                isClickDismiss = true;
                 dismiss();
             }
         });
@@ -73,6 +76,7 @@ public class RHDiffAddPointPopupWindow extends PopupWindow {
                 if(rhDiffAddPointCallback != null){
                     rhDiffAddPointCallback.onAddPoint(mGroupEdit.getText().toString(),mPointEdit.getText().toString(),mAnnotRef);
                 }
+                isClickDismiss = true;
                 dismiss();
             }
         });
@@ -83,21 +87,21 @@ public class RHDiffAddPointPopupWindow extends PopupWindow {
                 if(rhDiffAddPointCallback != null){
                     rhDiffAddPointCallback.onDeletePoint(mGroupEdit.getText().toString(),mPointEdit.getText().toString(),mAnnotRef);
                 }
+                isClickDismiss = true;
                 dismiss();
             }
         });
     }
 
-    //显示虚拟键盘
-    public static void ShowKeyboard(View v)
-    {
-        InputMethodManager imm = ( InputMethodManager ) v.getContext( ).getSystemService( Context.INPUT_METHOD_SERVICE );
-
-        imm.showSoftInput(v,InputMethodManager.SHOW_FORCED);
-
+    @Override
+    public void dismiss() {
+        if(isClickDismiss) {
+            super.dismiss();
+            isClickDismiss = false;
+        }
     }
 
-    public void setInfo(String group,String pointName,Long annotRef){
+    public void setInfo(String group, String pointName, Long annotRef){
         Log.d("bruce","setInfo: "+group+" "+pointName+" "+annotRef);
         this.group = group;
         this.pointName = pointName;

@@ -255,7 +255,7 @@ class ProjectFloorItemActivity : BaseActivity(), IProjectContrast.IProjectFloorD
                    mRemoteId,
                    items.get(choseType)
                ) {
-                   ToastUtil.getInstance()._short(getContext(), "" + it)
+                   LogUtils.d("模块ID：" + it)
                    mAdapter.addItem(
                        (BuildingFloorItem(
                            it,
