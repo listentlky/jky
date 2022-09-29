@@ -73,6 +73,7 @@ class CheckOBDFragment : BaseFragment(R.layout.fragment_check_obliquedeformation
      * 初始化选择窗口图纸数据
      */
     fun initFloorDrawData(checkOBDMainBean: List<CheckOBDMainBean>){
+        LogUtils.d("initFloorDrawData： "+checkOBDMainBean)
         mDrawingV3Bean!!.clear()
         checkOBDMainBean.forEach {
             mDrawingV3Bean!!.addAll(it.drawing!!)

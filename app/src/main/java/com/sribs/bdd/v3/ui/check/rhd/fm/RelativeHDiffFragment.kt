@@ -133,7 +133,9 @@ class RelativeHDiffFragment : BaseFragment(R.layout.fragment_relative_h_diff) {
     fun resetView(damageV3Bean: List<DamageV3Bean>?) {
         LogUtils.d("resetView: "+damageV3Bean)
         mBinding.checkTableInfo.setDatas(damageV3Bean).build()
-        mBinding.checkBzEdit.setText(damageV3Bean?.get(0)?.note)
+        if(damageV3Bean != null && damageV3Bean.size>0) {
+            mBinding.checkBzEdit.setText(damageV3Bean.get(0).note)
+        }
     }
 
     fun getPDFView(): PDFLayoutView {

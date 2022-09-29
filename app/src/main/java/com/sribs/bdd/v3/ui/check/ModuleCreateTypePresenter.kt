@@ -5,6 +5,8 @@ import android.app.Activity
 import android.content.Context
 import android.content.SharedPreferences
 import android.net.Uri
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.android.arouter.launcher.ARouter
 import com.sribs.common.module.BasePresenter
@@ -126,7 +128,7 @@ class ModuleCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCrea
                 beanPicList!!.add(
                     ModuleFloorPictureBean(
                         name = b.fileName!!,
-                        uri = b.localAbsPath,
+                        uri = "",
                         url = b.localAbsPath,
                     )
                 )
@@ -341,30 +343,28 @@ class ModuleCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCrea
 
             copyDrawingsToLocalCache(activity, originList!!,floorBean.name, cacheRootDir)
 
-            for (i in originList!!.indices) {
-                var item = originList!![i]
-                var cacheFilePath = File(cacheRootDir + mCurDrawingsDir+floorBean.name, item.name)
-                cachePath = cacheRootDir + mCurDrawingsDir + item.name
-                LogUtils.d("楼层图纸缓存目录：" + cachePath)
+            originList.forEachIndexed { index, item ->
+                var cacheFilePath = File(cacheRootDir + mCurDrawingsDir+floorBean.name+"/"+index, item.name)
+                LogUtils.d("楼层图纸缓存目录：" + cacheFilePath)
 
                 drawingItem = DrawingV3Bean(
                     -1,
                     item.name,
                     FileUtil.getFileExtension(item.name),
                     "floor",
-                    if (item.url != null) item.url else cacheFilePath.absolutePath,
+                    cacheFilePath.absolutePath,
                     "",
                     ArrayList()
                 )
                 floorDrawingsList.add(drawingItem)
             }
             return floorDrawingsList
-
         }
 
         return null
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun copyDrawingsToLocalCache(
         activity: Activity,
         pictureBean: ArrayList<ModuleFloorPictureBean>,
@@ -372,24 +372,31 @@ class ModuleCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCrea
         cacheRootDir: String
     ) {
         LogUtils.d("copyDrawingsToLocalCache: " + pictureBean.size)
-        var filters = pictureBean.filter {
+      /*  var filters = pictureBean.filter {
             it.uri != null
         }
-        LogUtils.d("过滤uri不等于null后: " + filters.size)
+        LogUtils.d("过滤uri不等于null后: " + filters)*/
 
-        addDisposable(Observable.fromIterable(filters)
+        var index = -1
+
+        addDisposable(Observable.fromIterable(pictureBean)
             .subscribeOn(Schedulers.io())
             .observeOn(Schedulers.io())
             .flatMap {
+                ++index
                 var cacheFileParent = File(cacheRootDir + mCurDrawingsDir)
                 if(!floorName.isNullOrEmpty()) { // 为空认为是楼图纸   不为空认为是楼层图纸
-                    cacheFileParent = File(cacheRootDir + mCurDrawingsDir + floorName)
+                    cacheFileParent = File(cacheRootDir + mCurDrawingsDir + floorName+"/"+index)
                 }
                 cacheFileParent.mkdirs()
                 var cacheFile = File(cacheFileParent,it.name)
                 LogUtils.d("图纸缓存目录： "+cacheFile.toString())
                 if (cacheFile != null) {
-                    FileUtil.copyFileTo(activity, Uri.parse(it.uri),cacheFile.absolutePath)
+                    if(!it.uri.isNullOrEmpty()) {
+                        FileUtil.copyFileTo(activity, Uri.parse(it.uri), cacheFile.absolutePath)
+                    }else{
+                        FileUtil.copyTo(File(it.url),cacheFile)
+                    }
                 }
                 Observable.just("Done")
             }

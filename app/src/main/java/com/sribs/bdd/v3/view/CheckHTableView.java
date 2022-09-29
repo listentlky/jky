@@ -60,11 +60,9 @@ public class CheckHTableView extends LinearLayout {
     }
 
     public CheckHTableView setDatas(List<DamageV3Bean> datas) {
-        //设置table数据
-        this.datas = datas;
-
         //设置测点数据
         if(datas != null && datas.size()>0){
+            this.datas = datas;
             DamageV3Bean damageV3Bean = datas.get(0);
             if(damageV3Bean != null){
                 List<RelativeHDiffPointBean> pointList = damageV3Bean.getPointList();
@@ -190,8 +188,7 @@ public class CheckHTableView extends LinearLayout {
                 && datas.size() > 0
                 && datas.get(0) != null
                 && datas.get(0).getRhdiffInfo() != null
-                && datas.get(0).getRhdiffInfo().size()>0
-                && datas.get(0).getRhdiffInfo().size() > 0) {
+                && datas.get(0).getRhdiffInfo().size()>0) {
             for (int i = 0; i < datas.get(0).getRhdiffInfo().size(); i++) {
                 RelativeHDiffInfoBean infoBean = datas.get(0).getRhdiffInfo().get(i);
                 if (i == 0) { //BM1

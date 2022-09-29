@@ -4,6 +4,8 @@ import android.app.Activity
 import android.content.Context
 import android.content.SharedPreferences
 import android.net.Uri
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.android.arouter.launcher.ARouter
 import com.baidu.mapapi.ModuleName
@@ -121,29 +123,37 @@ class ModuleFloorCreateTypeBuildingPresenter : BasePresenter(), IBasePresenter {
         )
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun copyDrawingsToLocalCache(
         activity: Activity,
         pictureBean: ArrayList<ModuleFloorPictureBean>,
-        floorName: String?,
         cacheRootDir: String
     ) {
-        LogUtils.d("copyDrawingsToLocalCache: " + pictureBean.size)
-        var filters = pictureBean.filter {
+      /*  var filters = pictureBean.filter {
             it.uri != null
         }
-        addDisposable(Observable.fromIterable(filters)
+        LogUtils.d("filters: " + filters)*/
+        var index = -1
+        addDisposable(Observable.fromIterable(pictureBean)
             .subscribeOn(Schedulers.io())
             .observeOn(Schedulers.io())
             .flatMap {
-                var cacheFileParent = File(cacheRootDir + mCurDrawingsDir)
-                if (!floorName.isNullOrEmpty()) { // 不为空认为是楼图纸   为空认为是楼层图纸
-                    cacheFileParent = File(cacheRootDir + mCurDrawingsDir + floorName)
-                }
+                ++index
+                var cacheFileParent = File(cacheRootDir + mCurDrawingsDir+index)
                 cacheFileParent.mkdirs()
                 var cacheFile = File(cacheFileParent, it.name)
+
+                if (cacheFile.isFile){
+                    cacheFile.delete()
+                }
+
                 LogUtils.d("图纸缓存目录： " + cacheFile.toString())
                 if (cacheFile != null) {
-                    FileUtil.copyFileTo(activity, Uri.parse(it.uri), cacheFile.absolutePath)
+                    if(!it.uri.isNullOrEmpty()) {
+                        FileUtil.copyFileTo(activity, Uri.parse(it.uri), cacheFile.absolutePath)
+                    }else{
+                        FileUtil.copyTo(File(it.url),cacheFile)
+                    }
                 }
                 Observable.just("Done")
             }
@@ -176,22 +186,24 @@ class ModuleFloorCreateTypeBuildingPresenter : BasePresenter(), IBasePresenter {
         if (picList != null && picList!!.size > 0) {
             var cacheRootDir: String = FileUtil.getDrawingCacheRootDir(mView!!.getContext()!!)
 
-            copyDrawingsToLocalCache(activity, picList!!, null, cacheRootDir)
+            copyDrawingsToLocalCache(activity, picList!!, cacheRootDir)
 
-            picList!!.forEach {
+            picList!!.forEachIndexed { index, it ->
 
-                var cacheFilePath = File(cacheRootDir + mCurDrawingsDir, it.name)
+                var cacheFilePath = File(cacheRootDir + mCurDrawingsDir+index, it.name)
 
+                LogUtils.d("absolutePath "+ cacheFilePath.absolutePath)
                 var drawingV3ToBuild = DrawingV3Bean(
                     -1,
                     it.name,
                     FileUtil.getFileExtension(it.name),
                     "overall",
-                    if (it.url != null) it.url else cacheFilePath.absolutePath,
+                    cacheFilePath.absolutePath,
                     "",
                     ArrayList()
                 )
                 mAppFacadeDrawingList!!.add(drawingV3ToBuild)
+
             }
         }
     }
@@ -208,8 +220,8 @@ class ModuleFloorCreateTypeBuildingPresenter : BasePresenter(), IBasePresenter {
                     it.drawings?.forEach { b ->
                         var bean = ModuleFloorPictureBean(
                             name = b.fileName!!,
-                            uri = b.localAbsPath,
-                            url = b.remoteAbsPath,
+                            uri = "",
+                            url = b.localAbsPath,
                         )
                         LogUtils.d(bean.name + b.localAbsPath)
                         picList!!.add(bean)

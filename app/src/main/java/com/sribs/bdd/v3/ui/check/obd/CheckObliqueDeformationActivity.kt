@@ -322,7 +322,7 @@ class CheckObliqueDeformationActivity : BaseActivity(),ICheckOBDContrast.ICheckO
 
 
     /**
-     * 保存损伤到数据库
+     * 保存损伤
      */
     fun saveDamage(damageInfo: DamageV3Bean) {
 

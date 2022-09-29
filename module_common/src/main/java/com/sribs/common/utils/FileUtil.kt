@@ -15,10 +15,13 @@ import android.util.Log
 import android.webkit.MimeTypeMap
 import android.widget.Toast
 import androidx.annotation.DrawableRes
+import androidx.annotation.RequiresApi
 import androidx.core.content.FileProvider
 import androidx.core.net.toFile
 import com.cbj.sdk.utils.UriUtil
 import java.io.*
+import java.nio.file.Files
+import java.nio.file.StandardCopyOption
 
 object FileUtil {
 
@@ -305,6 +308,9 @@ object FileUtil {
             }
         }
     }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun copyTo(file: File, target: File) = Files.copy(file.toPath(), target.toPath(), StandardCopyOption.REPLACE_EXISTING)!!
 
     fun generateNewFileName(origiName:String, addString: String): String{
         var dotPos:Int = origiName.indexOf('.')
