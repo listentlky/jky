@@ -12,7 +12,7 @@
             <group>
                 <item
                     android:id="@+id/menu_unit_upload"
-                    android:title="上传后台"
+                    android:title="上传配置"
                     android:icon="@drawable/ic_main_upload"
                     />
                 <item

@@ -3,11 +3,14 @@ package com.sribs.bdd.ui.project
 import android.content.Context
 import android.content.DialogInterface
 import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ListView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.view.forEachIndexed
+import androidx.core.view.get
 import androidx.recyclerview.widget.LinearLayoutManager
 import cc.shinichi.library.tool.ui.ToastUtil
 import com.alibaba.android.arouter.facade.annotation.Autowired
@@ -39,8 +42,16 @@ class ProjectFloorItemActivity : BaseActivity(), IProjectContrast.IProjectFloorD
     var mLocalProjectId = -1L
 
     @JvmField
+    @Autowired(name = com.sribs.common.ARouterPath.VAL_PROJECT_NAME)
+    var mProjectName = ""
+
+    @JvmField
     @Autowired(name = com.sribs.common.ARouterPath.VAL_BUILDING_ID)
     var mBuildingId = -1L
+
+    @JvmField
+    @Autowired(name = com.sribs.common.ARouterPath.VAL_BUILDING_NAME)
+    var mBldName = ""
 
     @JvmField
     @Autowired(name = com.sribs.common.ARouterPath.VAL_COMMON_REMOTE_ID)
@@ -83,13 +94,13 @@ class ProjectFloorItemActivity : BaseActivity(), IProjectContrast.IProjectFloorD
 
         initRecycleView()
 
-    //    if (mRemoteId.isNullOrEmpty()) {
-            //TODO 查询本地数据库
-            mPresent.getLocalModule(mLocalProjectId, mBuildingId)
-   /*     } else {
-            //TODO 查询网络接口
-            mPresent.getRemoteModule(mLocalProjectId, mBuildingId)
-        }*/
+        //    if (mRemoteId.isNullOrEmpty()) {
+        //TODO 查询本地数据库
+        mPresent.getLocalModule(mLocalProjectId, mBuildingId)
+        /*     } else {
+                 //TODO 查询网络接口
+                 mPresent.getRemoteModule(mLocalProjectId, mBuildingId)
+             }*/
 
         mBinding.matchMainFab.setOnClickListener {
             showMutilAlertDialog(it)
@@ -131,7 +142,7 @@ class ProjectFloorItemActivity : BaseActivity(), IProjectContrast.IProjectFloorD
                         com.sribs.common.ARouterPath.VAL_COMMON_LEADER,
                         mLeaderName
                     )
-                     .navigation()
+                    .navigation()
             }
 
             override fun onConfig(moduleName: String, routing: String, moduleId: Long) {
@@ -170,7 +181,7 @@ class ProjectFloorItemActivity : BaseActivity(), IProjectContrast.IProjectFloorD
             }
 
             override fun onDelete(moduleId: Long) {
-                mPresent.deleteModule(mLocalProjectId,mBuildingId,moduleId) {
+                mPresent.deleteModule(mLocalProjectId, mBuildingId, moduleId) {
                     ToastUtil.getInstance()._short(getContext(), "本地module删除成功")
                 }
 
@@ -186,6 +197,70 @@ class ProjectFloorItemActivity : BaseActivity(), IProjectContrast.IProjectFloorD
         return true
     }
 
+    var alert:AlertDialog?= null
+
+
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item?.itemId) {
+            R.id.menu_unit_upload -> { //上传
+                var data = mAdapter.getData()
+                if (data == null || data.size <= 0) {
+                    showToast("请先创建模块")
+                    return super.onOptionsItemSelected(item)
+                }
+                var items = Array<String>(data.size+1) {""}
+
+                var checkedList = ArrayList<String>()
+
+                items[0] = "全选"
+                data.forEachIndexed { index, buildingFloorItem ->
+                    items[index+1] = buildingFloorItem.name!!
+                }
+                var alertList:ListView?=null
+                var alert = AlertDialog.Builder(this).setTitle("上传配置")
+                    .setMultiChoiceItems(items, null) { dialog, which, isChecked ->
+                        if(which == 0){
+                            if(isChecked){
+                                alertList?.forEachIndexed { index, view ->
+                                    alertList?.setItemChecked(index,true)
+                                }
+                                checkedList.addAll(items.filter {
+                                    !it.equals("全选")
+                                })
+                            }else{
+                                alertList?.forEachIndexed { index, view ->
+                                    alertList?.setItemChecked(index,false)
+                                }
+                                checkedList.clear()
+                            }
+                        }else{
+                            if(isChecked){
+                                checkedList.add(items[which])
+                            }else{
+                                checkedList.remove(items[which])
+                            }
+                        }
+                    }.setNegativeButton("取消"){ dialog, which ->
+
+                    }.setPositiveButton("上传"){ dialog, which ->
+                        //此处处理上传
+                        LogUtils.d("checkedList: "+checkedList)
+                    }.create()
+                alertList = alert?.listView
+                alert?.show()
+            }
+            R.id.menu_unit_download_config -> { //下载配置
+
+
+            }
+            R.id.menu_unit_download_all -> { //下载所有配置
+
+
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
 
     override fun handlItemList(list: ArrayList<BuildingFloorItem>) {
         mAdapter.setData(list)
@@ -244,30 +319,32 @@ class ProjectFloorItemActivity : BaseActivity(), IProjectContrast.IProjectFloorD
             "确定"
         ) { _, i ->
 
-           if (mAdapter.hasSameName(items.get(choseType))){
-               onMsg("模块请勿重复创建~")
+            if (mAdapter.hasSameName(items.get(choseType))) {
+                onMsg("模块请勿重复创建~")
 
-           }else {
+            } else {
 
-               mPresent.createOrSaveModule(
-                   mLocalProjectId,
-                   mBuildingId,
-                   mRemoteId,
-                   items.get(choseType)
-               ) {
-                   LogUtils.d("模块ID：" + it)
-                   mAdapter.addItem(
-                       (BuildingFloorItem(
-                           it,
-                           mBuildingId,
-                           items.get(choseType),
-                           TimeUtil.YMD_HMS.format(Date())
-                       ))
-                   )
-                   LogUtils.d("llf传递数据" + TimeUtil.YMD_HMS.format(Date()))
+                mPresent.createOrSaveModule(
+                    mLocalProjectId,
+                    mBuildingId,
+                    mRemoteId,
+                    mProjectName,
+                    mBldName,
+                    items.get(choseType)
+                ) {
+                    LogUtils.d("模块ID：" + it)
+                    mAdapter.addItem(
+                        (BuildingFloorItem(
+                            it,
+                            mBuildingId,
+                            items.get(choseType),
+                            TimeUtil.YMD_HMS.format(Date())
+                        ))
+                    )
+                    LogUtils.d("llf传递数据" + TimeUtil.YMD_HMS.format(Date()))
 
-               }
-           }
+                }
+            }
 
             /*mAdapter.addItem(
                 BuildingFloorItem(

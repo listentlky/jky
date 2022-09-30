@@ -7,11 +7,15 @@ import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.view.Menu
+import android.view.MenuItem
 import android.view.View
+import android.widget.ListView
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SearchView
 import androidx.cardview.widget.CardView
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.view.forEachIndexed
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -46,6 +50,9 @@ class ProjectFloorActivity : BaseActivity(), IBuildingContrast.IBuildingListView
     @Autowired(name = com.sribs.common.ARouterPath.VAL_COMMON_LOCAL_ID)
     var mLocalProjectId = -1L
 
+    @JvmField
+    @Autowired(name = com.sribs.common.ARouterPath.VAL_PROJECT_NAME)
+    var mProjectName = ""
 
     @JvmField
     @Autowired(name = com.sribs.common.ARouterPath.VAL_PROJECT_ID)
@@ -127,8 +134,69 @@ class ProjectFloorActivity : BaseActivity(), IBuildingContrast.IBuildingListView
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         super.onCreateOptionsMenu(menu)
-        menuInflater.inflate(R.menu.menu_floor, menu)
+        menuInflater.inflate(R.menu.menu_unit_vp, menu)
         return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item?.itemId) {
+            R.id.menu_unit_upload -> { //上传
+                var data = buildingAdapter?.getData()
+                if (data == null || data.size <= 0) {
+                    showToast("请先创建楼")
+                    return super.onOptionsItemSelected(item)
+                }
+                var items = Array<String>(data.size+1) {""}
+
+                var checkedList = ArrayList<String>()
+
+                items[0] = "全选"
+                data.forEachIndexed { index, buildingMainBean ->
+                    items[index+1] = buildingMainBean.bldName!!
+                }
+                var alertList: ListView?=null
+                var alert = AlertDialog.Builder(this).setTitle("上传配置")
+                    .setMultiChoiceItems(items, null) { dialog, which, isChecked ->
+                        if(which == 0){
+                            if(isChecked){
+                                alertList?.forEachIndexed { index, view ->
+                                    alertList?.setItemChecked(index,true)
+                                }
+                                checkedList.addAll(items.filter {
+                                    !it.equals("全选")
+                                })
+                            }else{
+                                alertList?.forEachIndexed { index, view ->
+                                    alertList?.setItemChecked(index,false)
+                                }
+                                checkedList.clear()
+                            }
+                        }else{
+                            if(isChecked){
+                                checkedList.add(items[which])
+                            }else{
+                                checkedList.remove(items[which])
+                            }
+                        }
+                    }.setNegativeButton("取消"){ dialog, which ->
+
+                    }.setPositiveButton("上传"){ dialog, which ->
+                        //此处处理上传
+                        LogUtils.d("checkedList: "+checkedList)
+                    }.create()
+                alertList = alert?.listView
+                alert?.show()
+            }
+            R.id.menu_unit_download_config -> { //下载配置
+
+
+            }
+            R.id.menu_unit_download_all -> { //下载所有配置
+
+
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
 
@@ -197,10 +265,13 @@ class ProjectFloorActivity : BaseActivity(), IBuildingContrast.IBuildingListView
             mBottomDialog =
                 DialogUtil.showBottomDialog(this, R.layout.dialog_common_bottom_building_select, true) {
                     when (it) {
-                        1->{ //上传楼配置
+                        0->{ //上传楼配置
 
                         }
-                        2 -> {
+                        1 -> { //下载配置
+
+                        }
+                        2 -> { // 删除
                             DialogUtil.showMsgDialog(this, "是否确认删除楼?", {
                                 //TODO del project
                                 /*  if (beanMain.localId>0){
@@ -210,11 +281,6 @@ class ProjectFloorActivity : BaseActivity(), IBuildingContrast.IBuildingListView
                                   }*/
                                 //    mPresenter.projectDelete(beanMain.localId)
                             })
-                        }
-                        3 -> { // 下载楼配置
-
-                        }
-                        4 -> { //下载所有楼配置
 
                         }
                         else -> {
@@ -254,6 +320,8 @@ class ProjectFloorActivity : BaseActivity(), IBuildingContrast.IBuildingListView
             .withString(com.sribs.common.ARouterPath.VAL_COMMON_LEADER, mLeader)
             .withString(com.sribs.common.ARouterPath.VAL_COMMON_REMOTE_ID, mRemoteId)
             .withString(com.sribs.common.ARouterPath.VAL_COMMON_INSPECTOR,beanMain.inspectorName)
+            .withString(com.sribs.common.ARouterPath.VAL_PROJECT_NAME, mProjectName)
+            .withString(com.sribs.common.ARouterPath.VAL_BUILDING_NAME, beanMain.bldName)
             .navigation()
     }
 

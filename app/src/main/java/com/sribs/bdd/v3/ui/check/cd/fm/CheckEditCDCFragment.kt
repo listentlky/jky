@@ -1,5 +1,6 @@
 package com.sribs.bdd.v3.ui.check.cd.fm
 
+import android.text.InputType
 import android.view.Gravity
 import android.view.MotionEvent
 import android.view.View
@@ -130,7 +131,6 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
         mBinding.checkColumnMenuLayout.checkObdMenuScale.setOnClickListener {
             (context as CheckComponentDetectionActivity).scaleDamageInfo(2)
         }
-
 
         leftRealView =
             mBinding.checkCpdColumnLeftRealUi

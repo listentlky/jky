@@ -27,7 +27,7 @@
 
         <include
             android:id="@+id/check_cpd_subtitle1"
-            layout="@layout/check_edit_item"
+            layout="@layout/check_edit_item_2"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/_12sdp"
             android:layout_marginLeft="@dimen/_10sdp"

@@ -81,6 +81,10 @@ class FloorItemAdapter : BaseListAdapter<BuildingFloorItem, ItemFloorDetailBindi
         notifyDataSetChanged()
     }
 
+    fun getData():ArrayList<BuildingFloorItem>?{
+        return mList
+    }
+
     fun addItem(item: BuildingFloorItem) {
         mList?.add(item)
         notifyItemChanged(item.moduleid!!.toInt())

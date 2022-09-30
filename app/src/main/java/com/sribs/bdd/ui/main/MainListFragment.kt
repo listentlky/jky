@@ -63,6 +63,7 @@ class MainListFragment :
                     .withString(com.sribs.common.ARouterPath.VAL_COMMON_TITLE, beanMain.address)
                     .withLong(com.sribs.common.ARouterPath.VAL_COMMON_LOCAL_ID, beanMain.localId)
                     .withLong(com.sribs.common.ARouterPath.VAL_PROJECT_ID, beanMain.localId)
+                    .withString(com.sribs.common.ARouterPath.VAL_PROJECT_NAME, beanMain.address)
                     .withString(com.sribs.common.ARouterPath.VAL_COMMON_REMOTE_ID, beanMain.remoteId)
                     .withString(com.sribs.common.ARouterPath.VAL_COMMON_LEADER,beanMain.leader)
                     .withString(com.sribs.common.ARouterPath.VAL_COMMON_INSPECTOR,beanMain.inspector)

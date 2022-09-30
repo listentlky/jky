@@ -26,20 +26,6 @@
             android:includeFontPadding="false"
             android:layout_gravity="center"
             />
-        <TextView
-            android:id="@+id/bottom_delete_btn"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/common_bottom_btn_bk"
-            android:text="删除楼"
-            android:textColor="@color/white"
-            android:textSize="@dimen/_7sdp"
-            android:gravity="center"
-            android:drawablePadding="@dimen/_2sdp"
-            android:drawableTop="@mipmap/ic_common_delete"
-            android:layout_gravity="center"
-            />
 
         <TextView
             android:id="@+id/bottom_download_config"
@@ -56,7 +42,23 @@
             android:layout_gravity="center"
             />
 
+
         <TextView
+            android:id="@+id/bottom_delete_btn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/common_bottom_btn_bk"
+            android:text="删除楼"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_7sdp"
+            android:gravity="center"
+            android:drawablePadding="@dimen/_2sdp"
+            android:drawableTop="@mipmap/ic_common_delete"
+            android:layout_gravity="center"
+            />
+
+     <!--   <TextView
             android:id="@+id/bottom_download_all"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -69,6 +71,6 @@
             android:drawablePadding="@dimen/_2sdp"
             android:drawableTop="@mipmap/ic_common_download"
             android:layout_gravity="center"
-            />
+            />-->
     </LinearLayout>
 </FrameLayout>

@@ -657,7 +657,9 @@ class CheckObliqueDeformationActivity : BaseActivity(), ICheckOBDContrast.ICheck
         LogUtils.d("onPDFNoteAdded " + annotPoint)
         var damageBean = Gson().fromJson(annotPoint, DamageV3Bean::class.java)
         mCurrentAddAnnotReF = damageBean.annotRef
+        mController?.savePDF()
         resetDamageInfo(null, damageBean.type)
+        (mFragments[1] as CheckEditOBDFragment).openPDF(mCurrentLocalPDF)
         /* when (damageBean.type) {
              mCurrentDamageType[0] -> {
                  mController?.savePDF()

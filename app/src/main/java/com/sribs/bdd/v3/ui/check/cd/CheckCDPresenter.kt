@@ -55,7 +55,7 @@ class CheckCDPresenter : BasePresenter(),ICheckCDContrast.ICheckCDPresenter{
                 mView?.onModuleInfo(list)
             },{
                 it.printStackTrace()
-                mView?.onMsg(it.toString())
+             //   mView?.onMsg(it.toString())
                 LogUtils.d("获取到该楼下所有楼层失败 ${it}")
             }))
 

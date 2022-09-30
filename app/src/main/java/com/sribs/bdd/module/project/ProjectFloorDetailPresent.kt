@@ -4,17 +4,21 @@ import com.alibaba.android.arouter.launcher.ARouter
 import com.cbj.sdk.libnet.http.HttpManager
 import com.cbj.sdk.libui.mvp.moudles.IBaseView
 import com.sribs.bdd.bean.BuildingFloorItem
+import com.sribs.bdd.utils.ModuleHelper
 import com.sribs.bdd.v3.util.LogUtils
+import com.sribs.common.bean.db.DrawingV3Bean
 import com.sribs.common.bean.db.v3.project.v3BuildingModuleDbBean
 import com.sribs.common.bean.v3.v3ModuleFloorDbBean
 
 import com.sribs.common.module.BasePresenter
 import com.sribs.common.net.HttpApi
 import com.sribs.common.server.IDatabaseService
+import com.sribs.common.utils.FileUtil
 import com.sribs.common.utils.TimeUtil
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import java.io.File
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -102,117 +106,152 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
 
     }
 
+    var cacheRootDir = ""
+    var mCurDrawingsDir = ""
+
     fun createOrSaveModule(
         projectId: Long,
         buildingId: Long,
         remoteId: String?,
+        projectName:String,
+        buildingName:String,
         moduleName: String?,
         onResult: (Long) -> Unit
     ) {
-        LogUtils.d("llf无网络 单本地创建")
+        LogUtils.d("无网络 单本地创建")
         /**
          * 查询copy楼栋下的图纸
          */
+        cacheRootDir = FileUtil.getDrawingCacheRootDir(mView!!.getContext()!!)
+        mCurDrawingsDir =
+            "/" + ModuleHelper.DRAWING_CACHE_FOLDER + "/" + projectName + "/" + buildingName + "/"+moduleName+"/"
 
-            mDb.getLocalBuildingOnce(buildingId).toObservable()
-                .subscribeOn(Schedulers.computation())
-                .observeOn(Schedulers.computation())
-                .flatMap {
-                    var cc = v3BuildingModuleDbBean()
-                    cc.projectId = projectId
-                    cc.buildingId = buildingId
-                    cc.remoteId = remoteId
-                    cc.moduleName = moduleName
-                    cc.drawings = it[0].drawing
-                    cc.inspectors = it[0].inspectorName
-                    cc.leaderId = ""
-                    cc.leaderName = it[0].leader
-                    cc.updateTime = TimeUtil.YMD_HMS.format(Date())
-                    cc.aboveGroundNumber = it[0].aboveGroundNumber
-                    cc.underGroundNumber = it[0].underGroundNumber
+        //页面数据
+        var cc = v3BuildingModuleDbBean()
 
-                    LogUtils.d("查询到楼栋下面的数据包装进 model表 : " + cc)
-
-                    mDb.updatev3BuildingModule(cc)
+        mDb.getLocalBuildingOnce(buildingId).toObservable()
+            .subscribeOn(Schedulers.computation())
+            .observeOn(Schedulers.computation())
+            .flatMap {
+                it[0].drawing?.forEachIndexed { index, item ->
+                    var cacheFileParent = File(cacheRootDir + mCurDrawingsDir + index)
+                    cacheFileParent.mkdirs()
+                    var cacheFile = File(cacheFileParent,item.fileName)
+                    LogUtils.d("当前缓存地址: "+cacheFile.absolutePath)
+                    FileUtil.copyTo(File(item.localAbsPath),cacheFile)
+                    item.localAbsPath = cacheFile.absolutePath
                 }
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    LogUtils.d("本地楼层model创建成功 "+it)
-                    onResult(it)
-                    createModuleFloor(it, projectId, buildingId, remoteId, moduleName)
-                },{
-                    LogUtils.d("本地楼层model创建失败 : " + it)
-                })
+
+                LogUtils.d("it[0].drawing： "+it[0].drawing)
+
+                cc.projectId = projectId
+                cc.buildingId = buildingId
+                cc.remoteId = remoteId
+                cc.moduleName = moduleName
+                cc.drawings = it[0].drawing
+                cc.inspectors = it[0].inspectorName
+                cc.leaderId = ""
+                cc.leaderName = it[0].leader
+                cc.updateTime = TimeUtil.YMD_HMS.format(Date())
+                cc.aboveGroundNumber = it[0].aboveGroundNumber
+                cc.underGroundNumber = it[0].underGroundNumber
+
+                LogUtils.d("查询到楼栋下面的数据包装进 model表 : " + cc)
+
+                mDb.updatev3BuildingModule(cc)
+            }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                LogUtils.d("本地楼层model创建成功 " + it)
+                onResult(it)
+                createModuleFloor(it, projectId, buildingId, remoteId)
+            }, {
+                LogUtils.d("本地楼层model创建失败 : " + it)
+            })
     }
 
     fun createModuleFloor(
-        moduleId:Long,
+        moduleId: Long,
         projectId: Long,
         buildingId: Long,
         remoteId: String?,
-        moduleName: String?,
     ) {
 
         mDb.getLocalFloorsInTheBuilding(buildingId).toObservable()
             .subscribeOn(Schedulers.computation())
             .observeOn(Schedulers.computation())
             .subscribe({
-                var floorList = ArrayList(it.map { b->v3ModuleFloorDbBean(
-                    id = -1,
-                    projectId = projectId,
-                    bldId = buildingId,
-                    moduleId = moduleId,
-                    floorId = b.floorId,
-                    floorName =  b.floorName,
-                    drawingsList = b.drawing,
-                    remoteId = remoteId,
-                    aboveNumber = b.aboveGroundNumber,
-                    afterNumber = b.underGroundNumber,
-                    version = 1,
-                    status = 0,
-                    createTime = TimeUtil.YMD_HMS.format(Date()),
-                    updateTime = TimeUtil.YMD_HMS.format(Date())
-                )})
-                LogUtils.d("查询包装 model楼层表 : " + floorList)
-                addDisposable(Observable.fromIterable(floorList)
-                    .subscribeOn(Schedulers.computation())
-                    .observeOn(Schedulers.computation())
-                    .flatMap {
-                        mDb.updatev3ModuleFloor(it)
-                    }.observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({
-                        LogUtils.d("存储到model 楼层表 : " + it)
-                    },{
+                var floorList = ArrayList(it.map { b ->
+                    b.drawing?.forEachIndexed { index, item ->
+                        var cacheFileParent = File(cacheRootDir + mCurDrawingsDir + b.floorName+"/"+index)
+                        cacheFileParent.mkdirs()
+                        var cacheFile = File(cacheFileParent,item.fileName)
+                        LogUtils.d("当前模块楼层缓存地址: "+cacheFile.absolutePath)
+                        FileUtil.copyTo(File(item.localAbsPath),cacheFile)
+                        item.localAbsPath = cacheFile.absolutePath
+                    }
 
-                    }))
-            },{
+                    v3ModuleFloorDbBean(
+                        id = -1,
+                        projectId = projectId,
+                        bldId = buildingId,
+                        moduleId = moduleId,
+                        floorId = b.floorId,
+                        floorName = b.floorName,
+                        drawingsList = b.drawing,
+                        remoteId = remoteId,
+                        aboveNumber = b.aboveGroundNumber,
+                        afterNumber = b.underGroundNumber,
+                        version = 1,
+                        status = 0,
+                        createTime = TimeUtil.YMD_HMS.format(Date()),
+                        updateTime = TimeUtil.YMD_HMS.format(Date())
+                    )
+                })
+                LogUtils.d("查询包装 model楼层表 : " + floorList)
+                addDisposable(
+                    Observable.fromIterable(floorList)
+                        .subscribeOn(Schedulers.computation())
+                        .observeOn(Schedulers.computation())
+                        .flatMap {
+                            mDb.updatev3ModuleFloor(it)
+                        }.observeOn(AndroidSchedulers.mainThread())
+                        .subscribe({
+                            LogUtils.d("存储到model 楼层表 : " + it)
+                        }, {
+
+                        })
+                )
+            }, {
                 LogUtils.d("存储到model 楼层表失败 : " + it)
             })
     }
 
     fun saveModuleFloor(
-        floorList:ArrayList<v3ModuleFloorDbBean>,
+        floorList: ArrayList<v3ModuleFloorDbBean>,
         onResult: (Long) -> Unit
-    ){
-        addDisposable(Observable.fromIterable(floorList)
-            .subscribeOn(Schedulers.computation())
-            .observeOn(Schedulers.computation())
-            .flatMap {
-                mDb.updatev3ModuleFloor(it)
-            }.observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
+    ) {
+        addDisposable(
+            Observable.fromIterable(floorList)
+                .subscribeOn(Schedulers.computation())
+                .observeOn(Schedulers.computation())
+                .flatMap {
+                    mDb.updatev3ModuleFloor(it)
+                }.observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
 
-            },{
+                }, {
 
-            }))
+                })
+        )
 
     }
 
     override fun bindView(v: IBaseView) {
-    mView = v as IProjectContrast.IProjectFloorDetailView
-}
+        mView = v as IProjectContrast.IProjectFloorDetailView
+    }
 
-override fun unbindView() {
-    mView = null
-}
+    override fun unbindView() {
+        mView = null
+    }
 }

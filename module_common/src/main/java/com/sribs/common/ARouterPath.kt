@@ -56,8 +56,10 @@ object ARouterPath {
     const val VAL_AFTER_NUMBER = 0
 
     const val VAL_PROJECT_ID = "project_id"
+    const val VAL_PROJECT_NAME = "project_name"
     const val VAL_BUILDING_ID = "building_id"
     const val VAL_BUILDING_NO = "building_no"
+    const val VAL_BUILDING_NAME = "building_name"
     const val VAL_MODULE_ID = "module_id"
     const val VAL_MODULE_NAME = "module_name"
     const val VAL_UNIT_CODE = "unit_code"

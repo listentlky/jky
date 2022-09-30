@@ -15,6 +15,9 @@
         android:minWidth="@dimen/_30sdp"
         android:paddingLeft="@dimen/_4sdp"
         android:paddingRight="@dimen/_4sdp"
+        android:digits="0123456789."
+        android:inputType="number"
+        android:lines="1"
         android:background="@drawable/edit_selector_stroke_bg"
         android:gravity="center_vertical"
         android:minHeight="@dimen/_14sdp"
@@ -37,13 +40,16 @@
         android:layout_weight="1"
         android:textColorHint="@color/gray_600"
         android:textColor="@color/black"
+        android:digits="0123456789."
+        android:inputType="number"
+        android:lines="1"
         android:textSize="@dimen/_6ssp"
         android:minWidth="@dimen/_30sdp"
         android:paddingLeft="@dimen/_4sdp"
         android:paddingRight="@dimen/_4sdp"
         android:background="@drawable/edit_selector_stroke_bg"
         android:gravity="center_vertical"
-        android:minHeight="@dimen/_16sdp"
+        android:minHeight="@dimen/_14sdp"
         android:layout_height="wrap_content"/>
 
 

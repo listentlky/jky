@@ -129,6 +129,10 @@ class BuildingListAdapter (private val mCb: ICallback) :
         notifyDataSetChanged()
     }
 
+    fun getData():ArrayList<BuildingMainBean>?{
+        return mList
+    }
+
     fun setSearch(keyword:String?){
         mKeyword = keyword
         if (mAll.isNullOrEmpty())return

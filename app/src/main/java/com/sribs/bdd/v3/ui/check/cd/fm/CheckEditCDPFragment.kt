@@ -1,6 +1,7 @@
 package com.sribs.bdd.v3.ui.check.cd.fm
 
 import android.graphics.Color
+import android.text.InputType
 import android.view.Gravity
 import android.view.View
 import com.alibaba.android.arouter.facade.annotation.Route

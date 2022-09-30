@@ -101,7 +101,7 @@
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/check_bs_choose_but"
             android:layout_width="@dimen/_35sdp"
-            android:layout_height="@dimen/_16sdp"
+            android:layout_height="@dimen/_14sdp"
             android:layout_marginLeft="@dimen/_6sdp"
             android:background="@drawable/round_blue_bg"
             android:gravity="center"

@@ -204,16 +204,16 @@ class DamageMainActivity :BaseActivity(),IMainListContrast.IMainView{
             mBottomDialog = DialogUtil.showBottomDialog(this,R.layout.dialog_common_bottom_select,true){
                 when(it){
                     0->{
-                        if(beanMain.localId<0){
+                       /* if(beanMain.localId<0){
                             showToast(getString(R.string.error_no_local))
                             return@showBottomDialog
-                        }
+                        }*/
                         /*ARouter.getInstance().build(com.sribs.common.ARouterPath.PRO_CREATE_ATY)
                             .withInt(com.sribs.common.ARouterPath.VAL_COMMON_LOCAL_ID,beanMain.localId.toInt())
                             .navigation()*/
                         initCreateDialog()
                     }
-                    1->{
+               /*     1->{
                         if (beanMain.remoteId.isNullOrEmpty() || !Config.isNetAvailable){
                             //获取本地汇总
 
@@ -241,23 +241,23 @@ class DamageMainActivity :BaseActivity(),IMainListContrast.IMainView{
                                 )
                             }
                         }
-                    }
-                    2->{
-                        DialogUtil.showMsgDialog(this,"是否确认删除项目?",{
-                            //TODO del project
-                          /*  if (beanMain.localId>0){
-                                mPresenter.projectDelete(beanMain.localId)
-                            }else{
-                                showToast("无法删除云端项目")
-                            }*/
-                            mPresenter.projectDelete(beanMain.localId)
-                        })
-                    }
-                    3->{
+                    }*/
+                    1->{
                         doDownload(beanMain,false)
                     }
-                    4-> {
+                    2-> {
                         doDownload(beanMain,true)
+                    }
+                    3->{
+                        DialogUtil.showMsgDialog(this,"是否确认删除项目?",{
+                            //TODO del project
+                            /*  if (beanMain.localId>0){
+                                  mPresenter.projectDelete(beanMain.localId)
+                              }else{
+                                  showToast("无法删除云端项目")
+                              }*/
+                            mPresenter.projectDelete(beanMain.localId)
+                        })
                     }
                     else->{
                         showFab(true)

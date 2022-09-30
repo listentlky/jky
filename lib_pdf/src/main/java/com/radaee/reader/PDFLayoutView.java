@@ -1521,8 +1521,6 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
                     pt[1] = pos.y;
                     Log.d("bruce", "x " + pos.x + " ; y " + pos.y);
                     mMarkPDFPos = pos;
-                    mMarkX = event.getX();
-                    mMarkY = event.getY();
                     page.AddAnnotText(pt);
                     m_annot = page.GetAnnot(page.GetAnnotCount() - 1);
                     onAnnotCreated(m_annot);
@@ -1546,6 +1544,8 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
                     m_annot_rect[1] = m_annot_page.GetVY(m_annot_rect[3]) - m_layout.vGetY();
                     m_annot_rect[2] = m_annot_page.GetVX(m_annot_rect[2]) - m_layout.vGetX();
                     m_annot_rect[3] = m_annot_page.GetVY(tmp) - m_layout.vGetY();
+                    mMarkX = m_annot_rect[2]- (m_annot_rect[2]-m_annot_rect[0])/2;
+                    mMarkY = m_annot_rect[3]- (m_annot_rect[3]-m_annot_rect[1])/2;
 
                     Log.d("bruce", "m_annot_rect " + m_annot_rect[0] + " ; " + m_annot_rect[1] + " ; " + m_annot_rect[2] + " ; " + m_annot_rect[3]);
                     if (m_listener != null)

@@ -95,7 +95,7 @@
     deps.reflect = "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
 
     def build_versions = [:]
-    build_versions.min_sdk = 25
+    build_versions.min_sdk = 26
     build_versions.target_sdk = 30
     build_versions.build_tools = "30.0.3"
     ext.build_versions = build_versions
