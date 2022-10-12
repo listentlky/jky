@@ -1,7 +1,6 @@
 package com.sribs.db.util
 
 import com.sribs.common.bean.db.v3.project.v3BuildingModuleDbBean
-import com.sribs.common.bean.db.v3.project.v3ProjectDbBean
 import com.sribs.common.bean.v3.v3ModuleFloorDbBean
 import com.sribs.common.utils.TimeUtil
 import com.sribs.common.utils.Util
@@ -21,7 +20,6 @@ import com.sribs.db.report.ReportBean
 import com.sribs.db.user.UserBean
 import com.sribs.db.v3.project.v3BuildingModuleRoom
 import com.sribs.db.v3.project.v3ModuleFloorRoom
-import com.sribs.db.v3.project.v3ProjectRoom
 import io.reactivex.Flowable
 import io.reactivex.Maybe
 import io.reactivex.Single
@@ -41,6 +39,7 @@ object ConverterHelper {
             it.map { b ->
                 com.sribs.common.bean.db.ProjectBean(
                     b.id,
+                    b.uuid,
                     b.name,
                     b.leader,
                     b.inspector,
@@ -59,6 +58,7 @@ object ConverterHelper {
             it.map { b ->
                 com.sribs.common.bean.db.ProjectBean(
                     b.id,
+                    b.uuid,
                     b.name,
                     b.leader,
                     b.inspector,
@@ -74,6 +74,7 @@ object ConverterHelper {
 
 
     fun covertProjectBean(b: com.sribs.common.bean.db.ProjectBean): ProjectBean = ProjectBean(
+        uuid = b.uuid,
         name = b.name,
         leader = b.leader,
         builderNo = b.buildNo,
@@ -96,50 +97,16 @@ object ConverterHelper {
     /**
      * 3期项目 start
      */
-    fun convertv3ProjectBean(l: Flowable<List<v3ProjectRoom>>): Flowable<List<v3ProjectDbBean>> =
-        l.map {
-            it.map { b ->
-                v3ProjectDbBean(
-                    b.id,
-                    b.projectName,
-                    b.inspectors,
-                    b.leaderId,
-                    b.leaderName,
-                    b.projectId,
-                    b.status,
-                    b.createTime,
-                    b.updateTime,
-                )
-            }
-        }
-
-    fun convertv3ProjectRoom(b: v3ProjectDbBean): v3ProjectRoom = v3ProjectRoom(
-        projectName = b.projectName,
-        inspectors = b.inspectors,
-        leaderId = b.leaderId,
-        leaderName = b.leaderName,
-        projectId = b.projectId,
-    ).also {
-        if (b.id ?: -1 > 0) {
-            it.id = b.id!!
-        }
-        if (b.status != null) {
-            it.status = b.status
-        }
-        if (b.createTime != null) {
-            it.createTime = b.createTime
-        } else {
-            it.createTime = Date(Date().time)
-        }
-    }
-
 
     fun convertv3BuildingModuleBean(l: Flowable<List<v3BuildingModuleRoom>>): Flowable<List<v3BuildingModuleDbBean>> =
         l.map {
             it.map { b ->
                 v3BuildingModuleDbBean(
                     b.id,
+                    b.uuid,
+                    b.buildingUUID,
                     b.buildingId,
+                    b.projectUUID,
                     b.projectId,
                     b.moduleName,
                     b.leaderId,
@@ -164,7 +131,10 @@ object ConverterHelper {
             it.map { b ->
                 v3BuildingModuleDbBean(
                     b.id,
+                    b.uuid,
+                    b.buildingUUID,
                     b.buildingId,
+                    b.projectUUID,
                     b.projectId,
                     b.moduleName,
                     b.leaderId,
@@ -190,7 +160,10 @@ object ConverterHelper {
              b ->
                 v3BuildingModuleDbBean(
                     b.id,
+                    b.uuid,
+                    b.buildingUUID,
                     b.buildingId,
+                    b.projectUUID,
                     b.projectId,
                     b.moduleName,
                     b.leaderId,
@@ -211,7 +184,10 @@ object ConverterHelper {
 
     fun convertv3BuildingModuleRoom(b: v3BuildingModuleDbBean): v3BuildingModuleRoom =
         v3BuildingModuleRoom(
+            uuid = b.uuid,
+            buildingUUID = b.buildingUUID,
             buildingId = b.buildingId,
+            projectUUID = b.projectUUID,
             projectId = b.projectId,
             leaderId = b.leaderId,
             leaderName = b.leaderName,
@@ -224,7 +200,6 @@ object ConverterHelper {
             remoteId = b.remoteId,
             version = b.version,
             status = b.status
-
 
         ).also {
             if (b.id ?: -1 > 0) {
@@ -887,6 +862,8 @@ object ConverterHelper {
         }
 
     fun convertBuildingBean(bb: com.sribs.common.bean.db.BuildingBean): BuildingBean = BuildingBean(
+        bb.UUID,
+        bb.projectUUID,
         bb.projectId,
         bb.bldName,
         bb.bldType,
@@ -912,6 +889,8 @@ object ConverterHelper {
             it.map { b ->
                 com.sribs.common.bean.db.BuildingBean(
                     b.id,
+                    b.uuid,
+                    b.projectUUID,
                     b.projectId,
                     b.bldName,
                     b.bldType,
@@ -935,6 +914,8 @@ object ConverterHelper {
             it.map { b ->
                 com.sribs.common.bean.db.BuildingBean(
                     b.id,
+                    b.uuid,
+                    b.projectUUID,
                     b.projectId,
                     b.bldName,
                     b.bldType,

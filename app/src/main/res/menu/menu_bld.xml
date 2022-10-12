@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:id="@+id/menu_bld_fun"
+        android:title=""
+        android:orderInCategory="100"
+        app:showAsAction="always"
+        android:icon="@mipmap/icon_unit_fun"
+        >
+        <menu>
+            <group>
+                <item
+                    android:id="@+id/menu_bld_upload"
+                    android:title="上传配置"
+                    android:icon="@drawable/ic_main_upload"
+                    />
+                <item
+                    android:id="@+id/menu_bld_download_config"
+                    android:title="下载配置"
+                    android:icon="@drawable/ic_main_download_unit_config"
+                    />
+            </group>
+        </menu>
+
+    </item>
+
+
+    <item android:id="@+id/menu_bld_info"
+        android:title=""
+        android:orderInCategory="100"
+        app:showAsAction="always"
+        android:icon="@mipmap/icon_info"
+        >
+    </item>
+</menu>

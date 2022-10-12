@@ -225,6 +225,13 @@ class CheckObliqueDeformationActivity : BaseActivity(), ICheckOBDContrast.ICheck
     var mCurrentDrawing: DrawingV3Bean? = null
 
     /**
+     * 所有图纸信息集合
+     *  pdf图纸
+     *  对应损伤集合
+     */
+    var mDrawingV3BeanList: ArrayList<DrawingV3Bean?>? = ArrayList()
+
+    /**
      * 所有损伤信息集合
      *  pdf图纸
      *  对应损伤集合
@@ -243,6 +250,14 @@ class CheckObliqueDeformationActivity : BaseActivity(), ICheckOBDContrast.ICheck
         mCurrentDrawing = checkOBDMainBean[0].drawing!![0]
         if (mCurrentDrawing != null) {
             openPDF(mCurrentDrawing!!)
+        }
+
+        /**
+         * 初始化图纸数据
+         */
+
+        checkOBDMainBean.forEach { a ->
+            mDrawingV3BeanList!!.addAll(a.drawing!!)
         }
 
         /**
@@ -268,6 +283,7 @@ class CheckObliqueDeformationActivity : BaseActivity(), ICheckOBDContrast.ICheck
          */
         (mFragments[0] as CheckOBDFragment).initFloorDrawData(checkOBDMainBean)
 
+        setPDFGuide()
     }
 
     /**
@@ -281,7 +297,6 @@ class CheckObliqueDeformationActivity : BaseActivity(), ICheckOBDContrast.ICheck
                     mBinding.checkMenuLayout.root.visibility = View.GONE
                     when (type) {
                         mCurrentDamageType[0] -> { // 点位
-                            (mFragments[0] as CheckOBDFragment).setGuide(damageV3Bean)
                             (mFragments[1] as CheckEditOBDFragment).resetView(damageV3Bean)
                             mBinding.checkVp.currentItem = 1
                         }
@@ -295,12 +310,40 @@ class CheckObliqueDeformationActivity : BaseActivity(), ICheckOBDContrast.ICheck
         } else {
             when (type) {
                 mCurrentDamageType[0] -> { // 点位
-                    (mFragments[0] as CheckOBDFragment).setGuide(damageV3Bean)
                     (mFragments[1] as CheckEditOBDFragment).resetView(damageV3Bean)
                     mBinding.checkVp.currentItem = 1
                 }
             }
         }
+    }
+
+    /**
+     * 保存pdf方向
+     */
+    fun savePDFGuide() {
+        mDrawingV3BeanList?.forEach {
+            if (it?.localAbsPath.equals(mCurrentLocalPDF)) {
+                it?.direction =
+                    (mFragments[0] as CheckOBDFragment).mBinding.checkGuideHint.text.toString()
+                it?.rotate =
+                    (mFragments[0] as CheckOBDFragment).mBinding.checkGuideImg.rotation.toInt()
+            }
+        }
+        LogUtils.d("savePDFGuide mCurrentLocalPDF: "+mCurrentLocalPDF)
+        LogUtils.d("savePDFGuide: "+mDrawingV3BeanList)
+    }
+
+    /**
+     * 设置图纸方向
+     */
+    fun setPDFGuide() {
+        mDrawingV3BeanList?.forEach {
+            if (it?.localAbsPath.equals(mCurrentLocalPDF)) {
+                (mFragments[0] as CheckOBDFragment).setGuide(it)
+            }
+        }
+        LogUtils.d("setPDFGuide mCurrentLocalPDF: "+mCurrentLocalPDF)
+        LogUtils.d("setPDFGuide: "+mDrawingV3BeanList)
     }
 
     /**
@@ -363,10 +406,16 @@ class CheckObliqueDeformationActivity : BaseActivity(), ICheckOBDContrast.ICheck
      * 更新损伤数据
      */
     fun saveDamageDrawingToDb() {
-        mCheckOBDMainBean!!.forEach {
-            it.drawing!!.forEach { b ->
-                b.damage = mDamageBeanList!!.get(b.localAbsPath)!!
+        mCheckOBDMainBean?.forEach {
+            it.drawing?.forEach { b ->
+                mDrawingV3BeanList?.forEach { c ->
+                    if (c?.localAbsPath.equals(b.localAbsPath)) {
+                        b.direction = c?.direction
+                        b.rotate = c?.rotate
+                    }
+                }
             }
+            LogUtils.d("it.drawing： "+it.drawing)
             mPresenter.saveDamageToDb(it.drawing!!, it.moduleId!!)
         }
     }
@@ -387,6 +436,7 @@ class CheckObliqueDeformationActivity : BaseActivity(), ICheckOBDContrast.ICheck
             AlertDialog.Builder(this).setTitle("提示")
                 .setMessage(R.string.save_pdf_message)
                 .setPositiveButton(R.string.dialog_ok) { dialog, which ->
+                    savePDFGuide()
                     mController?.savePDF()
                     mPDFNoteModified = false
                     (mFragments[0] as CheckOBDFragment).mBinding.checkSelectIndex.text =
@@ -404,6 +454,7 @@ class CheckObliqueDeformationActivity : BaseActivity(), ICheckOBDContrast.ICheck
                 }
                 .show()
         } else {
+            savePDFGuide()
             (mFragments[0] as CheckOBDFragment).mBinding.checkSelectIndex.text = data.fileName
             openPDF(data)
             resetDamageList()
@@ -429,6 +480,7 @@ class CheckObliqueDeformationActivity : BaseActivity(), ICheckOBDContrast.ICheck
             .setMessage(R.string.is_save_hint)
             .setPositiveButton(R.string.dialog_ok) { dialog, which ->
                 mController?.savePDF()
+                savePDFGuide()
                 saveDamageDrawingToDb();
                 finish()
             }.setNegativeButton(
@@ -443,7 +495,6 @@ class CheckObliqueDeformationActivity : BaseActivity(), ICheckOBDContrast.ICheck
 
     var mGuideRotate: Int = 0
 
-
     private var mDoc: Document = Document()
 
     private var mAssetStream: PDFAssetStream? = PDFAssetStream()
@@ -454,7 +505,7 @@ class CheckObliqueDeformationActivity : BaseActivity(), ICheckOBDContrast.ICheck
 
     private var m_cur_page = 0
 
-    public var mView: PDFLayoutView? = null
+    var mView: PDFLayoutView? = null
 
     private var mViewParent: RelativeLayout? = null
 
@@ -478,6 +529,7 @@ class CheckObliqueDeformationActivity : BaseActivity(), ICheckOBDContrast.ICheck
         this.mViewParent = (mFragments[0] as CheckOBDFragment).getPDFParentView()
         this.mCurrentLocalPDF = pdfPath
         this.mCurrentDrawing = drawingV3Bean
+        setPDFGuide()
         Observable.create<Boolean> { o ->
             o.onNext(XXPermissions.isGranted(this, Permission.MANAGE_EXTERNAL_STORAGE))
         }

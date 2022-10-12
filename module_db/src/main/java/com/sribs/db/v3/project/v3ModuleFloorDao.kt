@@ -17,7 +17,6 @@ interface v3ModuleFloorDao {
     @Query("Select * from V3_MODULE_FLOOR where id = :id")
     fun getModuleFloorOnce(id: Long): Single<List<v3ModuleFloorRoom>>
 
-
     @Query("Select * from V3_MODULE_FLOOR where project_id = :projectId and building_id =:buildingId and module_id =:moduleId and status == 0")
     fun getModuleFloorByProjectIdOnce(
         projectId: Long,
@@ -58,4 +57,7 @@ interface v3ModuleFloorDao {
 
     @Query("Delete from V3_MODULE_FLOOR where module_id = :moduleId and project_id = :projectId and building_id =:buildingId  and  floor_id =:floorId ")
     fun deleteModuleFloorOnce(projectId: Long, buildingId: Long, moduleId: Long, floorId: Long)
+
+    @Query("Delete from V3_MODULE_FLOOR where project_id = :projectId")
+    fun deleteModuleFloorByProjectId(projectId: Long)
 }

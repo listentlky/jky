@@ -3,11 +3,15 @@ package com.sribs.bdd.module.project
 import com.alibaba.android.arouter.launcher.ARouter
 import com.cbj.sdk.libnet.http.HttpManager
 import com.cbj.sdk.libui.mvp.moudles.IBaseView
-import com.sribs.bdd.bean.BuildingFloorItem
+import com.sribs.bdd.Config
+import com.sribs.bdd.R
+import com.sribs.bdd.action.Dict
+import com.sribs.bdd.bean.BuildingModule
 import com.sribs.bdd.utils.ModuleHelper
+import com.sribs.bdd.utils.UUIDUtil
 import com.sribs.bdd.v3.util.LogUtils
-import com.sribs.common.bean.db.DrawingV3Bean
 import com.sribs.common.bean.db.v3.project.v3BuildingModuleDbBean
+import com.sribs.common.bean.net.v3.V3BuildingModuleListRes
 import com.sribs.common.bean.v3.v3ModuleFloorDbBean
 
 import com.sribs.common.module.BasePresenter
@@ -25,8 +29,6 @@ import kotlin.collections.ArrayList
 class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloorDetailPresent {
 
     private var mView: IProjectContrast.IProjectFloorDetailView? = null
-
-    var list = arrayListOf<BuildingFloorItem>()
 
     private val mDb by lazy {
         ARouter.getInstance().build(com.sribs.common.ARouterPath.SRV_DB)
@@ -49,8 +51,6 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
                     mView?.onMsg(checkError(it))
                 })
         )
-
-
     }*/
 
     override fun getLocalModule(mLocalProjectId: Long, mBuildingId: Long) {
@@ -58,51 +58,91 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
         mDb.getv3BuildingModule(mLocalProjectId, mBuildingId)
             .subscribeOn(Schedulers.computation())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe() {
-                list.clear()
-                for (i in 0 until it.size) {
-                    var moduleId = it.get(i).id
-                    var buildingId = it.get(i).buildingId
-                    var moduleName = it.get(i).moduleName
-                    var updateTime = it.get(i).updateTime
-                    list.add(BuildingFloorItem(moduleId, buildingId, moduleName, updateTime))
-
-                    if (i == it.size - 1) {
-                        mView?.handlItemList(list)
-                    }
-                }
-            }
-
+            .subscribe({
+                var list = ArrayList(it.map { b->
+                    BuildingModule(
+                        b.projectUUID,
+                        b.projectId,
+                        b.buildingUUID,
+                        b.buildingId,
+                        b.uuid,
+                        b.id,
+                        b.moduleName,
+                        b.drawings,
+                        b.inspectors,
+                        b.leaderId,
+                        b.leaderName,
+                        b.aboveGroundNumber,
+                        b.underGroundNumber,
+                        b.isDeleted,
+                        b.version,
+                        b.status?:0,
+                        b.createTime,
+                        b.deleteTime,
+                        b.updateTime,
+                        b.remoteId
+                    )
+                })
+                mView?.handlItemList(list)
+            },{
+                mView?.handlItemList(ArrayList())
+                it.printStackTrace()
+            })
     }
 
-    fun deleteModule(
-        projectId: Long,
-        buildingId: Long,
-        moduleId: Long,
-        onResult: () -> Unit
-    ) {
-        LogUtils.d("llf无网络 删除本地模块")
-
-        var b = v3BuildingModuleDbBean()
-
-        b.id = moduleId
-
-        addDisposable(mDb.deletev3BuildingModule(v3BuildingModuleDbBean(id = moduleId))
+    fun deleteModule(beanMain: BuildingModule) {
+        LogUtils.d("删除本地模块")
+        addDisposable(mDb.deletev3BuildingModule(v3BuildingModuleDbBean(id = beanMain.moduleid))
             .subscribeOn(Schedulers.computation())
             .observeOn(Schedulers.computation())
             .flatMap {
-                mDb.deletev3ModuleFloor(projectId, buildingId, moduleId)
+                mDb.deletev3ModuleFloor(beanMain.projectId!!, beanMain.buildingId!!, beanMain.moduleid!!)
             }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                //   cb(it)
-                onResult()
-                LogUtils.d("llf删除数据成功")
+                LogUtils.d("删除数据成功")
             }, {
-                //  cb(false)
                 it.printStackTrace()
             })
         )
+    }
+
+    /**
+     * 上传模块配置
+     */
+    fun uploadModule(beanMain: BuildingModule){
+        LogUtils.d("上传模块配置: "+beanMain)
+        var floorDrawingsMap: HashMap<String?, Any?> = HashMap()
+        var inspectorList: List<String> =
+            if (beanMain.inspectors!!.contains("、")) beanMain.inspectors!!.split("、") else Arrays.asList(beanMain.inspectors!!)
+        addDisposable(HttpManager.instance.getHttpService<HttpApi>()
+            .saveBuildingModule(V3BuildingModuleListRes().also {
+                it.buildingId = beanMain.buildingUUID!!
+                it.moduleId = beanMain.moduleUUID!!
+                it.moduleName = beanMain.moduleName!!
+                it.inspectors = inspectorList
+                it.leaderId = Dict.getLeaderId(beanMain.leaderName!!)!!
+                it.leaderName = beanMain.leaderName!!
+                it.aboveGroundNumber = ""+beanMain.aboveGroundNumber
+                it.underGroundNumber = ""+beanMain.underGroundNumber
+                it.drawings = ArrayList()
+                it.floorDrawings = floorDrawingsMap
+
+            })
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                LogUtils.d("上传云端模块成功: " + it.toString())
+            },{
+                LogUtils.d("上传云端模块失败: " + it.toString())
+            }))
+    }
+
+    fun downloadModule(beanMain: BuildingModule){
+
+    }
+
+    fun getRecordHistory(beanMain: BuildingModule){
 
     }
 
@@ -111,14 +151,15 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
 
     fun createOrSaveModule(
         projectId: Long,
+        projectUUID:String,
         buildingId: Long,
+        buildingUUID:String,
         remoteId: String?,
         projectName:String,
         buildingName:String,
         moduleName: String?,
-        onResult: (Long) -> Unit
     ) {
-        LogUtils.d("无网络 单本地创建")
+        LogUtils.d("创建本地模块")
         /**
          * 查询copy楼栋下的图纸
          */
@@ -128,8 +169,13 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
 
         //页面数据
         var cc = v3BuildingModuleDbBean()
+        var mModuleUUID:String?=""
+        var mInspectors:String?=""
+        var mLeader:String?=""
+        var aboveGroundNumber:Int?=0
+        var underGroundNumber:Int?=0
 
-        mDb.getLocalBuildingOnce(buildingId).toObservable()
+        addDisposable(mDb.getLocalBuildingOnce(buildingId).toObservable()
             .subscribeOn(Schedulers.computation())
             .observeOn(Schedulers.computation())
             .flatMap {
@@ -143,18 +189,26 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
                 }
 
                 LogUtils.d("it[0].drawing： "+it[0].drawing)
+                mModuleUUID = UUIDUtil.getUUID(moduleName!!)
+                mInspectors = it[0].inspectorName
+                mLeader = it[0].leader
+                aboveGroundNumber = it[0].aboveGroundNumber
+                underGroundNumber = it[0].underGroundNumber
 
+                cc.uuid = mModuleUUID
+                cc.projectUUID = projectUUID
                 cc.projectId = projectId
+                cc.buildingUUID = buildingUUID
                 cc.buildingId = buildingId
                 cc.remoteId = remoteId
                 cc.moduleName = moduleName
                 cc.drawings = it[0].drawing
-                cc.inspectors = it[0].inspectorName
-                cc.leaderId = ""
-                cc.leaderName = it[0].leader
+                cc.inspectors = mInspectors
+                cc.leaderId = Dict.getLeaderId(mLeader!!)
+                cc.leaderName = mLeader
                 cc.updateTime = TimeUtil.YMD_HMS.format(Date())
-                cc.aboveGroundNumber = it[0].aboveGroundNumber
-                cc.underGroundNumber = it[0].underGroundNumber
+                cc.aboveGroundNumber = aboveGroundNumber
+                cc.underGroundNumber = underGroundNumber
 
                 LogUtils.d("查询到楼栋下面的数据包装进 model表 : " + cc)
 
@@ -163,18 +217,27 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 LogUtils.d("本地楼层model创建成功 " + it)
-                onResult(it)
-                createModuleFloor(it, projectId, buildingId, remoteId)
+                createModuleFloor(it,mModuleUUID!!,moduleName!!, projectId,projectUUID, buildingId,buildingUUID, remoteId,mInspectors
+                ,mLeader,aboveGroundNumber,underGroundNumber)
             }, {
                 LogUtils.d("本地楼层model创建失败 : " + it)
             })
+            )
     }
 
     fun createModuleFloor(
         moduleId: Long,
+        moduleUUID:String,
+        moduleName:String,
         projectId: Long,
+        projectUUID:String,
         buildingId: Long,
+        buildingUUID:String,
         remoteId: String?,
+        mInspectors:String?,
+        mLeader:String?,
+        aboveGroundNumber:Int?,
+        underGroundNumber:Int?
     ) {
 
         mDb.getLocalFloorsInTheBuilding(buildingId).toObservable()
@@ -222,6 +285,36 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
 
                         })
                 )
+
+                if(Config.isNetAvailable){
+                    LogUtils.d("有网进行云端模块创建: ")
+                    var floorDrawingsMap: HashMap<String?, Any?> = HashMap()
+                    var inspectorList: List<String> =
+                        if (mInspectors!!.contains("、")) mInspectors.split("、") else Arrays.asList(mInspectors)
+                    addDisposable(HttpManager.instance.getHttpService<HttpApi>()
+                        .saveBuildingModule(V3BuildingModuleListRes().also {
+                            it.buildingId = buildingUUID
+                            it.moduleId = moduleUUID
+                            it.moduleName = moduleName
+                            it.inspectors = inspectorList
+                            it.leaderId = Dict.getLeaderId(mLeader!!)!!
+                            it.leaderName = mLeader
+                            it.aboveGroundNumber = ""+aboveGroundNumber
+                            it.underGroundNumber = ""+underGroundNumber
+                            it.drawings = ArrayList()
+                            it.floorDrawings = floorDrawingsMap
+
+                        })
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe({
+                            LogUtils.d("创建云端模块成功: " + it.toString())
+                        },{
+                            LogUtils.d("创建云端模块失败: " + it.toString())
+                        }))
+
+                }
+
             }, {
                 LogUtils.d("存储到model 楼层表失败 : " + it)
             })

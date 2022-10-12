@@ -346,16 +346,16 @@ var designNorthSouthRebarList: ArrayList<String>? = ArrayList()
 
 
     //倾斜测量点位
-    var direction:String?="" //方向
-    var rotate:Int?=0//角度
     var pointName:String?="" //点位名称
     var measure1Height:String?="" //测量高度1
     var measure2Height:String?="" //测量高度2
+    var guide:String?=""//方向
+    var guideRotate:Int?=0//角度
     var tilt1:String?="" //倾斜量1
     var tilt2:String?="" //倾斜量2
     //倾斜测量点位
     constructor(id:Long,drawingId:Long,type:String?,action:Int?,annotRef:Long,note:String?,createTime:Long,
-                direction:String?,rotate:Int?,pointName:String?,measure1Height:String?,measure2Height:String?,
+                guide:String?,guideRotate:Int?,pointName:String?,measure1Height:String?,measure2Height:String?,
                 tilt1:String?,tilt2:String?):this(){
         this.id = id
         this.drawingId = drawingId
@@ -364,8 +364,8 @@ var designNorthSouthRebarList: ArrayList<String>? = ArrayList()
         this.annotRef = annotRef
         this.note = note
         this.createTime = createTime
-        this.direction = direction
-        this.rotate = rotate
+        this.guide = guide
+        this.guideRotate = guideRotate
         this.pointName = pointName
         this.measure1Height = measure1Height
         this.measure2Height = measure2Height
@@ -375,10 +375,11 @@ var designNorthSouthRebarList: ArrayList<String>? = ArrayList()
     }
 
     //相对高差
+    var closeDiff:String?=""
     var rhdiffInfo:ArrayList<RelativeHDiffInfoBean>?=ArrayList() //单条数据
     var pointList:List<RelativeHDiffPointBean>?=ArrayList() //测点数据
 
-    constructor(id:Long,drawingId:Long,type:String?,action:Int?,annotRef:Long,note:String?,createTime:Long,
+    constructor(id:Long,drawingId:Long,type:String?,action:Int?,annotRef:Long,note:String?,createTime:Long, closeDiff:String,
                 rhdiffInfo:ArrayList<RelativeHDiffInfoBean>,pointList:List<RelativeHDiffPointBean>):this(){
         this.id = id
         this.drawingId = drawingId
@@ -387,13 +388,14 @@ var designNorthSouthRebarList: ArrayList<String>? = ArrayList()
         this.annotRef = annotRef
         this.note = note
         this.createTime = createTime
+        this.closeDiff = closeDiff
         this.rhdiffInfo = rhdiffInfo
         this.pointList = pointList
 
     }
 
     override fun toString(): String {
-        return "DamageV3Bean(id=$id, drawingId=$drawingId, type=$type, action=$action, annotRef=$annotRef, note=$note, createTime=$createTime, annotX=$annotX, annotY=$annotY, axisNote=$axisNote, axisNoteList=$axisNoteList, heightType=$heightType, floorName=$floorName, floorDesign=$floorDesign, floorReal=$floorReal, plateDesign=$plateDesign, decorateDesign=$decorateDesign, gridDesign=$gridDesign, gridReal=$gridReal, direction=$direction, rotate=$rotate, pointName=$pointName, measure1Height=$measure1Height, measure2Height=$measure2Height, tilt1=$tilt1, tilt2=$tilt2, rhdiffInfo=$rhdiffInfo, pointList=$pointList)"
+        return "DamageV3Bean(id=$id, drawingId=$drawingId, type=$type, action=$action, annotRef=$annotRef, note=$note, createTime=$createTime, annotX=$annotX, annotY=$annotY, axisNote=$axisNote, axisNoteList=$axisNoteList, heightType=$heightType, floorName=$floorName, floorDesign=$floorDesign, floorReal=$floorReal, plateDesign=$plateDesign, decorateDesign=$decorateDesign, gridDesign=$gridDesign, gridReal=$gridReal, pointName=$pointName, measure1Height=$measure1Height, measure2Height=$measure2Height, tilt1=$tilt1, tilt2=$tilt2, closeDiff=$closeDiff,rhdiffInfo=$rhdiffInfo, pointList=$pointList)"
     }
 
 

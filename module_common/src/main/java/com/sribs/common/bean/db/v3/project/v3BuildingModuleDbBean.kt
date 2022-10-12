@@ -1,6 +1,7 @@
 package com.sribs.common.bean.db.v3.project
 
 import com.sribs.common.bean.db.DrawingV3Bean
+import kotlin.collections.ArrayList
 
 /**
  * create time: 2022/9/17
@@ -9,7 +10,10 @@ import com.sribs.common.bean.db.DrawingV3Bean
  */
 data class v3BuildingModuleDbBean(
     var id: Long? = null,
+    var uuid:String?="",
+    var buildingUUID:String?="",
     var buildingId: Long? = null,
+    var projectUUID: String?="",
     var projectId: Long? =null,
     var moduleName: String? = null,
     var leaderId: String? ="",

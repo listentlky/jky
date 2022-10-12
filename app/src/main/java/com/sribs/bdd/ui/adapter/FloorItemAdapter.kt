@@ -5,20 +5,29 @@ import android.view.ViewGroup
 import com.cbj.sdk.libui.mvp.BindingViewHolder
 import com.cbj.sdk.libui.mvp.adapter.BaseListAdapter
 import com.cbj.sdk.libui.mvp.newBindingViewHolder
-import com.sribs.bdd.bean.BuildingFloorItem
+import com.sribs.bdd.R
+import com.sribs.bdd.bean.BuildingModule
 import com.sribs.bdd.databinding.ItemFloorDetailBinding
+import com.sribs.bdd.v3.util.LogUtils
 
 
-class FloorItemAdapter : BaseListAdapter<BuildingFloorItem, ItemFloorDetailBinding>() {
+class FloorItemAdapter : BaseListAdapter<BuildingModule, ItemFloorDetailBinding>() {
 
+    private val icons = listOf(
+        R.drawable.ic_main_local,
+        R.drawable.ic_main_local_upload,
+        R.drawable.ic_main_cloud,
+        R.drawable.ic_main_download,
+        R.drawable.ic_main_download_config
+    )
 
-    override fun init(bind: ItemFloorDetailBinding, bean: BuildingFloorItem, pos: Int) {
+    override fun init(bind: ItemFloorDetailBinding, bean: BuildingModule, pos: Int) {
 
         var routing: String? = null
         var configRouting: String =
             com.sribs.common.ARouterPath.CHECK_MODULE_CONFIG_TYPE_BUILDING_ACTIVITY
         var text: String
-        when (bean.name) {
+        when (bean.moduleName) {
             "建筑结构复核" -> {
                 text = "建筑结构复核"
                 routing = com.sribs.common.ARouterPath.CHECK_BUILD_STRUCTURE_ACTIVITY
@@ -47,18 +56,16 @@ class FloorItemAdapter : BaseListAdapter<BuildingFloorItem, ItemFloorDetailBindi
                 text = ""
             }
         }
+
+        bind.status.setImageResource(icons[bean.status])
         bind.name.text = text
         bind.time.text = bean.updateTime
-        bind.delete.setOnClickListener {
-            mList?.remove(bean)
-            notifyDataSetChanged()
-            mItemClickCallback?.onDelete(bean.moduleid!!)
-
+        bind.more.setOnClickListener {
+            mItemClickCallback?.onMore(bean)
         }
         bind.edit.setOnClickListener {
             if (routing != null && mItemClickCallback != null) {
                 mItemClickCallback?.onEdit(text, routing, bean.moduleid!!)
-
             }
         }
         bind.config.setOnClickListener {
@@ -70,10 +77,9 @@ class FloorItemAdapter : BaseListAdapter<BuildingFloorItem, ItemFloorDetailBindi
 
     }
 
-    fun setData(list: ArrayList<BuildingFloorItem>) {
-
+    fun setData(list: ArrayList<BuildingModule>) {
         if (mList == null) {
-            mList = ArrayList<BuildingFloorItem>()
+            mList = ArrayList<BuildingModule>()
 
         }
         mList?.clear()
@@ -81,16 +87,16 @@ class FloorItemAdapter : BaseListAdapter<BuildingFloorItem, ItemFloorDetailBindi
         notifyDataSetChanged()
     }
 
-    fun getData():ArrayList<BuildingFloorItem>?{
+    fun getData():ArrayList<BuildingModule>?{
         return mList
     }
 
-    fun addItem(item: BuildingFloorItem) {
+    fun addItem(item: BuildingModule) {
         mList?.add(item)
         notifyItemChanged(item.moduleid!!.toInt())
     }
 
-    fun removeItem(item: BuildingFloorItem) {
+    fun removeItem(item: BuildingModule) {
         mList?.remove(item)
         notifyDataSetChanged()
     }
@@ -111,7 +117,7 @@ class FloorItemAdapter : BaseListAdapter<BuildingFloorItem, ItemFloorDetailBindi
             return false
         }
         for (i in 0 until mList!!.size) {
-            if (name.equals(mList!!.get(i).name))
+            if (name.equals(mList!!.get(i).moduleName))
                 return true
         }
         return false
@@ -122,6 +128,6 @@ class FloorItemAdapter : BaseListAdapter<BuildingFloorItem, ItemFloorDetailBindi
 
         fun onConfig(moduleName: String, routing: String, moduleId: Long);
 
-        fun onDelete(moduleId: Long);
+        fun onMore(bean: BuildingModule);
     }
 }

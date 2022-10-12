@@ -37,6 +37,10 @@ class ProjectCreateByTypeActivity:BaseActivity(), IProjectContrast.IProjectCreat
     var mLocalProjectId = -1L
 
     @JvmField
+    @Autowired(name= com.sribs.common.ARouterPath.VAL_PROJECT_UUID)
+    var mLocalProjectUUID = ""
+
+    @JvmField
     @Autowired(name= com.sribs.common.ARouterPath.VAL_BUILDING_ID)
     var mBuildingId = -1L
 
@@ -154,6 +158,7 @@ class ProjectCreateByTypeActivity:BaseActivity(), IProjectContrast.IProjectCreat
             if (mBinding.builderName.getEditText().text!=null){
                 projectCreateTypePresenter.createLocalBuilding(this,
                     mLocalProjectId.toInt(),
+                    mLocalProjectUUID,
                     mBuildingId,
                     mBinding.builderName.getEditText().text.toString()
                     ,mLeader!!

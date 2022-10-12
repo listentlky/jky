@@ -7,16 +7,24 @@ import android.content.SharedPreferences
 import android.net.Uri
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.android.arouter.launcher.ARouter
-import com.sribs.common.module.BasePresenter
+import com.cbj.sdk.libnet.http.HttpManager
 import com.cbj.sdk.libui.mvp.moudles.IBaseView
 import com.cbj.sdk.utils.NumberUtil
-import com.sribs.bdd.bean.*
+import com.sribs.bdd.Config
+import com.sribs.bdd.action.Dict
+import com.sribs.bdd.bean.BuildingFloorBean
+import com.sribs.bdd.bean.BuildingFloorPictureBean
+import com.sribs.bdd.bean.Floor
 import com.sribs.bdd.ui.adapter.CreateFloorAdapter
 import com.sribs.bdd.ui.adapter.CreateFloorPictureAdapter
 import com.sribs.bdd.utils.ModuleHelper
+import com.sribs.bdd.utils.UUIDUtil
 import com.sribs.bdd.v3.util.LogUtils
 import com.sribs.common.bean.db.DrawingV3Bean
 import com.sribs.common.bean.db.FloorBean
+import com.sribs.common.bean.net.v3.V3BuildingSaveReq
+import com.sribs.common.module.BasePresenter
+import com.sribs.common.net.HttpApi
 import com.sribs.common.server.IDatabaseService
 import com.sribs.common.utils.FileUtil
 import com.sribs.db.project.building.BuildingBean
@@ -24,6 +32,9 @@ import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import java.io.File
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 class ProjectCreateTypePresenter: BasePresenter(),IProjectContrast.IProjectCreateTypePresenter
     ,CreateFloorAdapter.ICallback {
@@ -126,7 +137,9 @@ class ProjectCreateTypePresenter: BasePresenter(),IProjectContrast.IProjectCreat
 
     private var mBldId: Long?=-1
 
-    fun createLocalBuilding(activity: Activity, mLocalProjectId:Int,
+    private var mBldUUID:String? = ""
+
+    fun createLocalBuilding(activity: Activity, mLocalProjectId:Int,mLocalProjectUUID:String,
                             mBuildingId:Long, name:String,leader:String,inspector:String): Long? {
 
         if (array==null||array?.size==0){
@@ -152,7 +165,9 @@ class ProjectCreateTypePresenter: BasePresenter(),IProjectContrast.IProjectCreat
         LogUtils.d("创建本地楼: mBldId=${mBuildingId}")
 
         createLocalFacadesDrawingInTheBuilding(activity,mLocalProjectId, mBldId!!)
+
         LogUtils.d("楼图纸："+mAppFacadeDrawingList.toString())
+        mBldUUID = UUIDUtil.getUUID(name)
         mDb.getLocalBuildingOnce(mBuildingId.toLong()?:-1).toObservable()
             .subscribeOn(Schedulers.computation())
             .observeOn(Schedulers.computation())
@@ -161,6 +176,8 @@ class ProjectCreateTypePresenter: BasePresenter(),IProjectContrast.IProjectCreat
                 var dbBldBean: com.sribs.common.bean.db.BuildingBean? = null
                 dbBldBean = com.sribs.common.bean.db.BuildingBean(
                     -1,
+                    mBldUUID!!,
+                    mLocalProjectUUID,
                     mLocalProjectId.toLong(),
                     name,
                     "all",
@@ -187,12 +204,13 @@ class ProjectCreateTypePresenter: BasePresenter(),IProjectContrast.IProjectCreat
                 //cache building drawings info to sqlite
 
 
-                addDisposable(mDb.getAllBuilding()
+    /*            addDisposable(mDb.getAllBuilding()
                     .subscribeOn(Schedulers.computation())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe {
                         var list = ArrayList(it.map { b->BuildingBean(
                             id = b.id?:-1,
+                            uuid=b.UUID,
                             bldName = b.bldName!!,
                             bldType = b.bldType!!,
                             createTime = b.createTime!!,
@@ -229,7 +247,44 @@ class ProjectCreateTypePresenter: BasePresenter(),IProjectContrast.IProjectCreat
                             drawing = b.drawing
                         )})
                         LogUtils.d("获取本地数据库楼层表: "+list.toString())
-                    })
+                    })*/
+
+                /**
+                 * 有网 走网络创建
+                 */
+                var floorDrawingsMap: HashMap<String?, Any?> = HashMap()
+                var inspectorList: List<String> =
+                    if (inspector.contains("、")) inspector.split("、") else Arrays.asList(inspector)
+                if(Config.isNetAvailable){
+                    LogUtils.d("有网进行云端楼创建: ")
+                    addDisposable(HttpManager.instance.getHttpService<HttpApi>()
+                        .saveV3Building(V3BuildingSaveReq().also {
+                            it.projectId = mLocalProjectUUID
+                            it.buildingId = mBldUUID!!
+                            it.buildName = name
+                            it.buildingType = ""
+                            it.leaderId = Dict.getLeaderId(leader)!!
+                            it.leaderName = leader
+                            it.aboveGroundNumber = ""+above.size
+                            it.underGroundNumber = ""+before.size
+                            it.drawings = ArrayList() // 遗留图纸上传
+                            it.floorDrawings = floorDrawingsMap // 遗留图纸上传
+                            it.inspectors = inspectorList
+                        })
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe({
+                            LogUtils.d("创建云端楼成功: " + it.toString())
+                            mView?.createBuildingSuccess()
+                        },{
+                            LogUtils.d("创建云端楼失败: " + it.toString())
+                            mView?.onMsg(checkError(it))
+                            mView?.createBuildingSuccess()
+                        }))
+                }else{
+                    LogUtils.d("无网直接返回: ")
+                    mView?.createBuildingSuccess()
+                }
 
                /* addDisposable(mDb.getAllDrawing()
                     .subscribeOn(Schedulers.computation())
@@ -260,7 +315,6 @@ class ProjectCreateTypePresenter: BasePresenter(),IProjectContrast.IProjectCreat
               /*  if(Config.isNetAvailable){ // 有网，网络创建
 
                 }else {*/
-                    mView?.createBuildingSuccess()
          //       }
 
             },{

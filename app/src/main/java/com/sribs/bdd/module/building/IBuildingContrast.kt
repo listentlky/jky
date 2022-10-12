@@ -62,7 +62,7 @@ interface IBuildingContrast {
      */
     interface IBuildingListPresent:IBasePresenter{
 
-        fun getAllBuilding(localProject:Long)
+        fun getAllBuilding(localProject:Long,projectUUID:String)
     }
 
     interface IBuildingListView:IView{

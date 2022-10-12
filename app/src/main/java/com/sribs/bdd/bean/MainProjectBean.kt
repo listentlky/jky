@@ -11,6 +11,7 @@ import java.io.Serializable
  */
 data class MainProjectBean(
     var localId:Long=-1,
+    var localUUID:String,
     var remoteId:String="",
     var updateTimeYMD:String,
     var status: String,
@@ -38,7 +39,7 @@ data class MainProjectBean(
     }
 
     override fun toString(): String {
-        return "MainProjectBean(localId=$localId, remoteId='$remoteId', updateTimeYMD='$updateTimeYMD', status='$status', address='$address', leader='$leader', inspector='$inspector', isCardSel=$isCardSel, isMenuChecked=$isMenuChecked, hasNewer=$hasNewer, updateTime='$updateTime', createTime='$createTime', name=$name, buildNo=$buildNo, remoteData=$remoteData)"
+        return "MainProjectBean(localId=$localId, localUUID='$localUUID', remoteId='$remoteId', updateTimeYMD='$updateTimeYMD', status='$status', address='$address', leader='$leader', inspector='$inspector', isCardSel=$isCardSel, isMenuChecked=$isMenuChecked, hasNewer=$hasNewer, updateTime='$updateTime', createTime='$createTime', name=$name, buildNo=$buildNo, remoteData=$remoteData)"
     }
 
 

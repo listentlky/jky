@@ -1,13 +1,10 @@
 package com.sribs.bdd.v3.adapter
 
 import android.text.Editable
-import android.view.View
 import android.view.ViewGroup
 import com.cbj.sdk.libui.mvp.BindingViewHolder
 import com.cbj.sdk.libui.mvp.adapter.BaseListAdapter
 import com.cbj.sdk.libui.mvp.newBindingViewHolder
-import com.sribs.bdd.bean.BuildingFloorItem
-import com.sribs.bdd.bean.BuildingFloorPictureBean
 import com.sribs.bdd.bean.data.ModuleFloorPictureBean
 import com.sribs.bdd.databinding.ItemFloorPicBinding
 import com.sribs.common.ui.widget.TagEditView

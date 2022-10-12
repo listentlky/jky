@@ -127,9 +127,8 @@ class CheckBuildStructureActivity : BaseActivity(), ICheckBSContrast.ICheckBSVie
         mBinding.checkMenuLayout.checkObdMenuClose.setOnClickListener {
             mBinding.checkMenuLayout.root.visibility = View.GONE
         }
-
-        Global.Init(this)
         mPresenter.getModuleInfo(mLocalProjectId, mBuildingId, mModuleId, mRemoteId)
+        Global.Init(this)
         RxBus.getDefault().toObservable<RefreshPDFEvent>(RefreshPDFEvent::class.java)
             .subscribe {
                 if (it.isRefresh) {
@@ -283,7 +282,7 @@ class CheckBuildStructureActivity : BaseActivity(), ICheckBSContrast.ICheckBSVie
                 mView?.setReadOnly(false)
                 mView?.setAnnotMenu(UIAnnotMenu(mViewParent))
                 mView?.setV3SelectDamageCallback(this)
-                if(mController == null) {
+                if (mController == null) {
                     mController = PDFViewController(
                         mViewParent,
                         mView,
@@ -394,8 +393,8 @@ class CheckBuildStructureActivity : BaseActivity(), ICheckBSContrast.ICheckBSVie
      * 设置损伤页面详情，并展示
      */
     fun resetDamageInfo(damageV3Bean: DamageV3Bean?, type: String?) {
-        LogUtils.d("resetDamageInfo： "+damageV3Bean+" ; type:"+type)
-        if(mBinding.checkMenuLayout.root.visibility == View.VISIBLE){
+        LogUtils.d("resetDamageInfo： " + damageV3Bean + " ; type:" + type)
+        if (mBinding.checkMenuLayout.root.visibility == View.VISIBLE) {
             AlertDialog.Builder(this).setTitle("提示")
                 .setMessage("当前有缩小详情页，是否移除？")
                 .setPositiveButton(R.string.dialog_ok) { dialog, which ->
@@ -416,7 +415,7 @@ class CheckBuildStructureActivity : BaseActivity(), ICheckBSContrast.ICheckBSVie
 
                 }
                 .show()
-        }else{
+        } else {
             when (type) {
                 mCurrentDamageType[0] -> { // 层高
                     (mFragments[1] as CheckBSFloorFragment).resetView(damageV3Bean)
@@ -433,7 +432,7 @@ class CheckBuildStructureActivity : BaseActivity(), ICheckBSContrast.ICheckBSVie
     /**
      * 删除某个损伤
      */
-    fun removeDamage(damageV3Bean: DamageV3Bean?, type: String?){
+    fun removeDamage(damageV3Bean: DamageV3Bean?, type: String?) {
         var exitDamageBeanList = mDamageBeanList!!.get(mCurrentLocalPDF)
         LogUtils.d("删除前损伤数据: " + exitDamageBeanList)
 
@@ -445,11 +444,11 @@ class CheckBuildStructureActivity : BaseActivity(), ICheckBSContrast.ICheckBSVie
 
         mDamageBeanList!!.put(mCurrentLocalPDF, exitDamageBeanList)
         resetDamageList()
-       /* try {
-            mView?.removeCurrentNone(damageV3Bean!!.annotX,damageV3Bean!!.annotY)
-        }catch (e:Exception){
+        /* try {
+             mView?.removeCurrentNone(damageV3Bean!!.annotX,damageV3Bean!!.annotY)
+         }catch (e:Exception){
 
-        }*/
+         }*/
     }
 
     /**
@@ -461,7 +460,7 @@ class CheckBuildStructureActivity : BaseActivity(), ICheckBSContrast.ICheckBSVie
 
 
         LogUtils.d("当前数据：" + damageInfo)
-        if(exitDamageBeanList == null){
+        if (exitDamageBeanList == null) {
             exitDamageBeanList = ArrayList()
         }
         LogUtils.d("过滤前损伤数据：" + exitDamageBeanList)
@@ -493,11 +492,11 @@ class CheckBuildStructureActivity : BaseActivity(), ICheckBSContrast.ICheckBSVie
      * 更新损伤数据
      */
     fun saveDamageDrawingToDb() {
-        mCheckBSMainBeanList!!.forEach {
-            it.drawing!!.forEach { b->
-                b.damage = mDamageBeanList!!.get(b.localAbsPath)!!
+        mCheckBSMainBeanList?.forEach {
+            it.drawing?.forEach { b ->
+                b.damage = mDamageBeanList?.get(b.localAbsPath)
             }
-            mPresenter.saveDamageToDb(it.drawing!!,it.id!!)
+            mPresenter.saveDamageToDb(it.drawing!!, it.id!!)
         }
     }
 
@@ -707,8 +706,8 @@ class CheckBuildStructureActivity : BaseActivity(), ICheckBSContrast.ICheckBSVie
                         resetDamageInfo(it, it.type)
                     }
                 }
-                LogUtils.d("isMatch： "+isMatch)
-                if(!isMatch){
+                LogUtils.d("isMatch： " + isMatch)
+                if (!isMatch) {
                     AlertDialog.Builder(this).setTitle("提示")
                         .setMessage("当前损伤信息已被删除，移除标记点")
                         .setPositiveButton(R.string.dialog_ok) { dialog, which ->

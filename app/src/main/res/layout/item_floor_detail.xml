@@ -4,8 +4,19 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <ImageView
+        android:id="@+id/status"
+        android:layout_width="@dimen/login_item_icon_size"
+        android:layout_height="@dimen/login_item_icon_size"
+        android:scaleType="fitXY"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/name"
+        android:layout_marginRight="@dimen/_4sdp"
+        />
+
     <TextView
-        android:layout_marginLeft="@dimen/_20sdp"
+        android:layout_marginLeft="@dimen/_35sdp"
         android:id="@+id/name"
         android:textColor="@color/text_black"
         android:textSize="@dimen/_8ssp"
@@ -49,10 +60,9 @@
             app:cornerRadius="@dimen/_2sdp"
             app:rippleColor="@color/rippleColor"
             android:theme="@style/Theme.MaterialComponents.Light"
-
             android:insetTop="0dp"
             android:insetBottom="0dp" />
-        <androidx.appcompat.widget.AppCompatButton
+     <!--   <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/config"
             android:background="@drawable/grey_line_back"
             android:layout_marginLeft="@dimen/_5sdp"
@@ -64,19 +74,35 @@
             app:cornerRadius="@dimen/_2sdp"
             android:padding="0dp"
             android:insetTop="0dp"
-            android:insetBottom="0dp" />
+            android:insetBottom="0dp" />-->
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/delete"
-            android:background="@drawable/grey_line_back"
-            android:layout_marginLeft="@dimen/_5sdp"
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/config"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/_20sdp"
-            android:text="删除"
-            android:textColor="@color/text_black"
+            android:layout_marginLeft="@dimen/_5sdp"
+            app:backgroundTint="@color/blue_800"
+            android:text="配置"
+            android:textColor="@color/white"
             android:textSize="@dimen/_8ssp"
             app:cornerRadius="@dimen/_2sdp"
-            android:padding="0dp"
+            app:rippleColor="@color/rippleColor"
+            android:theme="@style/Theme.MaterialComponents.Light"
+            android:insetTop="0dp"
+            android:insetBottom="0dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/more"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/_20sdp"
+            android:layout_marginLeft="@dimen/_5sdp"
+            app:backgroundTint="@color/blue_800"
+            android:text="更多"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_8ssp"
+            app:cornerRadius="@dimen/_2sdp"
+            app:rippleColor="@color/rippleColor"
+            android:theme="@style/Theme.MaterialComponents.Light"
             android:insetTop="0dp"
             android:insetBottom="0dp" />
     </LinearLayout>

@@ -1,5 +1,6 @@
 package com.sribs.bdd.bean
 
+import com.sribs.common.bean.db.DrawingV3Bean
 import com.sribs.common.bean.db.UnitBean
 
 //楼层
@@ -46,7 +47,28 @@ data class BuildingFloor(val projectId:Long?,
 }
 
 //每栋楼的模块
-data class BuildingFloorItem(var moduleid:Long?,var buildingId:Long?,var name:String?,var updateTime:String?){
+data class BuildingModule(
+    var projectUUID:String?,
+    var projectId: Long?,
+    var buildingUUID:String?,
+    var buildingId:Long?,
+    var moduleUUID:String?,
+    var moduleid:Long?,
+    var moduleName: String?,
+    var drawings: List<DrawingV3Bean>?=ArrayList(),
+    var inspectors: String?,
+    var leaderId: String?,
+    var leaderName: String?,
+    var aboveGroundNumber: Int?,
+    var underGroundNumber: Int?,
+    var isDeleted: Int?,
+    var version: Int?,
+    var status: Int,
+    var createTime: String?,
+    var deleteTime: String?,
+    var updateTime:String?,
+    var remoteId: String?
+    ){
 
 }
 

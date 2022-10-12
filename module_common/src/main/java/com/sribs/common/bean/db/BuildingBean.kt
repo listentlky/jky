@@ -8,6 +8,8 @@ package com.sribs.common.bean.db
  */
 data class BuildingBean(
     var id:Long?=null,
+    var UUID:String,
+    var projectUUID:String,
     var projectId:Long?=null,
     var bldName:String?=null,
     var bldType:String?=null,
