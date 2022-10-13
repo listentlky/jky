@@ -120,6 +120,7 @@ class BuildingDamageMainPresenter :BasePresenter(), IBuildingContrast.IBuildingP
                     "",
                     "",
                     1,
+                    1,
                     "",
                     0
                 )

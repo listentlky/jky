@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:id="@+id/menu_bld_fun"
+    <item android:id="@+id/menu_module_fun"
         android:title=""
         android:orderInCategory="100"
         app:showAsAction="always"
@@ -10,18 +10,18 @@
         >
         <menu>
             <group>
-             <!--   <item
-                    android:id="@+id/menu_bld_upload"
-                    android:title="上传配置"
-                    android:icon="@drawable/ic_main_upload"
-                    />
+                <!--   <item
+                       android:id="@+id/menu_bld_upload"
+                       android:title="上传配置"
+                       android:icon="@drawable/ic_main_upload"
+                       />
+                   <item
+                       android:id="@+id/menu_bld_download_config"
+                       android:title="下载配置"
+                       android:icon="@drawable/ic_main_download_unit_config"
+                       />-->
                 <item
-                    android:id="@+id/menu_bld_download_config"
-                    android:title="下载配置"
-                    android:icon="@drawable/ic_main_download_unit_config"
-                    />-->
-                <item
-                    android:id="@+id/menu_bld_refresh"
+                    android:id="@+id/menu_module_refresh"
                     android:title="从云端获取更新"
                     android:icon="@drawable/ic_main_download_unit_all"
                     />
@@ -31,7 +31,7 @@
     </item>
 
 
-    <item android:id="@+id/menu_bld_info"
+    <item android:id="@+id/menu_module_info"
         android:title=""
         android:orderInCategory="100"
         app:showAsAction="always"

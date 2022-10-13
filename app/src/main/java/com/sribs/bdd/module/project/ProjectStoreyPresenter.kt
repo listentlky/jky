@@ -119,6 +119,7 @@ class ProjectStoreyPresenter :BasePresenter(),IProjectContrast.IFloorPresenter{
                     "",
                     "",
                     1,
+                    1,
                     "",
                     0
                 )

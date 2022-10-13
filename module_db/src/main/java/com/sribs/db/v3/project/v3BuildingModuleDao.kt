@@ -41,4 +41,7 @@ interface v3BuildingModuleDao {
 
     @Query("Delete from v3_building_module where project_id = :projectId")
     fun deleteBuildingModuleByProjectId(projectId: Long)
+
+    @Query("Delete from v3_building_module where building_id = :buildingId")
+    fun deleteBuildingModuleByBuildingId(buildingId: Long)
 }

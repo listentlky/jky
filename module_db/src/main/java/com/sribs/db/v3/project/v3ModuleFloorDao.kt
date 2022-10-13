@@ -60,4 +60,7 @@ interface v3ModuleFloorDao {
 
     @Query("Delete from V3_MODULE_FLOOR where project_id = :projectId")
     fun deleteModuleFloorByProjectId(projectId: Long)
+
+    @Query("Delete from V3_MODULE_FLOOR where building_id = :buildingId")
+    fun deleteModuleFloorByBuildingId(buildingId: Long)
 }

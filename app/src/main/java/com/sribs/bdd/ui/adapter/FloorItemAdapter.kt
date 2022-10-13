@@ -57,7 +57,11 @@ class FloorItemAdapter : BaseListAdapter<BuildingModule, ItemFloorDetailBinding>
             }
         }
 
-        bind.status.setImageResource(icons[bean.status])
+        var resIdx = bind.root.context.resources.getStringArray(R.array.main_project_status).indexOf(bean.status)
+        if (resIdx in icons.indices) {
+            bind.status.setImageResource(icons[resIdx])
+        }
+
         bind.name.text = text
         bind.time.text = bean.updateTime
         bind.more.setOnClickListener {

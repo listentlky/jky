@@ -18,6 +18,7 @@ data class BuildingBean(
     var deleteTime:Long?=null,
     var leader:String?=null,
     var inspectorName:String?="",
+    var parentVersion:Int?=null,
     var version:Int?=null,
     var remoteId:String?=null,
     var status:Int?=null,

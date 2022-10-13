@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName
  * author: bruce
  * description:
  */
-data class V3ProjectDownloadReq (
-    @SerializedName("projectId") var projectId:String,
+data class V3VersionDownloadReq (
+    @SerializedName("id") var id:String,
     @SerializedName("version") var version:Int,
 )

@@ -23,6 +23,7 @@ data class v3BuildingModuleRoom(
     @ColumnInfo(name = "aboveground_number") var aboveGroundNumber: Int? = 0,  //
     @ColumnInfo(name = "underground_number") var underGroundNumber: Int? = 0,  //
     @ColumnInfo(name = "is_deleted") var isDeleted: Int? = 0,  //
+    @ColumnInfo(name = "parentVersion") var parentVersion: Int? = 1,
     @ColumnInfo(name = "version") var version: Int? = 1,
     @ColumnInfo(name = "status") var status: Int? = 0,  //
 

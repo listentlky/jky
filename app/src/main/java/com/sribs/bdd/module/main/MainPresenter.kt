@@ -5,8 +5,8 @@ import com.cbj.sdk.libbase.exception.MsgThrowable
 import com.cbj.sdk.libbase.utils.LOG
 import com.cbj.sdk.libnet.http.HttpManager
 import com.cbj.sdk.libui.mvp.moudles.IBaseView
+import com.sribs.bdd.Config
 import com.sribs.bdd.R
-import com.sribs.bdd.action.Dict
 import com.sribs.bdd.bean.MainProjectBean
 import com.sribs.bdd.bean.UnitConfigType
 import com.sribs.bdd.module.BaseUnitConfigPresenter
@@ -17,15 +17,14 @@ import com.sribs.common.bean.db.ConfigBean
 import com.sribs.common.bean.db.ProjectBean
 import com.sribs.common.bean.db.UnitBean
 import com.sribs.common.bean.net.*
-import com.sribs.common.bean.net.v3.V3ProjectDownloadReq
-import com.sribs.common.bean.net.v3.V3ProjectVersionDeleteReq
+import com.sribs.common.bean.net.v3.V3VersionDownloadReq
+import com.sribs.common.bean.net.v3.V3VersionDeleteReq
 import com.sribs.common.net.HttpApi
 import com.sribs.common.utils.TimeUtil
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import java.sql.Date
-import java.util.*
 import kotlin.collections.ArrayList
 
 /**
@@ -198,7 +197,7 @@ class MainPresenter:BaseUnitConfigPresenter(),IMainListContrast.IMainPresenter {
         cb: (Boolean) -> Unit
     ){
         addDisposable(HttpManager.instance.getHttpService<HttpApi>()
-            .downloadV3ProjectVersionList(V3ProjectDownloadReq(remoteProjectId,version))
+            .downloadV3ProjectVersionList(V3VersionDownloadReq(remoteProjectId,version))
             .subscribeOn(Schedulers.io())
             .observeOn(Schedulers.computation())
             .subscribe({
@@ -406,40 +405,42 @@ class MainPresenter:BaseUnitConfigPresenter(),IMainListContrast.IMainPresenter {
      */
     override fun projectDelete(beanMain:MainProjectBean) {
         //删除本地数据库
-        LogUtils.d("删除本地数据")
-        var obList = ArrayList<Observable<Boolean>>()
-        var projectId = beanMain.localId
-        // 3期
-        obList.add(mDb.deleteProject(ProjectBean(id=projectId)).map { true })
-        obList.add(mDb.deleteBuildingByProjectId(projectId)) //删除本地项目下的所有本地楼
-        obList.add(mDb.deleteFloorByProjectId(projectId)) //删除本地项目下的所有本地楼层
-        obList.add(mDb.deleteBuildingModuleByProjectId(projectId)) //删除本地项目下的所有楼模块
-        obList.add(mDb.deleteModuleFloorByProjectId(projectId)) //删除本地项目下的所有楼模块层
+        if(beanMain.localId>0) {
+            LogUtils.d("删除本地数据")
+            var obList = ArrayList<Observable<Boolean>>()
+            var projectId = beanMain.localId
+            // 3期
+            obList.add(mDb.deleteProject(ProjectBean(id = projectId)).map { true })
+            obList.add(mDb.deleteBuildingByProjectId(projectId)) //删除本地项目下的所有本地楼
+            obList.add(mDb.deleteFloorByProjectId(projectId)) //删除本地项目下的所有本地楼层
+            obList.add(mDb.deleteBuildingModuleByProjectId(projectId)) //删除本地项目下的所有楼模块
+            obList.add(mDb.deleteModuleFloorByProjectId(projectId)) //删除本地项目下的所有楼模块层
 
-        //2期
-        obList.add(mDb.deleteUnit(projectId))
-        obList.add(mDb.deleteConfig(projectId))
-        obList.add(mDb.deleteHouseStatusByProject(projectId))
-        obList.add(mDb.deleteRoomStatusByProject(projectId))
-        obList.add(mDb.deleteRoomDetailByProject(projectId))
-        obList.add(mDb.deleteReportByProjectId(projectId))
-        var count = 0
-        Observable.merge(obList)
-            .subscribeOn(Schedulers.computation())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-                count++
-                LOG.I("123","delete project count=$count  $it")
-            },{
-                it.printStackTrace()
-            })
+            //2期
+            obList.add(mDb.deleteUnit(projectId))
+            obList.add(mDb.deleteConfig(projectId))
+            obList.add(mDb.deleteHouseStatusByProject(projectId))
+            obList.add(mDb.deleteRoomStatusByProject(projectId))
+            obList.add(mDb.deleteRoomDetailByProject(projectId))
+            obList.add(mDb.deleteReportByProjectId(projectId))
+            var count = 0
+            Observable.merge(obList)
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    count++
+                    LOG.I("123", "delete project count=$count  $it")
+                }, {
+                    it.printStackTrace()
+                })
+        }
 
         if(!beanMain.remoteId.isNullOrEmpty()) {
             //删除网络数据
             LogUtils.d("删除网络数据")
             addDisposable(HttpManager.instance.getHttpService<HttpApi>()
                 .deleteProject(
-                    V3ProjectVersionDeleteReq(
+                    V3VersionDeleteReq(
                         beanMain.remoteId,
                         beanMain.parentVersion,
                         beanMain.version

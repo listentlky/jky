@@ -8,11 +8,13 @@ import com.sribs.bdd.R
 import com.sribs.bdd.action.Dict
 import com.sribs.bdd.bean.BuildingMainBean
 import com.sribs.bdd.v3.util.LogUtils
-import com.sribs.common.bean.net.v3.V3BuildingSaveReq
+import com.sribs.common.bean.V3VersionBean
+import com.sribs.common.bean.net.v3.*
 import com.sribs.common.module.BasePresenter
 import com.sribs.common.net.HttpApi
 import com.sribs.common.server.IDatabaseService
 import com.sribs.common.utils.TimeUtil
+import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import java.util.*
@@ -51,38 +53,40 @@ class BuildingListPresenter : BasePresenter(), IBuildingContrast.IBuildingListPr
                         projectId = localProject,
                         bldUUID = b.UUID,
                         bldId = b.id ?: -1,
-                        bldName = b.bldName!!,
-                        bldType = b.bldType!!,
-                        leader = b.leader,
-                        inspectorName = b.inspectorName,
+                        bldName = b.bldName?:"",
+                        bldType = b.bldType?:"",
+                        leader = b.leader?:"",
+                        inspectorName = b.inspectorName?:"",
                         remoteId = null,
                         createTime = if (b.createTime==null)"" else TimeUtil.YMD_HMS.format(b.createTime),
                         updateTime = if (b.updateTime==null)"" else TimeUtil.YMD_HMS.format(b.updateTime),
+                        parentVersion= b.parentVersion!!,
                         version = b.version!!,
                         status = mStateArr[b.status?:0],
-                        aboveGroundNumber = b.aboveGroundNumber,
-                        underGroundNumber = b.underGroundNumber
+                        aboveGroundNumber = b.aboveGroundNumber?:0,
+                        underGroundNumber = b.underGroundNumber?:0
                     )
                 })
                 LogUtils.d("获取本地数据库楼表: " + list.toString())
+                mView!!.onAllBuilding(ArrayList(list.sortedByDescending { b->b.updateTime }))
 
-                if(!Config.isNetAvailable){
+               /* if(!Config.isNetAvailable){
                     LogUtils.d("无网络 直接展示本地数据: ")
-                    mView!!.onAllBuilding(ArrayList(list.sortedByDescending { b->b.updateTime }))
+
                 }else{
                     LogUtils.d("有网络 获取云端楼: ")
                     getBuildingRemote(projectUUID,list)
-                }
+                }*/
             })
     }
 
     /**
      * 获取云端楼
      */
-    fun getBuildingRemote(projectUUID: String,localList:ArrayList<BuildingMainBean>){
-        LogUtils.d("请求云端楼数据项目ID: ${projectUUID}")
+    fun getBuildingRemote(projectRemoteId: String,version:Int,localList:ArrayList<BuildingMainBean>){
+        LogUtils.d("请求云端楼数据项目ID: ${projectRemoteId}")
         addDisposable(HttpManager.instance.getHttpService<HttpApi>()
-            .getV3BuildingList(projectUUID)
+            .getV3BuildingList(projectRemoteId,version)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
@@ -202,6 +206,110 @@ class BuildingListPresenter : BasePresenter(), IBuildingContrast.IBuildingListPr
             },{
                 LogUtils.d("查询楼层表异常: "+it)
             }))
+    }
+
+    /**
+     * 获取楼版本列表
+     */
+    fun getV3BuildingVersionHistory(projectRemoteId: String,buildingRemoteId:String,cb: (ArrayList<V3VersionBean>?) -> Unit){
+        addDisposable(HttpManager.instance.getHttpService<HttpApi>()
+            .getV3BuildingVersionList(V3VersionReq(projectRemoteId,buildingRemoteId))
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                checkResult(it)
+                LogUtils.d("查询楼版本列表："+it)
+                cb(ArrayList(it.data!!.records.map {
+                    V3VersionBean(
+                        it.projectId,
+                        it.projectName,
+                        it.leaderName,
+                        it.leaderId,
+                        it.inspectors,
+                        it.parentVersion,
+                        it.version,
+                        it.createTime
+                    )
+                }))
+            },{
+                LogUtils.d("查询楼版本列表失败："+it)
+                mView?.onMsg(ERROR_HTTP)
+                cb(null)
+                it.printStackTrace()
+            }))
+    }
+
+    /**
+     * 下载指定版本楼
+     */
+    fun downloadBuildingConfig(
+        remoteBuildingId:String,
+        version:Int,
+        cb: (Boolean) -> Unit
+    ){
+        addDisposable(HttpManager.instance.getHttpService<HttpApi>()
+            .downloadV3BuildingVersionList(V3VersionDownloadReq(remoteBuildingId,version))
+            .subscribeOn(Schedulers.io())
+            .observeOn(Schedulers.computation())
+            .subscribe({
+                LogUtils.d("下载的楼版本数据: "+it)
+                cb(true)
+            },{
+                cb(false)
+            }))
+        /*.concatMap {
+            LogUtils.d("下载的项目版本数据")
+
+        }*/
+
+    }
+
+    /**
+     * 删除楼
+     */
+    fun deleteBuilding(beanMain: BuildingMainBean){
+        //本地楼
+        if(beanMain.bldId >0){
+            var obList = ArrayList<Observable<Boolean>>()
+            var bldId = beanMain.bldId
+            obList.add(mDb.deleteBuilding(bldId))
+            obList.add(mDb.deleteFloorByBuildingId(bldId))
+            obList.add(mDb.deleteBuildingModuleByBuildingId(bldId))
+            obList.add(mDb.deleteModuleFloorByBuildingId(bldId))
+
+            var count = 0
+            Observable.merge(obList)
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    count++
+                    LogUtils.d("删除楼 count=$count  $it")
+                }, {
+                    it.printStackTrace()
+                })
+        }
+
+        if(!beanMain.remoteId.isNullOrEmpty()){
+            LogUtils.d("删除网络数据")
+            addDisposable(HttpManager.instance.getHttpService<HttpApi>()
+                .deleteBuilding(
+                    V3VersionDeleteReq(
+                        beanMain.remoteId!!,
+                        beanMain.parentVersion,
+                        beanMain.version
+                    )
+                )
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    checkResult(it)
+                    LogUtils.d("删除远端楼成功：" + it.toString())
+                    mView?.onMsg("删除楼成功")
+                }, {
+                    mView?.onMsg("删除远端楼失败" + checkError(it))
+                })
+            )
+        }
     }
 
     override fun bindView(v: IBaseView) {

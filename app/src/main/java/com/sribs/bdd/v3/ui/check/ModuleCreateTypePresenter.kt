@@ -23,7 +23,6 @@ import com.sribs.bdd.v3.adapter.CreateModuleFloorAdapter
 import com.sribs.bdd.utils.ModuleHelper
 import com.sribs.bdd.v3.util.LogUtils
 import com.sribs.common.bean.db.DrawingV3Bean
-import com.sribs.common.bean.db.v3.project.v3BuildingModuleDbBean
 import com.sribs.common.bean.v3.v3ModuleFloorDbBean
 import com.sribs.common.server.IDatabaseService
 import com.sribs.common.utils.FileUtil
@@ -270,7 +269,6 @@ class ModuleCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCrea
         mLocalProjectId: Int,
         mBuildingId: Long,
         mModuleId: Long,
-        remoteId: String,
         moduleName: String,
     ) {
 

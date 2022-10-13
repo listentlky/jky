@@ -27,6 +27,7 @@ data class v3BuildingModuleDbBean(
     var createTime: String? = "",
     var updateTime: String? = null,
     var remoteId: String? = null,
+    var parentVersion: Int? = 1,
     var version: Int? = 1,
     var status: Int? = 0
 ) {

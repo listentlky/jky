@@ -163,6 +163,12 @@ class DatabaseSrv : IDatabaseService {
         it.onNext(true)
     }
 
+    override fun deleteBuildingModuleByBuildingId(buildingId: Long): Observable<Boolean> = Observable.create{
+        var dao = mDb!!.v3BuildingModuleDao()
+        dao.deleteBuildingModuleByBuildingId(buildingId)
+        it.onNext(true)
+    }
+
     override fun updatev3BuildingModuleDrawing(b: v3BuildingModuleDbBean): Observable<Int> =
         Observable.create {
             var dao = mDb!!.v3BuildingModuleDao()
@@ -227,6 +233,12 @@ class DatabaseSrv : IDatabaseService {
     override fun deleteModuleFloorByProjectId(projectId: Long): Observable<Boolean> =Observable.create {
         var dao = mDb!!.v3ModuleFloorDao()
         dao.deleteModuleFloorByProjectId(projectId)
+        it.onNext(true)
+    }
+
+    override fun deleteModuleFloorByBuildingId(buildingId: Long): Observable<Boolean> =Observable.create {
+        var dao = mDb!!.v3ModuleFloorDao()
+        dao.deleteModuleFloorByBuildingId(buildingId)
         it.onNext(true)
     }
 
@@ -730,6 +742,12 @@ class DatabaseSrv : IDatabaseService {
         it.onNext(true)
     }
 
+    override fun deleteFloorByBuildingId(bldId: Long): Observable<Boolean>  = Observable.create{
+        var dao = mDb!!.floorDao()
+        dao.deleteFloorByBuildingId(bldId)
+        it.onNext(true)
+    }
+
     override fun getAllFloor(): Flowable<List<FloorBean>> {
         var dao = mDb!!.floorDao()
         return dao.getAllFloor().run { ConverterHelper.convertFloorsInTheBuilding(this) }
@@ -770,6 +788,12 @@ class DatabaseSrv : IDatabaseService {
     override fun deleteBuildingByProjectId(projectId: Long): Observable<Boolean> = Observable.create{
         var dao = mDb!!.buildingDao()
         dao.deleteBuildingByProjectId(projectId)
+        it.onNext(true)
+    }
+
+    override fun deleteBuilding(bldId : Long): Observable<Boolean> = Observable.create{
+        var dao = mDb!!.buildingDao()
+        dao.deleteBuilding(bldId)
         it.onNext(true)
     }
 

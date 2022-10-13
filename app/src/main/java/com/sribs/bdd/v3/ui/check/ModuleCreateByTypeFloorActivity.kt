@@ -38,9 +38,6 @@ import com.sribs.common.utils.FileUtil
 @Route(path = com.sribs.common.ARouterPath.CHECK_MODULE_CONFIG_TYPE_FLOOR_ACTIVITY)
 class ModuleCreateByTypeFloorActivity : BaseActivity(), IProjectContrast.IModuleCreateTypeView {
 
-    private val moduleCreateTypePresenter by lazy { ModuleCreateTypePresenter() }
-
-
     @JvmField
     @Autowired(name = com.sribs.common.ARouterPath.VAL_PROJECT_ID)
     var mLocalProjectId = -1L
@@ -49,16 +46,13 @@ class ModuleCreateByTypeFloorActivity : BaseActivity(), IProjectContrast.IModule
     @Autowired(name = com.sribs.common.ARouterPath.VAL_BUILDING_ID)
     var mBuildingId = -1L
 
-
     @JvmField
     @Autowired(name = com.sribs.common.ARouterPath.VAL_COMMON_REMOTE_ID)
     var mRemoteId = ""
 
-
     @JvmField
     @Autowired(name = com.sribs.common.ARouterPath.VAL_COMMON_LEADER)
     var mLeaderName = ""
-
 
     @JvmField
     @Autowired(name = com.sribs.common.ARouterPath.VAL_COMMON_INSPECTOR)
@@ -68,7 +62,6 @@ class ModuleCreateByTypeFloorActivity : BaseActivity(), IProjectContrast.IModule
     @Autowired(name = com.sribs.common.ARouterPath.VAL_MODULE_ID)
     var mModuleId = -1L
 
-
     @JvmField
     @Autowired(name = com.sribs.common.ARouterPath.VAL_MODULE_NAME)
     var mModuleName = ""
@@ -77,10 +70,12 @@ class ModuleCreateByTypeFloorActivity : BaseActivity(), IProjectContrast.IModule
     @Autowired(name = com.sribs.common.ARouterPath.VAL_COMMON_TITLE)
     var mTitle = ""
 
-
     private val mBinding: ActivityCreateModuleTypeFloorBinding by inflate()
 
+    private val moduleCreateTypePresenter by lazy { ModuleCreateTypePresenter() }
+
     private var selected = ArrayList<String>()
+
     private var selectedPic = ArrayList<ModuleFloorPictureBean>()
 
     private val REQUEST_CODE = 12 //上传图片(pdf/img)
@@ -90,17 +85,16 @@ class ModuleCreateByTypeFloorActivity : BaseActivity(), IProjectContrast.IModule
     private val REQUEST_CODE_BEAN_WHITE_FLLOR = 14 //基于楼层的白板
 
     private var aboveNumber = 0
+
     private var afterNumber = 0
 
-    var currentBean: ModuleFloorBean? = null
+    private var currentBean: ModuleFloorBean? = null
 
-    private  var isDeleteModuleFloor = false
-
+    private var isDeleteModuleFloor = false
 
     override fun deinitView() {
-
+        unbindPresenter()
     }
-
 
     override fun getView(): View = mBinding.root
 
@@ -179,7 +173,6 @@ class ModuleCreateByTypeFloorActivity : BaseActivity(), IProjectContrast.IModule
                 mLocalProjectId.toInt(),
                 mBuildingId,
                 mModuleId,
-                mRemoteId,
                 mModuleName,
             )
         }
@@ -244,7 +237,6 @@ class ModuleCreateByTypeFloorActivity : BaseActivity(), IProjectContrast.IModule
         menuInflater.inflate(R.menu.menu_check, menu)
         return true
     }
-
 
     fun openPdfOrImgSelector() {
         val supportedMimeTypes = arrayOf("application/pdf", "image/*")

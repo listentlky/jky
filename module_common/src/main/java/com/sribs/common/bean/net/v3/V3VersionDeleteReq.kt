@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName
  * author: bruce
  * description:
  */
-data class V3ProjectVersionDeleteReq(
+data class V3VersionDeleteReq(
     @SerializedName("id") var projectId: String,
     @SerializedName("superiorVersion") var superiorVersion: Int,
     @SerializedName("version") var version: Int,

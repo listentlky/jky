@@ -61,6 +61,8 @@ interface IDatabaseService:IProvider {
 
     fun deleteBuildingModuleByProjectId(projectId: Long):Observable<Boolean>
 
+    fun deleteBuildingModuleByBuildingId(buildingId: Long):Observable<Boolean>
+
     fun updatev3BuildingModuleDrawing(b: v3BuildingModuleDbBean): Observable<Int>
 
     fun updatev3BuildingModuleDrawing(id:Long,drawingList:List<DrawingV3Bean>): Observable<Int>
@@ -76,6 +78,8 @@ interface IDatabaseService:IProvider {
     fun deletev3ModuleFloorOnce(projectId:Long,buildingId:Long,moduleId:Long,floorId: Long): Observable<Boolean>
 
     fun deleteModuleFloorByProjectId(projectId: Long): Observable<Boolean>
+
+    fun deleteModuleFloorByBuildingId(buildingId: Long): Observable<Boolean>
 
     /**
      * 3期项目end
@@ -240,11 +244,13 @@ interface IDatabaseService:IProvider {
     fun createLocalFloor(bb: FloorBean):Observable<Long>
     fun getLocalFloorsInTheBuilding(bldId: Long): Flowable<List<FloorBean>>
     fun deleteFloorByProjectId(projectId: Long):Observable<Boolean>
+    fun deleteFloorByBuildingId(bldId:Long):Observable<Boolean>
 
     fun createLocalDrawing(dw: DrawingBean):Observable<Long>
 //    fun getLocalFloorsInTheBuilding(bldId: Long): Flowable<List<FloorBean>>
     fun getBuildingIdByProjectId(proId: Long): Observable<Long>
     fun deleteBuildingByProjectId(projectId: Long): Observable<Boolean>
+    fun deleteBuilding(bld: Long): Observable<Boolean>
     fun getLocalDrawingListInBuilding(proId:Long, bldId:Long): Maybe<List<DrawingBean>>
     fun getLocalDamageListInDrawing(drwingId:Long): Flowable<List<com.sribs.common.bean.db.DamageBean>>
     fun createDamageInDrawing(dmg:DamageBean): Observable<Long>

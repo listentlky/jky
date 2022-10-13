@@ -272,6 +272,7 @@ class ProjectCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCre
                     leader,
                     inspector,
                     1,
+                    1,
                     "",
                     0,
                     mAppFacadeDrawingList,

@@ -8,21 +8,22 @@ import com.sribs.bdd.bean.RoomItemBean.Companion.TYPE_CONTENT
  * description:
  */
 class BuildingMainBean (
-    var projectUUID:String?,
-    var projectId:Long?,
-    var bldUUID:String?,
-    var bldId:Long?,
-    var bldName:String?,
-    var bldType:String?,
-    var leader:String?,
-    var inspectorName:String?="",
+    var projectUUID:String = "",
+    var projectId:Long = -1,
+    var bldUUID:String="",
+    var bldId:Long=-1,
+    var bldName:String="",
+    var bldType:String="",
+    var leader:String="",
+    var inspectorName:String="",
     var remoteId:String?=null,
-    var createTime:String?="",
-    var updateTime:String?="",
-    var version:Int?=1,
-    var status:String?="0",  //0 本地
-    var aboveGroundNumber:Int?,
-    var underGroundNumber:Int?
+    var createTime:String="",
+    var updateTime:String="",
+    var parentVersion:Int=1,
+    var version:Int=1,
+    var status:String="0",  //0 本地
+    var aboveGroundNumber:Int=0,
+    var underGroundNumber:Int=0
 ){
     var isMenuChecked:Boolean = false
     var isCardSel:Boolean = false
@@ -36,7 +37,7 @@ class BuildingMainBean (
      * @Description 分类标签
      */
     constructor(tag:String):this("",-1,"",-1,"","","","","","",
-        "",1,"0",0,0){
+        "",1,1,"0",0,0){
         type = RoomItemBean.TYPE_GROUP
         this.tag = tag
         spanCount = 3

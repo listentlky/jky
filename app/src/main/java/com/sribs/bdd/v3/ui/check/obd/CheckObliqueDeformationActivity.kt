@@ -205,8 +205,8 @@ class CheckObliqueDeformationActivity : BaseActivity(), ICheckOBDContrast.ICheck
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
         when (item?.itemId) {
-            R.id.menu_check_pop -> { // 菜单111
-
+            R.id.menu_check_pop -> {
+                mPresenter.uploadFile(mDrawingV3BeanList)
             }
 
         }

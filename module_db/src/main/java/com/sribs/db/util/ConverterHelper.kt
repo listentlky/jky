@@ -124,6 +124,7 @@ object ConverterHelper {
                     b.createTime,
                     b.updateTime,
                     b.remoteId,
+                    b.parentVersion,
                     b.version,
                     b.status
                 )
@@ -152,6 +153,7 @@ object ConverterHelper {
                     b.createTime,
                     b.updateTime,
                     b.remoteId,
+                    b.parentVersion,
                     b.version,
                     b.status
                 )
@@ -180,7 +182,10 @@ object ConverterHelper {
                     b.deleteTime,
                     b.createTime,
                     b.updateTime,
-                    b.remoteId
+                    b.remoteId,
+                    b.parentVersion,
+                    b.version,
+                    b.status
                 )
 
         }
@@ -202,6 +207,7 @@ object ConverterHelper {
             drawings = b.drawings,
             inspectors = b.inspectors,
             remoteId = b.remoteId,
+            parentVersion = b.parentVersion,
             version = b.version,
             status = b.status
 
@@ -879,6 +885,7 @@ object ConverterHelper {
         bb.leader,
         bb.inspectorName,
         bb.remoteId,
+        bb.parentVersion,
         bb.version,
         bb.status,
         bb.drawing,
@@ -905,6 +912,7 @@ object ConverterHelper {
                     b.deleteTime,
                     b.leader,
                     b.inspectorName,
+                    b.parentVersion,
                     b.version,
                     b.remoteId,
                     b.status,
@@ -930,6 +938,7 @@ object ConverterHelper {
                     b.deleteTime,
                     b.leader,
                     b.inspectorName,
+                    b.parentVersion,
                     b.version,
                     b.remoteId,
                     b.status,

@@ -31,7 +31,9 @@ data class DrawingBean(
 
 }
 
-class DrawingV3Bean(){
+class DrawingV3Bean():BaseDbBean(){
+
+    override fun getThis(): BaseDbBean = this
 
     var drawingID:Long=-1
     var fileName: String?=""
