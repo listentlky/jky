@@ -15,6 +15,7 @@ import com.sribs.common.bean.db.ProjectBean
 import com.sribs.common.bean.db.UnitBean
 import com.sribs.common.bean.db.v3.project.v3BuildingModuleDbBean
 import com.sribs.common.bean.v3.v3ModuleFloorDbBean
+import java.text.FieldPosition
 
 /**
  * @date 2021/7/13
@@ -81,6 +82,7 @@ interface IProjectContrast {
         fun chosePic(bean: BuildingFloorBean)
         fun takePhone(bean: BuildingFloorBean)
         fun choseWhite(bean: BuildingFloorBean)
+        fun deleteBuildingFloor(floorType:String ,aboveSize: Int,beforeSize:Int)
         fun createBuildingSuccess()
     }
 
@@ -91,6 +93,7 @@ interface IProjectContrast {
         fun chosePic(bean: ModuleFloorBean)
         fun takePhoto(bean: ModuleFloorBean)
         fun choseWhite(bean: ModuleFloorBean)
+        fun deleteModuleFloor(floorType:String ,aboveSize: Int,beforeSize:Int)
         fun createModuleConfigSuccess()
     }
 

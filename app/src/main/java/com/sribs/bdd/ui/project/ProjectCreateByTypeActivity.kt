@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
-
 import android.text.Editable
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
@@ -65,7 +64,7 @@ class ProjectCreateByTypeActivity:BaseActivity(), IProjectContrast.IProjectCreat
 
     private val REQUEST_CODE_WHITE_BUILDING = 16 //基于楼的白板
 
-
+    private  var isDeleteBuildingFloor = false
     override fun deinitView() {
 
     }
@@ -76,11 +75,25 @@ class ProjectCreateByTypeActivity:BaseActivity(), IProjectContrast.IProjectCreat
         bindPresenter()
         mBinding.toolbar.tb.setNavigationIcon(R.mipmap.icon_back)
         mBinding.toolbar.tb.setNavigationOnClickListener {
+            projectCreateTypePresenter.mAboveOldIndex = 0
+            projectCreateTypePresenter.mBeforeOldIndex = 0
             finish()
         }
        mBinding.toolbar.tbTitle.text = "新建项目"
        mBinding.aboveNumber.setTextCallback(object :TagEditView.ITextChanged{
            override fun onTextChange(s: Editable?) {
+
+               if (isDeleteBuildingFloor){
+                   isDeleteBuildingFloor = false
+                   if ((s == null) || (s.toString() == "")){
+                       projectCreateTypePresenter.addAboveFlourList(0)
+                   }else{
+                       projectCreateTypePresenter.mAboveOldIndex = s.toString().toInt()
+
+                   }
+                   return
+               }
+
                if ((s == null) || (s.toString() == "")){
                    projectCreateTypePresenter.addAboveFlourList(0)
                    return
@@ -94,6 +107,16 @@ class ProjectCreateByTypeActivity:BaseActivity(), IProjectContrast.IProjectCreat
 
         mBinding.afterNumber.setTextCallback(object :TagEditView.ITextChanged{
             override fun onTextChange(s: Editable?) {
+                if (isDeleteBuildingFloor){
+                    isDeleteBuildingFloor = false
+                    if ((s == null) || (s.toString() == "")){
+                        projectCreateTypePresenter.addAfterFlourList(0)
+                    }else{
+                        projectCreateTypePresenter.mBeforeOldIndex = s.toString().toInt()
+
+                    }
+                    return
+                }
                 if ((s == null) || (s.toString() == "")){
                     projectCreateTypePresenter.addAfterFlourList(0)
                     return
@@ -273,6 +296,21 @@ class ProjectCreateByTypeActivity:BaseActivity(), IProjectContrast.IProjectCreat
             .navigation(this,REQUEST_CODE_BEAN_WHITE_FLLOR)
         currentBean = bean
 
+    }
+
+    override fun deleteBuildingFloor(floorType:String,adboveSize: Int,beforeSize:Int) {
+        currentFocus?.clearFocus()
+        isDeleteBuildingFloor = true
+            when(floorType){
+                "地上"->{
+
+                    mBinding.aboveNumber.setEditText(adboveSize.toString())
+
+                }
+                "地下"->{
+                    mBinding.afterNumber.setEditText(beforeSize.toString())
+                }
+            }
     }
 
     override fun createBuildingSuccess() {

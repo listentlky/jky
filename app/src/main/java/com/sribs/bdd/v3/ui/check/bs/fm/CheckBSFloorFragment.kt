@@ -38,7 +38,7 @@ class CheckBSFloorFragment : BaseFragment(R.layout.fragment_check_build_structur
     /**
      * 当前添加的mark
      */
-    var mAddAnnotReF:Long = -1L
+    var mAddAnnotReF: Long = -1L
 
     var mAddAnnotX:Int = 0
 
@@ -113,7 +113,7 @@ class CheckBSFloorFragment : BaseFragment(R.layout.fragment_check_build_structur
         }
         mBinding.checkBsFloorConfirm.setOnClickListener {
             var mAxisNote: String = "" // 轴线
-            var mAxisNoteList:ArrayList<String>?=ArrayList() // 多轴线
+            var mAxisNoteList: ArrayList<String>? = ArrayList() // 多轴线
 
             if (mBinding.checkBsFloorZxEdit.visibility == View.GONE) {
                 if (mBinding.checkBsFloorEdit1.root.check_edit.text.isNullOrEmpty() ||
@@ -160,7 +160,7 @@ class CheckBSFloorFragment : BaseFragment(R.layout.fragment_check_build_structur
                 return@setOnClickListener
             }
 
-            mAddAnnotReF =  (activity as CheckBuildStructureActivity).mCurrentAddAnnotReF
+            mAddAnnotReF = (activity as CheckBuildStructureActivity).mCurrentAddAnnotReF
             mAddAnnotX =  (activity as CheckBuildStructureActivity).mCurrentAddAnnotX
             mAddAnnotY =  (activity as CheckBuildStructureActivity).mCurrentAddAnnotY
 
@@ -171,7 +171,7 @@ class CheckBSFloorFragment : BaseFragment(R.layout.fragment_check_build_structur
                 0,
                 mAddAnnotReF,
                 mBinding.checkBsFloorHintText.text.toString(),
-                if(mDamageCreateTime<0) System.currentTimeMillis() else mDamageCreateTime,
+                if (mDamageCreateTime < 0) System.currentTimeMillis() else mDamageCreateTime,
                 mAddAnnotX,
                 mAddAnnotY,
                 mAxisNote,
@@ -193,10 +193,10 @@ class CheckBSFloorFragment : BaseFragment(R.layout.fragment_check_build_structur
      */
     fun resetView(damageV3Bean: DamageV3Bean?) {
 
-        LogUtils.d("重新resetView："+damageV3Bean)
+        LogUtils.d("重新resetView：" + damageV3Bean)
 
-        mBinding.checkBsFloorCurrent.setText("当前层数: "+(context as CheckBuildStructureActivity).mCurrentDrawing!!.floorName)
-        if(damageV3Bean == null){
+        mBinding.checkBsFloorCurrent.setText("当前层数: " + (context as CheckBuildStructureActivity).mCurrentDrawing!!.floorName)
+        if (damageV3Bean == null) {
             mBinding.checkBsFloorEdit1.root.visibility = View.VISIBLE
             mBinding.checkBsFloorEdit1.root.check_edit.setText("")
             mBinding.checkBsFloorEdit1.root.check_edit_flag.setText("")
@@ -215,17 +215,25 @@ class CheckBSFloorFragment : BaseFragment(R.layout.fragment_check_build_structur
             mBinding.checkBsFloorHintText.setText("")
             mBinding.checkBsFloorMchd.checkEdit.isEnabled = false
             mDamageCreateTime = -1L
-        }else{
-            if(!damageV3Bean.axisNoteList.isNullOrEmpty() && damageV3Bean.axisNoteList!!.size>0){
+        } else {
+            if (!damageV3Bean.axisNoteList.isNullOrEmpty() && damageV3Bean.axisNoteList!!.size > 0) {
                 mBinding.checkBsFloorEdit1.root.visibility = View.VISIBLE
                 mBinding.checkBsFloorEdit1.root.check_edit.setText(damageV3Bean.axisNoteList!!.get(0))
-                mBinding.checkBsFloorEdit1.root.check_edit_flag.setText(damageV3Bean.axisNoteList!!.get(1))
+                mBinding.checkBsFloorEdit1.root.check_edit_flag.setText(
+                    damageV3Bean.axisNoteList!!.get(
+                        1
+                    )
+                )
                 mBinding.checkBsFloorFj.visibility = View.VISIBLE
                 mBinding.checkBsFloorEdit2.root.visibility = View.VISIBLE
                 mBinding.checkBsFloorEdit2.root.check_edit.setText(damageV3Bean.axisNoteList!!.get(2))
-                mBinding.checkBsFloorEdit2.root.check_edit_flag.setText(damageV3Bean.axisNoteList!!.get(3))
+                mBinding.checkBsFloorEdit2.root.check_edit_flag.setText(
+                    damageV3Bean.axisNoteList!!.get(
+                        3
+                    )
+                )
                 mBinding.checkBsFloorZxEdit.visibility = View.GONE
-            }else{
+            } else {
                 mBinding.checkBsFloorEdit1.root.visibility = View.INVISIBLE
                 mBinding.checkBsFloorEdit1.root.check_edit.setText("")
                 mBinding.checkBsFloorEdit1.root.check_edit_flag.setText("")
@@ -236,13 +244,13 @@ class CheckBSFloorFragment : BaseFragment(R.layout.fragment_check_build_structur
                 mBinding.checkBsFloorZxEdit.visibility = View.VISIBLE
                 mBinding.checkBsFloorZxEdit.setText(damageV3Bean.axisNote)
             }
-            if(damageV3Bean.decorateDesign.isNullOrEmpty()){
+            if (damageV3Bean.decorateDesign.isNullOrEmpty()) {
                 mBinding.checkBsFloorMchd.checkEdit.setText("")
                 mSelectPosition = 0
                 mBinding.checkBsFloorSpinner.setText(mJgZgList!!.get(mSelectPosition))
                 mBinding.checkBsFloorSpinner.setSelect(mSelectPosition)
                 mBinding.checkBsFloorMchd.checkEdit.isEnabled = false
-            }else{
+            } else {
                 mBinding.checkBsFloorMchd.checkEdit.setText(damageV3Bean.decorateDesign)
                 mSelectPosition = 1
                 mBinding.checkBsFloorSpinner.setText(mJgZgList!!.get(mSelectPosition))

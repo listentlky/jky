@@ -1,12 +1,14 @@
 package com.sribs.bdd.v3.ui.check.cd.fm
 
-import android.graphics.Color
+import android.net.Uri
 import android.view.Gravity
 import android.view.MotionEvent
 import android.view.View
 import com.alibaba.android.arouter.facade.annotation.Route
+import com.alibaba.android.arouter.launcher.ARouter
 import com.cbj.sdk.libui.mvp.BaseFragment
 import com.cbj.sdk.libui.mvp.bindView
+import com.donkingliang.imageselector.utils.ImageSelector
 import com.sribs.bdd.R
 import com.sribs.bdd.databinding.*
 import com.sribs.bdd.v3.popup.FloorDrawingSpinnerPopupWindow
@@ -15,8 +17,8 @@ import com.sribs.bdd.v3.util.LogUtils
 import com.sribs.common.ARouterPath
 import com.sribs.common.bean.db.DamageV3Bean
 import com.sribs.common.bean.db.DrawingV3Bean
-import kotlinx.android.synthetic.main.fragment_check_componentdetection_column_right_design_edit.view.*
 import java.util.*
+import kotlin.collections.ArrayList
 
 @Route(path = ARouterPath.CHECK_COMPONENT_DETECTION_BEAM_FRAGMENT)
 class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetection_beam_edit_new),
@@ -40,6 +42,9 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
     private var currentRightDesignType3 = 0
     private var currentRightDesignType4 = 0
 
+    private var mPicLeftRealList: ArrayList<String>? = ArrayList()
+    private var mPicLeftDesignList: ArrayList<String>? = ArrayList()
+
     private var mTypeLeftList: ArrayList<String>? = ArrayList()
     private var mTypeLeftList2: ArrayList<String>? = ArrayList()
     private var mTypeRightList: ArrayList<String>? = ArrayList()
@@ -47,8 +52,8 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
 
     private var mPicList: ArrayList<String>? = ArrayList()
 
-    private var leftRealSectionType: String = ""
-    private var leftDesignSectionType: String = ""
+    private var mRightRealPicSrc: String = ""
+    private var mRightDesignPicSrc: String = ""
     private var leftRealSectionTypeParamsList: ArrayList<String> = ArrayList()
     private var leftDesignSectionTypeParamsList: ArrayList<String> = ArrayList()
 
@@ -90,6 +95,12 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
     lateinit var rightDesignSingleParamsView: ItemComponentDetectionBeamRightRealSingleRowSteelBinding
     lateinit var rightDesignDoubleParamsView: ItemComponentDetectionBeamRightRealSingleRowSteel2Binding
 
+
+    private val REQUEST_BEAM_REAL_TAKE_PHOTO = 12 //
+    private val REQUEST_BEAM_DESIGN_TAKE_PHOTO = 13 //
+    private val REQUEST_CODE_BEAN_REAL_WHITE_FLLOR = 14 //实测梁-草图
+    private val REQUEST_CODE_BEAN_DESIGN_WHITE_FLLOR = 15 //设计梁-草图
+
     override fun deinitView() {
     }
 
@@ -104,6 +115,7 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
 
         mBinding.checkCpdSubtitle1.checkEditName.setText("梁名称")
         mBinding.checkCpdSubtitle1.checkEdit.hint = "请输入梁名称"
+
 
 
 
@@ -127,6 +139,13 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
 
         rightDesignSingleParamsView = rightDesignView.checkCpdBeamRightRealSingle
         rightDesignDoubleParamsView = rightDesignView.checkCpdBeamRightRealSingle2
+
+
+        rightRealView.checkCpdLeftMenu.checkCpdLeftMenu1.setText("实测配筋")
+        rightRealView.checkCpdLeftMenu.checkCpdLeftMenu2.setText("设计配筋")
+
+        rightDesignView.checkCpdLeftMenu.checkCpdLeftMenu1.setText("实测配筋")
+        rightDesignView.checkCpdLeftMenu.checkCpdLeftMenu2.setText("设计配筋")
 
         leftRealView.checkCpdLeftRealSpinner1.setText(mTypeLeftList!!.get(0))
         leftRealView.checkCpdLeftRealSpinner1.setSelect(0)
@@ -309,8 +328,13 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
         }.build()
 
 
+        leftRealAnotherView.checkCpdSubtitleConfirm.setOnClickListener {
+            ARouter.getInstance().build(com.sribs.common.ARouterPath.DRAW_WHITE).navigation(activity,REQUEST_CODE_BEAN_REAL_WHITE_FLLOR)
+        }
 
-
+        leftDesignAnotherView.checkCpdSubtitleConfirm.setOnClickListener {
+            ARouter.getInstance().build(com.sribs.common.ARouterPath.DRAW_WHITE).navigation(activity,REQUEST_CODE_BEAN_DESIGN_WHITE_FLLOR)
+        }
 
         leftRealView.checkCpdLeftMenu.checkCpdLeftMenu2.setOnClickListener {
             leftRealView.content.visibility = View.INVISIBLE
@@ -342,7 +366,13 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
         })
 
 
+        rightRealView.checkCpdBeamPic.setOnClickListener {
+            openImgSelector(REQUEST_BEAM_REAL_TAKE_PHOTO)
+        }
 
+        rightDesignView.checkCpdBeamPic.setOnClickListener {
+            openImgSelector(REQUEST_BEAM_DESIGN_TAKE_PHOTO)
+        }
 
         mBinding.checkCpdSubtitle2Second.checkEdit.hint = "请输入轴线"
         mBinding.checkCpdSubtitle2Second.checkEditName.hint = "轴线"
@@ -443,7 +473,7 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
                     if (leftRealAnotherView.checkCpdLeftDesignAnotherName.text.toString()
                             .isNullOrEmpty() ||
                         leftRealAnotherView.checkCpdLeftDesignAnotherDescribe.text.toString()
-                            .isNullOrEmpty()
+                            .isNullOrEmpty() || mPicLeftRealList.isNullOrEmpty()
                     ) {
                         showToast("请输入 实测截面类型-其他")
                         return@setOnClickListener
@@ -503,7 +533,7 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
                     if (leftDesignAnotherView.checkCpdLeftDesignAnotherName.text.toString()
                             .isNullOrEmpty() ||
                         leftDesignAnotherView.checkCpdLeftDesignAnotherDescribe.text.toString()
-                            .isNullOrEmpty()
+                            .isNullOrEmpty() || mPicLeftRealList.isNullOrEmpty()
                     ) {
                         showToast("请输入 设计截面类型-其他")
                         return@setOnClickListener
@@ -623,6 +653,11 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
                 return@setOnClickListener
             }
 
+            if(mRightRealPicSrc.isNullOrEmpty()){
+                showToast("请上传 实测配筋-图片")
+                return@setOnClickListener
+            }
+
             if (rightDesignView.checkCpdBeamRightRealMeasured.checkEdit2.text.toString()
                     .isNullOrEmpty() ||
                 rightDesignView.checkEdit.text.toString().isNullOrEmpty()
@@ -630,8 +665,14 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
                 showToast("请输入 设计箍筋")
                 return@setOnClickListener
             }
+
             if (rightDesignView.checkCpdLeftRealRemarkContent.text.toString().isNullOrEmpty()) {
                 showToast("请输入 设计配筋-备注")
+                return@setOnClickListener
+            }
+
+            if(mRightDesignPicSrc.isNullOrEmpty()){
+                showToast("请上传 设计配筋-图片")
                 return@setOnClickListener
             }
 
@@ -657,12 +698,14 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
                 ),
                 leftRealSectionTypeParamsList,
                 leftRealView.checkCpdLeftRealRemarkContent.text.toString(),
+                mPicLeftRealList!!,
                 arrayListOf(
                     mTypeLeftList!!.get(currentLeftDesignType),
                     mTypeLeftList2!!.get(currentLeftDesignType2)
                 ),
                 leftDesignSectionTypeParamsList,
                 leftDesignView.checkCpdLeftDesignRemarkContent.text.toString(),
+                mPicLeftDesignList!!,
                 mTypeRightList!!.get(currentRightRealType),
                 rightRealSectionTypeParamsList,
                 arrayListOf(
@@ -684,7 +727,7 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
                     rightRealView.checkCpdBeamRightRealProtect.checkEditProtect2.text.toString()
                 ),
                 rightRealView.checkCpdLeftRealRemarkContent.text.toString(),
-                "照片",
+                mRightRealPicSrc,
                 mTypeRightList!!.get(currentRightDesignType),
                 rightDesignSectionTypeParamsList,
                 arrayListOf(
@@ -694,7 +737,7 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
                     rightDesignView.checkEdit.text.toString()
                 ),
                 rightDesignView.checkCpdLeftRealRemarkContent.text.toString(),
-                "照片"
+                mRightDesignPicSrc
             )
             LogUtils.d(damage.toBeamString())
             (context as CheckComponentDetectionActivity).saveDamage(damage)
@@ -724,6 +767,11 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
             currentRightDesignType3 = 0
             currentRightDesignType4 = 0
 
+            mRightRealPicSrc = ""
+            mRightDesignPicSrc = ""
+
+            mPicLeftRealList!!.clear()
+            mPicLeftDesignList!!.clear()
 
             mBinding.checkCpdSubtitle1.checkEdit.setText("")
             mBinding.checkCpdSubtitle2.content.visibility = View.VISIBLE
@@ -758,6 +806,7 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
             leftRealAnotherView.content.visibility = View.INVISIBLE
             leftRealAnotherView.checkCpdLeftDesignAnotherName.setText("")
             leftRealAnotherView.checkCpdLeftDesignAnotherDescribe.setText("")
+            leftRealAnotherView.checkCpdAnotherPicStatus.setText("未绘制")
 
             leftDesignView.content.visibility = View.INVISIBLE
 
@@ -785,6 +834,7 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
             leftDesignAnotherView.content.visibility = View.INVISIBLE
             leftDesignAnotherView.checkCpdLeftDesignAnotherName.setText("")
             leftDesignAnotherView.checkCpdLeftDesignAnotherDescribe.setText("")
+            leftDesignAnotherView.checkCpdAnotherPicStatus.setText("未绘制")
 
             leftRealView.checkCpdLeftRealRemarkContent.setText("")
             leftDesignView.checkCpdLeftDesignRemarkContent.setText("")
@@ -862,7 +912,7 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
 
             rightRealView.checkCpdLeftRealRemarkContent.setText("")
 
-       //     rightRealView.checkCpdBeamPic.setBackgroundResource(R.color.red)
+            rightRealView.checkCpdBeamPic.setImageResource(R.color.gray)
 
             rightDesignView.checkCpdBeamRightRealMeasured.checkEdit2.setText("")
             rightDesignView.checkCpdBeamRightRealMeasured.checkCpdLeftRealSpinner2.setSelect(0)
@@ -877,7 +927,7 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
             )
             rightDesignView.checkEdit.setText("")
             rightDesignView.checkCpdLeftRealRemarkContent.setText("")
-    //        rightDesignView.checkCpdBeamPic.setBackgroundResource(R.color.red)
+            rightDesignView.checkCpdBeamPic.setImageResource(R.color.gray)
         } else {
             LogUtils.d("子控件进去的Damage梁bean"+damageV3Bean.toBeamString())
             mBinding.checkCpdSubtitle1.checkEdit.setText(damageV3Bean.beamName)
@@ -1009,6 +1059,7 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
                             1
                         )
                     )
+                    leftRealAnotherView.checkCpdAnotherPicStatus.setText("已绘制")
                 }
             }
 
@@ -1128,6 +1179,7 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
                             1
                         )
                     )
+                    leftDesignAnotherView.checkCpdAnotherPicStatus.setText("已绘制")
                 }
             }
             leftRealView.checkCpdLeftRealRemarkContent.setText(damageV3Bean.beamLeftRealNote)
@@ -1292,7 +1344,9 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
                 rightDesignSingleParamsView.checkCpdLeftRealSpinner.setText(mPicList!!.get(0))
             }
 
-            //TODO 图片
+
+            rightRealView.checkCpdBeamPic.setImageURI(Uri.parse(damageV3Bean.beamRightRealPic))
+            rightDesignView.checkCpdBeamPic.setImageURI(Uri.parse(damageV3Bean.beamRightDesignPic))
 
             rightDesignView.checkEdit.setText(damageV3Bean.beamRightDesignStirrupsTypeList!!.get(3))
 
@@ -1323,6 +1377,55 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
     override fun onClick(data: DrawingV3Bean?) {
         (activity as CheckComponentDetectionActivity).choosePDF(data!!)
     }
+
+    fun setRealPicList(picList: ArrayList<String>){
+        mPicLeftRealList?.clear()
+        mPicLeftRealList?.addAll(picList)
+        if (mPicLeftRealList.isNullOrEmpty()){
+            leftRealAnotherView.checkCpdAnotherPicStatus.setText("未绘制")
+        }else{
+            leftRealAnotherView.checkCpdAnotherPicStatus.setText("已绘制")
+        }
+    }
+
+    fun setDesignPicList(picList: ArrayList<String>){
+        mPicLeftDesignList?.clear()
+        mPicLeftDesignList?.addAll(picList)
+        if (mPicLeftDesignList.isNullOrEmpty()){
+            leftDesignAnotherView.checkCpdAnotherPicStatus.setText("未绘制")
+        }else{
+            leftDesignAnotherView.checkCpdAnotherPicStatus.setText("已绘制")
+        }
+    }
+
+    fun openImgSelector(requestCode:Int) {
+
+        //仅拍照
+        ImageSelector
+            .builder()
+            .onlyTakePhoto(false)
+            .canPreview(true)
+            .setSingle(true)
+            .start(activity as CheckComponentDetectionActivity, requestCode)
+
+
+    }
+
+    fun setImgaeBitmap(uri: Uri, type:Int){
+        when(type){
+            REQUEST_BEAM_REAL_TAKE_PHOTO->
+            {
+                rightRealView.checkCpdBeamPic.setImageURI(uri)
+                mRightRealPicSrc = uri.toString()
+            }
+            REQUEST_BEAM_DESIGN_TAKE_PHOTO->
+            {
+                rightDesignView.checkCpdBeamPic.setImageURI(uri)
+                mRightDesignPicSrc = uri.toString()
+            }
+        }
+    }
+
 
 
 }

@@ -94,6 +94,9 @@ class ModuleCreateByTypeFloorActivity : BaseActivity(), IProjectContrast.IModule
 
     var currentBean: ModuleFloorBean? = null
 
+    private  var isDeleteModuleFloor = false
+
+
     override fun deinitView() {
 
     }
@@ -111,6 +114,18 @@ class ModuleCreateByTypeFloorActivity : BaseActivity(), IProjectContrast.IModule
         }
         mBinding.aboveNumber.setTextCallback(object : TagEditView.ITextChanged {
             override fun onTextChange(s: Editable?) {
+
+                if (isDeleteModuleFloor){
+                    isDeleteModuleFloor = false
+                    if ((s == null) || (s.toString() == "")){
+                        moduleCreateTypePresenter.addAboveFlourList(0)
+                    }else{
+                        moduleCreateTypePresenter.mAboveOldIndex = s.toString().toInt()
+
+                    }
+                    return
+                }
+
                 if ((s == null) || (s.toString() == "")) {
                     moduleCreateTypePresenter.addAboveFlourList(0)
                     return
@@ -125,6 +140,20 @@ class ModuleCreateByTypeFloorActivity : BaseActivity(), IProjectContrast.IModule
 
         mBinding.afterNumber.setTextCallback(object : TagEditView.ITextChanged {
             override fun onTextChange(s: Editable?) {
+
+
+                if (isDeleteModuleFloor){
+                    isDeleteModuleFloor = false
+                    if ((s == null) || (s.toString() == "")){
+                        moduleCreateTypePresenter.addAfterFlourList(0)
+                    }else{
+                        moduleCreateTypePresenter.mBeforeOldIndex = s.toString().toInt()
+
+                    }
+                    return
+                }
+
+
                 if ((s == null) || (s.toString() == "")) {
                     moduleCreateTypePresenter.addAfterFlourList(0)
                     return
@@ -299,6 +328,21 @@ class ModuleCreateByTypeFloorActivity : BaseActivity(), IProjectContrast.IModule
         ARouter.getInstance().build(com.sribs.common.ARouterPath.DRAW_WHITE)
             .navigation(this, REQUEST_CODE_BEAN_WHITE_FLLOR)
 
+    }
+
+    override fun deleteModuleFloor(floorType: String, aboveSize: Int, beforeSize: Int) {
+        currentFocus?.clearFocus()
+        isDeleteModuleFloor = true
+        when(floorType){
+            "地上"->{
+
+                mBinding.aboveNumber.setEditText(aboveSize.toString())
+
+            }
+            "地下"->{
+                mBinding.afterNumber.setEditText(beforeSize.toString())
+            }
+        }
     }
 
     override fun createModuleConfigSuccess() {

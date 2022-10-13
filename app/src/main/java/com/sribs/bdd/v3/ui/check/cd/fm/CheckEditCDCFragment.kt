@@ -1,13 +1,15 @@
 package com.sribs.bdd.v3.ui.check.cd.fm
 
-import android.text.InputType
+import android.net.Uri
 import android.view.Gravity
 import android.view.MotionEvent
 import android.view.View
 import android.view.View.OnTouchListener
 import com.alibaba.android.arouter.facade.annotation.Route
+import com.alibaba.android.arouter.launcher.ARouter
 import com.cbj.sdk.libui.mvp.BaseFragment
 import com.cbj.sdk.libui.mvp.bindView
+import com.donkingliang.imageselector.utils.ImageSelector
 import com.sribs.bdd.R
 import com.sribs.bdd.databinding.*
 import com.sribs.bdd.v3.popup.FloorDrawingSpinnerPopupWindow
@@ -49,6 +51,16 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
     private var currentRightDesignType2 = 0
     private var currentRightDesignType3 = 0
     private var currentRightDesignType4 = 0
+
+    private var mRightRealPicSrc: String = ""
+    private var mRightDesignPicSrc: String = ""
+    private val REQUEST_CODE_COLUMN_REAL_WHITE_FLLOR = 16 //
+    private val REQUEST_CODE_COLUMN_DESIGN_WHITE_FLLOR = 17 //
+    private val REQUEST_COLUMN_REAL_TAKE_PHOTO = 18 //选择图片
+    private val REQUEST_COLUMN_DESIGN_TAKE_PHOTO = 19 //选择图片
+
+    private var mPicLeftRealList: ArrayList<String>? = ArrayList()
+    private var mPicLeftDesignList: ArrayList<String>? = ArrayList()
 
     var leftRealView: FragmentCheckComponentdetectionColumnLeftRealEditBinding? = null
     var leftDesignView: FragmentCheckComponentdetectionColumnLeftDesignEditBinding? = null
@@ -243,6 +255,15 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
         }
 
 
+        leftRealAnotherView!!.checkCpdSubtitleConfirm.setOnClickListener {
+            ARouter.getInstance().build(com.sribs.common.ARouterPath.DRAW_WHITE).navigation(activity,REQUEST_CODE_COLUMN_REAL_WHITE_FLLOR)
+        }
+
+        leftDesignAnotherView!!.checkCpdSubtitleConfirm.setOnClickListener {
+            ARouter.getInstance().build(com.sribs.common.ARouterPath.DRAW_WHITE).navigation(activity,REQUEST_CODE_COLUMN_DESIGN_WHITE_FLLOR)
+        }
+
+
         leftRealView!!.checkCpdLeftRealSpinner1.setSpinnerData(mTypeList)
             .setSpinnerTextGravity(
                 Gravity.CENTER_VERTICAL
@@ -391,6 +412,15 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
         rightDesignView!!.checkCpdLeftMenu.checkCpdLeftMenu1.text = "实测配筋"
         rightDesignView!!.checkCpdLeftMenu.checkCpdLeftMenu2.text = "设计配筋"
 
+
+        rightRealView!!.checkCpdBeamPic.setOnClickListener {
+            openImgSelector(REQUEST_COLUMN_REAL_TAKE_PHOTO)
+        }
+
+        rightDesignView!!.checkCpdBeamPic.setOnClickListener {
+            openImgSelector(REQUEST_COLUMN_DESIGN_TAKE_PHOTO)
+        }
+
         rightRealRowSteelView!!.checkCpdLeftRealSpinner2.setSpinnerData(
             mTypeRightList
         )
@@ -429,6 +459,7 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
                 }
 
             }.build()
+
 
         rightRealRowSteelView!!.checkCpdLeftRealSpinner3.setSpinnerData(
             mPicList
@@ -606,6 +637,13 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
                         showToast("请输入 实测截面尺寸-H型尺寸")
                         return@setOnClickListener
                     }
+                }4->{
+                    if(leftRealAnotherView!!.checkCpdLeftDesignAnotherName.text.toString().isNullOrEmpty()||
+                            leftRealAnotherView!!.checkCpdLeftDesignAnotherDescribe.text.toString().isNullOrEmpty()||
+                            mPicLeftRealList.isNullOrEmpty()){
+                        showToast("请输入 实测截面尺寸-其他")
+                        return@setOnClickListener
+                    }
                 }
             }
 
@@ -660,7 +698,14 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
                         showToast("请输入 设计截面尺寸-H型尺寸")
                         return@setOnClickListener
                     }
+                }4->{
+                if(leftDesignAnotherView!!.checkCpdLeftDesignAnotherName.text.toString().isNullOrEmpty()||
+                    leftDesignAnotherView!!.checkCpdLeftDesignAnotherDescribe.text.toString().isNullOrEmpty()||
+                    mPicLeftDesignList.isNullOrEmpty()){
+                    showToast("请输入 设计截面尺寸-其他")
+                    return@setOnClickListener
                 }
+            }
             }
 
             if (leftDesignView!!.checkCpdLeftRealRemarkContent.text.toString()
@@ -849,9 +894,11 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
                 mTypeList!!.get(currentLeftRealType),
                 leftRealSectionTypeParamsList,
                 leftRealView!!.checkCpdLeftRealRemarkContent.text.toString(),
+                mPicLeftRealList!!,
                 mTypeList!!.get(currentLeftDesignType),
                 leftDesignSectionTypeParamsList,
                 leftDesignView!!.checkCpdLeftRealRemarkContent.text.toString(),
+                mPicLeftDesignList!!,
                 //右侧界面
                 arrayListOf(
                     mTypeRightList!!.get(currentRightRealType),
@@ -878,7 +925,7 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
                     rightRealProtectView!!.checkEditProtect2.text.toString()
                 ),
                 rightRealView!!.checkCpdLeftRealRemarkContent.text.toString(),
-
+                mRightRealPicSrc,
                 //右侧设计
                 arrayListOf(
                     mTypeRightList!!.get(currentRightDesignType),
@@ -892,7 +939,8 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
                     rightDesignMeasuredView!!.checkEdit2.text.toString(),
                     rightDesignView!!.ll1.check_edit.text.toString()
                 ),
-                rightDesignView!!.checkCpdLeftRealRemarkContent.text.toString()
+                rightDesignView!!.checkCpdLeftRealRemarkContent.text.toString(),
+                mRightDesignPicSrc
             )
             LogUtils.d(damage.toColumnString())
             (context as CheckComponentDetectionActivity).saveDamage(damage)
@@ -922,7 +970,6 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
             4 -> {
                 leftRealSectionTypeParamsList!!.add(leftRealAnotherView!!.checkCpdLeftDesignAnotherName.text.toString())
                 leftRealSectionTypeParamsList!!.add(leftRealAnotherView!!.checkCpdLeftDesignAnotherDescribe.text.toString())
-                leftRealSectionTypeParamsList!!.add("图片")
             }
         }
         leftDesignSectionTypeParamsList!!.clear()
@@ -1005,6 +1052,11 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
             currentRightDesignType4 = 0
 
 
+            mRightRealPicSrc = ""
+            mRightDesignPicSrc = ""
+
+            mPicLeftRealList!!.clear()
+            mPicLeftDesignList!!.clear()
 
             mBinding.checkCpdSubtitle2.content.visibility = View.VISIBLE
             mBinding.checkCpdSubtitle2Second.content.visibility = View.INVISIBLE
@@ -1070,6 +1122,8 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
             rightRealView!!.content.visibility = View.VISIBLE
             rightDesignView!!.content.visibility = View.INVISIBLE
 
+            leftDesignAnotherView!!.checkCpdAnotherPicStatus.setText("未绘制")
+            leftRealAnotherView!!.checkCpdAnotherPicStatus.setText("未绘制")
 
             ////右侧-纵筋类型
             rightRealRowSteelView!!.checkCpdLeftRealSpinner2.setSelect(0)
@@ -1093,6 +1147,8 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
             rightRealRowSteelAnotherView!!.content.visibility = View.INVISIBLE
             rightRealRowSteelAnotherView!!.checkEdit.setText("")
 
+            rightRealView!!.checkCpdBeamPic.setImageResource(R.color.gray)
+            rightDesignView!!.checkCpdBeamPic.setImageResource(R.color.gray)
 
             //右侧设计-纵筋类型
             rightDesignRowSteelView!!.checkCpdLeftRealSpinner2.setSelect(0)
@@ -1187,6 +1243,10 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
                 damageV3Bean.columnAxisNoteList!!.get(1)
             )
 
+
+            rightRealView!!.checkCpdBeamPic.setImageURI(Uri.parse(damageV3Bean.columnRightRealPic))
+            rightDesignView!!.checkCpdBeamPic.setImageURI(Uri.parse(damageV3Bean.columnRightDesignPic))
+
             when (damageV3Bean.leftRealSectionType) {
                 "矩形" -> {
                     leftRealView!!.checkCpdLeftRealSpinner1.setSelect(0)
@@ -1265,6 +1325,8 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
                     leftRealAnotherView!!.checkCpdLeftDesignAnotherDescribe.setText(
                         damageV3Bean.leftRealSectionTypeParamsList!!.get(1)
                     )
+                    leftRealAnotherView!!.checkCpdAnotherPicStatus.setText("已绘制")
+
                 }
             }
 
@@ -1346,6 +1408,7 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
                     leftDesignAnotherView!!.checkCpdLeftDesignAnotherDescribe.setText(
                         damageV3Bean.leftDesignSectionTypeParamsList!!.get(1)
                     )
+                    leftDesignAnotherView!!.checkCpdAnotherPicStatus.setText("已绘制")
                 }
             }
 
@@ -1554,5 +1617,57 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
     override fun onClick(data: DrawingV3Bean?) {
         (activity as CheckComponentDetectionActivity).choosePDF(data!!)
     }
+
+
+    fun setRealPicList(picList: ArrayList<String>){
+        mPicLeftRealList?.clear()
+        mPicLeftRealList?.addAll(picList)
+        if (mPicLeftRealList.isNullOrEmpty()){
+            leftRealAnotherView!!.checkCpdAnotherPicStatus.setText("未绘制")
+        }else{
+            leftRealAnotherView!!.checkCpdAnotherPicStatus.setText("已绘制")
+        }
+    }
+
+    fun setDesignPicList(picList: ArrayList<String>){
+        mPicLeftDesignList?.clear()
+        mPicLeftDesignList?.addAll(picList)
+        if (mPicLeftDesignList.isNullOrEmpty()){
+            leftDesignAnotherView!!.checkCpdAnotherPicStatus.setText("未绘制")
+        }else{
+            leftDesignAnotherView!!.checkCpdAnotherPicStatus.setText("已绘制")
+        }
+    }
+
+
+
+    fun openImgSelector(requestCode:Int) {
+
+        //仅拍照
+        ImageSelector
+            .builder()
+            .onlyTakePhoto(false)
+            .canPreview(true)
+            .setSingle(true)
+            .start(activity as CheckComponentDetectionActivity, requestCode)
+
+
+    }
+
+    fun setImgaeBitmap(uri: Uri, type:Int){
+        when(type){
+            REQUEST_COLUMN_REAL_TAKE_PHOTO->
+            {
+                rightRealView!!.checkCpdBeamPic.setImageURI(uri)
+                mRightRealPicSrc = uri.toString()
+            }
+            REQUEST_COLUMN_DESIGN_TAKE_PHOTO->
+            {
+                rightDesignView!!.checkCpdBeamPic.setImageURI(uri)
+                mRightDesignPicSrc = uri.toString()
+            }
+        }
+    }
+
 
 }

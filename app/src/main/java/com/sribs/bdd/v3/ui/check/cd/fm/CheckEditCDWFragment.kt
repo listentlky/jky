@@ -1,6 +1,7 @@
 package com.sribs.bdd.v3.ui.check.cd.fm
 
 import android.graphics.Color
+import android.net.Uri
 import android.text.InputType
 import android.view.Gravity
 import android.view.View
@@ -8,6 +9,8 @@ import android.widget.ArrayAdapter
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.cbj.sdk.libui.mvp.BaseFragment
 import com.cbj.sdk.libui.mvp.bindView
+import com.donkingliang.imageselector.utils.ImageSelector
+import com.radaee.util.CommonUtil
 import com.sribs.bdd.R
 import com.sribs.bdd.databinding.FragmentCheckBuildStructureFloorBinding
 import com.sribs.bdd.databinding.FragmentCheckComponentdetectionBeamEditBinding
@@ -38,6 +41,11 @@ class CheckEditCDWFragment : BaseFragment(R.layout.fragment_check_componentdetec
     private var currentDesignPicType = ""
     private var currentDesignPicType2 = ""
 
+    private val REQUEST_WALL_REAL_TAKE_PHOTO = 20 //选择图片
+    private val REQUEST_WALL_DESIGN_TAKE_PHOTO = 21 //选择图片
+
+    private var mRightRealPicSrc: String = ""
+    private var mRightDesignPicSrc: String = ""
     /**
      * 创建损伤时间
      */
@@ -136,6 +144,14 @@ class CheckEditCDWFragment : BaseFragment(R.layout.fragment_check_componentdetec
          */
         mBinding.checkMenuLayout.checkObdMenuScale.setOnClickListener {
             (context as CheckComponentDetectionActivity).scaleDamageInfo(3)
+        }
+
+        mBinding.checkCdpPlateRightRealUi.checkCdpPlatePic.setOnClickListener {
+            openImgSelector(REQUEST_WALL_REAL_TAKE_PHOTO)
+        }
+
+        mBinding.checkCdpPlateRightDesignUi.checkCdpPlatePic.setOnClickListener {
+            openImgSelector(REQUEST_WALL_DESIGN_TAKE_PHOTO)
         }
 
         //左侧-实测界面
@@ -378,7 +394,10 @@ class CheckEditCDWFragment : BaseFragment(R.layout.fragment_check_componentdetec
             mBinding.checkCdpPlateRightRealUi.checkCdpPlateRightRealProtect.checkEditProtect.setText(
                 ""
             )
-
+            mRightRealPicSrc = ""
+            mRightDesignPicSrc = ""
+            mBinding.checkCdpPlateRightRealUi.checkCdpPlatePic.setImageResource(R.color.gray)
+            mBinding.checkCdpPlateRightDesignUi.checkCdpPlatePic.setImageResource(R.color.gray)
             mBinding.checkCdpPlateRightRealUi.checkCdpLeftRealRemarkContent.setText("")
             mBinding.checkCdpPlateRightRealUi.checkCdpPlatePic.setBackgroundColor(Color.GRAY)
 
@@ -454,10 +473,35 @@ class CheckEditCDWFragment : BaseFragment(R.layout.fragment_check_componentdetec
             mBinding.checkCdpPlateRightRealUi.checkCdpLeftRealRemarkContent.setText(damageV3Bean.realNote)
             mBinding.checkCdpPlateRightDesignUi.checkCdpLeftRealRemarkContent.setText(damageV3Bean.designNote)
 
-            /*     mBinding.checkCdpPlateRightRealUi.checkCdpPlatePic.setImageURI(damageV3Bean.realPicture)
-                 mBinding.checkCdpPlateRightDesignUi.checkCdpPlatePic.setImageURI(damageV3Bean.designPicture)*/
+                 mBinding.checkCdpPlateRightRealUi.checkCdpPlatePic.setImageURI(Uri.parse(damageV3Bean.realPicture))
+                 mBinding.checkCdpPlateRightDesignUi.checkCdpPlatePic.setImageURI(Uri.parse(damageV3Bean.designPicture))
 
             mDamageCreateTime = damageV3Bean.createTime
+        }
+    }
+
+    fun openImgSelector(requestCode:Int) {
+        ImageSelector
+            .builder()
+            .onlyTakePhoto(false)
+            .canPreview(true)
+            .setSingle(true)
+            .start(activity as CheckComponentDetectionActivity, requestCode)
+    }
+
+    fun setImgaeBitmap(uri: Uri, type:Int){
+        when(type){
+            REQUEST_WALL_REAL_TAKE_PHOTO->
+            {
+                mBinding.checkCdpPlateRightRealUi.checkCdpPlatePic.setImageURI(uri)
+                mRightRealPicSrc = uri.toString()
+            }
+            REQUEST_WALL_DESIGN_TAKE_PHOTO->
+            {
+                mBinding.checkCdpPlateRightDesignUi.checkCdpPlatePic.setImageURI(uri)
+                mRightDesignPicSrc = uri.toString()
+                CommonUtil.imageToPDF(mRightDesignPicSrc,"/storage/emulated/0/Android/data/com.sribs.bdd/files/图纸/1.pdf")
+            }
         }
     }
 

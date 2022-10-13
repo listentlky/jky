@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.cbj.sdk.libui.mvp.BindingViewHolder
 import com.cbj.sdk.libui.mvp.adapter.BaseListAdapter
 import com.cbj.sdk.libui.mvp.newBindingViewHolder
+import com.sribs.bdd.bean.BuildingFloorBean
 import com.sribs.bdd.bean.data.ModuleFloorBean
 import com.sribs.bdd.bean.data.ModuleFloorPictureBean
 import com.sribs.bdd.databinding.ItemFloorListBinding
@@ -48,8 +49,9 @@ class CreateModuleFloorAdapter(var iCallback: ICallback?):BaseListAdapter<Module
         bind.delete.setOnClickListener {
             bean.pictureList!!.clear()
             adapter.notifyDataSetChanged()
-            mList?.remove(bean)
-            notifyDataSetChanged()
+           /* mList?.remove(bean)
+            notifyDataSetChanged()*/
+            iCallback?.deleteModuleFloor(bean,pos)
         }
 
         bind.chosePic.setOnClickListener {
@@ -83,6 +85,12 @@ class CreateModuleFloorAdapter(var iCallback: ICallback?):BaseListAdapter<Module
         notifyDataSetChanged()
     }
 
+
+    override fun onBindViewHolder(holder: BindingViewHolder<ItemFloorListBinding>, position: Int) {
+        super.onBindViewHolder(holder, position)
+        holder.setIsRecyclable(false)
+    }
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -92,5 +100,6 @@ class CreateModuleFloorAdapter(var iCallback: ICallback?):BaseListAdapter<Module
         fun chosePic(bean: ModuleFloorBean)
         fun takePhoto(bean: ModuleFloorBean)
         fun showWhite(bean: ModuleFloorBean)
+        fun deleteModuleFloor(bean: ModuleFloorBean, position:Int)
     }
 }

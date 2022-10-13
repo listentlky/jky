@@ -15,13 +15,12 @@ import com.sribs.common.ui.widget.TagEditView
 class CreateFloorAdapter(var iCallback: ICallback?):BaseListAdapter<BuildingFloorBean,ItemFloorListBinding>() {
 
 
-
     override fun init(bind: ItemFloorListBinding, bean: BuildingFloorBean, pos: Int) {
-        bind.floorName.getEditText().hint = bean.name
+        bind.floorName.getEditText().setHint(bean.name)
         bind.floorName.setTextCallback(object :TagEditView.ITextChanged{
             override fun onTextChange(s: Editable?) {
                 if (s!=null&&s.toString()!=""){
-                    bean.name = s.toString()
+                   bean.name = s.toString()
                 }
 
             }
@@ -46,8 +45,11 @@ class CreateFloorAdapter(var iCallback: ICallback?):BaseListAdapter<BuildingFloo
         bind.delete.setOnClickListener {
             bean.pictureList!!.clear()
             adapter.notifyDataSetChanged()
-            mList?.remove(bean)
-            notifyDataSetChanged()
+
+   /*         mList?.remove(bean)
+            notifyDataSetChanged()*/
+
+            iCallback?.deleteBuildingFloor(bean,pos)
         }
 
         bind.chosePic.setOnClickListener {
@@ -82,6 +84,11 @@ class CreateFloorAdapter(var iCallback: ICallback?):BaseListAdapter<BuildingFloo
         notifyDataSetChanged()
     }
 
+    override fun onBindViewHolder(holder: BindingViewHolder<ItemFloorListBinding>, position: Int) {
+        super.onBindViewHolder(holder, position)
+        holder.setIsRecyclable(false)
+    }
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -91,5 +98,7 @@ class CreateFloorAdapter(var iCallback: ICallback?):BaseListAdapter<BuildingFloo
         fun chosePic(bean: BuildingFloorBean)
         fun takePhoto(bean: BuildingFloorBean)
         fun showWiite(bean: BuildingFloorBean)
+        fun deleteBuildingFloor(bean: BuildingFloorBean, position:Int)
     }
+
 }

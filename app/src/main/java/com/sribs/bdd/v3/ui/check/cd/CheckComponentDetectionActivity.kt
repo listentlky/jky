@@ -3,6 +3,7 @@ package com.sribs.bdd.v3.ui.check.cd
 import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.Canvas
+import android.net.Uri
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -15,9 +16,11 @@ import com.cbj.sdk.libui.mvp.BaseActivity
 import com.cbj.sdk.libui.mvp.BaseFragment
 import com.cbj.sdk.libui.mvp.adapter.BasePagerAdapter
 import com.cbj.sdk.libui.mvp.inflate
+import com.donkingliang.imageselector.utils.ImageSelector
 import com.google.gson.Gson
 import com.hjq.permissions.Permission
 import com.hjq.permissions.XXPermissions
+import com.itextpdf.text.pdf.PdfWriter
 import com.radaee.annotui.UIAnnotMenu
 import com.radaee.constant.Constant
 import com.radaee.pdf.Document
@@ -32,19 +35,19 @@ import com.radaee.util.RadaeePluginCallback
 import com.radaee.view.ILayoutView
 import com.sribs.bdd.R
 import com.sribs.bdd.databinding.ActivityCheckComponentDetectionBinding
-import com.sribs.bdd.v3.bean.CheckBSMainBean
 import com.sribs.bdd.v3.bean.CheckCDMainBean
 import com.sribs.bdd.v3.event.RefreshPDFEvent
 import com.sribs.bdd.v3.ui.check.cd.fm.*
-
 import com.sribs.bdd.v3.util.LogUtils
 import com.sribs.common.ARouterPath
 import com.sribs.common.bean.db.DamageV3Bean
 import com.sribs.common.bean.db.DrawingV3Bean
+import com.sribs.common.utils.FileUtil
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import java.util.*
+
 
 /**
  *    author :
@@ -59,6 +62,20 @@ class CheckComponentDetectionActivity : BaseActivity(), ICheckCDContrast.ICheckC
 
     private val mBinding: ActivityCheckComponentDetectionBinding by inflate()
 
+    private val REQUEST_BEAM_REAL_TAKE_PHOTO = 12 //选择图片
+    private val REQUEST_BEAM_DESIGN_TAKE_PHOTO = 13 //选择图片
+
+    private val REQUEST_COLUMN_REAL_TAKE_PHOTO = 18 //选择图片
+    private val REQUEST_COLUMN_DESIGN_TAKE_PHOTO = 19 //选择图片
+    private val REQUEST_WALL_REAL_TAKE_PHOTO = 20 //选择图片
+    private val REQUEST_WALL_DESIGN_TAKE_PHOTO = 21 //选择图片
+    private val REQUEST_PLATE_REAL_TAKE_PHOTO = 22 //选择图片
+    private val REQUEST_PLATE_DESIGN_TAKE_PHOTO = 23 //选择图片
+
+    private val REQUEST_CODE_BEAN_REAL_WHITE_FLLOR = 14 //基于梁-草图
+    private val REQUEST_CODE_BEAN_DESIGN_WHITE_FLLOR = 15 //基于梁-草图
+    private val REQUEST_CODE_COLUMN_REAL_WHITE_FLLOR = 16 //基于柱-草图
+    private val REQUEST_CODE_COLUMN_DESIGN_WHITE_FLLOR = 17 //基于柱-草图
 
     @JvmField
     @Autowired(name = com.sribs.common.ARouterPath.VAL_COMMON_TITLE)
@@ -71,6 +88,7 @@ class CheckComponentDetectionActivity : BaseActivity(), ICheckCDContrast.ICheckC
     @JvmField
     @Autowired(name = com.sribs.common.ARouterPath.VAL_MODULE_ID)
     var mModuleId = -1L
+
 
     @JvmField
     @Autowired(name = com.sribs.common.ARouterPath.VAL_BUILDING_ID)
@@ -159,6 +177,7 @@ class CheckComponentDetectionActivity : BaseActivity(), ICheckCDContrast.ICheckC
                 }
             }
     }
+
 
     /**
      * @Description 初始化toolbar
@@ -265,7 +284,7 @@ class CheckComponentDetectionActivity : BaseActivity(), ICheckCDContrast.ICheckC
                     when (type) {
 
                         mCurrentDamageType[0] -> { //梁
-                              (mFragments[1] as CheckEditCDBFragment).resetView(damageV3Bean)
+                            (mFragments[1] as CheckEditCDBFragment).resetView(damageV3Bean)
                             mBinding.checkVp.currentItem = 1
                         }
 
@@ -422,7 +441,7 @@ class CheckComponentDetectionActivity : BaseActivity(), ICheckCDContrast.ICheckC
             showToast("该图纸类型不是pdf，无法加载")
             return
         }
-        LogUtils.d("openPDF "+pdfPath)
+        LogUtils.d("openPDF " + pdfPath)
         this.mView = (mFragments[0] as CheckCDFragment).getPDFView()
         mView!!.setV3Version(true)
         this.mViewParent = (mFragments[0] as CheckCDFragment).getPDFParentView()
@@ -451,7 +470,7 @@ class CheckComponentDetectionActivity : BaseActivity(), ICheckCDContrast.ICheckC
                 mView?.setReadOnly(false)
                 mView?.setAnnotMenu(UIAnnotMenu(mViewParent))
                 mView?.setV3SelectDamageCallback(this)
-                if(mController == null) {
+                if (mController == null) {
                     mController = PDFViewController(
                         mViewParent,
                         mView,
@@ -531,13 +550,13 @@ class CheckComponentDetectionActivity : BaseActivity(), ICheckCDContrast.ICheckC
     override fun onModuleInfo(checkMainBean: List<CheckCDMainBean>) {
         this.mCheckCDMainBeanList!!.clear()
         mCheckCDMainBeanList!!.addAll(checkMainBean)
-        LogUtils.d("回调到view层数据 "+mCheckCDMainBeanList)
+        LogUtils.d("回调到view层数据 " + mCheckCDMainBeanList)
 
         /**
          * 初始化并加载第一张图纸
          */
         mCurrentDrawing = checkMainBean[0].drawing!![0]
-        LogUtils.d("mCurrentDrawing "+mCurrentDrawing)
+        LogUtils.d("mCurrentDrawing " + mCurrentDrawing)
         if (mCurrentDrawing != null) {
             openPDF(mCurrentDrawing!!)
         }
@@ -714,20 +733,20 @@ class CheckComponentDetectionActivity : BaseActivity(), ICheckCDContrast.ICheckC
         var damageBean = Gson().fromJson(annotPoint, DamageV3Bean::class.java)
         mCurrentAddAnnotReF = damageBean.annotRef
         resetDamageInfo(null, damageBean.type)
-       /* when (damageBean.type) {
-            mCurrentDamageType[0] -> {
-                mBinding.checkVp.currentItem = 1
-            }
-            mCurrentDamageType[1] -> {
-                mBinding.checkVp.currentItem = 2
-            }
-            mCurrentDamageType[2] -> {
-                mBinding.checkVp.currentItem = 3
-            }
-            mCurrentDamageType[3] -> {
-                mBinding.checkVp.currentItem = 4
-            }
-        }*/
+        /* when (damageBean.type) {
+             mCurrentDamageType[0] -> {
+                 mBinding.checkVp.currentItem = 1
+             }
+             mCurrentDamageType[1] -> {
+                 mBinding.checkVp.currentItem = 2
+             }
+             mCurrentDamageType[2] -> {
+                 mBinding.checkVp.currentItem = 3
+             }
+             mCurrentDamageType[3] -> {
+                 mBinding.checkVp.currentItem = 4
+             }
+         }*/
     }
 
     override fun onPDFNoteEdited(annotPoint: String?) {
@@ -744,37 +763,37 @@ class CheckComponentDetectionActivity : BaseActivity(), ICheckCDContrast.ICheckC
                     if (damageBean.annotRef == it.annotRef) {
                         isMatch = true
                         resetDamageInfo(it, it.type)
-                      /*  when (it.type) {
-                            mCurrentDamageType[0] -> {
-                                mBinding.checkVp.currentItem = 1
-                            }
-                            mCurrentDamageType[1] -> {
-                                mBinding.checkVp.currentItem = 2
-                            }
-                            mCurrentDamageType[2] -> {
-                                mBinding.checkVp.currentItem = 3
-                            }
-                            mCurrentDamageType[3] -> {
-                                mBinding.checkVp.currentItem = 4
-                            }
-                        }*/
+                        /*  when (it.type) {
+                              mCurrentDamageType[0] -> {
+                                  mBinding.checkVp.currentItem = 1
+                              }
+                              mCurrentDamageType[1] -> {
+                                  mBinding.checkVp.currentItem = 2
+                              }
+                              mCurrentDamageType[2] -> {
+                                  mBinding.checkVp.currentItem = 3
+                              }
+                              mCurrentDamageType[3] -> {
+                                  mBinding.checkVp.currentItem = 4
+                              }
+                          }*/
                     }
                 }
                 if (!isMatch) {
-                  /*  when (damageBean.type) {
-                        mCurrentDamageType[0] -> {
-                            mBinding.checkVp.currentItem = 1
-                        }
-                        mCurrentDamageType[1] -> {
-                            mBinding.checkVp.currentItem = 2
-                        }
-                        mCurrentDamageType[2] -> {
-                            mBinding.checkVp.currentItem = 3
-                        }
-                        mCurrentDamageType[3] -> {
-                            mBinding.checkVp.currentItem = 4
-                        }
-                    }*/
+                    /*  when (damageBean.type) {
+                          mCurrentDamageType[0] -> {
+                              mBinding.checkVp.currentItem = 1
+                          }
+                          mCurrentDamageType[1] -> {
+                              mBinding.checkVp.currentItem = 2
+                          }
+                          mCurrentDamageType[2] -> {
+                              mBinding.checkVp.currentItem = 3
+                          }
+                          mCurrentDamageType[3] -> {
+                              mBinding.checkVp.currentItem = 4
+                          }
+                      }*/
                     AlertDialog.Builder(this).setTitle("提示")
                         .setMessage("当前损伤信息已被删除，移除标记点")
                         .setPositiveButton(R.string.dialog_ok) { dialog, which ->
@@ -816,5 +835,196 @@ class CheckComponentDetectionActivity : BaseActivity(), ICheckCDContrast.ICheckC
     override fun onButtonNextPressed() {
         LogUtils.d("onButtonNextPressed")
     }
+
+    /**
+     * Dispatch incoming result to the correct fragment.
+     */
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        LogUtils.d("onActivityResult：requestCode=${requestCode}  data=${data}")
+        if (requestCode == REQUEST_CODE_BEAN_REAL_WHITE_FLLOR) {
+            if (data != null) {
+                var file = data.getStringExtra("File")
+                LogUtils.d("梁-实测草图：" + file)
+                if (file != null) {
+                    var name = FileUtil.getFileName(file)
+                    name = name ?: file
+                    (mFragments[1] as CheckEditCDBFragment).setRealPicList(arrayListOf(name, file))
+                } else {
+                    (mFragments[1] as CheckEditCDBFragment).setRealPicList(arrayListOf())
+                }
+            } else {
+                (mFragments[1] as CheckEditCDBFragment).setRealPicList(arrayListOf())
+            }
+
+        } else if (requestCode == REQUEST_CODE_BEAN_DESIGN_WHITE_FLLOR) {
+
+            if (data != null) {
+                var file = data.getStringExtra("File")
+                LogUtils.d("梁-设计草图：" + file)
+                if (file != null) {
+                    var name = FileUtil.getFileName(file)
+                    name = name ?: file
+                    (mFragments[1] as CheckEditCDBFragment).setDesignPicList(
+                        arrayListOf(
+                            name,
+                            file
+                        )
+                    )
+                } else {
+                    (mFragments[1] as CheckEditCDBFragment).setDesignPicList(arrayListOf())
+                }
+            } else {
+                (mFragments[1] as CheckEditCDBFragment).setDesignPicList(arrayListOf())
+            }
+
+        } else if (requestCode == REQUEST_CODE_COLUMN_REAL_WHITE_FLLOR) {
+
+            if (data != null) {
+                var file = data.getStringExtra("File")
+                LogUtils.d("柱-实测草图：" + file)
+                if (file != null) {
+                    var name = FileUtil.getFileName(file)
+                    name = name ?: file
+                    (mFragments[2] as CheckEditCDCFragment).setRealPicList(
+                        arrayListOf(
+                            name,
+                            file
+                        )
+                    )
+                } else {
+                    (mFragments[2] as CheckEditCDCFragment).setRealPicList(arrayListOf())
+                }
+            } else {
+                (mFragments[2] as CheckEditCDCFragment).setRealPicList(arrayListOf())
+            }
+        }else if (requestCode == REQUEST_CODE_COLUMN_DESIGN_WHITE_FLLOR) {
+
+            if (data != null) {
+                var file = data.getStringExtra("File")
+                LogUtils.d("柱-设计草图：" + file)
+                if (file != null) {
+                    var name = FileUtil.getFileName(file)
+                    name = name ?: file
+                    (mFragments[2] as CheckEditCDCFragment).setDesignPicList(
+                        arrayListOf(
+                            name,
+                            file
+                        )
+                    )
+                } else {
+                    (mFragments[2] as CheckEditCDCFragment).setDesignPicList(arrayListOf())
+                }
+            } else {
+                (mFragments[2] as CheckEditCDCFragment).setDesignPicList(arrayListOf())
+            }
+        }
+        else if (requestCode == REQUEST_BEAM_REAL_TAKE_PHOTO && data != null) {
+            //     var  isCameraImage = data.getBooleanExtra(ImageSelector.IS_CAMERA_IMAGE, false)
+            var images = data.getStringArrayListExtra(ImageSelector.SELECT_RESULT)
+            if (images != null && images.size > 0) {
+                var name = FileUtil.getFileName(images[0])
+                name = name ?: images[0]
+                LogUtils.d("梁-实测图片: " + images[0])
+
+                (mFragments[1] as CheckEditCDBFragment).setImgaeBitmap(
+                    Uri.parse(images[0]),
+                    REQUEST_BEAM_REAL_TAKE_PHOTO
+                )
+            }
+        }else if (requestCode == REQUEST_BEAM_DESIGN_TAKE_PHOTO && data != null) {
+            var images = data.getStringArrayListExtra(ImageSelector.SELECT_RESULT)
+            if (images != null && images.size > 0) {
+                var name = FileUtil.getFileName(images[0])
+                name = name ?: images[0]
+                LogUtils.d("梁-设计图片: " + images[0])
+
+                (mFragments[1] as CheckEditCDBFragment).setImgaeBitmap(
+                    Uri.parse(images[0]),
+                    REQUEST_BEAM_DESIGN_TAKE_PHOTO
+                )
+            }
+        }else if (requestCode == REQUEST_COLUMN_REAL_TAKE_PHOTO && data != null) {
+            var images = data.getStringArrayListExtra(ImageSelector.SELECT_RESULT)
+            if (images != null && images.size > 0) {
+                var name = FileUtil.getFileName(images[0])
+                name = name ?: images[0]
+                LogUtils.d("柱-实测图片: " + images[0])
+
+                (mFragments[2] as CheckEditCDCFragment).setImgaeBitmap(
+                    Uri.parse(images[0]),
+                    REQUEST_COLUMN_REAL_TAKE_PHOTO
+                )
+            }
+        }
+        else if (requestCode == REQUEST_COLUMN_DESIGN_TAKE_PHOTO && data != null) {
+            var images = data.getStringArrayListExtra(ImageSelector.SELECT_RESULT)
+            if (images != null && images.size > 0) {
+                var name = FileUtil.getFileName(images[0])
+                name = name ?: images[0]
+                LogUtils.d("柱-设计图片: " + images[0])
+
+                (mFragments[2] as CheckEditCDCFragment).setImgaeBitmap(
+                    Uri.parse(images[0]),
+                    REQUEST_COLUMN_DESIGN_TAKE_PHOTO
+                )
+            }
+        }
+        else if (requestCode == REQUEST_WALL_REAL_TAKE_PHOTO && data != null) {
+            var images = data.getStringArrayListExtra(ImageSelector.SELECT_RESULT)
+            if (images != null && images.size > 0) {
+                var name = FileUtil.getFileName(images[0])
+                name = name ?: images[0]
+                LogUtils.d("墙-实测图片: " + images[0])
+
+                (mFragments[3] as CheckEditCDWFragment).setImgaeBitmap(
+                    Uri.parse(images[0]),
+                    REQUEST_WALL_REAL_TAKE_PHOTO
+                )
+            }
+        }
+        else if (requestCode == REQUEST_WALL_DESIGN_TAKE_PHOTO && data != null) {
+            var images = data.getStringArrayListExtra(ImageSelector.SELECT_RESULT)
+            if (images != null && images.size > 0) {
+                var name = FileUtil.getFileName(images[0])
+                name = name ?: images[0]
+                LogUtils.d("墙-设计图片: " + images[0])
+
+                (mFragments[3] as CheckEditCDWFragment).setImgaeBitmap(
+                    Uri.parse(images[0]),
+                    REQUEST_WALL_DESIGN_TAKE_PHOTO
+                )
+            }
+        }
+        else if (requestCode == REQUEST_PLATE_REAL_TAKE_PHOTO && data != null) {
+            var images = data.getStringArrayListExtra(ImageSelector.SELECT_RESULT)
+            if (images != null && images.size > 0) {
+                var name = FileUtil.getFileName(images[0])
+                name = name ?: images[0]
+                LogUtils.d("板-实测图片: " + images[0])
+
+                (mFragments[4] as CheckEditCDPFragment).setImgaeBitmap(
+                    Uri.parse(images[0]),
+                    REQUEST_PLATE_REAL_TAKE_PHOTO
+                )
+            }
+        }
+        else if (requestCode == REQUEST_PLATE_DESIGN_TAKE_PHOTO && data != null) {
+            var images = data.getStringArrayListExtra(ImageSelector.SELECT_RESULT)
+            if (images != null && images.size > 0) {
+                var name = FileUtil.getFileName(images[0])
+                name = name ?: images[0]
+                LogUtils.d("板-设计图片: " + images[0])
+
+                (mFragments[4] as CheckEditCDPFragment).setImgaeBitmap(
+                    Uri.parse(images[0]),
+                    REQUEST_PLATE_DESIGN_TAKE_PHOTO
+                )
+            }
+        }
+    }
+
+
+
 
 }

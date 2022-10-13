@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.os.Build;
 import android.os.Environment;
 import android.util.Log;
@@ -21,6 +22,7 @@ import android.widget.Toast;
 import androidx.annotation.ColorRes;
 import androidx.annotation.DrawableRes;
 
+import com.itextpdf.text.pdf.PdfWriter;
 import com.radaee.pdf.Document;
 import com.radaee.pdf.Global;
 import com.radaee.pdf.Matrix;
@@ -64,8 +66,7 @@ public class CommonUtil {
 
         int nightModeFlags = context.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
 
-        switch(nightModeFlags)
-        {
+        switch (nightModeFlags) {
             case Configuration.UI_MODE_NIGHT_YES:
                 bNight = true;
                 break;
@@ -82,9 +83,9 @@ public class CommonUtil {
 
     }
 
-    public static void copyFiletoExternalStorage(int resourceId, String resourceName, Context context){
+    public static void copyFiletoExternalStorage(int resourceId, String resourceName, Context context) {
         String pathSDCard = Global.tmp_path + "/" + resourceName;
-        try{
+        try {
             InputStream in = context.getResources().openRawResource(resourceId);
             FileOutputStream out = null;
             out = new FileOutputStream(pathSDCard);
@@ -321,10 +322,10 @@ public class CommonUtil {
                                     break;
                             }
                             //readonly
-                            if(!mAnnotInfo.isNull("ReadOnly"))
+                            if (!mAnnotInfo.isNull("ReadOnly"))
                                 mAnnotation.SetReadOnly((mAnnotInfo.getInt("ReadOnly") == 1) ? true : false);
                             //locked
-                            if(!mAnnotInfo.isNull("Locked"))
+                            if (!mAnnotInfo.isNull("Locked"))
                                 mAnnotation.SetLocked((mAnnotInfo.getInt("Locked") == 1) ? true : false);
                         }
                     }
@@ -450,21 +451,21 @@ public class CommonUtil {
 
     /**
      * it is fake sign method(graphic sign only), if you want a real sign feature, please using Annotation.SignField()
-     * @param document document object
+     *
+     * @param document   document object
      * @param field_name field name of unsigned signature field.
-     * @param image Bitmap object.
+     * @param image      Bitmap object.
      * @return true or false.
      */
-    public static boolean signField(Document document, String field_name, Bitmap image)
-    {
+    public static boolean signField(Document document, String field_name, Bitmap image) {
         int pcnt = document.GetPageCount();
-        for(int pcur = 0; pcur < pcnt; pcur++)//loop all pages
+        for (int pcur = 0; pcur < pcnt; pcur++)//loop all pages
         {
             Page page = document.GetPage(pcur);
             if (page == null) continue;
             page.ObjsStart();
             int acnt = page.GetAnnotCount();
-            for(int acur = 0; acur < acnt; acur++)//loop all annotations
+            for (int acur = 0; acur < acnt; acur++)//loop all annotations
             {
                 Page.Annotation annot = page.GetAnnot(acur);
                 if (annot == null) continue;
@@ -483,13 +484,13 @@ public class CommonUtil {
 
     /**
      * it is fake sign method(graphic sign only), if you want a real sign feature, please using Annotation.SignField()
+     *
      * @param document document object
-     * @param annot annotation object of unsigned signature field.
-     * @param image Bitmap object.
+     * @param annot    annotation object of unsigned signature field.
+     * @param image    Bitmap object.
      * @return true or false.
      */
-    public static boolean signField(Document document, Page.Annotation annot, Bitmap image)
-    {
+    public static boolean signField(Document document, Page.Annotation annot, Bitmap image) {
         if (document == null || annot == null || image == null) return false;
         if (annot.GetFieldType() != 4 || annot.GetSignStatus() != 0) return false;
         //it must unsigned signature field.
@@ -499,12 +500,14 @@ public class CommonUtil {
         Document.DocForm form = createImageForm(document, image, width, height);
         return annot.SetIcon("", form);//make fake sign(graphic sign).
     }
+
     /**
      * create DocForm object from image, and scale image to (width, height)
+     *
      * @param document Document object
-     * @param image bitmap object.
-     * @param width form width
-     * @param height form height
+     * @param image    bitmap object.
+     * @param width    form width
+     * @param height   form height
      * @return DocForm object.
      */
     public static Document.DocForm createImageForm(Document document, Bitmap image, float width, float height) {
@@ -564,7 +567,7 @@ public class CommonUtil {
             page.ObjsStart();
             Page.Annotation signAnnot = page.GetAnnot(annotIndex);
             if (signAnnot != null) {
-                if(bitmapHeight == 0 || bitmapWidth == 0) {
+                if (bitmapHeight == 0 || bitmapWidth == 0) {
                     float[] annotRect = signAnnot.GetRect();
                     bitmapWidth = (int) (annotRect[2] - annotRect[0]);
                     bitmapHeight = (int) (annotRect[3] - annotRect[1]);
@@ -575,7 +578,7 @@ public class CommonUtil {
                 signAnnot.RenderToBmp(bitmap);
                 Global.setAnnotTransparency(Global.g_annot_transparency);
                 Bitmap emptyBitmap = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), bitmap.getConfig());
-                if(bitmap.sameAs(emptyBitmap))
+                if (bitmap.sameAs(emptyBitmap))
                     result = "Empty Annot";
                 else {
                     saveThumb(bitmap, new File(renderPath));
@@ -588,5 +591,22 @@ public class CommonUtil {
         } else result = "Cannot get indicated page";
 
         return result;
+    }
+
+    public static void imageToPDF(String imgPaths, String pdf_save_address) {
+        try {
+            com.itextpdf.text.Document document = new  com.itextpdf.text.Document();
+            PdfWriter.getInstance(document, new FileOutputStream(pdf_save_address));
+            document.open();
+            com.itextpdf.text.Image img = com.itextpdf.text.Image.getInstance(imgPaths);
+            float scale = ((document.getPageSize().getWidth() - document.leftMargin()
+                    - document.rightMargin() - 0) / img.getWidth()) * 100;
+            img.scalePercent(scale);
+            img.setAlignment(com.itextpdf.text.Image.ALIGN_CENTER | com.itextpdf.text.Image.ALIGN_TOP);
+            document.add(img);
+            document.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

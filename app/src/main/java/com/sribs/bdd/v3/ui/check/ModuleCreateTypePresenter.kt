@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.android.arouter.launcher.ARouter
@@ -43,14 +44,22 @@ class ModuleCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCrea
     private var picList: ArrayList<ModuleFloorPictureBean>? = null
 
     private var above = ArrayList<ModuleFloorBean>()
-    private var after = ArrayList<ModuleFloorBean>()
+    private var before = ArrayList<ModuleFloorBean>()
 
     private var mProLeader: String? = ""
 
+    var mAboveOldIndex = 0
+
+    var mBeforeOldIndex = 0
 
     var beanList: ArrayList<ModuleFloorBean>? = ArrayList()
 
     var beanFinalPicList: ArrayList<ModuleFloorPictureBean>? = null
+
+    var isFirstCome :Boolean = true //首次进入设置楼层数量时 不该进行新建楼层操作
+    var isFirstCome2 :Boolean = true //首次进入设置楼层数量时 不该进行新建楼层操作
+
+
 
     private val floorAdapter by lazy {
         CreateModuleFloorAdapter(this)
@@ -64,23 +73,63 @@ class ModuleCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCrea
 
     @SuppressLint("NotifyDataSetChanged")
     override fun addAboveFlourList(num: Int) {
+        if (isFirstCome){
+            isFirstCome = false
+            return
+        }
+        LogUtils.d("addAboveFlourList： " + num)
+
         if (num == 0) {
             array?.removeAll(above)
-            array?.removeAll(beanList!!)
-            above.clear()
             floorAdapter.notifyDataSetChanged()
         } else if (num > 0) {
             array?.removeAll(above)
-            array?.removeAll(beanList!!)
-            above.clear()
-            for (i in 0 until num) {
-                var name = NumberUtil.num2Chinese(i + 1)
-                var moduleFloorBean = ModuleFloorBean(name + "层", arrayListOf())
-                above.add(moduleFloorBean)
+
+            if (mAboveOldIndex == 0 && above.size < 1) {
+                for (i in 0 until num) {
+                    var name = NumberUtil.num2Chinese(i + 1)
+                    var buildingFloorBean = ModuleFloorBean(name + "层", arrayListOf(), "地上")
+                    above.add(buildingFloorBean)
+                }
+                array?.addAll(above)
+                floorAdapter.notifyDataSetChanged()
+                mAboveOldIndex = num
+                return
             }
-            array?.addAll(above)
-            floorAdapter.notifyDataSetChanged()
-        } else {
+
+            if (mAboveOldIndex > 0 && mAboveOldIndex == num) {
+                array?.addAll(above)
+                floorAdapter.notifyDataSetChanged()
+                mAboveOldIndex = num
+                return
+            }
+
+            if (mAboveOldIndex > 0 && mAboveOldIndex > num) {
+                for (i in 0 until mAboveOldIndex - num) {
+                    above.removeAt(above.size - 1)
+                }
+                array?.addAll(above)
+                floorAdapter.notifyDataSetChanged()
+                //     flourAdapter.notifyItemChanged(above.size-1)
+                mAboveOldIndex = num
+                return
+
+            }
+
+            if (mAboveOldIndex > 0 && mAboveOldIndex < num) {
+                for (i in mAboveOldIndex until num) {
+                    var name = NumberUtil.num2Chinese(1 + i)
+                    var buildingFloorBean = ModuleFloorBean(name + "层", arrayListOf(), "地上")
+                    above.add(buildingFloorBean)
+                }
+                array?.addAll(above)
+                floorAdapter.notifyDataSetChanged()
+                //  flourAdapter.notifyItemInserted(before.size+above.size)
+                //  flourAdapter.notifyItemRangeChanged(before.size+above.size-1,before.size+above.size)
+                mAboveOldIndex = num
+                return
+            }
+        }else {
             mView?.onMsg("请输入正确的数字")
         }
     }
@@ -89,22 +138,65 @@ class ModuleCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCrea
     //地下楼层层数
     @SuppressLint("NotifyDataSetChanged")
     override fun addAfterFlourList(num: Int) {
+        if (isFirstCome2){
+            isFirstCome2 = false
+            return
+        }
+        LogUtils.d("addAfterFlourList： " + num)
         if (num == 0) {
-            array?.removeAll(after)
-            after.clear()
-            array?.removeAll(beanList!!)
+            array?.removeAll(before)
             floorAdapter.notifyDataSetChanged()
         } else if (num > 0) {
-            array?.removeAll(after)
-            after.clear()
-            array?.removeAll(beanList!!)
-            for (i in 0 until num) {
-                var name = NumberUtil.num2Chinese(i + 1)
-                var moduleFloorBean = ModuleFloorBean("负" + name + "层", arrayListOf())
-                after.add(moduleFloorBean)
+            array?.removeAll(before)
+            array?.removeAll(above)
+
+            if (mBeforeOldIndex == 0 && before.size < 1) {
+                for (i in 0 until num) {
+                    var name = NumberUtil.num2Chinese(i + 1)
+                    var buildingFloorBean = ModuleFloorBean("负"+name + "层", arrayListOf(), "地下")
+                    before.add(buildingFloorBean)
+                }
+                array?.addAll(before)
+                array?.addAll(above)
+                floorAdapter.notifyDataSetChanged()
+                mBeforeOldIndex = num
+                return
             }
-            array?.addAll(after)
-            floorAdapter.notifyDataSetChanged()
+
+            if (mBeforeOldIndex > 0 && mBeforeOldIndex == num) {
+                array?.addAll(before)
+                array?.addAll(above)
+                floorAdapter.notifyDataSetChanged()
+                mBeforeOldIndex = num
+                return
+            }
+
+            if (mBeforeOldIndex > 0 && mBeforeOldIndex > num) {
+                for (i in 0 until mBeforeOldIndex - num) {
+                    before.removeAt(before.size - 1)
+                }
+                array?.addAll(before)
+                array?.addAll(above)
+                floorAdapter.notifyDataSetChanged()
+                //   flourAdapter.notifyItemChanged(before.size-1)
+                mBeforeOldIndex = num
+                return
+
+            }
+
+            if (mBeforeOldIndex > 0 && mBeforeOldIndex < num) {
+                for (i in mBeforeOldIndex until num) {
+                    var name = NumberUtil.num2Chinese(1 + i)
+                    var buildingFloorBean = ModuleFloorBean("负"+name + "层", arrayListOf(), "地下")
+                    before.add(buildingFloorBean)
+                }
+                array?.addAll(before)
+                array?.addAll(above)
+                floorAdapter.notifyDataSetChanged()
+                //   flourAdapter.notifyItemInserted(before.size)
+                mBeforeOldIndex = num
+                return
+            }
         } else {
             mView?.onMsg("请输入正确的数字")
         }
@@ -136,13 +228,16 @@ class ModuleCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCrea
             beanList!!.add(
                 ModuleFloorBean(
                     name = it.floorName!!,
-                    pictureList = beanPicList
+                    pictureList = beanPicList,
+                    floor = ""
                 )
             )
         }
 
         array?.clear()
         array?.addAll(beanList!!)
+        array?.addAll(before)
+        array?.addAll(above)
 
         refeshData()
 
@@ -204,7 +299,7 @@ class ModuleCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCrea
             updateTime = TimeUtil.YMD_HMS.format(Date()),
             drawings = ArrayList(),
             aboveGroundNumber = above.size,
-            underGroundNumber = after.size,
+            underGroundNumber = before.size,
             inspectors = "",
             remoteId = remoteId,
 
@@ -227,7 +322,7 @@ class ModuleCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCrea
                     mBuildingId,
                     mLocalModuleId!!.toInt(),
                     above.size,
-                    after.size
+                    before.size
                 )
             }, {
                 mView?.onMsg("gg")
@@ -479,6 +574,29 @@ class ModuleCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCrea
 
     override fun showWhite(bean: ModuleFloorBean) {
         mView?.choseWhite(bean)
+    }
+
+    override fun deleteModuleFloor(bean: ModuleFloorBean, position: Int) {
+
+        when (bean.floor) {
+            "地上" -> {
+                above.removeAt(position - before.size-beanList!!.size)
+            }
+            "地下" -> {
+                before.removeAt(position-beanList!!.size)
+            }
+            ""->{
+                beanList!!.removeAt(position)
+            }
+        }
+        array!!.clear()
+        array!!.addAll(beanList!!)
+        array!!.addAll(before)
+        array!!.addAll(above)
+
+        floorAdapter.notifyDataSetChanged()
+        Log.e("TAG", "deleteBuildingFloor: "+array )
+     //   mView?.deleteModuleFloor(bean.floor!!, above.size, before.size)
     }
 
 }

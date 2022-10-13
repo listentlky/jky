@@ -3,7 +3,7 @@ package com.sribs.bdd.bean
 import com.sribs.common.bean.db.UnitBean
 
 //楼层
-data class BuildingFloorBean(var name:String, var pictureList: ArrayList<BuildingFloorPictureBean>?)
+data class BuildingFloorBean(var name:String,var pictureList: ArrayList<BuildingFloorPictureBean>?,var floor:String?)
 
 data class BuildingFloorIndexBean(var name:String,var floor:String,var pictureList: ArrayList<BuildingFloorPictureBean>?)
 //楼层配置图片

@@ -562,7 +562,6 @@ class CheckBuildStructureActivity : BaseActivity(), ICheckBSContrast.ICheckBSVie
     override fun unbindPresenter() {
         mPresenter.unbindView()
     }
-
     override fun OnPDFPageModified(pageno: Int) {
         mPDFNoteModified = true
         mController?.onPageModified(pageno)
