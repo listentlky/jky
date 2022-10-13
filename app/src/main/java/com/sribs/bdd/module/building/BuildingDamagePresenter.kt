@@ -49,7 +49,7 @@ class BuildingDamagePresenter :BasePresenter(), IBuildingContrast.IBuildingPrese
     override fun getLocalBuilding(projectId: Long) {
         mProId = projectId
         println("leon getLocalBuilding projectId=${projectId}")
-        addDisposable( mDb.getBuildingIdByProjectId(projectId?:-1)
+        addDisposable(mDb.getBuildingIdByProjectId(projectId?:-1)
             .subscribeOn(Schedulers.computation())
             .observeOn(Schedulers.computation())
             .flatMap {
@@ -69,7 +69,8 @@ class BuildingDamagePresenter :BasePresenter(), IBuildingContrast.IBuildingPrese
                             item.bldId,
                             item.projectId,
                             item.floorId,
-                            item.floorName
+                            item.floorName,
+                            item.floorType
                         )
                         println("leon getLocalBuilding floorName=${item.floorName}")
                         mAppFloorList?.add(floor!!)

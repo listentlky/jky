@@ -4,8 +4,7 @@ import androidx.annotation.NonNull
 import com.cbj.sdk.libnet.http.bean.ListBean
 import com.cbj.sdk.libnet.http.bean.ResultBean
 import com.sribs.common.bean.net.*
-import com.sribs.common.bean.net.v3.V3BuildingModuleListRes
-import com.sribs.common.bean.net.v3.V3BuildingSaveReq
+import com.sribs.common.bean.net.v3.*
 import io.reactivex.Observable
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -129,18 +128,33 @@ interface HttpApi {
     @POST("api/v3/app/building/list")
     fun getV3UnitList(@QueryName projectId:String):Observable<ResultBean<ListBean<UnitListRes>>>
 
+
     /**
-     * V3
+     * V3 ↓
+     * 查询所有项目
      */
-    //查询所有项目
+    //
     @GET("api/v3/app/building/project/list")
     fun getV3ProjectList():Observable<ResultBean<ListBean<ProjectListRes>>>
+
+    /**
+     * 查询指定项目版本列表
+     */
+    @GET("api/v3/app/building/project/version/list")
+    fun getV3ProjectVersionList(@Query("projectId") remoteProjectId: String):Observable<ResultBean<ListBean<V3ProjectVersionListRes>>>
+
+    /**
+     * 下载项目的指定版本
+     */
+    @POST("api/v3/app/building/project/download/versionList")
+    fun downloadV3ProjectVersionList(@Body req:V3ProjectDownloadReq):Observable<ResultBean<Any>>
+
 
     @POST("api/v3/app/project/save")
     fun createOrUpdateProject(@Body req:ProjectCreateReq):Observable<ResultBean<Any>>
 
     @POST("api/v3/app/project/delete")
-    fun deleteProject(@Query("projectId") projectId:Long):Observable<ResultBean<Any>>
+    fun deleteProject(@Body req:V3ProjectVersionDeleteReq):Observable<ResultBean<Any>>
 
     /**
      * 查询项目下所有楼

@@ -88,7 +88,7 @@ class ModuleCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCrea
             if (mAboveOldIndex == 0 && above.size < 1) {
                 for (i in 0 until num) {
                     var name = NumberUtil.num2Chinese(i + 1)
-                    var buildingFloorBean = ModuleFloorBean(name + "层", arrayListOf(), "地上")
+                    var buildingFloorBean = ModuleFloorBean(name + "层", arrayListOf(), "地上",1)
                     above.add(buildingFloorBean)
                 }
                 array?.addAll(above)
@@ -119,7 +119,7 @@ class ModuleCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCrea
             if (mAboveOldIndex > 0 && mAboveOldIndex < num) {
                 for (i in mAboveOldIndex until num) {
                     var name = NumberUtil.num2Chinese(1 + i)
-                    var buildingFloorBean = ModuleFloorBean(name + "层", arrayListOf(), "地上")
+                    var buildingFloorBean = ModuleFloorBean(name + "层", arrayListOf(), "地上",1)
                     above.add(buildingFloorBean)
                 }
                 array?.addAll(above)
@@ -153,7 +153,7 @@ class ModuleCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCrea
             if (mBeforeOldIndex == 0 && before.size < 1) {
                 for (i in 0 until num) {
                     var name = NumberUtil.num2Chinese(i + 1)
-                    var buildingFloorBean = ModuleFloorBean("负"+name + "层", arrayListOf(), "地下")
+                    var buildingFloorBean = ModuleFloorBean("负"+name + "层", arrayListOf(), "地下",0)
                     before.add(buildingFloorBean)
                 }
                 array?.addAll(before)
@@ -187,7 +187,7 @@ class ModuleCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCrea
             if (mBeforeOldIndex > 0 && mBeforeOldIndex < num) {
                 for (i in mBeforeOldIndex until num) {
                     var name = NumberUtil.num2Chinese(1 + i)
-                    var buildingFloorBean = ModuleFloorBean("负"+name + "层", arrayListOf(), "地下")
+                    var buildingFloorBean = ModuleFloorBean("负"+name + "层", arrayListOf(), "地下",0)
                     before.add(buildingFloorBean)
                 }
                 array?.addAll(before)
@@ -229,7 +229,8 @@ class ModuleCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCrea
                 ModuleFloorBean(
                     name = it.floorName!!,
                     pictureList = beanPicList,
-                    floor = ""
+                    floor = "",
+                    floorType = it.floorType
                 )
             )
         }
@@ -364,6 +365,7 @@ class ModuleCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCrea
                         moduleId = it.moduleId,
                         floorId = it.floorId,
                         floorName = it.floorName,
+                        floorType = it.floorType,
                         drawingsList = it.floorList,
                         deleteTime = "",
                         aboveNumber = it.aboveNumber,
@@ -407,6 +409,7 @@ class ModuleCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCrea
                     moduleId = moduleId,
                     floorId = (i + 1).toLong(),
                     floorName = item.name,
+                    floorType = item.floorType,
                     aboveNumber = aboveGroundNumber,
                     afterNumber = underGroundNumber
                 )

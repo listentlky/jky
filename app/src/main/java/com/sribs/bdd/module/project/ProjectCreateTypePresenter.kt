@@ -80,7 +80,7 @@ class ProjectCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCre
             if (mAboveOldIndex == 0 && above.size < 1) {
                 for (i in 0 until num) {
                     var name = NumberUtil.num2Chinese(i + 1)
-                    var buildingFloorBean = BuildingFloorBean(name + "层", arrayListOf(), "地上")
+                    var buildingFloorBean = BuildingFloorBean(name + "层", arrayListOf(), "地上",1)
                     above.add(buildingFloorBean)
                 }
                 array?.addAll(above)
@@ -111,7 +111,7 @@ class ProjectCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCre
             if (mAboveOldIndex > 0 && mAboveOldIndex < num) {
                 for (i in mAboveOldIndex until num) {
                     var name = NumberUtil.num2Chinese(1 + i)
-                    var buildingFloorBean = BuildingFloorBean(name + "层", arrayListOf(), "地上")
+                    var buildingFloorBean = BuildingFloorBean(name + "层", arrayListOf(), "地上",1)
                     above.add(buildingFloorBean)
                 }
                 array?.addAll(above)
@@ -138,7 +138,7 @@ class ProjectCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCre
             if (mBeforeOldIndex == 0 && before.size < 1) {
                 for (i in 0 until num) {
                     var name = NumberUtil.num2Chinese(i + 1)
-                    var buildingFloorBean = BuildingFloorBean("负"+name + "层", arrayListOf(), "地下")
+                    var buildingFloorBean = BuildingFloorBean("负"+name + "层", arrayListOf(), "地下",0)
                     before.add(buildingFloorBean)
                 }
                 array?.addAll(before)
@@ -172,7 +172,7 @@ class ProjectCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCre
             if (mBeforeOldIndex > 0 && mBeforeOldIndex < num) {
                 for (i in mBeforeOldIndex until num) {
                     var name = NumberUtil.num2Chinese(1 + i)
-                    var buildingFloorBean = BuildingFloorBean("负"+name + "层", arrayListOf(), "地下")
+                    var buildingFloorBean = BuildingFloorBean("负"+name + "层", arrayListOf(), "地下",0)
                     before.add(buildingFloorBean)
                 }
                 array?.addAll(before)
@@ -431,6 +431,7 @@ class ProjectCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCre
                         -1,
                         it.floorId?.toLong(),
                         it.floorName,
+                        it.floorType,
                         it.createTime,
                         it.createTime,
                         0L,
@@ -493,7 +494,8 @@ class ProjectCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCre
                     mBuildingId.toLong(),
                     mLocalProjectId.toLong(),
                     (i+1).toLong(),
-                    item.name
+                    item.name,
+                    item.floorType
                 )
                 floor.drawingsV3List = getDrawingList(activity,item,mLocalProjectId,mBuildingId)
                 LogUtils.d("楼层图纸集合: "+floor.drawingsV3List)

@@ -17,7 +17,9 @@ data class MainProjectBean(
     var status: String,
     var address:String,
     var leader:String="",
-    var inspector:String=""
+    var inspector:String="",
+    var parentVersion:Int=0,
+    var version:Int=0
 ){
     var isCardSel:Boolean = false
     var isMenuChecked:Boolean = false

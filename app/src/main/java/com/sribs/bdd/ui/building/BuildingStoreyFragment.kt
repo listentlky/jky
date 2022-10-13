@@ -580,7 +580,8 @@ class BuildingStoreyFragment:BaseFragment(R.layout.fragment_project_storey), IBu
                 mBuildingId.toLong(),
                 mLocalProjectId.toLong(),
                 (i+1).toLong(),
-                item.floorName
+                item.floorName,
+                0
             )
 
             uriList = item.drawingsUriList

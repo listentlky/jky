@@ -13,7 +13,9 @@ data class ProjectListRes(
     @SerializedName("leaderId")          var leaderId:String,
     @SerializedName("leaderName")        var leaderName:String,
     @SerializedName("buildingNo")        var buildingNo:String, //三期项目列表无楼号
-    @SerializedName("inspectors")     var inspectors:List<String>?,
+    @SerializedName("inspectors")        var inspectors:List<String>?,
+    @SerializedName("parentVersion")     var parentVersion:Int,
+    @SerializedName("version")           var version:Int,
     @SerializedName("createTime")        var createTime:String,
     @SerializedName("updateTime")        var updateTime:String
 )

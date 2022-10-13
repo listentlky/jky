@@ -261,6 +261,7 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
                         moduleId = moduleId,
                         floorId = b.floorId,
                         floorName = b.floorName,
+                        floorType = b.floorType?:0,
                         drawingsList = b.drawing,
                         remoteId = remoteId,
                         aboveNumber = b.aboveGroundNumber,

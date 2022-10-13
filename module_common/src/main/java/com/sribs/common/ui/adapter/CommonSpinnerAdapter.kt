@@ -13,6 +13,7 @@ import com.cbj.sdk.libbase.utils.LOG
 
 import com.sribs.common.R
 import com.sribs.common.bean.HistoryBean
+import com.sribs.common.bean.V3VersionBean
 import com.sribs.common.utils.TimeUtil
 
 /**
@@ -50,6 +51,19 @@ class CommonSpinnerAdapter<T>(var mContext: Context, var list:Array<T>, @LayoutR
                 }
                 ctv.isChecked = b.isCheck
             }
+
+            is V3VersionBean->{
+                ctv.text = (getItem(position) as V3VersionBean).let {
+                    newTv.visibility = if (!mLocalTime.isNullOrEmpty() && TimeUtil.isBefore(mLocalTime!!,it.createTime?:"")){
+                        View.VISIBLE
+                    }else{
+                        View.INVISIBLE
+                    }
+                    it.createTime+" "+it.leaderName
+                }
+                ctv.isChecked = b.isCheck
+            }
+
             is String->{
                 ctv.text = b
                 newTv?.visibility = View.GONE

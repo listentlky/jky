@@ -7,9 +7,7 @@ import com.sribs.bdd.Config
 import com.sribs.bdd.R
 import com.sribs.bdd.action.Dict
 import com.sribs.bdd.bean.BuildingMainBean
-import com.sribs.bdd.bean.MainProjectBean
 import com.sribs.bdd.v3.util.LogUtils
-import com.sribs.common.bean.db.FloorBean
 import com.sribs.common.bean.net.v3.V3BuildingSaveReq
 import com.sribs.common.module.BasePresenter
 import com.sribs.common.net.HttpApi

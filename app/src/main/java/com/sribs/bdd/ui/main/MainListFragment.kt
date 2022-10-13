@@ -57,7 +57,12 @@ class MainListFragment :
                 LogUtils.d("选中："+beanMain.toString())
                 LogUtils.d("leader："+beanMain.leader+" ; "+"inspector: "+beanMain.inspector)
 
+                (activity as DamageMainActivity).selectProject(beanMain)
 
+                if (beanMain.localId<0){
+                    showToast(getString(R.string.error_no_local))
+                    return
+                }
 
                 ARouter.getInstance().build(com.sribs.common.ARouterPath.PRO_CREATE_ATY_FLOOR_LIST)
                     .withString(com.sribs.common.ARouterPath.VAL_COMMON_TITLE, beanMain.address)

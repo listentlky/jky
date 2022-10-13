@@ -26,6 +26,7 @@ import com.sribs.bdd.databinding.ActivityDamageMainBinding
 import com.sribs.bdd.module.main.IMainListContrast
 import com.sribs.bdd.module.main.MainPresenter
 import com.sribs.bdd.utils.CreateDialog
+import com.sribs.bdd.v3.util.LogUtils
 import com.sribs.common.bean.CommonBtnBean
 import com.sribs.common.utils.DialogUtil
 import org.aspectj.tools.ajc.Main
@@ -257,7 +258,7 @@ class DamageMainActivity :BaseActivity(),IMainListContrast.IMainView{
                               }else{
                                   showToast("无法删除云端项目")
                               }*/
-                            mPresenter.projectDelete(beanMain.localId)
+                            mPresenter.projectDelete(beanMain)
                         })
                     }
                     else->{
@@ -290,8 +291,8 @@ class DamageMainActivity :BaseActivity(),IMainListContrast.IMainView{
             showToast(getString(R.string.error_no_network))
             return
         }
-        if (isAll){
-            mPresenter.projectGetRecordHistory(beanMain.remoteId){ history->
+        if (isAll){ // todo 下载所有 待确认
+           /* mPresenter.projectGetRecordHistory(beanMain.remoteId){ history->
                 if (history.isNullOrEmpty()){
                     showToast(getString(R.string.error_no_history))
                     return@projectGetRecordHistory
@@ -311,25 +312,32 @@ class DamageMainActivity :BaseActivity(),IMainListContrast.IMainView{
                         }
                     },{})
                 }
-            }
+            }*/
         }else{
-            mPresenter.projectGetConfigHistory(beanMain.remoteId){ history->
-                if (history.isNullOrEmpty()){
+
+            mPresenter.projectV3GetConfigVersionList(beanMain.remoteId){ versionList->
+                if (versionList.isNullOrEmpty()){
                     showToast(getString(R.string.error_no_history))
-                    return@projectGetConfigHistory
+                    return@projectV3GetConfigVersionList
                 }
-                LOG.I("123","history size=${history.size}")
-                com.sribs.bdd.utils.DialogUtil.showDownloadProjectDialog(this,null,beanMain.updateTime,
-                    history!!.toTypedArray()){ l->
-                    if (l.isEmpty())return@showDownloadProjectDialog
+                LogUtils.d("版本个数: ${versionList.size}")
+                com.sribs.bdd.utils.DialogUtil.showDownloadV3ProjectDialog(this,null,beanMain.updateTime,
+                    versionList!!.toTypedArray()){ l->
+                    if (l.isEmpty())return@showDownloadV3ProjectDialog
                     LOG.I("123","${l[0]}")
                     var idx = l[0]!!
                     DialogUtil.showMsgDialog(this,"覆盖本地版本？",{
                         showPb(true)
-                        mPresenter.projectDownLoadConfig(
-                            history[idx].remoteConfigHistoryId?:"",
-                            beanMain.also { b->b.status = resources.getStringArray(R.array.main_project_status)[4] },
+                        mPresenter.projectV3DownloadConfig(
+                            versionList[idx].projectId,
+                            versionList[idx].version,
                         ){
+                            if(it){
+                                showToast("下载成功")
+                                beanMain.also { b->b.status = resources.getStringArray(R.array.main_project_status)[4] }
+                            }else{
+                                showToast("下载失败")
+                            }
                             showPb(false)
                         }
                     },{})

@@ -65,7 +65,8 @@ data class ProjectBean(
         var buildingId:Long?,
         var projectId: Long?,
         var floorId: Long?,
-        var floorName: String?
+        var floorName: String?,
+        var floorType:Int? // 0地下 1地上
     ){
             var unitId: Long? = -1
             var houseList: ArrayList<House>? = null

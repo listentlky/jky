@@ -15,6 +15,8 @@ data class ProjectBean(
     var inspector:String?=null,
     var buildNo:String?=null,
     var status:Int?=null,
+    var parentVersion:Int?=0,
+    var version:Int?=0,
 
     var createTime:Date?=null,
     var updateTime:Date?=null,

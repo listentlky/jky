@@ -14,6 +14,7 @@ data class v3ModuleFloorRoom(
     @ColumnInfo(name = "module_id") var moduleId: Long?,//module 表主键
     @ColumnInfo(name = "floor_id") var floorId: Long?,//本楼楼层id
     @ColumnInfo(name = "floor_name") var floorName: String?,//楼层名称
+    @ColumnInfo(name = "floor_type") var floorType: Int,//0 地下 1地上
     @ColumnInfo(name = "drawingsList") var drawingsList:List<DrawingV3Bean>? = null,///
     @ColumnInfo(name = "above_number") var aboveNumber:Int? = 0,///
     @ColumnInfo(name = "after_number") var afterNumber:Int? = 0,///

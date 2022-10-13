@@ -19,6 +19,8 @@ data class ProjectBean(
     @ColumnInfo(name="building_no")          var builderNo:String?=null,//楼号
     @ColumnInfo(name="inspector")           var inspector:String?=null,//检验员
     @ColumnInfo(name="status")              var status:Int?=0,//状态 //本地，已上传
+    @ColumnInfo(name="parentVersion")       var parentVersion:Int?=0,
+    @ColumnInfo(name="version")              var version:Int?=0,//版本
 
     @ColumnInfo(name="create_time")         var createTime:Date?=null,
     @ColumnInfo(name="update_time")         var updateTime:Date?=Date(java.util.Date().time),

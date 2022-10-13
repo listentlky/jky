@@ -12,6 +12,7 @@ data class FloorBean(
     var unitId:Long?=null,
     var floorId:Long?=null,
     var floorName:String?=null,
+    var floorType:Int?=0, // 0地下 1地上
 
     var createTime:Long?=null,
     var updateTime:Long?=null,

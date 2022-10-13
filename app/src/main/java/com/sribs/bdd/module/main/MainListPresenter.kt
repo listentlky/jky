@@ -50,7 +50,9 @@ class MainListPresenter:BasePresenter(),IMainListContrast.IPresenter {
                     status = mStateArr[b.status?:0],
                     address = b.name+"",
                     leader = b.leader?:"",
-                    inspector = b.inspector?:""
+                    inspector = b.inspector?:"",
+                    parentVersion = b.parentVersion!!,
+                    version = b.version!!
                 ).also { _b->
                     _b.updateTime = TimeUtil.YMD_HMS.format(b.updateTime)
                     _b.createTime = TimeUtil.YMD_HMS.format(b.createTime)
@@ -110,7 +112,7 @@ class MainListPresenter:BasePresenter(),IMainListContrast.IPresenter {
                     }
                 }
                 // 远程项目在本地中已有 本地remoteId为空  项目名称、楼号相同，更新状态
-            /*    it.data!!.records.forEach {  remoteBean->
+                it.data!!.records.forEach {  remoteBean->
                     var i = localList.indexOfFirst { localBean->
                         localBean.remoteId.isNullOrEmpty() &&
                                 localBean.name == remoteBean.projectName
@@ -124,9 +126,9 @@ class MainListPresenter:BasePresenter(),IMainListContrast.IPresenter {
                         localBean.remoteData = remoteBean
                         localBean.remoteId = remoteBean.projectId
                     }
-                }*/
+                }
 
-                it.data!!.records.forEach {  remoteBean->
+            /*    it.data!!.records.forEach {  remoteBean->
                     var i = localList.indexOfFirst { localBean->
                         localBean.localUUID == remoteBean.projectId
                     }
@@ -139,7 +141,7 @@ class MainListPresenter:BasePresenter(),IMainListContrast.IPresenter {
                         localBean.remoteData = remoteBean
                         localBean.remoteId = remoteBean.projectId
                     }
-                }
+                }*/
 
                 // 本地中没有
                 var onlyRemoteList =  it.data!!.records.filter { remoteBean->
@@ -153,6 +155,8 @@ class MainListPresenter:BasePresenter(),IMainListContrast.IPresenter {
                     remoteId= b.projectId,
                     updateTimeYMD = TimeUtil.time2YMD(b.updateTime),
                     status = mStateArr[2],
+                    parentVersion = b.parentVersion,
+                    version = b.version,
                     address = b.projectName,
                     leader = b.leaderName?:"",
                     inspector = b.inspectors?.joinToString(separator = "、")?:""

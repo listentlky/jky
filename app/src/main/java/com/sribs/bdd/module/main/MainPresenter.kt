@@ -12,10 +12,13 @@ import com.sribs.bdd.bean.UnitConfigType
 import com.sribs.bdd.module.BaseUnitConfigPresenter
 import com.sribs.bdd.v3.util.LogUtils
 import com.sribs.common.bean.HistoryBean
+import com.sribs.common.bean.V3VersionBean
 import com.sribs.common.bean.db.ConfigBean
 import com.sribs.common.bean.db.ProjectBean
 import com.sribs.common.bean.db.UnitBean
 import com.sribs.common.bean.net.*
+import com.sribs.common.bean.net.v3.V3ProjectDownloadReq
+import com.sribs.common.bean.net.v3.V3ProjectVersionDeleteReq
 import com.sribs.common.net.HttpApi
 import com.sribs.common.utils.TimeUtil
 import io.reactivex.Observable
@@ -32,6 +35,38 @@ import kotlin.collections.ArrayList
  */
 class MainPresenter:BaseUnitConfigPresenter(),IMainListContrast.IMainPresenter {
     private var mView:IMainListContrast.IMainView?=null
+
+    /**
+     * 三期查询项目版本列表
+     */
+    fun projectV3GetConfigVersionList(remoteProjectId: String,cb: (ArrayList<V3VersionBean>?) -> Unit){
+        addDisposable(HttpManager.instance.getHttpService<HttpApi>()
+            .getV3ProjectVersionList(remoteProjectId)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                checkResult(it)
+                LogUtils.d("查询项目版本列表："+it)
+                cb(ArrayList(it.data!!.records.map {
+                    V3VersionBean(
+                        it.projectId,
+                        it.projectName,
+                        it.leaderName,
+                        it.leaderId,
+                        it.inspectors,
+                        it.parentVersion,
+                        it.version,
+                        it.createTime
+                    )
+                }))
+            },{
+                LogUtils.d("查询项目版本列表失败："+it)
+                mView?.onMsg(ERROR_HTTP)
+                cb(null)
+                it.printStackTrace()
+            }))
+    }
+
 
     override fun projectGetConfigHistory(remoteProjectId: String, cb: (ArrayList<HistoryBean>?) -> Unit) {
         addDisposable(HttpManager.instance.getHttpService<HttpApi>()
@@ -108,7 +143,8 @@ class MainPresenter:BaseUnitConfigPresenter(),IMainListContrast.IMainPresenter {
      * 上传项目配置
      */
     fun uploadProject(bean: MainProjectBean){
-        var inspectorList: List<String> =
+        LogUtils.d("上传项目配置： "+bean)
+        /*var inspectorList: List<String> =
             if (bean.inspector.contains("、")) bean.inspector.split("、") else Arrays.asList(bean.inspector)
 
         addDisposable(HttpManager.instance.getHttpService<HttpApi>()
@@ -128,7 +164,7 @@ class MainPresenter:BaseUnitConfigPresenter(),IMainListContrast.IMainPresenter {
 
             }
             )
-        )
+        )*/
     }
 
     private fun updateProject(bean: MainProjectBean):Observable<Long>{
@@ -151,6 +187,31 @@ class MainPresenter:BaseUnitConfigPresenter(),IMainListContrast.IMainPresenter {
                 it.status = status
             }
         })
+    }
+
+    /**
+     * V3下载指定版本的项目
+     */
+    fun projectV3DownloadConfig(
+        remoteProjectId:String,
+        version:Int,
+        cb: (Boolean) -> Unit
+    ){
+        addDisposable(HttpManager.instance.getHttpService<HttpApi>()
+            .downloadV3ProjectVersionList(V3ProjectDownloadReq(remoteProjectId,version))
+            .subscribeOn(Schedulers.io())
+            .observeOn(Schedulers.computation())
+            .subscribe({
+                LogUtils.d("下载的项目版本数据: "+it)
+                cb(true)
+            },{
+                cb(false)
+            }))
+            /*.concatMap {
+                LogUtils.d("下载的项目版本数据")
+
+            }*/
+
     }
 
     override fun projectDownLoadConfig(
@@ -340,10 +401,14 @@ class MainPresenter:BaseUnitConfigPresenter(),IMainListContrast.IMainPresenter {
             })
     }
 
-    override fun projectDelete(projectId: Long) {
+    /**
+     * 三期删除
+     */
+    override fun projectDelete(beanMain:MainProjectBean) {
         //删除本地数据库
         LogUtils.d("删除本地数据")
         var obList = ArrayList<Observable<Boolean>>()
+        var projectId = beanMain.localId
         // 3期
         obList.add(mDb.deleteProject(ProjectBean(id=projectId)).map { true })
         obList.add(mDb.deleteBuildingByProjectId(projectId)) //删除本地项目下的所有本地楼
@@ -368,20 +433,29 @@ class MainPresenter:BaseUnitConfigPresenter(),IMainListContrast.IMainPresenter {
             },{
                 it.printStackTrace()
             })
-        //删除网络数据
-        LogUtils.d("删除网络数据")
-        addDisposable(HttpManager.instance.getHttpService<HttpApi>()
-            .deleteProject(projectId)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-                checkResult(it)
-                LogUtils.d("删除远端项目成功："+it.toString())
-                mView?.onMsg("删除项目成功")
-            },{
-                mView?.onMsg("删除远端项目失败"+checkError(it))
-            }))
 
+        if(!beanMain.remoteId.isNullOrEmpty()) {
+            //删除网络数据
+            LogUtils.d("删除网络数据")
+            addDisposable(HttpManager.instance.getHttpService<HttpApi>()
+                .deleteProject(
+                    V3ProjectVersionDeleteReq(
+                        beanMain.remoteId,
+                        beanMain.parentVersion,
+                        beanMain.version
+                    )
+                )
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    checkResult(it)
+                    LogUtils.d("删除远端项目成功：" + it.toString())
+                    mView?.onMsg("删除项目成功")
+                }, {
+                    mView?.onMsg("删除远端项目失败" + checkError(it))
+                })
+            )
+        }
     }
 
 

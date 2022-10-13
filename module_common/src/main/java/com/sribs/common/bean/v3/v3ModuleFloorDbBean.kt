@@ -14,6 +14,7 @@ data class v3ModuleFloorDbBean(
     var moduleId:Long?=null,
     var floorId:Long?=null,
     var floorName:String?=null,
+    var floorType:Int,
     var drawingsList: List<DrawingV3Bean>? = null,
     var aboveNumber:Int?=0,
     var afterNumber:Int?=0,

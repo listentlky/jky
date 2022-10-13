@@ -40,6 +40,6 @@ interface IMainListContrast {
         fun projectDownLoadRecord(configHistoryId:String, recordHistoryId:String, bean:MainProjectBean, cb:(Boolean)->Unit)
         fun projectGetSummary(remoteProjectId: String,cb:(ProjectSummaryRes)->Unit)
         fun projectGetLocalSummary(projectId:Long,cb:(ProjectSummaryRes)->Unit)
-        fun projectDelete(projectId:Long)
+        fun projectDelete(beanMain:MainProjectBean)
     }
 }

@@ -20,6 +20,7 @@ data class FloorBean(
     @ColumnInfo(name="unit_id")              var unitId:Long?,//unit 表主键
     @ColumnInfo(name="floor_id")              var floorId:Long?,//本楼楼层id
     @ColumnInfo(name="floor_name")           var floorName:String?,//楼层名称
+    @ColumnInfo(name="floor_type")           var floorType:Int?,//0地下  1 地上
     @ColumnInfo(name="create_time")         var createTime:Long?=0,
     @ColumnInfo(name="update_time")         var updateTime:Long?=0,
     @ColumnInfo(name="delete_time")         var deleteTime:Long?=0,//如果inspectorId==10000,代表多人检测，对应inspectorName应该是JSON String，记录各个id,name
@@ -41,19 +42,21 @@ data class FloorBean(
                 unitId: Long?,
                 floorId: Long?,
                 floorName:String?,
+                floorType:Int,
                 createTime: Long?,
                 updateTime: Long?,
                 deleteTime: Long,
                 inspectorName: String,
                 remoteId: String?,
                 version: Int?,
-                status: Int?) : this(0L,0L,0L,0L,"",0L,0L,0L,"","",0, 0) {
+                status: Int?) : this(0L,0L,0L,0L,"",0,0L,0L,0L,"","",0, 0) {
         this.id = id
         this.projectId = projectId
         this.bldId = bldId
         this.unitId = unitId
         this.floorId = floorId
         this.floorName = floorName
+        this.floorType = floorType
         this.createTime = createTime
         this.updateTime = updateTime
         this.deleteTime = deleteTime
