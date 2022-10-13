@@ -15,7 +15,6 @@ interface v3BuildingModuleDao {
     @Query("Select * from v3_building_module where id = :moduleId")
     fun getProject(moduleId: Long): Single<v3BuildingModuleRoom>
 
-
     @Query("Select * from v3_building_module where project_id = :projectId and building_id = :buildingId")
     fun getProject(projectId: Long,buildingId: Long): Flowable<List<v3BuildingModuleRoom>>
 
@@ -37,7 +36,9 @@ interface v3BuildingModuleDao {
     @Delete
     fun deleteProject(bean: v3BuildingModuleRoom): Int
 
-
     @Query("UPDATE v3_building_module SET drawings = :drawings WHERE id =:moduleId and status == 0")
     fun updateProjectOneData(moduleId: Long,drawings:List<DrawingV3Bean>): Int
+
+    @Query("Delete from v3_building_module where project_id = :projectId")
+    fun deleteBuildingModuleByProjectId(projectId: Long)
 }

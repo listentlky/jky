@@ -6,7 +6,7 @@ package com.sribs.common.bean.db
  * @Description
  */
 data class DrawingBean(
-    var id:Long?=null,
+    var id:Long?=-1,
     var projectId:Long?,//project 表主键
     var bldId:Long?,//building 表主键
     var unitId:Long?,//unit 表主键
@@ -31,15 +31,48 @@ data class DrawingBean(
 
 }
 
-data class DrawingV3Bean(
-    var drawingID:Long,
-    var fileName: String?,
-    var fileType: String?,//pdf,jpg,png,jpeg
-    var drawingType: String?,//east,west,south,north,overall,floor
-    var localAbsPath: String?,//移动端缓存地址
-    var remoteAbsPath: String?,//服务端缓存地址,
-    var damage:ArrayList<DamageV3Bean> //损伤
-){
+class DrawingV3Bean(){
+
+    var drawingID:Long=-1
+    var fileName: String?=""
+    var fileType: String?=""//pdf,jpg,png,jpeg
+    var drawingType: String?=""//east,west,south,north,overall,floor
+    var localAbsPath: String?=""//移动端缓存地址
+    var remoteAbsPath: String?=""//服务端缓存地址,
+    var damage:ArrayList<DamageV3Bean>?=ArrayList() //损伤
+
+    constructor(drawingID:Long,fileName: String?,fileType: String?,drawingType: String?,localAbsPath: String?,
+                remoteAbsPath: String?,damage:ArrayList<DamageV3Bean>):this(){
+        this.drawingID = drawingID
+        this.fileName = fileName
+        this.fileType = fileType
+        this.drawingType = drawingType
+        this.localAbsPath = localAbsPath
+        this.remoteAbsPath = remoteAbsPath
+        this.damage = damage
+    }
+
+
+    var direction:String?="" //方向
+    var rotate:Int?=0//角度
+    constructor(drawingID:Long,fileName: String?,fileType: String?,drawingType: String?,localAbsPath: String?,
+                remoteAbsPath: String?,damage:ArrayList<DamageV3Bean>,direction:String?,rotate:Int?):this(){
+        this.drawingID = drawingID
+        this.fileName = fileName
+        this.fileType = fileType
+        this.drawingType = drawingType
+        this.localAbsPath = localAbsPath
+        this.remoteAbsPath = remoteAbsPath
+        this.damage = damage
+        this.direction = direction
+        this.rotate = rotate
+    }
+
     var floorName:String?=""
+    override fun toString(): String {
+        return "DrawingV3Bean(drawingID=$drawingID, fileName=$fileName, fileType=$fileType, drawingType=$drawingType, localAbsPath=$localAbsPath, remoteAbsPath=$remoteAbsPath, damage=$damage, direction=$direction, rotate=$rotate, floorName=$floorName)"
+    }
+
+
 }
 

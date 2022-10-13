@@ -108,6 +108,8 @@ class ProjectStoreyPresenter :BasePresenter(),IProjectContrast.IFloorPresenter{
                 var dbBldBean: com.sribs.common.bean.db.BuildingBean? = null
                 dbBldBean = com.sribs.common.bean.db.BuildingBean(
                     -1,
+                    "",
+                    "",
                     proId,
                     bb.buildingName,
                     bb.bldType,

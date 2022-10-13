@@ -49,7 +49,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@drawable/common_bottom_btn_bk"
-            android:text="删除楼"
+            android:text="删除"
             android:textColor="@color/white"
             android:textSize="@dimen/_7sdp"
             android:gravity="center"

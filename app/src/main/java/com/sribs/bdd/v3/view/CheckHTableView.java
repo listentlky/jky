@@ -42,7 +42,7 @@ public class CheckHTableView extends LinearLayout {
 
     private List<RelativeHDiffPointBean> mChoosePointList = new ArrayList<>();
 
-    private LinearLayout.LayoutParams layoutParams;
+    private LayoutParams layoutParams;
 
     public CheckHTableView(Context context) {
         super(context);
@@ -138,7 +138,7 @@ public class CheckHTableView extends LinearLayout {
 
     private void init(Context context) {
         this.mContext = context;
-        layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+        layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 mContext.getResources().getDimensionPixelSize(R.dimen._15sdp));
         setOrientation(VERTICAL);
         if (mChoosePointList.size() <= 0) {
@@ -377,7 +377,14 @@ public class CheckHTableView extends LinearLayout {
     /**
      * 计算
      */
-    public void calculate() {
+    public void calculate(boolean isJSpc) {
+        if(isJSpc){
+            if(!mViewHolderList.get(mViewHolderList.size()-1).dnTag.getText().toString().equals("闭合点")){
+                Toast.makeText(getContext(), "请在最后添加闭合点", Toast.LENGTH_SHORT).show();
+                return;
+            }
+        }
+
         List<TextView> topList = new ArrayList<>();
         for (ViewHolder viewHolder : mViewHolderList) {
             if (viewHolder.dnTag.getText().toString().startsWith("TP")) {
@@ -432,19 +439,22 @@ public class CheckHTableView extends LinearLayout {
                         return;
                     }
 
-                    EditList.get(2).setText("4444"); //前后视高差  BM1后视-当前前视-闭合差
-                    EditList.get(3).setText("4444");  //高程  BM1高程+当前高差
-                    EditList.get(4).setText("4444");  //高程  当前测点高程-测点高程最大值
+                    int dqgc = Integer.valueOf(bm1hs) - Integer.valueOf(EditList.get(1).getText().toString());
+
+                    EditList.get(2).setText(""+dqgc); //前后视高差  BM1后视-当前前视-闭合差
+                    EditList.get(3).setText(""+(Integer.valueOf(bm1gc) + dqgc));  //高程  BM1高程+当前高差
+                //    EditList.get(4).setText("4444");  //高程  当前测点高程-测点高程最大值
 
                 } else { //上一个转点
                     String onTPhs = viewHolder1.EditViewList.get(0).getText().toString();
-                    String onTPgc = viewHolder1.EditViewList.get(1).getText().toString();
+                    String onTPqs = viewHolder1.EditViewList.get(1).getText().toString();
+                    String onTPgc = viewHolder1.EditViewList.get(3).getText().toString();
 
                     if (TextUtils.isEmpty(onTPhs)) {
                         Toast.makeText(getContext(), "请填写" + viewHolder1.dnTag.getText() + "转点后视", Toast.LENGTH_SHORT).show();
                         return;
                     }
-                    if (TextUtils.isEmpty(onTPgc)) {
+                    if (TextUtils.isEmpty(onTPqs)) {
                         Toast.makeText(getContext(), "请填写" + viewHolder1.dnTag.getText() + "转点前视", Toast.LENGTH_SHORT).show();
                         return;
                     }
@@ -456,11 +466,12 @@ public class CheckHTableView extends LinearLayout {
                         Toast.makeText(getContext(), "请填写" + viewHolder.dnTag.getText() + "转点前视", Toast.LENGTH_SHORT).show();
                         return;
                     }
-                    EditList.get(2).setText("5555"); //前后视高差  上个转点后视-当前前视-闭合差
-                    EditList.get(3).setText("5555");  //高程  上个转点高程+当前高差
-                    EditList.get(4).setText("5555");  //高程  当前测点高程-测点高程最大值
+                    int dqgc = Integer.valueOf(onTPhs) - Integer.valueOf(EditList.get(1).getText().toString());
+                    EditList.get(2).setText(""+dqgc); //前后视高差  上个转点后视-当前前视-闭合差
+                    EditList.get(3).setText(""+(Integer.valueOf(onTPgc)+dqgc));  //高程  上个转点高程+当前高差
+                //    EditList.get(4).setText("5555");  //高程  当前测点高程-测点高程最大值
                 }
-            } else if (tag.startsWith("闭合点")) {
+            } else if (tag.equals("闭合点")) {
 
                 if (viewHolder1 == null) {
                     ViewHolder viewHolder2 = mViewHolderList.get(0); //BM1
@@ -478,20 +489,21 @@ public class CheckHTableView extends LinearLayout {
                         Toast.makeText(getContext(), "请填写" + viewHolder.dnTag.getText() + "前视", Toast.LENGTH_SHORT).show();
                         return;
                     }
-
-                    EditList.get(2).setText("6666"); //前后视高差  BM1后视-当前前视-闭合差
-                    EditList.get(3).setText("6666");  //高程  BM1高程+当前高差
-                    EditList.get(4).setText("6666");  //高程  当前测点高程-测点高程最大值
+                    int dqgc = Integer.valueOf(bm1hs) - Integer.valueOf(EditList.get(1).getText().toString());
+                    EditList.get(2).setText(""+dqgc); //前后视高差  BM1后视-当前前视-闭合差
+                    EditList.get(3).setText(""+(Integer.valueOf(bm1gc)+dqgc));  //高程  BM1高程+当前高差
+                 //   EditList.get(4).setText("6666");  //高程  当前测点高程-测点高程最大值
 
                 } else { //上一个转点
                     String onTPhs = viewHolder1.EditViewList.get(0).getText().toString();
-                    String onTPgc = viewHolder1.EditViewList.get(1).getText().toString();
+                    String onTPqs = viewHolder1.EditViewList.get(1).getText().toString();
+                    String onTPgc = viewHolder1.EditViewList.get(3).getText().toString();
 
                     if (TextUtils.isEmpty(onTPhs)) {
                         Toast.makeText(getContext(), "请填写" + viewHolder1.dnTag.getText() + "转点后视", Toast.LENGTH_SHORT).show();
                         return;
                     }
-                    if (TextUtils.isEmpty(onTPgc)) {
+                    if (TextUtils.isEmpty(onTPqs)) {
                         Toast.makeText(getContext(), "请填写" + viewHolder1.dnTag.getText() + "转点前视", Toast.LENGTH_SHORT).show();
                         return;
                     }
@@ -499,9 +511,10 @@ public class CheckHTableView extends LinearLayout {
                         Toast.makeText(getContext(), "请填写" + viewHolder.dnTag.getText() + "前视", Toast.LENGTH_SHORT).show();
                         return;
                     }
-                    EditList.get(2).setText("7777"); //前后视高差  上个转点后视-当前前视-闭合差
-                    EditList.get(3).setText("7777");  //高程  上个转点高程+当前高差
-                    EditList.get(4).setText("7777");  //高程  当前测点高程-测点高程最大值
+                    int dqgc = Integer.valueOf(onTPhs) - Integer.valueOf(EditList.get(1).getText().toString());
+                    EditList.get(2).setText(""+dqgc); //前后视高差  上个转点后视-当前前视-闭合差
+                    EditList.get(3).setText(""+(Integer.valueOf(onTPgc)+dqgc));  //高程  上个转点高程+当前高差
+                 //   EditList.get(4).setText("7777");  //高程  当前测点高程-测点高程最大值
                 }
             } else { //自填测点
                 if (viewHolder1 == null) {
@@ -521,19 +534,22 @@ public class CheckHTableView extends LinearLayout {
                         return;
                     }
 
-                    EditList.get(2).setText("8888"); //前后视高差  BM1后视-当前前视-闭合差
-                    EditList.get(3).setText("8888");  //高程  BM1高程+当前高差
-                    EditList.get(4).setText("8888");  //高程  当前测点高程-测点高程最大值
+                    int dqgc = Integer.valueOf(bm1hs) - Integer.valueOf(EditList.get(1).getText().toString());
+
+                    EditList.get(2).setText(""+dqgc); //前后视高差  BM1后视-当前前视-闭合差
+                    EditList.get(3).setText(""+(Integer.valueOf(bm1gc)+dqgc));  //高程  BM1高程+当前高差
+                 //   EditList.get(4).setText("8888");  //高程  当前测点高程-测点高程最大值
 
                 } else { //上一个转点
                     String onTPhs = viewHolder1.EditViewList.get(0).getText().toString();
-                    String onTPgc = viewHolder1.EditViewList.get(1).getText().toString();
+                    String onTPqs = viewHolder1.EditViewList.get(1).getText().toString();
+                    String onTPgc = viewHolder1.EditViewList.get(3).getText().toString();
 
                     if (TextUtils.isEmpty(onTPhs)) {
                         Toast.makeText(getContext(), "请填写" + viewHolder1.dnTag.getText() + "转点后视", Toast.LENGTH_SHORT).show();
                         return;
                     }
-                    if (TextUtils.isEmpty(onTPgc)) {
+                    if (TextUtils.isEmpty(onTPqs)) {
                         Toast.makeText(getContext(), "请填写" + viewHolder1.dnTag.getText() + "转点前视", Toast.LENGTH_SHORT).show();
                         return;
                     }
@@ -541,14 +557,98 @@ public class CheckHTableView extends LinearLayout {
                         Toast.makeText(getContext(), "请填写" + viewHolder.dnTag.getText() + "前视", Toast.LENGTH_SHORT).show();
                         return;
                     }
-                    EditList.get(2).setText("9999"); //前后视高差  上个转点后视-当前前视-闭合差
-                    EditList.get(3).setText("9999");  //高程  上个转点高程+当前高差
-                    EditList.get(4).setText("9999");  //高程  当前测点高程-测点高程最大值
+                    int dqgc = Integer.valueOf(onTPhs) - Integer.valueOf(EditList.get(1).getText().toString());
+                    EditList.get(2).setText(""+dqgc); //前后视高差  上个转点后视-当前前视-闭合差
+                    LogUtils.INSTANCE.d("111111： "+Integer.valueOf(onTPgc));
+                    LogUtils.INSTANCE.d("222222： "+dqgc);
+                    EditList.get(3).setText(""+(Integer.valueOf(onTPgc)+dqgc));  //高程  上个转点高程+当前高差
+                 //   EditList.get(4).setText("9999");  //高程  当前测点高程-测点高程最大值
                 }
             }
         }
 
+        /**
+         * 是否计算闭合差
+         */
+        if(isJSpc){
+            calculatePCZ();
+        }
+
+        /**
+         * 获得最大高程值
+         */
+        int gcMax = Integer.valueOf(mViewHolderList.get(0).EditViewList.get(3).getText().toString());
+        for (int j = 1; j < mViewHolderList.size(); j++) {
+            ViewHolder viewHolder = mViewHolderList.get(j);
+            List<EditText> EditList = viewHolder.EditViewList;
+            int currentGc = Integer.valueOf(EditList.get(3).getText().toString());
+            if(gcMax<currentGc){
+                gcMax = currentGc;
+            }
+        }
+
+        /**
+         * 计算相对高差
+         */
+        for (int q = 1; q < mViewHolderList.size(); q++) {
+            ViewHolder viewHolder = mViewHolderList.get(q);
+            List<EditText> EditList = viewHolder.EditViewList;
+            int currentGc = Integer.valueOf(EditList.get(3).getText().toString());
+            EditList.get(4).setText(""+(currentGc-gcMax));
+        }
+
         getTableInfo();
+    }
+
+    private int bhc;
+
+    /**
+     * 获取闭合差
+     * @return
+     */
+    public String getBHC(){
+        return ""+bhc;
+    }
+    /**
+     * 计算平差值
+     * return 闭合差 用于UI展示
+     */
+    private void calculatePCZ(){
+        bhc = 0;
+        int zdCount = 0;
+        for (int i = 1; i < mViewHolderList.size(); i++) {
+            ViewHolder viewHolder = mViewHolderList.get(i);
+            String tag = viewHolder.dnTag.getText().toString();
+            if(!tag.startsWith("TP") && !tag.equals("闭合点")){
+                continue;
+            }
+            LogUtils.INSTANCE.d("calculatePCZ： "+tag);
+            if(tag.startsWith("TP")){
+                zdCount++;
+            }
+            List<EditText> EditList = viewHolder.EditViewList;
+            int currentqhsgc = Integer.valueOf(EditList.get(2).getText().toString());
+            bhc+=currentqhsgc;
+        }
+
+        LogUtils.INSTANCE.d("calculatePCZ222： "+zdCount);
+        LogUtils.INSTANCE.d("calculatePCZ333： "+bhc);
+
+        for (int i = 1; i < mViewHolderList.size(); i++) {
+            ViewHolder viewHolder = mViewHolderList.get(i);
+            String tag = viewHolder.dnTag.getText().toString();
+            if(!tag.startsWith("TP")){
+                continue;
+            }
+            List<EditText> EditList = viewHolder.EditViewList;
+            int currentqhsgc = Integer.valueOf(EditList.get(2).getText().toString());
+            if(zdCount <= 0){
+                EditList.get(2).setText(""+(currentqhsgc-bhc));
+            }else {
+                int pcz = -bhc/zdCount;
+                EditList.get(2).setText(""+(currentqhsgc+pcz));
+            }
+        }
     }
 
     public void addPoint() {

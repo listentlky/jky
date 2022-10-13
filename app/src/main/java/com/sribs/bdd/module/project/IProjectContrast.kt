@@ -6,14 +6,13 @@ import com.cbj.sdk.libui.mvp.moudles.IBasePresenter
 import com.cbj.sdk.libui.mvp.moudles.IBaseView
 import com.sribs.bdd.bean.Building
 import com.sribs.bdd.bean.BuildingFloorBean
-import com.sribs.bdd.bean.BuildingFloorItem
+import com.sribs.bdd.bean.BuildingModule
 import com.sribs.bdd.bean.data.ModuleFloorBean
 import com.sribs.bdd.bean.data.ProjectConfigBean
 import com.sribs.common.bean.HistoryBean
 import com.sribs.common.bean.db.ConfigBean
 import com.sribs.common.bean.db.ProjectBean
 import com.sribs.common.bean.db.UnitBean
-import com.sribs.common.bean.db.v3.project.v3BuildingModuleDbBean
 import com.sribs.common.bean.v3.v3ModuleFloorDbBean
 import java.text.FieldPosition
 
@@ -127,8 +126,8 @@ interface IProjectContrast {
     }
 
     interface IProjectFloorDetailView:IView{
-        fun handlItemList(list:ArrayList<BuildingFloorItem>)
-        fun addItem(bean:BuildingFloorItem)
-        fun removeItem(bean:BuildingFloorItem)
+        fun handlItemList(list:ArrayList<BuildingModule>)
+        fun addItem(bean:BuildingModule)
+        fun removeItem(bean:BuildingModule)
     }
 }

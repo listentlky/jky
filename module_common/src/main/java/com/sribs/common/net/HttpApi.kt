@@ -5,6 +5,7 @@ import com.cbj.sdk.libnet.http.bean.ListBean
 import com.cbj.sdk.libnet.http.bean.ResultBean
 import com.sribs.common.bean.net.*
 import com.sribs.common.bean.net.v3.V3BuildingModuleListRes
+import com.sribs.common.bean.net.v3.V3BuildingSaveReq
 import io.reactivex.Observable
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -124,6 +125,10 @@ interface HttpApi {
     @POST("api/v1/role/user/list")
     fun getRoleUserList(@Body req:RoleUserListReq):Observable<ResultBean<ListBean<RoleUserListRes>>>
 
+
+    @POST("api/v3/app/building/list")
+    fun getV3UnitList(@QueryName projectId:String):Observable<ResultBean<ListBean<UnitListRes>>>
+
     /**
      * V3
      */
@@ -135,22 +140,35 @@ interface HttpApi {
     fun createOrUpdateProject(@Body req:ProjectCreateReq):Observable<ResultBean<Any>>
 
     @POST("api/v3/app/project/delete")
-    fun deleteProject(@QueryName projectId:Long):Observable<ResultBean<Any>>
+    fun deleteProject(@Query("projectId") projectId:Long):Observable<ResultBean<Any>>
 
+    /**
+     * 查询项目下所有楼
+     */
     @POST("api/v3/app/building/list")
-    fun getV3UnitList(@QueryName projectId:String):Observable<ResultBean<ListBean<UnitListRes>>>
+    fun getV3BuildingList(@Query("projectId") projectId:String):Observable<ResultBean<ListBean<Any>>>
 
+    /**
+     * 新建保存楼
+     */
+    @POST("api/v3/app/building/save")
+    fun saveV3Building(@Body req: V3BuildingSaveReq):Observable<ResultBean<Any>>
 
+    /**
+     * 查询楼下的模块
+     */
     @POST("/api/v3/app/building/module/list")
-    fun getV3BuildingModuleList(@QueryName buildingId: Long):Observable<ResultBean<ListBean<Any>>>
+    fun getV3BuildingModuleList(@Query("buildingId") buildingId: Long):Observable<ResultBean<ListBean<Any>>>
 
-
+    /**
+     * 新建保存模块
+     */
     @POST("/api/v3/app/module/save")
-    fun createOrUpdateBuildingModule(@Body req: V3BuildingModuleListRes):Observable<ResultBean<Any>>
+    fun saveBuildingModule(@Body req: V3BuildingModuleListRes):Observable<ResultBean<Any>>
 
 
     @POST("/api/v3/app/module/delete")
-    fun deleteBuildingModule(@QueryName projectId:Long):Observable<ResultBean<Any>>
+    fun deleteBuildingModule(@Query("projectId") projectId:Long):Observable<ResultBean<Any>>
 
 
 

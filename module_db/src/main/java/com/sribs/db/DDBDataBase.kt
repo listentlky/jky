@@ -84,7 +84,6 @@ import com.sribs.db.v3.project.*
         FloorBean::class,
         DamageBean::class,
         //3期
-        v3ProjectRoom::class,
         v3BuildingModuleRoom::class,
         v3ModuleFloorRoom::class
     ],
@@ -109,7 +108,6 @@ abstract class DDBDataBase: RoomDatabase() {
     abstract fun drawingDao(): DrawingDao
     abstract fun damageDao(): DamageDao
     //3期
-    abstract fun v3ProjectDao(): v3ProjectDao
     abstract fun v3BuildingModuleDao(): v3BuildingModuleDao
     abstract fun v3ModuleFloorDao():v3ModuleFloorDao
 }

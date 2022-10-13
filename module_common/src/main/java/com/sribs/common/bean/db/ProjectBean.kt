@@ -9,6 +9,7 @@ import java.sql.Date
  */
 data class ProjectBean(
     var id:Long?=null,
+    var uuid:String?="",
     var name:String?=null,
     var leader:String?=null,
     var inspector:String?=null,

@@ -386,9 +386,9 @@ class CheckComponentDetectionActivity : BaseActivity(), ICheckCDContrast.ICheckC
      * 更新损伤数据
      */
     fun saveDamageDrawingToDb() {
-        mCheckCDMainBeanList!!.forEach {
-            it.drawing!!.forEach { b ->
-                b.damage = mDamageBeanList!!.get(b.localAbsPath)!!
+        mCheckCDMainBeanList?.forEach {
+            it.drawing?.forEach { b ->
+                b.damage = mDamageBeanList?.get(b.localAbsPath)
             }
             mPresenter.saveDamageToDb(it.drawing!!, it.id!!)
         }

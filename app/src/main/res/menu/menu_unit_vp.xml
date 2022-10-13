@@ -30,7 +30,6 @@
 
     </item>
 
-
     <item android:id="@+id/menu_unit_info"
         android:title=""
         android:orderInCategory="100"

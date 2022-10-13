@@ -7,6 +7,7 @@ import com.sribs.common.module.BasePresenter
 import com.cbj.sdk.libui.mvp.moudles.IBaseView
 import com.sribs.bdd.Config
 import com.sribs.bdd.action.Dict
+import com.sribs.bdd.utils.UUIDUtil
 import com.sribs.bdd.v3.util.LogUtils
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -105,10 +106,12 @@ class ProjectProjectPresenter : BasePresenter(), IProjectContrast.IProjectPresen
         name: String,
         leader: String,
         inspector: String,
+        projectIDUUID:String,
         onResult: (Long) -> Unit
     ) {
         mBean.also {
             it.id = projectId
+            it.uuid = projectIDUUID
             it.name = name
             it.leader = leader
             it.inspector = inspector
@@ -122,6 +125,7 @@ class ProjectProjectPresenter : BasePresenter(), IProjectContrast.IProjectPresen
                     if (it.isEmpty()) {
                     } else {
                         mBean.id = it[0].id
+                        mBean.uuid = it[0].uuid
                         mBean.createTime = it[0].createTime
                         mView?.onMsg("已存在项目")
                     }
@@ -153,9 +157,11 @@ class ProjectProjectPresenter : BasePresenter(), IProjectContrast.IProjectPresen
         inspector: String,
         onResult: (Long) -> Unit
     ) {
+        var projectIDUUID = UUIDUtil.getUUID(name)
+
         if (!Config.isNetAvailable) {
             LogUtils.d("无网络 单本地创建")
-            createNewLocalProject(projectId, name, leader, inspector, onResult)
+            createNewLocalProject(projectId, name, leader, inspector,projectIDUUID, onResult)
         } else {
             LogUtils.d("网络创建项目")
             LogUtils.d("输入的： " + inspector)
@@ -171,17 +177,18 @@ class ProjectProjectPresenter : BasePresenter(), IProjectContrast.IProjectPresen
                     it.leaderId = Dict.getLeaderId(leader)!!
                     it.leaderName = leader
                     it.projectName = name
+                    it.projectId = projectIDUUID
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     LogUtils.d("网络创建项目成功: " + it.toString())
                     LogUtils.d("网络创建项目成功  本地同步创建")
-                    createNewLocalProject(projectId, name, leader, inspector, onResult)
+                    createNewLocalProject(projectId, name, leader, inspector,projectIDUUID, onResult)
                 }, {
                     LogUtils.d("网络创建项目失败 单本地创建" + it.toString())
                     mView?.onMsg(checkError(it))
-                    createNewLocalProject(projectId, name, leader, inspector, onResult)
+                    createNewLocalProject(projectId, name, leader, inspector,projectIDUUID, onResult)
                 }
                 )
             )

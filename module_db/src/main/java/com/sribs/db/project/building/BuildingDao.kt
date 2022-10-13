@@ -3,7 +3,6 @@ package com.sribs.db.project.building
 import androidx.room.*
 import androidx.room.OnConflictStrategy.REPLACE
 import io.reactivex.Flowable
-import io.reactivex.Observable
 import io.reactivex.Single
 
 /**
@@ -52,4 +51,8 @@ interface BuildingDao {
 
     @Query("Delete from project_building where id = :bldId")
     fun deleteBuilding(bldId: Long)
+
+    @Query("Delete from project_building where project_id = :projectId")
+    fun deleteBuildingByProjectId(projectId: Long)
+
 }

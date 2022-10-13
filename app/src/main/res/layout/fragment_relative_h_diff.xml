@@ -115,6 +115,33 @@
             app:layout_constraintBottom_toTopOf="@id/check_but_tjcd"
             app:layout_constraintTop_toBottomOf="@id/check_scrollview" />
 
+        <TextView
+            android:id="@+id/check_text_bhc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/_10sdp"
+            android:clickable="true"
+            android:text="闭合差"
+            android:textColor="@color/black_800"
+            android:textSize="@dimen/_7ssp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_marginLeft="@dimen/_10sdp"
+            app:layout_constraintBottom_toBottomOf="@id/check_but_jspcz"
+            app:layout_constraintTop_toTopOf="@id/check_but_jspcz" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/check_but_jspcz"
+            android:layout_width="@dimen/_40sdp"
+            android:layout_height="@dimen/_14sdp"
+            android:layout_marginRight="@dimen/_10sdp"
+            android:background="@drawable/round_blue_bg"
+            android:gravity="center"
+            android:text="计算平差"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_7ssp"
+            app:layout_constraintRight_toLeftOf="@id/check_but_js"
+            app:layout_constraintTop_toTopOf="@id/check_but_tjcd" />
+
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/check_but_js"
             android:layout_width="@dimen/_30sdp"

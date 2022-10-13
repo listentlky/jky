@@ -15,6 +15,7 @@ import com.sribs.bdd.v3.util.LogUtils
 import com.sribs.common.bean.db.DamageV3Bean
 import com.sribs.common.bean.db.DrawingV3Bean
 import com.sribs.common.bean.db.RelativeHDiffPointBean
+import kotlinx.android.synthetic.main.fragment_relative_h_diff.view.*
 import kotlin.collections.ArrayList
 
 /**
@@ -75,9 +76,15 @@ class RelativeHDiffFragment : BaseFragment(R.layout.fragment_relative_h_diff) {
             (activity as RelativeHDiffActivity).startFabPDF()
         }
 
+        //计算平差
+        mBinding.checkButJspcz.setOnClickListener {
+            mBinding.checkTableInfo.calculate(true)
+            mBinding.checkTextBhc.text = "闭合差: "+mBinding.checkTableInfo.bhc
+        }
+
         //计算
         mBinding.checkButJs.setOnClickListener {
-            mBinding.checkTableInfo.calculate()
+            mBinding.checkTableInfo.calculate(false)
         }
 
         //添加测点
@@ -135,6 +142,7 @@ class RelativeHDiffFragment : BaseFragment(R.layout.fragment_relative_h_diff) {
         mBinding.checkTableInfo.setDatas(damageV3Bean).build()
         if(damageV3Bean != null && damageV3Bean.size>0) {
             mBinding.checkBzEdit.setText(damageV3Bean.get(0).note)
+            mBinding.checkTextBhc.text =  "闭合差: "+damageV3Bean.get(0).closeDiff
         }
     }
 

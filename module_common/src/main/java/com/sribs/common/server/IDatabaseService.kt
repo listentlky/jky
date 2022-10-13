@@ -35,20 +35,6 @@ interface IDatabaseService:IProvider {
      * 3期项目start
      */
 
-    fun getv3AllProject():Flowable<List<v3ProjectDbBean>>
-
-    fun getv3Project(id:Long):Flowable<List<v3ProjectDbBean>>
-
-    fun getv3ProjectOnce(name:String,buildNo:String):Flowable<List<v3ProjectDbBean>>
-
-    fun getv3ProjectOnce(name:String):Flowable<List<v3ProjectDbBean>>
-
-    fun updatev3Project(b:v3ProjectDbBean):Observable<Long>
-
-    fun deletev3Project(b:v3ProjectDbBean):Observable<Int>
-
-
-
     fun getv3AllBuildingModule(): Flowable<List<v3BuildingModuleDbBean>>
 
     fun getv3BuildingModule(projectId: Long,buildingId: Long): Flowable<List<v3BuildingModuleDbBean>>
@@ -73,6 +59,7 @@ interface IDatabaseService:IProvider {
 
     fun updatev3BuildingModule(b: v3BuildingModuleDbBean): Observable<Long>
 
+    fun deleteBuildingModuleByProjectId(projectId: Long):Observable<Boolean>
 
     fun updatev3BuildingModuleDrawing(b: v3BuildingModuleDbBean): Observable<Int>
 
@@ -87,6 +74,8 @@ interface IDatabaseService:IProvider {
     fun deletev3ModuleFloor(projectId:Long,buildingId:Long,moduleId:Long): Observable<Boolean>
 
     fun deletev3ModuleFloorOnce(projectId:Long,buildingId:Long,moduleId:Long,floorId: Long): Observable<Boolean>
+
+    fun deleteModuleFloorByProjectId(projectId: Long): Observable<Boolean>
 
     /**
      * 3期项目end
@@ -250,10 +239,12 @@ interface IDatabaseService:IProvider {
 
     fun createLocalFloor(bb: FloorBean):Observable<Long>
     fun getLocalFloorsInTheBuilding(bldId: Long): Flowable<List<FloorBean>>
+    fun deleteFloorByProjectId(projectId: Long):Observable<Boolean>
 
     fun createLocalDrawing(dw: DrawingBean):Observable<Long>
 //    fun getLocalFloorsInTheBuilding(bldId: Long): Flowable<List<FloorBean>>
     fun getBuildingIdByProjectId(proId: Long): Observable<Long>
+    fun deleteBuildingByProjectId(projectId: Long): Observable<Boolean>
     fun getLocalDrawingListInBuilding(proId:Long, bldId:Long): Maybe<List<DrawingBean>>
     fun getLocalDamageListInDrawing(drwingId:Long): Flowable<List<com.sribs.common.bean.db.DamageBean>>
     fun createDamageInDrawing(dmg:DamageBean): Observable<Long>

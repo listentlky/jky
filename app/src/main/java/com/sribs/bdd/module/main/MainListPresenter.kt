@@ -44,6 +44,7 @@ class MainListPresenter:BasePresenter(),IMainListContrast.IPresenter {
             .subscribe({
                 var list = ArrayList(it.map { b->MainProjectBean(
                     localId= b.id?:-1,
+                    localUUID = b.uuid?:"",
                     remoteId= b.remoteId?:"",
                     updateTimeYMD = if (b.updateTime==null)"" else TimeUtil.YMD_HMS.format(b.updateTime),
                     status = mStateArr[b.status?:0],
@@ -104,11 +105,12 @@ class MainListPresenter:BasePresenter(),IMainListContrast.IPresenter {
                         if (TimeUtil.isBefore(localBean.updateTime, remoteBean.updateTime)) {
                             localList[i].hasNewer = true
                         }
+                        localBean.localUUID = remoteBean.projectId
                         localBean.remoteData = remoteBean
                     }
                 }
                 // 远程项目在本地中已有 本地remoteId为空  项目名称、楼号相同，更新状态
-                it.data!!.records.forEach {  remoteBean->
+            /*    it.data!!.records.forEach {  remoteBean->
                     var i = localList.indexOfFirst { localBean->
                         localBean.remoteId.isNullOrEmpty() &&
                                 localBean.name == remoteBean.projectName
@@ -122,7 +124,23 @@ class MainListPresenter:BasePresenter(),IMainListContrast.IPresenter {
                         localBean.remoteData = remoteBean
                         localBean.remoteId = remoteBean.projectId
                     }
+                }*/
+
+                it.data!!.records.forEach {  remoteBean->
+                    var i = localList.indexOfFirst { localBean->
+                        localBean.localUUID == remoteBean.projectId
+                    }
+                    if (i>=0) {
+                        var localBean = localList[i]
+                        //判断时间
+                        if (TimeUtil.isBefore(localBean.updateTime , remoteBean.updateTime)) {
+                            localList[i].hasNewer = true
+                        }
+                        localBean.remoteData = remoteBean
+                        localBean.remoteId = remoteBean.projectId
+                    }
                 }
+
                 // 本地中没有
                 var onlyRemoteList =  it.data!!.records.filter { remoteBean->
                     localList.find { localBean->
@@ -131,6 +149,7 @@ class MainListPresenter:BasePresenter(),IMainListContrast.IPresenter {
                     }==null
                 }?.map { b -> MainProjectBean(
                     localId = -1,
+                    localUUID = b.projectId,
                     remoteId= b.projectId,
                     updateTimeYMD = TimeUtil.time2YMD(b.updateTime),
                     status = mStateArr[2],

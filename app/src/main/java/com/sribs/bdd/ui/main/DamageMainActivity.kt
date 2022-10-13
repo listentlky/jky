@@ -203,15 +203,16 @@ class DamageMainActivity :BaseActivity(),IMainListContrast.IMainView{
             if (mBottomDialog?.isShowing == true)return
             mBottomDialog = DialogUtil.showBottomDialog(this,R.layout.dialog_common_bottom_select,true){
                 when(it){
-                    0->{
-                       /* if(beanMain.localId<0){
+                    0->{ // 上传配置
+                        if(beanMain.localId < 0){
                             showToast(getString(R.string.error_no_local))
                             return@showBottomDialog
-                        }*/
+                        }
+                        mPresenter.uploadProject(beanMain)
                         /*ARouter.getInstance().build(com.sribs.common.ARouterPath.PRO_CREATE_ATY)
                             .withInt(com.sribs.common.ARouterPath.VAL_COMMON_LOCAL_ID,beanMain.localId.toInt())
                             .navigation()*/
-                        initCreateDialog()
+                      //  initCreateDialog()
                     }
                /*     1->{
                         if (beanMain.remoteId.isNullOrEmpty() || !Config.isNetAvailable){

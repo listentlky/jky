@@ -264,8 +264,6 @@ class ModuleCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCrea
         )
     }
 
-    private var mLocalModuleId: Long? = -1
-
     fun createLocalModule(
         activity: Activity,
         mLocalProjectId: Int,
@@ -291,7 +289,7 @@ class ModuleCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCrea
         mCurDrawingsDir = "/" + ModuleHelper.DRAWING_CACHE_FOLDER + "/" + mProName + "/" + moduleName + "/"
 
 
-        var bean = v3BuildingModuleDbBean(
+      /*  var bean = v3BuildingModuleDbBean(
             id = mModuleId,
             buildingId = mBuildingId,
             projectId = mLocalProjectId.toLong(),
@@ -299,28 +297,25 @@ class ModuleCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCrea
             updateTime = TimeUtil.YMD_HMS.format(Date()),
             drawings = ArrayList(),
             aboveGroundNumber = above.size,
-            underGroundNumber = before.size,
-            inspectors = "",
-            remoteId = remoteId,
+            underGroundNumber = after.size,
+            )*/
 
-            )
 
         addDisposable(mDb.deletev3ModuleFloor(mLocalProjectId.toLong(), mBuildingId, mModuleId)
             .subscribeOn(Schedulers.computation())
             .observeOn(Schedulers.computation())
-            .flatMap {
+       /*     .flatMap {
 
                 mDb.updatev3BuildingModule(bean)
             }
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(AndroidSchedulers.mainThread())*/
             .subscribe({
-                mLocalModuleId = it.toLong()
-                LogUtils.d("llf createLocalModule new building id=${mLocalModuleId}")
+                LogUtils.d("llf createLocalModule new building id=${mModuleId}")
                 createLocalFloorsInTheModule(
                     activity,
                     mLocalProjectId,
                     mBuildingId,
-                    mLocalModuleId!!.toInt(),
+                    mModuleId,
                     above.size,
                     before.size
                 )
@@ -335,7 +330,7 @@ class ModuleCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCrea
         activity: Activity,
         mLocalProjectId: Int,
         mBuildingId: Long,
-        moduleId: Int,
+        moduleId: Long,
         aboveGroundNumber: Int,
         underGroundNumber: Int
     ) {
@@ -396,7 +391,7 @@ class ModuleCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCrea
         activity: Activity,
         mLocalProjectId: Int,
         mBuildingId: Long,
-        moduleId: Int,
+        moduleId: Long,
         aboveGroundNumber: Int,
         underGroundNumber: Int
     ) {
@@ -409,7 +404,7 @@ class ModuleCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCrea
                     id = -1,
                     projectId = mLocalProjectId.toLong(),
                     bldId = mBuildingId,
-                    moduleId = moduleId.toLong(),
+                    moduleId = moduleId,
                     floorId = (i + 1).toLong(),
                     floorName = item.name,
                     aboveNumber = aboveGroundNumber,

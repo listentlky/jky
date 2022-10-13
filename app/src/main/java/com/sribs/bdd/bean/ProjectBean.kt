@@ -10,7 +10,7 @@ import java.sql.Date
 */
 
 data class ProjectBean(
-    var projectId: Long?=null,
+    var projectId: Long?=-1,
     var address: String?=null,
     var proLeader: String?=null,//项目负责人
     var buildingList: ArrayList<Building>?,

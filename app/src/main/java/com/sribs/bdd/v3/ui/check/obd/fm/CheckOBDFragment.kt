@@ -80,7 +80,6 @@ class CheckOBDFragment : BaseFragment(R.layout.fragment_check_obliquedeformation
         }
         if(mDrawingV3Bean != null && mDrawingV3Bean!!.size>0) {
             mBinding.checkSelectIndex.text = mDrawingV3Bean!![0].fileName
-            setGuide(mDrawingV3Bean!![0].damage[0])
         }
         LogUtils.d("initFloorDrawData： "+mDrawingV3Bean)
     }
@@ -142,14 +141,19 @@ class CheckOBDFragment : BaseFragment(R.layout.fragment_check_obliquedeformation
     /**
      * 设置指南方向
      */
-    fun setGuide(damageV3Bean:DamageV3Bean?){
-        LogUtils.d("setGuide() "+damageV3Bean)
-        if(damageV3Bean == null){
+    fun setGuide(drawingV3Bean:DrawingV3Bean?){
+        LogUtils.d("setGuide() "+drawingV3Bean)
+        if(drawingV3Bean == null){
             mBinding.checkGuideImg.rotation = 0F
             mBinding.checkGuideHint.text="北"
         }else{
-            mBinding.checkGuideImg.rotation = damageV3Bean.rotate!!.toFloat()
-            mBinding.checkGuideHint.text= damageV3Bean.direction
+            if(drawingV3Bean.direction.isNullOrEmpty()){
+                mBinding.checkGuideHint.text="北"
+            }else{
+                mBinding.checkGuideHint.text= drawingV3Bean.direction
+            }
+            mBinding.checkGuideImg.rotation = drawingV3Bean.rotate!!.toFloat()
+
         }
     }
 

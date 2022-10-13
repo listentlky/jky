@@ -6,6 +6,7 @@ import com.cbj.sdk.libbase.utils.LOG
 import com.cbj.sdk.libnet.http.HttpManager
 import com.cbj.sdk.libui.mvp.moudles.IBaseView
 import com.sribs.bdd.R
+import com.sribs.bdd.action.Dict
 import com.sribs.bdd.bean.MainProjectBean
 import com.sribs.bdd.bean.UnitConfigType
 import com.sribs.bdd.module.BaseUnitConfigPresenter
@@ -21,6 +22,8 @@ import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import java.sql.Date
+import java.util.*
+import kotlin.collections.ArrayList
 
 /**
  * @date 2021/8/5
@@ -98,6 +101,33 @@ class MainPresenter:BaseUnitConfigPresenter(),IMainListContrast.IMainPresenter {
                 cb(false)
                 it.printStackTrace()
             })
+        )
+    }
+
+    /**
+     * 上传项目配置
+     */
+    fun uploadProject(bean: MainProjectBean){
+        var inspectorList: List<String> =
+            if (bean.inspector.contains("、")) bean.inspector.split("、") else Arrays.asList(bean.inspector)
+
+        addDisposable(HttpManager.instance.getHttpService<HttpApi>()
+            .createOrUpdateProject(ProjectCreateReq().also {
+                it.inspectors = inspectorList
+                it.leaderId = Dict.getLeaderId(bean.leader)!!
+                it.leaderName = bean.leader
+                it.projectName = bean.address
+                it.projectId = bean.localUUID
+            })
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                mView?.onMsg("项目上传成功")
+            }, {
+                mView?.onMsg("上传项目失败: "+checkError(it))
+
+            }
+            )
         )
     }
 
@@ -314,7 +344,14 @@ class MainPresenter:BaseUnitConfigPresenter(),IMainListContrast.IMainPresenter {
         //删除本地数据库
         LogUtils.d("删除本地数据")
         var obList = ArrayList<Observable<Boolean>>()
+        // 3期
         obList.add(mDb.deleteProject(ProjectBean(id=projectId)).map { true })
+        obList.add(mDb.deleteBuildingByProjectId(projectId)) //删除本地项目下的所有本地楼
+        obList.add(mDb.deleteFloorByProjectId(projectId)) //删除本地项目下的所有本地楼层
+        obList.add(mDb.deleteBuildingModuleByProjectId(projectId)) //删除本地项目下的所有楼模块
+        obList.add(mDb.deleteModuleFloorByProjectId(projectId)) //删除本地项目下的所有楼模块层
+
+        //2期
         obList.add(mDb.deleteUnit(projectId))
         obList.add(mDb.deleteConfig(projectId))
         obList.add(mDb.deleteHouseStatusByProject(projectId))
@@ -342,8 +379,7 @@ class MainPresenter:BaseUnitConfigPresenter(),IMainListContrast.IMainPresenter {
                 LogUtils.d("删除远端项目成功："+it.toString())
                 mView?.onMsg("删除项目成功")
             },{
-                LogUtils.d("删除远端项目失败")
-                mView?.onMsg(checkError(it))
+                mView?.onMsg("删除远端项目失败"+checkError(it))
             }))
 
     }

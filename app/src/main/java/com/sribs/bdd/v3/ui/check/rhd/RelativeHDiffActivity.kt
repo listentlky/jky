@@ -271,6 +271,7 @@ class RelativeHDiffActivity : BaseActivity() ,ICheckRHDiffContrast.ICheckRHDiffV
             -1,
             (mFragments[0] as RelativeHDiffFragment).mBinding.checkBzEdit.text.toString(),
             System.currentTimeMillis(),
+            (mFragments[0] as RelativeHDiffFragment).mBinding.checkTableInfo.bhc,
             (mFragments[0] as RelativeHDiffFragment).mBinding.checkTableInfo.tableInfo,
             (mFragments[0] as RelativeHDiffFragment).mBinding.checkTableInfo.pointBean
         )
@@ -291,10 +292,10 @@ class RelativeHDiffActivity : BaseActivity() ,ICheckRHDiffContrast.ICheckRHDiffV
      * 更新损伤数据
      */
     fun saveDamageDrawingToDb() {
-        mCheckHDiffMainBean!!.forEach {
-            it.drawing!!.forEach { b->
-                if(mDamageBeanList!!.size>0){
-                    b.damage = mDamageBeanList?.get(b.localAbsPath)!!
+        mCheckHDiffMainBean?.forEach {
+            it.drawing?.forEach { b->
+                if(mDamageBeanList?.size?:0 >0){
+                    b.damage = mDamageBeanList?.get(b.localAbsPath)
                 }else{
                     b.damage = ArrayList()
                 }

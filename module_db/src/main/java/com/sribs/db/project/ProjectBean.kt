@@ -13,6 +13,7 @@ import java.sql.Date
  */
 @Entity(tableName = "project")
 data class ProjectBean(
+    @ColumnInfo(name="uuid")                var uuid:String?=null, //项目唯一标识 与云端同步
     @ColumnInfo(name="name")                var name:String?=null, //项目名称
     @ColumnInfo(name="leader")              var leader:String?=null,//项目负责人
     @ColumnInfo(name="building_no")          var builderNo:String?=null,//楼号

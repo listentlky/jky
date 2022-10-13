@@ -313,6 +313,7 @@
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/drawable/floor_draw_item_img_selector.xml" value="0.1485" />
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/drawable/floor_draw_spinner_item_bg_selector.xml" value="0.1485" />
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/drawable/ic_sel_copy_config.xml" value="0.1485" />
+        <entry key="..\:/jiankeyuan/2022915/app/src/main/res/drawable/icon_bk_red_point.xml" value="0.3495" />
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/drawable/popup_bg_selector.xml" value="0.1485" />
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/drawable/popup_textcolor_selector.xml" value="0.1485" />
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/drawable/radio_selector.xml" value="0.13" />
@@ -337,7 +338,8 @@
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/chooserhd_point_popup_layout.xml" value="0.346875" />
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/dialog_check_rhd_edit.xml" value="0.34791666666666665" />
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/dialog_chose_pic.xml" value="0.271286231884058" />
-        <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/dialog_common_bottom_building_select.xml" value="0.26766304347826086" />
+        <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/dialog_common_bottom_building_select.xml" value="0.5" />
+        <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/dialog_download_project.xml" value="0.34791666666666665" />
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/double_edit_item.xml" value="0.3421875" />
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/draw_pdf_menu.xml" value="0.22" />
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/draw_pdf_menu_item.xml" value="0.5" />
@@ -352,6 +354,7 @@
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/fragment_check_componentdetection_wall_edit.xml" value="0.34791666666666665" />
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/fragment_check_obliquedeformation.xml" value="0.34791666666666665" />
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/fragment_relative_h_diff.xml" value="0.286231884057971" />
+        <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/item_floor_detail.xml" value="0.34791666666666665" />
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/item_floor_list.xml" value="0.33" />
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/item_floor_pic.xml" value="0.271286231884058" />
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/item_main_list.xml" value="0.26766304347826086" />
@@ -363,6 +366,7 @@
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/popup_layout.xml" value="0.20244565217391305" />
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/rhd_add_point_layout.xml" value="0.5227963525835866" />
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/spinner_layout.xml" value="0.286231884057971" />
+        <entry key="..\:/jiankeyuan/2022915/app/src/main/res/menu/menu_bld.xml" value="0.8037109375" />
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/menu/menu_floor.xml" value="0.34791666666666665" />
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/menu/menu_main.xml" value="0.3234375" />
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/menu/menu_unit_vp.xml" value="0.34791666666666665" />

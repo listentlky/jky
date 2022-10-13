@@ -79,37 +79,6 @@ class DatabaseSrv : IDatabaseService {
      * 3期项目 start
      */
 
-    override fun getv3Project(id: Long): Flowable<List<v3ProjectDbBean>> {
-        var dao = mDb!!.v3ProjectDao()
-        return dao.getProject(id).run { ConverterHelper.convertv3ProjectBean(this) }
-    }
-
-    override fun getv3ProjectOnce(name: String, buildNo: String): Flowable<List<v3ProjectDbBean>> {
-        var dao = mDb!!.v3ProjectDao()
-        return dao.getProjectOnce(name, buildNo).run { ConverterHelper.convertv3ProjectBean(this) }
-    }
-
-    override fun getv3ProjectOnce(name: String): Flowable<List<v3ProjectDbBean>> {
-        var dao = mDb!!.v3ProjectDao()
-        return dao.getProjectOnce(name).run { ConverterHelper.convertv3ProjectBean(this) }
-    }
-
-    override fun getv3AllProject(): Flowable<List<v3ProjectDbBean>> {
-        var dao = mDb!!.v3ProjectDao()
-        return dao.getAllProject().run { ConverterHelper.convertv3ProjectBean(this) }
-    }
-
-    override fun updatev3Project(b: v3ProjectDbBean): Observable<Long> = Observable.create {
-        var dao = mDb!!.v3ProjectDao()
-        it.onNext(dao.insertProject(ConverterHelper.convertv3ProjectRoom(b)))
-    }
-
-    override fun deletev3Project(b: v3ProjectDbBean): Observable<Int> = Observable.create {
-        var dao = mDb!!.v3ProjectDao()
-        it.onNext(dao.deleteProject(ConverterHelper.convertv3ProjectRoom(b)))
-    }
-
-
     // 3007 查询楼建筑下的模块
     override fun getv3AllBuildingModule(): Flowable<List<v3BuildingModuleDbBean>> {
         var dao = mDb!!.v3BuildingModuleDao()
@@ -188,6 +157,12 @@ class DatabaseSrv : IDatabaseService {
             it.onNext(dao.insertProject(ConverterHelper.convertv3BuildingModuleRoom(b)))
         }
 
+    override fun deleteBuildingModuleByProjectId(projectId: Long): Observable<Boolean> = Observable.create{
+        var dao = mDb!!.v3BuildingModuleDao()
+        dao.deleteBuildingModuleByProjectId(projectId)
+        it.onNext(true)
+    }
+
     override fun updatev3BuildingModuleDrawing(b: v3BuildingModuleDbBean): Observable<Int> =
         Observable.create {
             var dao = mDb!!.v3BuildingModuleDao()
@@ -246,6 +221,12 @@ class DatabaseSrv : IDatabaseService {
     ): Observable<Boolean> =Observable.create {
         var dao = mDb!!.v3ModuleFloorDao()
         dao.deleteModuleFloorOnce(projectId,buildingId,moduleId,floorId)
+        it.onNext(true)
+    }
+
+    override fun deleteModuleFloorByProjectId(projectId: Long): Observable<Boolean> =Observable.create {
+        var dao = mDb!!.v3ModuleFloorDao()
+        dao.deleteModuleFloorByProjectId(projectId)
         it.onNext(true)
     }
 
@@ -743,6 +724,12 @@ class DatabaseSrv : IDatabaseService {
             .run { ConverterHelper.convertFloorsInTheBuilding(this) }
     }
 
+    override fun deleteFloorByProjectId(projectId: Long): Observable<Boolean>  = Observable.create{
+        var dao = mDb!!.floorDao()
+        dao.deleteFloorByProjectId(projectId)
+        it.onNext(true)
+    }
+
     override fun getAllFloor(): Flowable<List<FloorBean>> {
         var dao = mDb!!.floorDao()
         return dao.getAllFloor().run { ConverterHelper.convertFloorsInTheBuilding(this) }
@@ -778,6 +765,12 @@ class DatabaseSrv : IDatabaseService {
         var bldId: Long = dao.getBuildingIdByProjectId(proId)
         Log.i("leon", "getBuildingIdByProjectId return bldId = $bldId")
         it.onNext(bldId)
+    }
+
+    override fun deleteBuildingByProjectId(projectId: Long): Observable<Boolean> = Observable.create{
+        var dao = mDb!!.buildingDao()
+        dao.deleteBuildingByProjectId(projectId)
+        it.onNext(true)
     }
 
     override fun createLocalBuilding(bb: BuildingBean): Observable<Long> = Observable.create {

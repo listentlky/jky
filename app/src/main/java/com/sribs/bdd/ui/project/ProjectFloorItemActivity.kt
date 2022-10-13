@@ -1,32 +1,28 @@
 package com.sribs.bdd.ui.project
 
+import android.app.Dialog
 import android.content.Context
-import android.content.DialogInterface
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ListView
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.forEachIndexed
-import androidx.core.view.get
 import androidx.recyclerview.widget.LinearLayoutManager
-import cc.shinichi.library.tool.ui.ToastUtil
 import com.alibaba.android.arouter.facade.annotation.Autowired
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
-import com.cbj.sdk.libbase.utils.LOG
 import com.cbj.sdk.libui.mvp.BaseActivity
 import com.cbj.sdk.libui.mvp.inflate
 import com.sribs.bdd.R
-import com.sribs.bdd.bean.BuildingFloorItem
+import com.sribs.bdd.bean.BuildingModule
 import com.sribs.bdd.databinding.ActivityProjectFloorDetailBinding
 import com.sribs.bdd.module.project.IProjectContrast
 import com.sribs.bdd.module.project.ProjectFloorDetailPresent
 import com.sribs.bdd.ui.adapter.FloorItemAdapter
 import com.sribs.bdd.v3.util.LogUtils
-import com.sribs.common.utils.TimeUtil
+import com.sribs.common.utils.DialogUtil
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -42,12 +38,20 @@ class ProjectFloorItemActivity : BaseActivity(), IProjectContrast.IProjectFloorD
     var mLocalProjectId = -1L
 
     @JvmField
+    @Autowired(name = com.sribs.common.ARouterPath.VAL_PROJECT_UUID)
+    var mLocalProjectUUID = ""
+
+    @JvmField
     @Autowired(name = com.sribs.common.ARouterPath.VAL_PROJECT_NAME)
     var mProjectName = ""
 
     @JvmField
     @Autowired(name = com.sribs.common.ARouterPath.VAL_BUILDING_ID)
     var mBuildingId = -1L
+
+    @JvmField
+    @Autowired(name = com.sribs.common.ARouterPath.VAL_BUILDING_UUID)
+    var mBuildingUUID = ""
 
     @JvmField
     @Autowired(name = com.sribs.common.ARouterPath.VAL_BUILDING_NAME)
@@ -71,7 +75,7 @@ class ProjectFloorItemActivity : BaseActivity(), IProjectContrast.IProjectFloorD
 
     private val mBinding: ActivityProjectFloorDetailBinding by inflate()
 
-    private val mPresent: ProjectFloorDetailPresent by lazy { ProjectFloorDetailPresent() }
+    private val mPresenter: ProjectFloorDetailPresent by lazy { ProjectFloorDetailPresent() }
 
     private val mAdapter: FloorItemAdapter by lazy { FloorItemAdapter() }
 
@@ -96,7 +100,7 @@ class ProjectFloorItemActivity : BaseActivity(), IProjectContrast.IProjectFloorD
 
         //    if (mRemoteId.isNullOrEmpty()) {
         //TODO 查询本地数据库
-        mPresent.getLocalModule(mLocalProjectId, mBuildingId)
+        mPresenter.getLocalModule(mLocalProjectId, mBuildingId)
         /*     } else {
                  //TODO 查询网络接口
                  mPresent.getRemoteModule(mLocalProjectId, mBuildingId)
@@ -180,44 +184,96 @@ class ProjectFloorItemActivity : BaseActivity(), IProjectContrast.IProjectFloorD
 
             }
 
-            override fun onDelete(moduleId: Long) {
-                mPresent.deleteModule(mLocalProjectId, mBuildingId, moduleId) {
-                    ToastUtil.getInstance()._short(getContext(), "本地module删除成功")
-                }
-
+            override fun onMore(bean: BuildingModule) {
+                showBottomDialog(true,bean)
             }
-
         })
         mBinding.floorItem.adapter = mAdapter
     }
 
+    var mBottomDialog: Dialog? = null
+
+    fun showBottomDialog(show: Boolean, beanMain: BuildingModule) {
+        if (show) {
+            if (mBottomDialog?.isShowing == true) return
+            mBottomDialog =
+                DialogUtil.showBottomDialog(this, R.layout.dialog_common_bottom_building_select, true) {
+                    when (it) {
+                        0->{ //上传配置
+                            if(beanMain.moduleid!!<0){
+                                showToast("请先下载再上传")
+                                return@showBottomDialog
+                            }
+                            mPresenter.uploadModule(beanMain)
+                        }
+                        1 -> { //下载配置
+                            if(beanMain.remoteId.isNullOrEmpty()){
+                                showToast("非云端项目，请先上传再下载")
+                                return@showBottomDialog
+                            }
+                            mPresenter.downloadModule(beanMain)
+                        }
+                        2 -> { // 删除
+                            DialogUtil.showMsgDialog(this, "是否确认删除模块?", {
+                                if (beanMain.moduleid!!>0){
+                                    mPresenter.deleteModule(beanMain)
+                                }else{
+                                    /**
+                                     * 此处删除云端模块？
+                                     */
+
+                                }
+                            })
+
+                        }
+                    }
+                }
+        } else {
+            if (mBottomDialog == null || mBottomDialog?.isShowing == false) {
+                mBottomDialog = null
+                return
+            }
+            mBottomDialog?.dismiss()
+            mBottomDialog = null
+        }
+    }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         super.onCreateOptionsMenu(menu)
-        menuInflater.inflate(R.menu.menu_unit_vp, menu)
+        menuInflater.inflate(R.menu.menu_bld, menu)
         return true
     }
 
     var alert:AlertDialog?= null
 
 
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item?.itemId) {
-            R.id.menu_unit_upload -> { //上传
-                var data = mAdapter.getData()
+            R.id.menu_bld_upload -> { //上传
+                var data = mAdapter?.getData()
                 if (data == null || data.size <= 0) {
                     showToast("请先创建模块")
                     return super.onOptionsItemSelected(item)
                 }
-                var items = Array<String>(data.size+1) {""}
+
+                var listLocalData = data.filter {
+                    it.moduleid!! >0
+                }
+
+                if(listLocalData.isEmpty()){
+                    showToast("请先下载或创建本地模块再上传")
+                    return super.onOptionsItemSelected(item)
+                }
+
+                var items = Array<String>(listLocalData.size+1) {""}
 
                 var checkedList = ArrayList<String>()
 
                 items[0] = "全选"
-                data.forEachIndexed { index, buildingFloorItem ->
-                    items[index+1] = buildingFloorItem.name!!
+                listLocalData.forEachIndexed { index, buildingMainBean ->
+                    items[index+1] = buildingMainBean.moduleName!!
                 }
-                var alertList:ListView?=null
+                var alertList: ListView?=null
                 var alert = AlertDialog.Builder(this).setTitle("上传配置")
                     .setMultiChoiceItems(items, null) { dialog, which, isChecked ->
                         if(which == 0){
@@ -246,31 +302,94 @@ class ProjectFloorItemActivity : BaseActivity(), IProjectContrast.IProjectFloorD
                     }.setPositiveButton("上传"){ dialog, which ->
                         //此处处理上传
                         LogUtils.d("checkedList: "+checkedList)
+                        listLocalData.forEachIndexed { index, buildingModuleBean ->
+                            if(checkedList.contains(buildingModuleBean.moduleName)){
+                                mPresenter.uploadModule(buildingModuleBean)
+                            }
+                        }
                     }.create()
                 alertList = alert?.listView
                 alert?.show()
             }
-            R.id.menu_unit_download_config -> { //下载配置
+            R.id.menu_bld_download_config -> { //下载配置
 
+                var data = mAdapter?.getData()
+                if (data == null || data.size <= 0) {
+                    showToast("请先创建模块")
+                    return super.onOptionsItemSelected(item)
+                }
 
-            }
-            R.id.menu_unit_download_all -> { //下载所有配置
+                var listRemoteData = data.filter {
+                    !it.remoteId.isNullOrEmpty()
+                }
 
+                if(listRemoteData.isEmpty()){
+                    showToast("云端无配置,请先上传再下载")
+                    return super.onOptionsItemSelected(item)
+                }
 
+                var items = Array<String>(listRemoteData.size+1) {""}
+
+                var checkedList = ArrayList<String>()
+
+                items[0] = "全选"
+                listRemoteData.forEachIndexed { index, buildingMainBean ->
+                    items[index+1] = buildingMainBean.moduleName!!
+                }
+                var alertList: ListView?=null
+                var alert = AlertDialog.Builder(this).setTitle("下载配置")
+                    .setMultiChoiceItems(items, null) { dialog, which, isChecked ->
+                        if(which == 0){
+                            if(isChecked){
+                                alertList?.forEachIndexed { index, view ->
+                                    alertList?.setItemChecked(index,true)
+                                }
+                                checkedList.addAll(items.filter {
+                                    !it.equals("全选")
+                                })
+                            }else{
+                                alertList?.forEachIndexed { index, view ->
+                                    alertList?.setItemChecked(index,false)
+                                }
+                                checkedList.clear()
+                            }
+                        }else{
+                            if(isChecked){
+                                checkedList.add(items[which])
+                            }else{
+                                checkedList.remove(items[which])
+                            }
+                        }
+                    }.setNegativeButton("取消"){ dialog, which ->
+
+                    }.setPositiveButton("下载"){ dialog, which ->
+                        //此处处理下载
+                        LogUtils.d("checkedList: "+checkedList)
+
+                        listRemoteData.forEachIndexed { index, buildingModule ->
+                            if(checkedList.contains(buildingModule.moduleName)){
+                               mPresenter.downloadModule(buildingModule)
+                            }
+                        }
+
+                    }.create()
+                alertList = alert?.listView
+                alert?.show()
             }
         }
         return super.onOptionsItemSelected(item)
     }
 
-    override fun handlItemList(list: ArrayList<BuildingFloorItem>) {
+    override fun handlItemList(list: ArrayList<BuildingModule>) {
+        LogUtils.d("获取模块数据: "+list)
         mAdapter.setData(list)
     }
 
-    override fun addItem(bean: BuildingFloorItem) {
+    override fun addItem(bean: BuildingModule) {
         mAdapter.addItem(bean)
     }
 
-    override fun removeItem(bean: BuildingFloorItem) {
+    override fun removeItem(bean: BuildingModule) {
         mAdapter.removeItem(bean)
     }
 
@@ -278,7 +397,7 @@ class ProjectFloorItemActivity : BaseActivity(), IProjectContrast.IProjectFloorD
     override fun getContext(): Context? = this
 
     override fun bindPresenter() {
-        mPresent.bindView(this)
+        mPresenter.bindView(this)
     }
 
     override fun onMsg(msg: String) {
@@ -286,7 +405,7 @@ class ProjectFloorItemActivity : BaseActivity(), IProjectContrast.IProjectFloorD
     }
 
     override fun unbindPresenter() {
-        mPresent.unbindView()
+        mPresenter.unbindView()
     }
 
     private var alertDialog3: AlertDialog? = null
@@ -313,8 +432,6 @@ class ProjectFloorItemActivity : BaseActivity(), IProjectContrast.IProjectFloorD
             items, 0
         ) { _, which -> choseType = which }
 
-
-
         alertBuilder.setPositiveButton(
             "确定"
         ) { _, i ->
@@ -323,37 +440,17 @@ class ProjectFloorItemActivity : BaseActivity(), IProjectContrast.IProjectFloorD
                 onMsg("模块请勿重复创建~")
 
             } else {
-
-                mPresent.createOrSaveModule(
+                mPresenter.createOrSaveModule(
                     mLocalProjectId,
+                    mLocalProjectUUID,
                     mBuildingId,
+                    mBuildingUUID,
                     mRemoteId,
                     mProjectName,
                     mBldName,
                     items.get(choseType)
-                ) {
-                    LogUtils.d("模块ID：" + it)
-                    mAdapter.addItem(
-                        (BuildingFloorItem(
-                            it,
-                            mBuildingId,
-                            items.get(choseType),
-                            TimeUtil.YMD_HMS.format(Date())
-                        ))
-                    )
-                    LogUtils.d("llf传递数据" + TimeUtil.YMD_HMS.format(Date()))
-
-                }
-            }
-
-            /*mAdapter.addItem(
-                BuildingFloorItem(
-                    mLocalProjectId,
-                    mBuildingId,
-                    choseType + 1,
-                    TimeUtil.YMD_HMS.format(Date())
                 )
-            )*/
+            }
             alertDialog3?.dismiss();
 
         }

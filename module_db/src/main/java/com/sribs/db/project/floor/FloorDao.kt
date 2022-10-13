@@ -47,4 +47,7 @@ interface FloorDao {
 
     @Query("Delete from project_floor where id = :floorId")
     fun deleteFloor(floorId: Long)
+
+    @Query("Delete from project_floor where project_id = :projectId")
+    fun deleteFloorByProjectId(projectId: Long)
 }
