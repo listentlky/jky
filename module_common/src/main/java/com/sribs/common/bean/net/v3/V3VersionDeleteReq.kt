@@ -9,6 +9,6 @@ import com.google.gson.annotations.SerializedName
  */
 data class V3VersionDeleteReq(
     @SerializedName("id") var projectId: String,
-    @SerializedName("superiorVersion") var superiorVersion: Int,
-    @SerializedName("version") var version: Int,
+    @SerializedName("superiorVersion") var superiorVersion: Long,
+    @SerializedName("version") var version: Long,
 )

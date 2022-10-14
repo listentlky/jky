@@ -35,6 +35,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 class ModuleFloorCreateTypeBuildingPresenter : BasePresenter(), IBasePresenter {
+
     private var mView: IProjectContrast.IModuleCreateTypeBuildingView? = null
 
     private var array: ArrayList<ModuleFloorBean>? = null
@@ -43,11 +44,12 @@ class ModuleFloorCreateTypeBuildingPresenter : BasePresenter(), IBasePresenter {
 
     private var mProLeader: String? = ""
 
-
     var beanList: ArrayList<ModuleFloorBean>? = ArrayList()
+
     var modulePicBeanList: ArrayList<ModuleFloorPictureBean>? = ArrayList()
 
     private var currentBean = v3BuildingModuleDbBean()
+
     private val picAdapter by lazy {
         CreateModuleFloorPictureAdapter()
     }
@@ -56,7 +58,6 @@ class ModuleFloorCreateTypeBuildingPresenter : BasePresenter(), IBasePresenter {
         ARouter.getInstance().build(com.sribs.common.ARouterPath.SRV_DB)
             .navigation() as IDatabaseService
     }
-
 
     fun initPicLits() {
         var manager = LinearLayoutManager(mView?.getContext())
@@ -68,11 +69,9 @@ class ModuleFloorCreateTypeBuildingPresenter : BasePresenter(), IBasePresenter {
 
     }
 
-
     fun getFloorList(activity: Activity, mLocalProjectId: Int, mBuildingId: Long) {
 
     }
-
 
     fun refreshPicList(mData: ArrayList<ModuleFloorPictureBean>) {
         picList?.addAll(mData)
@@ -106,6 +105,7 @@ class ModuleFloorCreateTypeBuildingPresenter : BasePresenter(), IBasePresenter {
         bean.id = mModuleId
         bean.updateTime = TimeUtil.YMD_HMS.format(Date())
         bean.remoteId = remoteId
+        bean.isChanged = true
 
 
         addDisposable(

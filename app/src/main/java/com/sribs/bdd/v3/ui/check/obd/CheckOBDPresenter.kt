@@ -47,7 +47,8 @@ class CheckOBDPresenter :BasePresenter(),ICheckOBDContrast.ICheckOBDPresenter{
                     updateTime = b.updateTime,
                     deleteTime = b.deleteTime,
                     version = b.version,
-                    status = b.status
+                    status = b.status,
+                    isChanged = b.isChanged
                 )
                 })
                 LogUtils.d("获取到该模块下所有数据 "+list.toString())
@@ -82,46 +83,51 @@ class CheckOBDPresenter :BasePresenter(),ICheckOBDContrast.ICheckOBDPresenter{
         }
 
 
+        var parts = ArrayList<MultipartBody.Part>()
 
         drawingV3Bean.forEach {
 
-            var path = it!!.localAbsPath
+           var path = it!!.localAbsPath
 
            var fileName = path!!.substring(path.lastIndexOf("/")+1)
             var fileSuffix = path.substring(path.lastIndexOf(".")+1)
-            var textBody = RequestBody.create(MediaType.parse("text/plain"),fileSuffix)
+       //     var textBody = RequestBody.create(MediaType.parse("text/plain"),fileSuffix)
             var fileBody = RequestBody.create(MediaType.parse("image/*"), File(path))
-            var filePart = MultipartBody.Part.createFormData("file",path,fileBody)
+            var filePart = MultipartBody.Part.createFormData("files",path,fileBody)
 
-            HttpManager.instance.getHttpService<HttpApi>()
-                .fileUpload(filePart,textBody)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    LogUtils.d("文件上传成功: ${it}")
-                },{
-                    LogUtils.d("文件上传失败: ${it}")
-                })
+            LogUtils.d("文件上传: "+filePart)
 
 
-      /*      var body = RequestBody.create(MediaType.parse("multipart/form-data"), File(it!!.localAbsPath))
+            parts.add(filePart)
+
+            /*  var body = RequestBody.create(MediaType.parse("multipart/form-data"), File(it!!.localAbsPath))
 
 
-            var multipartBody = MultipartBody.Builder()
-                .addFormDataPart("file", it.fileName, body)
-                .setType(MultipartBody.FORM)
-                .build()
+              var multipartBody = MultipartBody.Builder()
+                  .addFormDataPart("file", it.fileName, body)
+                  .setType(MultipartBody.FORM)
+                  .build()
 
-            HttpManager.instance.getHttpService<HttpApi>()
-                .uploadFile(multipartBody.parts())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    LogUtils.d("文件上传成功: ${it}")
-                },{
-                    LogUtils.d("文件上传失败: ${it}")
-                })*/
+              HttpManager.instance.getHttpService<HttpApi>()
+                  .uploadFile(multipartBody.parts())
+                  .subscribeOn(Schedulers.io())
+                  .observeOn(AndroidSchedulers.mainThread())
+                  .subscribe({
+                      LogUtils.d("文件上传成功: ${it}")
+                  },{
+                      LogUtils.d("文件上传失败: ${it}")
+                  })*/
         }
+
+        HttpManager.instance.getHttpService<HttpApi>()
+            .uploadFile(parts)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                LogUtils.d("文件上传成功: ${it}")
+            },{
+                LogUtils.d("文件上传失败: ${it}")
+            })
     }
 
     override fun bindView(v: IBaseView) {

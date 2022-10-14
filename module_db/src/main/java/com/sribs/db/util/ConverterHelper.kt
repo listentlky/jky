@@ -50,7 +50,8 @@ object ConverterHelper {
                     b.createTime,
                     b.updateTime,
                     b.remoteId,
-
+                    0,
+                    b.isChanged
                     )
             }
         }
@@ -71,7 +72,8 @@ object ConverterHelper {
                     b.createTime,
                     b.updateTime,
                     b.remoteId,
-
+                    0,
+                    b.isChanged
                     )
             }
         }
@@ -83,7 +85,8 @@ object ConverterHelper {
         leader = b.leader,
         builderNo = b.buildNo,
         inspector = b.inspector,
-        remoteId = b.remoteId
+        remoteId = b.remoteId,
+        isChanged = b.isChanged
     ).also {
         if (b.id ?: -1 > 0) {
             it.id = b.id!!
@@ -108,6 +111,7 @@ object ConverterHelper {
                 v3BuildingModuleDbBean(
                     b.id,
                     b.uuid,
+                    b.buildingRemoteId,
                     b.buildingUUID,
                     b.buildingId,
                     b.projectUUID,
@@ -124,9 +128,11 @@ object ConverterHelper {
                     b.createTime,
                     b.updateTime,
                     b.remoteId,
+                    b.superiorVersion,
                     b.parentVersion,
                     b.version,
-                    b.status
+                    b.status,
+                    b.isChanged
                 )
             }
         }
@@ -137,6 +143,7 @@ object ConverterHelper {
                 v3BuildingModuleDbBean(
                     b.id,
                     b.uuid,
+                    b.buildingRemoteId,
                     b.buildingUUID,
                     b.buildingId,
                     b.projectUUID,
@@ -153,9 +160,11 @@ object ConverterHelper {
                     b.createTime,
                     b.updateTime,
                     b.remoteId,
+                    b.superiorVersion,
                     b.parentVersion,
                     b.version,
-                    b.status
+                    b.status,
+                    b.isChanged
                 )
             }
         }
@@ -167,6 +176,7 @@ object ConverterHelper {
                 v3BuildingModuleDbBean(
                     b.id,
                     b.uuid,
+                    b.buildingRemoteId,
                     b.buildingUUID,
                     b.buildingId,
                     b.projectUUID,
@@ -183,9 +193,11 @@ object ConverterHelper {
                     b.createTime,
                     b.updateTime,
                     b.remoteId,
+                    b.superiorVersion,
                     b.parentVersion,
                     b.version,
-                    b.status
+                    b.status,
+                    b.isChanged
                 )
 
         }
@@ -194,6 +206,7 @@ object ConverterHelper {
     fun convertv3BuildingModuleRoom(b: v3BuildingModuleDbBean): v3BuildingModuleRoom =
         v3BuildingModuleRoom(
             uuid = b.uuid,
+            buildingRemoteId = b.buildingRemoteId,
             buildingUUID = b.buildingUUID,
             buildingId = b.buildingId,
             projectUUID = b.projectUUID,
@@ -209,7 +222,8 @@ object ConverterHelper {
             remoteId = b.remoteId,
             parentVersion = b.parentVersion,
             version = b.version,
-            status = b.status
+            status = b.status,
+            isChanged = b.isChanged
 
         ).also {
             if (b.id ?: -1 > 0) {
@@ -247,7 +261,8 @@ object ConverterHelper {
                     b.deleteTime,
                     b.version,
                     b.remoteId,
-                    b.status
+                    b.status,
+                    b.isChanged
 
                 )
             }
@@ -268,7 +283,8 @@ object ConverterHelper {
             afterNumber = b.afterNumber,
             createTime = b.createTime.toString(),
             updateTime = b.updateTime.toString(),
-            deleteTime = b.deleteTime.toString()
+            deleteTime = b.deleteTime.toString(),
+            isChanged = b.isChanged
 
         ).also {
             if (b.id ?: -1 > 0) {
@@ -875,6 +891,7 @@ object ConverterHelper {
 
     fun convertBuildingBean(bb: com.sribs.common.bean.db.BuildingBean): BuildingBean = BuildingBean(
         bb.UUID,
+        bb.projectRemoteId,
         bb.projectUUID,
         bb.projectId,
         bb.bldName,
@@ -882,15 +899,18 @@ object ConverterHelper {
         bb.createTime,
         bb.updateTime,
         bb.deleteTime,
+        bb.isDeleted,
         bb.leader,
         bb.inspectorName,
         bb.remoteId,
+        bb.superiorVersion,
         bb.parentVersion,
         bb.version,
         bb.status,
         bb.drawing,
         bb.aboveGroundNumber,
-        bb.underGroundNumber
+        bb.underGroundNumber,
+        bb.isChanged
     ).also {
         if (bb.id ?: -1 > 0) {
             it.id = bb.id!!
@@ -903,6 +923,7 @@ object ConverterHelper {
                 com.sribs.common.bean.db.BuildingBean(
                     b.id,
                     b.uuid,
+                    b.projectRemoteId,
                     b.projectUUID,
                     b.projectId,
                     b.bldName,
@@ -910,15 +931,18 @@ object ConverterHelper {
                     b.createTime,
                     b.updateTime,
                     b.deleteTime,
+                    b.isDeleted,
                     b.leader,
                     b.inspectorName,
+                    b.superiorVersion,
                     b.parentVersion,
                     b.version,
                     b.remoteId,
                     b.status,
                     b.drawing,
                     b.aboveGroundNumber,
-                    b.underGroundNumber
+                    b.underGroundNumber,
+                    b.isChanged
                 )
             }
         }
@@ -929,6 +953,7 @@ object ConverterHelper {
                 com.sribs.common.bean.db.BuildingBean(
                     b.id,
                     b.uuid,
+                    b.projectRemoteId,
                     b.projectUUID,
                     b.projectId,
                     b.bldName,
@@ -936,15 +961,18 @@ object ConverterHelper {
                     b.createTime,
                     b.updateTime,
                     b.deleteTime,
+                    b.isDeleted,
                     b.leader,
                     b.inspectorName,
+                    b.superiorVersion,
                     b.parentVersion,
                     b.version,
                     b.remoteId,
                     b.status,
                     b.drawing,
                     b.aboveGroundNumber,
-                    b.underGroundNumber
+                    b.underGroundNumber,
+                    b.isChanged
                 )
             }
         }

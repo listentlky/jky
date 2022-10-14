@@ -73,6 +73,7 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
                     BuildingModule(
                         b.projectUUID,
                         b.projectId,
+                        b.buildingRemoteId,
                         b.buildingUUID,
                         b.buildingId,
                         b.uuid,
@@ -85,13 +86,15 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
                         b.aboveGroundNumber,
                         b.underGroundNumber,
                         b.isDeleted,
+                        b.superiorVersion,
                         b.parentVersion,
                         b.version,
                         mStateArr[b.status ?: 0],
                         b.createTime,
                         b.deleteTime,
                         b.updateTime,
-                        b.remoteId
+                        b.remoteId,
+                        b.isChanged
                     )
                 })
                 mView?.handlItemList(list)
@@ -311,6 +314,7 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
                 cc.updateTime = TimeUtil.YMD_HMS.format(Date())
                 cc.aboveGroundNumber = aboveGroundNumber
                 cc.underGroundNumber = underGroundNumber
+                cc.isChanged = true
 
                 LogUtils.d("查询到楼栋下面的数据包装进 model表 : " + cc)
 
@@ -384,7 +388,8 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
                         version = 1,
                         status = 0,
                         createTime = TimeUtil.YMD_HMS.format(Date()),
-                        updateTime = TimeUtil.YMD_HMS.format(Date())
+                        updateTime = TimeUtil.YMD_HMS.format(Date()),
+                        isChanged = true
                     )
                 })
                 LogUtils.d("查询包装 model楼层表 : " + floorList)

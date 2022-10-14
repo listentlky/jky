@@ -15,14 +15,15 @@ data class ProjectBean(
     var inspector:String?=null,
     var buildNo:String?=null,
     var status:Int?=null,
-    var parentVersion:Int?=0,
-    var version:Int?=0,
+    var parentVersion:Long?=0,
+    var version:Long?=System.currentTimeMillis(),
 
     var createTime:Date?=null,
     var updateTime:Date?=null,
 
     var remoteId:String?=null,
-    var flag:Int?=null
+    var flag:Int?=null,
+    var isChanged: Boolean? = false
 ){
     fun isSame(name:String?,leader:String?,buildNo: String?):Boolean =
         this.name == name && this.leader == leader && this.buildNo == buildNo

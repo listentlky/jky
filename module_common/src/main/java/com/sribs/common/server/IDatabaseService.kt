@@ -37,7 +37,12 @@ interface IDatabaseService:IProvider {
 
     fun getv3AllBuildingModule(): Flowable<List<v3BuildingModuleDbBean>>
 
+    fun getv3BuildingModuleByProjectId(projectId: Long): Flowable<List<v3BuildingModuleDbBean>>
+
+    fun getv3BuildingModuleByBuildingId(buildingId: Long): Flowable<List<v3BuildingModuleDbBean>>
+
     fun getv3BuildingModule(projectId: Long,buildingId: Long): Flowable<List<v3BuildingModuleDbBean>>
+
     fun getv3BuildingModule(projectId: Long,buildingId: String): Flowable<List<v3BuildingModuleDbBean>>
 
     fun getv3BuildingModule(moduleId: Long): Single<v3BuildingModuleDbBean>
@@ -72,6 +77,12 @@ interface IDatabaseService:IProvider {
     fun updatev3ModuleFloor(b:v3ModuleFloorDbBean):Observable<Long>
 
     fun getv3ModuleFloor(projectId: Long,buildingId: Long,moduleId: Long): Flowable<List<v3ModuleFloorDbBean>>
+
+    fun getModuleFloorByProjectId(project_id: Long): Flowable<List<v3ModuleFloorDbBean>>
+
+    fun getModuleFloorByBuilding(buildingId: Long):Flowable<List<v3ModuleFloorDbBean>>
+
+    fun getModuleFloorByModule(moduleId: Long): Flowable<List<v3ModuleFloorDbBean>>
 
     fun deletev3ModuleFloor(projectId:Long,buildingId:Long,moduleId:Long): Observable<Boolean>
 
@@ -261,6 +272,10 @@ interface IDatabaseService:IProvider {
     //leon add end
 
     fun getAllFloor(): Flowable<List<FloorBean>>
+
+    fun getFloorByProjectId(projectId:Long):Flowable<List<FloorBean>>
+
+    fun getFloorByBuildingId(buildingId:Long):Flowable<List<FloorBean>>
 
     fun getAllBuilding(): Flowable<List<BuildingBean>>
 

@@ -11,6 +11,7 @@ import kotlin.collections.ArrayList
 data class v3BuildingModuleDbBean(
     var id: Long? = null,
     var uuid:String?="",
+    var buildingRemoteId:String?="",
     var buildingUUID:String?="",
     var buildingId: Long? = null,
     var projectUUID: String?="",
@@ -27,9 +28,11 @@ data class v3BuildingModuleDbBean(
     var createTime: String? = "",
     var updateTime: String? = null,
     var remoteId: String? = null,
-    var parentVersion: Int? = 1,
-    var version: Int? = 1,
-    var status: Int? = 0
+    var superiorVersion: Long? = 0,
+    var parentVersion: Long? = 0,
+    var version: Long? = System.currentTimeMillis(),
+    var status: Int? = 0,
+    var isChanged: Boolean? = false
 ) {
 
     fun isSame(buildingId: Long?, projectId: Long?): Boolean =

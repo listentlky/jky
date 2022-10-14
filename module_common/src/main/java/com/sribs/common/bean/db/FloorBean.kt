@@ -24,7 +24,7 @@ data class FloorBean(
     var drawing:List<DrawingV3Bean>?=null,
     var aboveGroundNumber:Int?=0, //楼上层数
     var underGroundNumber:Int?=0, //地下层数
-
+    var isChanged: Boolean? = false
 
 ){
     fun isSame(projectId:Long?,bldId: Long?,unitId: Long?,floorId: Long?):Boolean =

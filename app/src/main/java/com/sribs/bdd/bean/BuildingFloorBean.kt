@@ -50,6 +50,7 @@ data class BuildingFloor(val projectId:Long?,
 data class BuildingModule(
     var projectUUID:String?,
     var projectId: Long?,
+    var buildingRemoteId:String?,
     var buildingUUID:String?,
     var buildingId:Long?,
     var moduleUUID:String?,
@@ -62,13 +63,15 @@ data class BuildingModule(
     var aboveGroundNumber: Int?,
     var underGroundNumber: Int?,
     var isDeleted: Int?,
-    var parentVersion: Int?,
-    var version: Int?,
+    var superiorVersion: Long?,
+    var parentVersion: Long?,
+    var version: Long?,
     var status: String,
     var createTime: String?,
     var deleteTime: String?,
     var updateTime:String?,
-    var remoteId: String?
+    var remoteId: String?,
+    var isChanged: Boolean?
     ){
 
 }

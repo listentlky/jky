@@ -439,7 +439,7 @@ class ProjectFloorActivity : BaseActivity(), IBuildingContrast.IBuildingListView
             .withLong(com.sribs.common.ARouterPath.VAL_BUILDING_ID, beanMain.bldId!!)
             .withString(com.sribs.common.ARouterPath.VAL_BUILDING_UUID, beanMain.bldUUID!!)
             .withString(com.sribs.common.ARouterPath.VAL_COMMON_LEADER, mLeader)
-            .withInt(com.sribs.common.ARouterPath.VAL_COMMON_VERSION, beanMain.version)
+            .withLong(com.sribs.common.ARouterPath.VAL_COMMON_VERSION, beanMain.version!!)
             .withString(com.sribs.common.ARouterPath.VAL_COMMON_REMOTE_ID, beanMain.remoteId)
             .withString(com.sribs.common.ARouterPath.VAL_COMMON_INSPECTOR,beanMain.inspectorName)
             .withString(com.sribs.common.ARouterPath.VAL_PROJECT_NAME, mProjectName)

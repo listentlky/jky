@@ -71,7 +71,7 @@ class MainListFragment :
                     .withString(com.sribs.common.ARouterPath.VAL_PROJECT_UUID, beanMain.localUUID)
                     .withString(com.sribs.common.ARouterPath.VAL_PROJECT_NAME, beanMain.address)
                     .withString(com.sribs.common.ARouterPath.VAL_COMMON_REMOTE_ID, beanMain.remoteId)
-                    .withInt(com.sribs.common.ARouterPath.VAL_COMMON_VERSION, beanMain.version)
+                    .withLong(com.sribs.common.ARouterPath.VAL_COMMON_VERSION, beanMain.version)
                     .withString(com.sribs.common.ARouterPath.VAL_COMMON_LEADER,beanMain.leader)
                     .withString(com.sribs.common.ARouterPath.VAL_COMMON_INSPECTOR,beanMain.inspector)
                     .navigation()

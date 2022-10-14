@@ -370,7 +370,8 @@ class ModuleCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCrea
                         afterNumber = it.afterNumber,
                         createTime = TimeUtil.YMD_HMS.format(Date()),
                         updateTime = TimeUtil.YMD_HMS.format(Date()),
-                        status = 0
+                        status = 0,
+                        isChanged = true
                     )
                     mDb.updatev3ModuleFloor(bean)
                 }
@@ -409,7 +410,7 @@ class ModuleCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCrea
                     floorName = item.name,
                     floorType = item.floorType,
                     aboveNumber = aboveGroundNumber,
-                    afterNumber = underGroundNumber
+                    afterNumber = underGroundNumber,
                 )
 
                 moduleFloor.floorList = getDrawingList(activity, item, mLocalProjectId, mBuildingId)

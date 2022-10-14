@@ -24,6 +24,7 @@ data class v3ModuleFloorDbBean(
     var version:Int?=null,
     var remoteId:String?=null,
     var status:Int?=0,
+    var isChanged: Boolean? = false
 ){
     fun isSame(projectId:Long?,bldId: Long?,moduleId: Long?,floorId: Long?):Boolean =
         this.projectId == projectId && this.bldId == bldId && this.moduleId == moduleId && this.floorId == floorId

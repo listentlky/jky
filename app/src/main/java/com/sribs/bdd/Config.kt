@@ -33,7 +33,7 @@ object Config {
 //                URL ="http://139.224.253.98:8190"
 
                 URL = "http://14.116.217.72:8180"
-                host = "http://14.116.217.72:8180"
+               host = "http://14.116.217.72:8180"
             }
             2->{//生产
 //                URL ="http://building.mercs.xyz:8081"

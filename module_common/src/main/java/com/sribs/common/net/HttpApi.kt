@@ -112,7 +112,6 @@ interface HttpApi {
         @Part("typeCode") @NonNull body: RequestBody
     ): Observable<ResultBean<FileUploadRes>>
 
-
     //7002 添加/编辑项目
     @POST("api/v1/project/submit")
     fun updateProject(@Body req:ProjectUpdateReq):Observable<ResultBean<ProjectUpdateRes>>
@@ -151,7 +150,7 @@ interface HttpApi {
 
 
     @POST("api/v3/app/project/save")
-    fun createOrUpdateProject(@Body req:ProjectCreateReq):Observable<ResultBean<Any>>
+    fun createOrUpdateProject(@Body req:V3UploadProjectReq):Observable<ResultBean<Any>>
 
     @POST("api/v3/app/project/delete")
     fun deleteProject(@Body req:V3VersionDeleteReq):Observable<ResultBean<Any>>
@@ -219,10 +218,11 @@ interface HttpApi {
     /**
      * 文件上传
      */
+
     @Multipart
     @POST("api/v3/app/file/upload")
-    fun uploadFile(@Part parts: List<MultipartBody.Part>):Observable<ResultBean<Any>>
-
-
+    fun uploadFile(
+        @Part @NonNull file: List<MultipartBody.Part>
+    ): Observable<ResultBean<List<V3UploadDrawingRes>>>
 
 }

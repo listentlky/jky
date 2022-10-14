@@ -329,6 +329,7 @@ class DamageMainActivity :BaseActivity(),IMainListContrast.IMainView{
                     DialogUtil.showMsgDialog(this,"覆盖本地版本？",{
                         showPb(true)
                         mPresenter.projectV3DownloadConfig(
+                            beanMain,
                             versionList[idx].projectId,
                             versionList[idx].version,
                         ){

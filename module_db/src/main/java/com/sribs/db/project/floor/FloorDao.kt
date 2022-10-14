@@ -21,11 +21,11 @@ interface FloorDao {
     @Query("Select * from project_floor where id = :id")
     fun getFloorOnce(id:Long): Single<List<FloorBean>>
 
-    @Query("Select * from project_floor where project_id = :floorId and status == 0")
-    fun getFloorByProjectId(floorId:Long):Flowable<List<FloorBean>>
+    @Query("Select * from project_floor where project_id = :projectId")
+    fun getFloorByProjectId(projectId:Long):Flowable<List<FloorBean>>
 
-    @Query("Select * from project_floor where project_id = :floorId and status == 0")
-    fun getFloorByProjectIdOnce(floorId:Long):Single<List<FloorBean>>
+    @Query("Select * from project_floor where bld_id = :buildingId")
+    fun getFloorByBuildingId(buildingId:Long):Flowable<List<FloorBean>>
 
     @Query("Select * from project_floor where remote_id = :remoteId")
     fun getFloorByRemoteIdOnce(remoteId:String):Single<List<FloorBean>>

@@ -11,6 +11,7 @@ import java.sql.Date
 @Entity(tableName = "v3_building_module")
 data class v3BuildingModuleRoom(
     @ColumnInfo(name = "uuid") var uuid: String?,  //模块唯一ID 与云端同步
+    @ColumnInfo(name = "building_remoteId") var buildingRemoteId: String?,  //楼唯一ID 与云端同步
     @ColumnInfo(name = "building_uuid") var buildingUUID: String?,  //楼唯一ID 与云端同步
     @ColumnInfo(name = "building_id") var buildingId: Long?,  //楼id
     @ColumnInfo(name = "project_uuid") var projectUUID: String?, //项目唯一ID 与云端同步
@@ -22,9 +23,10 @@ data class v3BuildingModuleRoom(
     @ColumnInfo(name = "leader_name") var leaderName: String? = null, //
     @ColumnInfo(name = "aboveground_number") var aboveGroundNumber: Int? = 0,  //
     @ColumnInfo(name = "underground_number") var underGroundNumber: Int? = 0,  //
-    @ColumnInfo(name = "is_deleted") var isDeleted: Int? = 0,  //
-    @ColumnInfo(name = "parentVersion") var parentVersion: Int? = 1,
-    @ColumnInfo(name = "version") var version: Int? = 1,
+    @ColumnInfo(name = "isDeleted") var isDeleted: Int? = 0,  //
+    @ColumnInfo(name = "superiorVersion")       var superiorVersion:Long?=0,
+    @ColumnInfo(name = "parentVersion") var parentVersion: Long? = 1,
+    @ColumnInfo(name = "version") var version: Long? = 1,
     @ColumnInfo(name = "status") var status: Int? = 0,  //
 
 
@@ -32,6 +34,7 @@ data class v3BuildingModuleRoom(
     @ColumnInfo(name = "delete_time") var deleteTime: String? = null,
     @ColumnInfo(name = "update_time") var updateTime: String? = null,
     @ColumnInfo(name = "remote_id") var remoteId: String? = null, //远端ID
+    @ColumnInfo(name = "isChanged") var isChanged: Boolean? = false,
 ) {
     @ColumnInfo(name = "id")
     @PrimaryKey(autoGenerate = true)

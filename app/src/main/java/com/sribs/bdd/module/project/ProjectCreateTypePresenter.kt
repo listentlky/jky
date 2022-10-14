@@ -224,7 +224,7 @@ class ProjectCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCre
 
     private var mBldUUID:String? = ""
 
-    fun createLocalBuilding(activity: Activity, mLocalProjectId:Int,mLocalProjectUUID:String,
+    fun createLocalBuilding(activity: Activity, mLocalProjectId:Int,mLocalProjectUUID:String,mProjectRemoteId:String,
                             mBuildingId:Long, name:String,leader:String,inspector:String): Long? {
 
         if (array==null||array?.size==0){
@@ -262,6 +262,7 @@ class ProjectCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCre
                 dbBldBean = com.sribs.common.bean.db.BuildingBean(
                     -1,
                     mBldUUID!!,
+                    mProjectRemoteId,
                     mLocalProjectUUID,
                     mLocalProjectId.toLong(),
                     name,
@@ -269,15 +270,18 @@ class ProjectCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCre
                     curTime,
                     curTime,
                     0L,
+                    0,
                     leader,
                     inspector,
-                    1,
-                    1,
+                    0,
+                    0,
+                     System.currentTimeMillis(),
                     "",
                     0,
                     mAppFacadeDrawingList,
                     above.size,
-                    before.size
+                    before.size,
+                    true
                 )
                 mDb.createLocalBuilding(dbBldBean)
             }
@@ -442,7 +446,8 @@ class ProjectCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCre
                         0,
                         it.drawingsV3List,
                         above.size,
-                        before.size
+                        before.size,
+                        true
                     )
                     mDb.createLocalFloor(appFloor)
                 }

@@ -40,6 +40,10 @@ class ProjectCreateByTypeActivity:BaseActivity(), IProjectContrast.IProjectCreat
     var mLocalProjectUUID = ""
 
     @JvmField
+    @Autowired(name= com.sribs.common.ARouterPath.VAL_COMMON_REMOTE_ID)
+    var mRemoteId = ""
+
+    @JvmField
     @Autowired(name= com.sribs.common.ARouterPath.VAL_BUILDING_ID)
     var mBuildingId = -1L
 
@@ -182,6 +186,7 @@ class ProjectCreateByTypeActivity:BaseActivity(), IProjectContrast.IProjectCreat
                 projectCreateTypePresenter.createLocalBuilding(this,
                     mLocalProjectId.toInt(),
                     mLocalProjectUUID,
+                    mRemoteId,
                     mBuildingId,
                     mBinding.builderName.getEditText().text.toString()
                     ,mLeader!!

@@ -334,7 +334,6 @@ class CheckBuildStructureActivity : BaseActivity(), ICheckBSContrast.ICheckBSVie
             .show()
     }
 
-
     var mCheckBSMainBeanList: ArrayList<CheckBSMainBean>? = ArrayList()
 
     /**

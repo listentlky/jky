@@ -52,7 +52,8 @@ class MainListPresenter:BasePresenter(),IMainListContrast.IPresenter {
                     leader = b.leader?:"",
                     inspector = b.inspector?:"",
                     parentVersion = b.parentVersion!!,
-                    version = b.version!!
+                    version = b.version!!,
+                    isChanged = b.isChanged
                 ).also { _b->
                     _b.updateTime = TimeUtil.YMD_HMS.format(b.updateTime)
                     _b.createTime = TimeUtil.YMD_HMS.format(b.createTime)

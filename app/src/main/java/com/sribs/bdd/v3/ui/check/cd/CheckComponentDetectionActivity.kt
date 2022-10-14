@@ -20,7 +20,6 @@ import com.donkingliang.imageselector.utils.ImageSelector
 import com.google.gson.Gson
 import com.hjq.permissions.Permission
 import com.hjq.permissions.XXPermissions
-import com.itextpdf.text.pdf.PdfWriter
 import com.radaee.annotui.UIAnnotMenu
 import com.radaee.constant.Constant
 import com.radaee.pdf.Document

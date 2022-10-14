@@ -31,6 +31,7 @@ data class FloorBean(
     @ColumnInfo(name="drawing")              var drawing:List<DrawingV3Bean>?=ArrayList(),//基于楼层图纸列表
     @ColumnInfo(name="aboveGroundNumber")             var aboveGroundNumber:Int?=0,//楼上层数
     @ColumnInfo(name="underGroundNumber")              var underGroundNumber:Int?=0,//地下层数
+    @ColumnInfo(name = "isChanged") var isChanged: Boolean? = false
 ) {
     @ColumnInfo(name="id")
     @PrimaryKey(autoGenerate = true)

@@ -87,6 +87,24 @@ class DatabaseSrv : IDatabaseService {
         }
     }
 
+    override fun getv3BuildingModuleByProjectId(
+        projectId: Long,
+    ): Flowable<List<v3BuildingModuleDbBean>> {
+        var dao = mDb!!.v3BuildingModuleDao()
+        return dao.getBuildingModuleByProjectId(projectId).run {
+            ConverterHelper.convertv3BuildingModuleBean(this)
+        }
+    }
+
+    override fun getv3BuildingModuleByBuildingId(
+        buildingId: Long,
+    ): Flowable<List<v3BuildingModuleDbBean>> {
+        var dao = mDb!!.v3BuildingModuleDao()
+        return dao.getBuildingModuleByBuildingId(buildingId).run {
+            ConverterHelper.convertv3BuildingModuleBean(this)
+        }
+    }
+
     override fun getv3BuildingModule(
         projectId: Long,
         buildingId: Long
@@ -172,7 +190,7 @@ class DatabaseSrv : IDatabaseService {
     override fun updatev3BuildingModuleDrawing(b: v3BuildingModuleDbBean): Observable<Int> =
         Observable.create {
             var dao = mDb!!.v3BuildingModuleDao()
-            it.onNext(dao.updateProjectOneData(b.id!!,b.drawings!!))
+            it.onNext(dao.updateProjectOneData(b.id!!,b.drawings!!,true))
 
             Log.e("llf", "updatev3BuildingModuleOneData: "+it )
         }
@@ -180,7 +198,7 @@ class DatabaseSrv : IDatabaseService {
     override fun updatev3BuildingModuleDrawing(id:Long,drawingList:List<DrawingV3Bean>): Observable<Int> =
         Observable.create {
             var dao = mDb!!.v3BuildingModuleDao()
-            it.onNext(dao.updateProjectOneData(id,drawingList))
+            it.onNext(dao.updateProjectOneData(id,drawingList,true))
             Log.e("llf", "updatev3BuildingModuleOneData: "+it )
         }
 
@@ -198,6 +216,33 @@ class DatabaseSrv : IDatabaseService {
     ): Flowable<List<v3ModuleFloorDbBean>> {
         var dao = mDb!!.v3ModuleFloorDao()
         return dao.getModuleFloorByProjectIdOnce(projectId, buildingId, moduleId).run {
+            ConverterHelper.convertv3ModuleFloorBean(this)
+        }
+    }
+
+    override fun getModuleFloorByProjectId(
+        projectId: Long,
+    ): Flowable<List<v3ModuleFloorDbBean>> {
+        var dao = mDb!!.v3ModuleFloorDao()
+        return dao.getModuleFloorByProjectId(projectId).run {
+            ConverterHelper.convertv3ModuleFloorBean(this)
+        }
+    }
+
+    override fun getModuleFloorByBuilding(
+        buildingId: Long,
+    ): Flowable<List<v3ModuleFloorDbBean>> {
+        var dao = mDb!!.v3ModuleFloorDao()
+        return dao.getModuleFloorByBuilding(buildingId).run {
+            ConverterHelper.convertv3ModuleFloorBean(this)
+        }
+    }
+
+    override fun getModuleFloorByModule(
+        moduleId: Long,
+    ): Flowable<List<v3ModuleFloorDbBean>> {
+        var dao = mDb!!.v3ModuleFloorDao()
+        return dao.getModuleFloorByModule(moduleId).run {
             ConverterHelper.convertv3ModuleFloorBean(this)
         }
     }
@@ -753,6 +798,16 @@ class DatabaseSrv : IDatabaseService {
         return dao.getAllFloor().run { ConverterHelper.convertFloorsInTheBuilding(this) }
     }
 
+    override fun getFloorByProjectId(projectId:Long): Flowable<List<FloorBean>> {
+        var dao = mDb!!.floorDao()
+        return dao.getFloorByProjectId(projectId).run { ConverterHelper.convertFloorsInTheBuilding(this) }
+    }
+
+    override fun getFloorByBuildingId(buildingId:Long): Flowable<List<FloorBean>> {
+        var dao = mDb!!.floorDao()
+        return dao.getFloorByBuildingId(buildingId).run { ConverterHelper.convertFloorsInTheBuilding(this) }
+    }
+
     override fun getAllBuilding(): Flowable<List<BuildingBean>> {
         var dao = mDb!!.buildingDao()
         return dao.getAllBuilding().run { ConverterHelper.convertBuildingBean(this) }
@@ -774,7 +829,7 @@ class DatabaseSrv : IDatabaseService {
         id: Long
     ):Observable<Int> = Observable.create {
         var dao = mDb!!.v3ModuleFloorDao();
-        var moduleFloorId = dao.updateModuleFloorDrawing(drawingList,id)
+        var moduleFloorId = dao.updateModuleFloorDrawing(drawingList,true,id)
         it.onNext(moduleFloorId)
     }
 

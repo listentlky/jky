@@ -159,10 +159,9 @@ class ProjectProjectPresenter : BasePresenter(), IProjectContrast.IProjectPresen
     ) {
         var projectIDUUID = UUIDUtil.getUUID(name)
 
-        if (!Config.isNetAvailable) {
-            LogUtils.d("无网络 单本地创建")
+  //      if (!Config.isNetAvailable) {
             createNewLocalProject(projectId, name, leader, inspector,projectIDUUID, onResult)
-        } else {
+   /*     } else {
             LogUtils.d("网络创建项目")
             LogUtils.d("输入的： " + inspector)
 
@@ -192,7 +191,7 @@ class ProjectProjectPresenter : BasePresenter(), IProjectContrast.IProjectPresen
                 }
                 )
             )
-        }
+        }*/
     }
 
     override fun delLocalProject(projectId: Long) {

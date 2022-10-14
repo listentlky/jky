@@ -24,21 +24,21 @@ interface v3ModuleFloorDao {
         moduleId: Long
     ): Flowable<List<v3ModuleFloorRoom>>
 
-    @Query("Update V3_MODULE_FLOOR SET drawingsList = :drawingList WHERE id = :id and status == 0")
-    fun updateModuleFloorDrawing(drawingList:List<DrawingV3Bean>
+    @Query("Update V3_MODULE_FLOOR SET drawingsList = :drawingList,isChanged = :isChange  WHERE id = :id and status == 0")
+    fun updateModuleFloorDrawing(drawingList:List<DrawingV3Bean>,isChange:Boolean
                                  , id: Long): Int
 
-    @Query("Select * from V3_MODULE_FLOOR where project_id = :floorId and status == 0")
-    fun getModuleFloorByProjectId(floorId: Long): Flowable<List<v3ModuleFloorRoom>>
+    @Query("Select * from V3_MODULE_FLOOR where project_id = :project_id")
+    fun getModuleFloorByProjectId(project_id: Long): Flowable<List<v3ModuleFloorRoom>>
 
-    @Query("Select * from V3_MODULE_FLOOR where project_id = :floorId and status == 0")
-    fun getModuleFloorByProjectIdOnce(floorId: Long): Single<List<v3ModuleFloorRoom>>
+    @Query("Select * from V3_MODULE_FLOOR where building_id = :buildingId")
+    fun getModuleFloorByBuilding(buildingId: Long): Flowable<List<v3ModuleFloorRoom>>
 
     @Query("Select * from V3_MODULE_FLOOR where remote_id = :remoteId")
     fun getModuleFloorByRemoteIdOnce(remoteId: String): Single<List<v3ModuleFloorRoom>>
 
-    @Query("Select * from V3_MODULE_FLOOR where building_id = :bldId and status == 0 order by floor_id asc ")
-    fun getModuleFloorInTheBuilding(bldId: Long): Flowable<List<v3ModuleFloorRoom>>
+    @Query("Select * from V3_MODULE_FLOOR where module_id = :moduleId")
+    fun getModuleFloorByModule(moduleId: Long): Flowable<List<v3ModuleFloorRoom>>
 
     @Insert(onConflict = REPLACE)
     fun insertModuleFloor(bean: v3ModuleFloorRoom): Long

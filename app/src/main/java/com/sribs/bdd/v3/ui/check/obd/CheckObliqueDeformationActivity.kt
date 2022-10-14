@@ -414,6 +414,7 @@ class CheckObliqueDeformationActivity : BaseActivity(), ICheckOBDContrast.ICheck
                         b.rotate = c?.rotate
                     }
                 }
+                b.damage = mDamageBeanList?.get(b.localAbsPath)
             }
             LogUtils.d("it.drawing： "+it.drawing)
             mPresenter.saveDamageToDb(it.drawing!!, it.moduleId!!)

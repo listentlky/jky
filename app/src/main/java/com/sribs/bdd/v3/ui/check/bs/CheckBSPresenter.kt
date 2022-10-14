@@ -45,7 +45,8 @@ class CheckBSPresenter : BasePresenter(),ICheckBSContrast.ICheckBSPresenter{
                     updateTime = b.updateTime,
                     deleteTime = b.deleteTime,
                     version = b.version,
-                    status = b.status
+                    status = b.status,
+                    isChanged = b.isChanged
                 )
                 })
                 LogUtils.d("获取到该楼下所有楼层数据 "+list.toString())

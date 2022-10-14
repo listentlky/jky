@@ -49,6 +49,7 @@ class BuildingListPresenter : BasePresenter(), IBuildingContrast.IBuildingListPr
             .subscribe {
                 var list = ArrayList(it.map { b ->
                     com.sribs.bdd.bean.BuildingMainBean(
+                        projectRemoteId = b.projectRemoteId,
                         projectUUID = b.projectUUID,
                         projectId = localProject,
                         bldUUID = b.UUID,
@@ -60,11 +61,13 @@ class BuildingListPresenter : BasePresenter(), IBuildingContrast.IBuildingListPr
                         remoteId = null,
                         createTime = if (b.createTime==null)"" else TimeUtil.YMD_HMS.format(b.createTime),
                         updateTime = if (b.updateTime==null)"" else TimeUtil.YMD_HMS.format(b.updateTime),
-                        parentVersion= b.parentVersion!!,
-                        version = b.version!!,
+                        superiorVersion = b.superiorVersion,
+                        parentVersion= b.parentVersion,
+                        version = b.version,
                         status = mStateArr[b.status?:0],
                         aboveGroundNumber = b.aboveGroundNumber?:0,
-                        underGroundNumber = b.underGroundNumber?:0
+                        underGroundNumber = b.underGroundNumber?:0,
+                        isChanged = b.isChanged
                     )
                 })
                 LogUtils.d("获取本地数据库楼表: " + list.toString())
@@ -295,8 +298,8 @@ class BuildingListPresenter : BasePresenter(), IBuildingContrast.IBuildingListPr
                 .deleteBuilding(
                     V3VersionDeleteReq(
                         beanMain.remoteId!!,
-                        beanMain.parentVersion,
-                        beanMain.version
+                        beanMain.parentVersion!!,
+                        beanMain.version!!
                     )
                 )
                 .subscribeOn(Schedulers.io())

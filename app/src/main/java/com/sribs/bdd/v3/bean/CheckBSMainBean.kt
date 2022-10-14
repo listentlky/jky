@@ -21,7 +21,8 @@ data class CheckBSMainBean (
     var updateTime:String?="",
     var deleteTime:String?="",
     var version:Int?=1,
-    var status:Int?=0
+    var status:Int?=0,
+    var isChanged:Boolean?=false
 ){
     override fun toString(): String {
         return "CheckBSMainBean(projectId=$projectId, bldId=$bldId, moduleId=$moduleId, floorId=$floorId, floorName=$floorName, remoteId=$remoteId, inspectorName=$inspectorName, drawing=$drawing, createTime=$createTime, updateTime=$updateTime, deleteTime=$deleteTime, version=$version, status=$status)"

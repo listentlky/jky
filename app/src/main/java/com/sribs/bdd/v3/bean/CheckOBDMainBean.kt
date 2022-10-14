@@ -13,8 +13,9 @@ data class CheckOBDMainBean(
     var createTime: String? = "",
     var updateTime: String? = "",
     var deleteTime: String? = "",
-    var version: Int? = 1,
-    var status: Int? = 0
+    var version: Long? = System.currentTimeMillis(),
+    var status: Int? = 0,
+    var isChanged:Boolean?=false
 ) {
 
     override fun toString(): String {

@@ -5,26 +5,32 @@ import com.cbj.sdk.libbase.exception.MsgThrowable
 import com.cbj.sdk.libbase.utils.LOG
 import com.cbj.sdk.libnet.http.HttpManager
 import com.cbj.sdk.libui.mvp.moudles.IBaseView
-import com.sribs.bdd.Config
+import com.google.gson.Gson
 import com.sribs.bdd.R
+import com.sribs.bdd.action.Dict
+import com.sribs.bdd.bean.BuildingModule
 import com.sribs.bdd.bean.MainProjectBean
 import com.sribs.bdd.bean.UnitConfigType
 import com.sribs.bdd.module.BaseUnitConfigPresenter
 import com.sribs.bdd.v3.util.LogUtils
 import com.sribs.common.bean.HistoryBean
 import com.sribs.common.bean.V3VersionBean
-import com.sribs.common.bean.db.ConfigBean
-import com.sribs.common.bean.db.ProjectBean
-import com.sribs.common.bean.db.UnitBean
+import com.sribs.common.bean.db.*
 import com.sribs.common.bean.net.*
-import com.sribs.common.bean.net.v3.V3VersionDownloadReq
-import com.sribs.common.bean.net.v3.V3VersionDeleteReq
+import com.sribs.common.bean.net.v3.*
+import com.sribs.common.bean.v3.v3ModuleFloorDbBean
 import com.sribs.common.net.HttpApi
 import com.sribs.common.utils.TimeUtil
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import okhttp3.MediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import org.json.JSONObject
+import java.io.File
 import java.sql.Date
+import java.util.*
 import kotlin.collections.ArrayList
 
 /**
@@ -33,8 +39,12 @@ import kotlin.collections.ArrayList
  * @Description
  */
 class MainPresenter:BaseUnitConfigPresenter(),IMainListContrast.IMainPresenter {
+
     private var mView:IMainListContrast.IMainView?=null
 
+    private val mStateArr by lazy {
+        mView?.getContext()?.resources?.getStringArray(R.array.main_project_status) ?: emptyArray()
+    }
     /**
      * 三期查询项目版本列表
      */
@@ -143,27 +153,247 @@ class MainPresenter:BaseUnitConfigPresenter(),IMainListContrast.IMainPresenter {
      */
     fun uploadProject(bean: MainProjectBean){
         LogUtils.d("上传项目配置： "+bean)
-        /*var inspectorList: List<String> =
-            if (bean.inspector.contains("、")) bean.inspector.split("、") else Arrays.asList(bean.inspector)
 
-        addDisposable(HttpManager.instance.getHttpService<HttpApi>()
-            .createOrUpdateProject(ProjectCreateReq().also {
-                it.inspectors = inspectorList
-                it.leaderId = Dict.getLeaderId(bean.leader)!!
-                it.leaderName = bean.leader
-                it.projectName = bean.address
-                it.projectId = bean.localUUID
-            })
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-                mView?.onMsg("项目上传成功")
-            }, {
-                mView?.onMsg("上传项目失败: "+checkError(it))
+        var inspectorList: List<String> =
+        if (bean.inspector.contains("、")) bean.inspector.split("、") else Arrays.asList(bean.inspector)
 
+        var buildingList = ArrayList<BuildingBean>()
+
+        var buildingFloorList = ArrayList<FloorBean>()
+
+        var buildingModuleList = ArrayList<BuildingModule>()
+
+        var buildingModuleFloorList = ArrayList<v3ModuleFloorDbBean>()
+
+        var drawingList = ArrayList<String>()
+
+        addDisposable(mDb.getBuildingByProjectId(bean.localId)
+            .subscribeOn(Schedulers.computation())
+            .observeOn(Schedulers.computation())
+            .flatMap {
+                it.forEach {
+                    it.drawing?.forEach {
+                        drawingList.add(it.localAbsPath!!)
+                    }
+                }
+                buildingList.addAll(it)
+                mDb.getFloorByProjectId(bean.localId)
             }
-            )
-        )*/
+            .subscribeOn(Schedulers.computation())
+            .observeOn(Schedulers.computation())
+            .flatMap {
+                it.forEach {
+                    it.drawing?.forEach {
+                        drawingList.add(it.localAbsPath!!)
+                    }
+                }
+                buildingFloorList.addAll(it)
+                mDb.getv3BuildingModuleByProjectId(bean.localId)
+            }
+            .subscribeOn(Schedulers.computation())
+            .observeOn(Schedulers.computation())
+            .flatMap {
+                it.forEach {
+                    it.drawings?.forEach {
+                        drawingList.add(it.localAbsPath!!)
+                    }
+                }
+                var list  = ArrayList(it.map { b ->
+                    BuildingModule(
+                        b.projectUUID,
+                        b.projectId,
+                        b.buildingRemoteId,
+                        b.buildingUUID,
+                        b.buildingId,
+                        b.uuid,
+                        b.id,
+                        b.moduleName,
+                        b.drawings,
+                        b.inspectors,
+                        b.leaderId,
+                        b.leaderName,
+                        b.aboveGroundNumber,
+                        b.underGroundNumber,
+                        b.isDeleted,
+                        b.superiorVersion,
+                        b.parentVersion,
+                        b.version,
+                        mStateArr[b.status ?: 0],
+                        b.createTime,
+                        b.deleteTime,
+                        b.updateTime,
+                        b.remoteId,
+                        b.isChanged
+                    )
+                })
+                buildingModuleList.addAll(list)
+                mDb.getModuleFloorByProjectId(bean.localId)
+            }
+            .subscribeOn(Schedulers.computation())
+            .observeOn(Schedulers.computation())
+            .subscribe({
+                it.forEach {
+                    it.drawingsList?.forEach {
+                        drawingList.add(it.localAbsPath!!)
+                    }
+                }
+
+                var list = ArrayList(it.map { b ->
+                    v3ModuleFloorDbBean(
+                        id = b.id,
+                        projectId = b.projectId,
+                        bldId = b.bldId,
+                        moduleId = b.moduleId,
+                        floorId = b.floorId,
+                        floorName = b.floorName,
+                        floorType = b.floorType,
+                        drawingsList = b.drawingsList,
+                        remoteId = b.remoteId,
+                        aboveNumber = b.aboveNumber,
+                        afterNumber = b.aboveNumber,
+                        version = b.version,
+                        status = b.status,
+                        createTime = b.createTime,
+                        updateTime = b.updateTime
+                    )
+                })
+                buildingModuleFloorList.addAll(list)
+
+                LogUtils.d("获取项目下所有楼栋: "+buildingList)
+
+                LogUtils.d("获取项目下所有楼栋层: "+buildingFloorList)
+
+                LogUtils.d("获取项目下所有模块: "+buildingModuleList)
+
+                LogUtils.d("获取项目下所有模块层: "+buildingModuleFloorList)
+
+                LogUtils.d("获取项目下需要上传的图纸: "+drawingList)
+
+                var parts = ArrayList<MultipartBody.Part>()
+
+                drawingList.forEach { path->
+                    var fileBody = RequestBody.create(MediaType.parse("image/*"), File(path))
+                    var filePart = MultipartBody.Part.createFormData("files",path,fileBody)
+                    parts.add(filePart)
+                }
+
+                HttpManager.instance.getHttpService<HttpApi>()
+                    .uploadFile(parts)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(Schedulers.computation())
+                    .subscribe({ res->
+                        LogUtils.d("文件上传成功: ${res}")
+
+                        var V3UploadBuildingList = ArrayList<String>()
+
+                        var V3UploadBuildingModuleList = ArrayList<String>()
+
+                        var V3UploadBuildingReq = ArrayList<V3UploadBuildingReq>()
+
+                        var V3UploadModuleReq = ArrayList<V3UploadModuleReq>()
+
+                        buildingModuleList.forEach {
+                            V3UploadBuildingModuleList.add(if(it.remoteId.isNullOrEmpty()) it.moduleUUID!! else it.remoteId!!)
+                            var V3UploadDrawingReq = ArrayList<V3UploadDrawingReq>()
+                            it.drawings?.forEach { b->
+
+                                var resId = res.data?.filter {
+                                    it.fileName.equals(b.localAbsPath)
+                                }
+
+                                V3UploadDrawingReq.add(
+                                    V3UploadDrawingReq(
+                                        if(it.buildingRemoteId.isNullOrEmpty()) it.buildingUUID!! else it.buildingRemoteId!!,
+                                        "",
+                                        b.fileName!!,
+                                        b.fileType!!,
+                                        inspectorList,
+                                        if(it.remoteId.isNullOrEmpty()) it.moduleUUID!! else it.remoteId!!,
+                                        resId?.get(0)?.resId?:"",
+                                        "",
+                                        /*  b.damage?:ArrayList()*/
+                                    ))
+                            }
+
+                            V3UploadModuleReq.add(
+                                com.sribs.common.bean.net.v3.V3UploadModuleReq(
+                                    V3UploadDrawingReq,
+                                    inspectorList,
+                                    it.isChanged?:false,
+                                    if(it.remoteId.isNullOrEmpty()) it.moduleUUID!! else it.remoteId!!,
+                                    it.moduleName!!,
+                                    it.parentVersion!!,
+                                    it.superiorVersion!!,
+                                    it.version!!
+                                )
+                            )
+
+                        }
+
+                        buildingList.forEach {
+                            V3UploadBuildingList.add(if(it.remoteId.isNullOrEmpty()) it.UUID!! else it.remoteId!!)
+                            V3UploadBuildingReq.add(
+                                V3UploadBuildingReq(
+                                    if(it.remoteId.isNullOrEmpty()) it.UUID!! else it.remoteId!!,
+                                    it.bldName!!,
+                                    it.bldType!!,
+                                    inspectorList,
+                                    it.isChanged?:false,
+                                    Dict.getLeaderId(it.leader!!)!!,
+                                    it.leader!!,
+                                    V3UploadBuildingModuleList,
+                                    V3UploadModuleReq,
+                                    it.parentVersion?:0,
+                                    if(it.projectRemoteId.isNullOrEmpty()) it.projectUUID!! else it.projectRemoteId!!,
+                                    it.superiorVersion?:0,
+                                    it.version?:System.currentTimeMillis(),
+                                )
+                            )
+                        }
+
+                        var V3UploadProjectReq = V3UploadProjectReq(
+                            V3UploadBuildingList,
+                            V3UploadBuildingReq,
+                            bean.createTime,
+                            inspectorList,
+                            true,
+                            Dict.getLeaderId(bean.leader!!)!!,
+                            bean.leader!!,
+                            bean.parentVersion,
+                            if(bean.remoteId.isNullOrEmpty()) bean.localUUID!! else bean.remoteId!!,
+                            bean.address,
+                            bean.version
+                        )
+
+                        LogUtils.d("生成上传数据: "+Gson().toJson(V3UploadProjectReq))
+
+                        addDisposable(HttpManager.instance.getHttpService<HttpApi>()
+                            .createOrUpdateProject(V3UploadProjectReq)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe({
+                                mView?.onMsg("项目上传成功")
+                            }, {
+                                mView?.onMsg("上传项目失败: "+checkError(it))
+
+                            }))
+
+                    },{
+                        LogUtils.d("文件上传失败: ${it}")
+                    })
+
+                    },{
+
+            }))
+
+     /*   ProjectCreateReq().also {
+            it.inspectors = inspectorList
+            it.leaderId = Dict.getLeaderId(bean.leader)!!
+            it.leaderName = bean.leader
+            it.projectName = bean.address
+            it.projectId = bean.localUUID
+        }*/
+
     }
 
     private fun updateProject(bean: MainProjectBean):Observable<Long>{
@@ -192,6 +422,7 @@ class MainPresenter:BaseUnitConfigPresenter(),IMainListContrast.IMainPresenter {
      * V3下载指定版本的项目
      */
     fun projectV3DownloadConfig(
+        beanMain:MainProjectBean,
         remoteProjectId:String,
         version:Int,
         cb: (Boolean) -> Unit

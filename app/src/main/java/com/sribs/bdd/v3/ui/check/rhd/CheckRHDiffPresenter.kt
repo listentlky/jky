@@ -15,7 +15,7 @@ import io.reactivex.schedulers.Schedulers
  * author: bruce
  * description:
  */
-class CheckRHDiffPresenter :BasePresenter(),ICheckRHDiffContrast.ICheckRHDiffPresenter{
+class CheckRHDiffPresenter : BasePresenter(), ICheckRHDiffContrast.ICheckRHDiffPresenter {
 
     private var mView: ICheckRHDiffContrast.ICheckRHDiffView? = null
 
@@ -26,43 +26,48 @@ class CheckRHDiffPresenter :BasePresenter(),ICheckRHDiffContrast.ICheckRHDiffPre
 
     override fun getModuleInfo(localProjectId: Long, localBuildingId: Long, localModuleId: Long) {
         LogUtils.d("${localProjectId}  ${localBuildingId}  ${localModuleId}")
-        addDisposable(mDb.getv3BuildingModuleOnce(localProjectId,localBuildingId,localModuleId)
-            .subscribeOn(Schedulers.computation())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-                var list = ArrayList(it.map { b->
-                    CheckHDiffMainBean(
-                    projectId = b.projectId,
-                    bldId = b.buildingId,
-                    moduleId = b.id,
-                    moduleName = b.moduleName,
-                    drawing = b.drawings,
-                    inspectorName = b.inspectors,
-                    leaderNamr = b.leaderName,
-                    createTime = b.createTime,
-                    updateTime = b.updateTime,
-                    deleteTime = b.deleteTime,
-                    version = b.version,
-                    status = b.status
-                )
+        addDisposable(
+            mDb.getv3BuildingModuleOnce(localProjectId, localBuildingId, localModuleId)
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    var list = ArrayList(it.map { b ->
+                        CheckHDiffMainBean(
+                            projectId = b.projectId,
+                            bldId = b.buildingId,
+                            moduleId = b.id,
+                            moduleName = b.moduleName,
+                            drawing = b.drawings,
+                            inspectorName = b.inspectors,
+                            leaderNamr = b.leaderName,
+                            createTime = b.createTime,
+                            updateTime = b.updateTime,
+                            deleteTime = b.deleteTime,
+                            version = b.version,
+                            status = b.status,
+                            isChanged = b.isChanged
+                        )
+                    })
+                    LogUtils.d("获取到该模块下所有数据 " + list.toString())
+                    mView?.onModuleInfo(list)
+                }, {
+                    mView?.onMsg(it.toString())
+                    LogUtils.d("获取到该模块下数据失败 ${it}")
                 })
-                LogUtils.d("获取到该模块下所有数据 "+list.toString())
-                mView?.onModuleInfo(list)
-            },{
-                mView?.onMsg(it.toString())
-                LogUtils.d("获取到该模块下数据失败 ${it}")
-            }))
+        )
     }
 
     override fun saveDamageToDb(drawingV3Bean: List<DrawingV3Bean>, id: Long) {
-        addDisposable(mDb.updatev3BuildingModuleDrawing(id,drawingV3Bean)
-            .subscribeOn(Schedulers.computation())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-                LogUtils.d("更新图纸损伤信息成功")
-            },{
-                LogUtils.d("更新图纸损伤信息失败: "+it)
-            }))
+        addDisposable(
+            mDb.updatev3BuildingModuleDrawing(id, drawingV3Bean)
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    LogUtils.d("更新图纸损伤信息成功")
+                }, {
+                    LogUtils.d("更新图纸损伤信息失败: " + it)
+                })
+        )
     }
 
     override fun bindView(v: IBaseView) {
