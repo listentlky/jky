@@ -10,10 +10,10 @@ import java.util.*
 object UUIDUtil {
 
     fun getUUID(name:String):String{
-        return UUID(name.hashCode().toLong(),UUID.randomUUID().hashCode().toLong()).toString()
+        return UUID(name.hashCode().toLong(),UUID.randomUUID().hashCode().toLong()).toString().replace("-","")
     }
 
     fun getUUID():String{
-        return UUID.randomUUID().toString()
+        return UUID.randomUUID().toString().replace("-","")
     }
 }

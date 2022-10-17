@@ -6,6 +6,7 @@ package com.sribs.common.bean.net.v3
  * description:
  */
 data class V3UploadModuleReq(
+    val buildingId:String,
     var drawings: List<V3UploadDrawingReq>,
     var inspectors: List<String>,
     var isChanged: Boolean,

@@ -14,6 +14,7 @@ import com.baidu.mapapi.map.*
 import com.baidu.mapapi.model.LatLng
 import com.baidu.mapapi.utils.CoordinateConverter
 import com.cbj.sdk.databinding.LayoutBaseListMvpBinding
+import com.cbj.sdk.libbase.rxbus.RxBus
 import com.cbj.sdk.libbase.utils.LOG
 import com.cbj.sdk.libui.mvp.BaseListFragment
 import com.cbj.sdk.libui.mvp.adapter.BaseListAdapter
@@ -25,6 +26,7 @@ import com.sribs.bdd.databinding.ItemMainListBinding
 import com.sribs.bdd.module.main.IMainListContrast
 import com.sribs.bdd.module.main.MainListPresenter
 import com.sribs.bdd.ui.adapter.MainListAdapter
+import com.sribs.bdd.v3.event.RefreshProjectListEvent
 import com.sribs.common.bean.db.DrawingBean
 import com.sribs.common.bean.db.UnitBean
 import com.sribs.common.ui.widget.CommonLinearDividerItemDecoration
@@ -101,6 +103,12 @@ class MainMapFragment:BaseListFragment<MainProjectBean, ItemMainListBinding>(R.l
             }
         }
 
+        RxBus.getDefault().toObservable<RefreshProjectListEvent>(RefreshProjectListEvent::class.java)
+            .subscribe {
+                if (it.isRefresh) {
+                    mPresenter.getProjectList()
+                }
+            }
     }
 
     override fun getAdapter(): BaseListAdapter<MainProjectBean, ItemMainListBinding> = mAdapter

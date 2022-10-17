@@ -77,7 +77,7 @@ public class DrawPDFMenuAdapter extends BaseAdapter {
         vh.text.setText(drawPDFMenuModule.getText());
         vh.img.setBackgroundResource(drawPDFMenuModule.getIcon());
 
-        if(!mChecked){
+      /*  if(!mChecked){
             vh.root.setEnabled(true);
             vh.root.setBackgroundResource(R.drawable.draw_menu_item_no_bg);
         }else {
@@ -86,25 +86,23 @@ public class DrawPDFMenuAdapter extends BaseAdapter {
             }else {
                 vh.root.setEnabled(false);
             }
-        }
-/*
+        }*/
+
         if (mSelect != -1 && mSelect == position) {
             if(mChecked){
                 vh.root.setBackgroundResource(R.drawable.draw_menu_item_yes_bg);
             }else {
                 vh.root.setBackgroundResource(R.drawable.draw_menu_item_no_bg);
             }
-            vh.root.setBackgroundResource(R.drawable.draw_menu_item_yes_bg);
-            vh.root.setEnabled(true);
         } else {
             vh.root.setBackgroundResource(R.drawable.draw_menu_item_no_bg);
-            vh.root.setEnabled(false);
-        }*/
+        }
+
         if(mItemClickListener != null){
             vh.root.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mChecked = !mChecked;
+                    mChecked = true;
                     mSelect = position;
                     notifyDataSetChanged();
                     mItemClickListener.onItemClick(position,mChecked);

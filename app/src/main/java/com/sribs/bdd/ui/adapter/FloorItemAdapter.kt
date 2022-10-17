@@ -51,6 +51,7 @@ class FloorItemAdapter : BaseListAdapter<BuildingModule, ItemFloorDetailBinding>
             }
             "非居民类检测测量" -> {
                 text = "非居民类检测测量"
+                routing = com.sribs.common.ARouterPath.BLD_DRW_DMG_DIAL_REC_FGT
             }
             else -> {
                 text = ""

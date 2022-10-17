@@ -117,7 +117,7 @@ class ProjectProjectPresenter : BasePresenter(), IProjectContrast.IProjectPresen
             it.inspector = inspector
             it.updateTime = Date(java.util.Date().time)
         }
-        addDisposable(mDb.getProjectOnce(name).toObservable()
+        mDb.getProjectOnce(name).toObservable()
             .subscribeOn(Schedulers.computation())
             .observeOn(Schedulers.computation())
             .flatMap {
@@ -144,7 +144,6 @@ class ProjectProjectPresenter : BasePresenter(), IProjectContrast.IProjectPresen
             }, {
                 it.printStackTrace()
             })
-        )
     }
 
     /**

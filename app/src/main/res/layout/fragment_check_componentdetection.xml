@@ -34,8 +34,8 @@
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/check_fab"
-        android:layout_width="@dimen/_30sdp"
-        android:layout_height="@dimen/_30sdp"
+        android:layout_width="@dimen/_35sdp"
+        android:layout_height="@dimen/_35sdp"
         android:layout_marginRight="@dimen/_20sdp"
         android:layout_marginBottom="@dimen/_30sdp"
         android:clickable="true"
@@ -43,7 +43,7 @@
         android:scaleType="fitXY"
         android:src="@mipmap/icon_white_pen"
         app:backgroundTint="@color/blue_800"
-        app:fabCustomSize="@dimen/_30sdp"
+        app:fabCustomSize="@dimen/_35sdp"
         app:layout_anchorGravity="bottom|right|end"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"

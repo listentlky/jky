@@ -15,5 +15,5 @@ data class V3VersionListRes(
     @SerializedName("parentVersion") var parentVersion: Int,
     @SerializedName("version") var version: Int,
     @SerializedName("inspectors") var inspectors: List<String>,
-    @SerializedName("createTime") var createTime: String
+ //   @SerializedName("createTime") var createTime: String
 )

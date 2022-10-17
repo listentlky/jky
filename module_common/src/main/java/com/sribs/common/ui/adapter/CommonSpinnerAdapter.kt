@@ -77,6 +77,13 @@ class CommonSpinnerAdapter<T>(var mContext: Context, var list:Array<T>, @LayoutR
                         it.isCheck = !ctv.isChecked
                     }
                 }
+            }else if(b is V3VersionBean){
+                list.forEachIndexed { index, it ->
+                    (it as V3VersionBean).isCheck = false
+                    if (index == position){
+                        it.isCheck = !ctv.isChecked
+                    }
+                }
             }
 
             ctv.isChecked = !ctv.isChecked

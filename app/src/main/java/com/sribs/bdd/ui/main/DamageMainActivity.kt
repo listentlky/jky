@@ -209,7 +209,10 @@ class DamageMainActivity :BaseActivity(),IMainListContrast.IMainView{
                             showToast(getString(R.string.error_no_local))
                             return@showBottomDialog
                         }
-                        mPresenter.uploadProject(beanMain)
+                        showPb(true)
+                        mPresenter.uploadProject(beanMain){
+                            showPb(false)
+                        }
                         /*ARouter.getInstance().build(com.sribs.common.ARouterPath.PRO_CREATE_ATY)
                             .withInt(com.sribs.common.ARouterPath.VAL_COMMON_LOCAL_ID,beanMain.localId.toInt())
                             .navigation()*/
@@ -349,14 +352,18 @@ class DamageMainActivity :BaseActivity(),IMainListContrast.IMainView{
     }
 
     private fun showPb(b:Boolean){
-        if (b){
-            mBinding.pb.visibility = View.VISIBLE
-            window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
-        }else{
-            mBinding.pb.visibility = View.GONE
-            window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
-        }
+        runOnUiThread(object :Runnable{
+            override fun run() {
+                if (b){
+                    mBinding.pb.visibility = View.VISIBLE
+                    window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+                }else{
+                    mBinding.pb.visibility = View.GONE
+                    window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+                }
+            }
+        })
     }
 
     private fun showFab(b:Boolean){

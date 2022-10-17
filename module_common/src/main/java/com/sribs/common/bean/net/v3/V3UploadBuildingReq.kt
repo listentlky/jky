@@ -15,6 +15,7 @@ data class V3UploadBuildingReq (
     var leaderName:String,
     var moduleIds:List<String>,
     var modules:List<V3UploadModuleReq>,
+    var drawings:List<V3UploadDrawingReq>,
     var parentVersion:Long,
     var projectId:String,
     var superiorVersion:Long,

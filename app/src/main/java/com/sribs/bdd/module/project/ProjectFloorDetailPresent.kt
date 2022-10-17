@@ -212,7 +212,8 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
                             it.inspectors,
                             it.parentVersion,
                             it.version,
-                            it.createTime
+                         //   it.createTime
+                            ""+System.currentTimeMillis()
                         )
                     }))
                 }, {
@@ -280,7 +281,7 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
         var aboveGroundNumber: Int? = 0
         var underGroundNumber: Int? = 0
 
-        addDisposable(mDb.getLocalBuildingOnce(buildingId).toObservable()
+       mDb.getLocalBuildingOnce(buildingId).toObservable()
             .subscribeOn(Schedulers.computation())
             .observeOn(Schedulers.computation())
             .flatMap {
@@ -323,24 +324,33 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 LogUtils.d("本地楼层model创建成功 " + it)
-                createModuleFloor(
-                    it,
-                    mModuleUUID!!,
-                    moduleName!!,
-                    projectId,
-                    projectUUID,
-                    buildingId,
-                    buildingUUID,
-                    remoteId,
-                    mInspectors,
-                    mLeader,
-                    aboveGroundNumber,
-                    underGroundNumber
-                )
+                if(isCopyFloorDrawing(moduleName)) {
+                    createModuleFloor(
+                        it,
+                        mModuleUUID!!,
+                        moduleName!!,
+                        projectId,
+                        projectUUID,
+                        buildingId,
+                        buildingUUID,
+                        remoteId,
+                        mInspectors,
+                        mLeader,
+                        aboveGroundNumber,
+                        underGroundNumber
+                    )
+                }
             }, {
                 LogUtils.d("本地楼层model创建失败 : " + it)
             })
-        )
+    }
+
+    fun isCopyFloorDrawing(moduleName:String?):Boolean{
+        if(moduleName == "建筑结构复核" ||
+            moduleName == "构建检测"){
+            return true
+        }
+        return false
     }
 
     fun createModuleFloor(
@@ -357,6 +367,7 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
         aboveGroundNumber: Int?,
         underGroundNumber: Int?
     ) {
+        LogUtils.d("copy 层关系图纸")
 
         mDb.getLocalFloorsInTheBuilding(buildingId).toObservable()
             .subscribeOn(Schedulers.computation())
@@ -407,7 +418,7 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
                         })
                 )
 
-                if (Config.isNetAvailable) {
+            /*    if (Config.isNetAvailable) {
                     LogUtils.d("有网进行云端模块创建: ")
                     var floorDrawingsMap: HashMap<String?, Any?> = HashMap()
                     var inspectorList: List<String> =
@@ -438,7 +449,7 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
                             })
                     )
 
-                }
+                }*/
 
             }, {
                 LogUtils.d("存储到model 楼层表失败 : " + it)

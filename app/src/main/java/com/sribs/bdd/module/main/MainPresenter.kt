@@ -2,8 +2,10 @@ package com.sribs.bdd.module.main
 
 import android.content.Context
 import com.cbj.sdk.libbase.exception.MsgThrowable
+import com.cbj.sdk.libbase.rxbus.RxBus
 import com.cbj.sdk.libbase.utils.LOG
 import com.cbj.sdk.libnet.http.HttpManager
+import com.cbj.sdk.libnet.http.bean.ResultBean
 import com.cbj.sdk.libui.mvp.moudles.IBaseView
 import com.google.gson.Gson
 import com.sribs.bdd.R
@@ -12,6 +14,7 @@ import com.sribs.bdd.bean.BuildingModule
 import com.sribs.bdd.bean.MainProjectBean
 import com.sribs.bdd.bean.UnitConfigType
 import com.sribs.bdd.module.BaseUnitConfigPresenter
+import com.sribs.bdd.v3.event.RefreshProjectListEvent
 import com.sribs.bdd.v3.util.LogUtils
 import com.sribs.common.bean.HistoryBean
 import com.sribs.common.bean.V3VersionBean
@@ -20,14 +23,12 @@ import com.sribs.common.bean.net.*
 import com.sribs.common.bean.net.v3.*
 import com.sribs.common.bean.v3.v3ModuleFloorDbBean
 import com.sribs.common.net.HttpApi
-import com.sribs.common.utils.TimeUtil
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import org.json.JSONObject
 import java.io.File
 import java.sql.Date
 import java.util.*
@@ -38,82 +39,100 @@ import kotlin.collections.ArrayList
  * @author elijah
  * @Description
  */
-class MainPresenter:BaseUnitConfigPresenter(),IMainListContrast.IMainPresenter {
+class MainPresenter : BaseUnitConfigPresenter(), IMainListContrast.IMainPresenter {
 
-    private var mView:IMainListContrast.IMainView?=null
+    private var mView: IMainListContrast.IMainView? = null
 
     private val mStateArr by lazy {
         mView?.getContext()?.resources?.getStringArray(R.array.main_project_status) ?: emptyArray()
     }
+
     /**
      * 三期查询项目版本列表
      */
-    fun projectV3GetConfigVersionList(remoteProjectId: String,cb: (ArrayList<V3VersionBean>?) -> Unit){
-        addDisposable(HttpManager.instance.getHttpService<HttpApi>()
-            .getV3ProjectVersionList(remoteProjectId)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-                checkResult(it)
-                LogUtils.d("查询项目版本列表："+it)
-                cb(ArrayList(it.data!!.records.map {
-                    V3VersionBean(
-                        it.projectId,
-                        it.projectName,
-                        it.leaderName,
-                        it.leaderId,
-                        it.inspectors,
-                        it.parentVersion,
-                        it.version,
-                        it.createTime
-                    )
-                }))
-            },{
-                LogUtils.d("查询项目版本列表失败："+it)
-                mView?.onMsg(ERROR_HTTP)
-                cb(null)
-                it.printStackTrace()
-            }))
+    fun projectV3GetConfigVersionList(
+        remoteProjectId: String,
+        cb: (ArrayList<V3VersionBean>?) -> Unit
+    ) {
+        addDisposable(
+            HttpManager.instance.getHttpService<HttpApi>()
+                .getV3ProjectVersionList(remoteProjectId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    checkResult(it)
+                    LogUtils.d("查询项目版本列表：" + it)
+                    cb(ArrayList(it.data!!.map {
+                        V3VersionBean(
+                            it.projectId,
+                            it.projectName,
+                            it.leaderName,
+                            it.leaderId,
+                            //     it.inspectors,
+                            ArrayList<String>(),
+                            it.parentVersion,
+                            it.version,
+                            //        it.createTime
+                            "" + System.currentTimeMillis()
+                        )
+                    }))
+                }, {
+                    LogUtils.d("查询项目版本列表失败：" + it)
+                    mView?.onMsg(ERROR_HTTP)
+                    cb(null)
+                    it.printStackTrace()
+                })
+        )
     }
 
 
-    override fun projectGetConfigHistory(remoteProjectId: String, cb: (ArrayList<HistoryBean>?) -> Unit) {
-        addDisposable(HttpManager.instance.getHttpService<HttpApi>()
-            .getConfigHistoryList(HistoryListReq(projectId = remoteProjectId))
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-                checkResult(it)
-                LOG.I("123","records ${it.data!!.records}")
-                cb(ArrayList(it.data!!.records.map { b->
-                    HistoryBean(
-                        b.historyId,null,null,b.updateTime,b.userName
-                    )
-                }))
-            },{
-                mView?.onMsg(ERROR_HTTP)
-                cb(null)
-                it.printStackTrace()
-            }))
+    override fun projectGetConfigHistory(
+        remoteProjectId: String,
+        cb: (ArrayList<HistoryBean>?) -> Unit
+    ) {
+        addDisposable(
+            HttpManager.instance.getHttpService<HttpApi>()
+                .getConfigHistoryList(HistoryListReq(projectId = remoteProjectId))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    checkResult(it)
+                    LOG.I("123", "records ${it.data!!.records}")
+                    cb(ArrayList(it.data!!.records.map { b ->
+                        HistoryBean(
+                            b.historyId, null, null, b.updateTime, b.userName
+                        )
+                    }))
+                }, {
+                    mView?.onMsg(ERROR_HTTP)
+                    cb(null)
+                    it.printStackTrace()
+                })
+        )
     }
 
-    override fun projectGetRecordHistory(remoteProjectId: String, cb: (ArrayList<HistoryBean>?) -> Unit) {
-        addDisposable(HttpManager.instance.getHttpService<HttpApi>()
-            .getRecordHistoryList(HistoryListReq(projectId = remoteProjectId))
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-                checkResult(it)
-                cb(ArrayList(it.data!!.records.map { b->
-                    HistoryBean(
-                        b.configHistoryId,b.recordHistoryId,null,b.updateTime,b.userName
-                    )
-                }))
-            },{
-                mView?.onMsg(ERROR_HTTP)
-                cb(null)
-                it.printStackTrace()
-            }))
+    override fun projectGetRecordHistory(
+        remoteProjectId: String,
+        cb: (ArrayList<HistoryBean>?) -> Unit
+    ) {
+        addDisposable(
+            HttpManager.instance.getHttpService<HttpApi>()
+                .getRecordHistoryList(HistoryListReq(projectId = remoteProjectId))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    checkResult(it)
+                    cb(ArrayList(it.data!!.records.map { b ->
+                        HistoryBean(
+                            b.configHistoryId, b.recordHistoryId, null, b.updateTime, b.userName
+                        )
+                    }))
+                }, {
+                    mView?.onMsg(ERROR_HTTP)
+                    cb(null)
+                    it.printStackTrace()
+                })
+        )
     }
 
     private fun deleteProjectAllInfo(localProjectId: Long, cb: (Boolean) -> Unit) {
@@ -141,7 +160,7 @@ class MainPresenter:BaseUnitConfigPresenter(),IMainListContrast.IMainPresenter {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 cb(it)
-            },{
+            }, {
                 cb(false)
                 it.printStackTrace()
             })
@@ -151,11 +170,8 @@ class MainPresenter:BaseUnitConfigPresenter(),IMainListContrast.IMainPresenter {
     /**
      * 上传项目配置
      */
-    fun uploadProject(bean: MainProjectBean){
-        LogUtils.d("上传项目配置： "+bean)
-
-        var inspectorList: List<String> =
-        if (bean.inspector.contains("、")) bean.inspector.split("、") else Arrays.asList(bean.inspector)
+    fun uploadProject(bean: MainProjectBean, cb: (Boolean) -> Unit) {
+        LogUtils.d("上传项目配置： " + bean)
 
         var buildingList = ArrayList<BuildingBean>()
 
@@ -167,7 +183,7 @@ class MainPresenter:BaseUnitConfigPresenter(),IMainListContrast.IMainPresenter {
 
         var drawingList = ArrayList<String>()
 
-        addDisposable(mDb.getBuildingByProjectId(bean.localId)
+        mDb.getBuildingByProjectId(bean.localId)
             .subscribeOn(Schedulers.computation())
             .observeOn(Schedulers.computation())
             .flatMap {
@@ -198,7 +214,7 @@ class MainPresenter:BaseUnitConfigPresenter(),IMainListContrast.IMainPresenter {
                         drawingList.add(it.localAbsPath!!)
                     }
                 }
-                var list  = ArrayList(it.map { b ->
+                var list = ArrayList(it.map { b ->
                     BuildingModule(
                         b.projectUUID,
                         b.projectId,
@@ -259,160 +275,336 @@ class MainPresenter:BaseUnitConfigPresenter(),IMainListContrast.IMainPresenter {
                 })
                 buildingModuleFloorList.addAll(list)
 
-                LogUtils.d("获取项目下所有楼栋: "+buildingList)
+                LogUtils.d("获取项目下所有楼栋: " + buildingList)
 
-                LogUtils.d("获取项目下所有楼栋层: "+buildingFloorList)
+                LogUtils.d("获取项目下所有楼栋层: " + buildingFloorList)
 
-                LogUtils.d("获取项目下所有模块: "+buildingModuleList)
+                LogUtils.d("获取项目下所有模块: " + buildingModuleList)
 
-                LogUtils.d("获取项目下所有模块层: "+buildingModuleFloorList)
+                LogUtils.d("获取项目下所有模块层: " + buildingModuleFloorList)
 
-                LogUtils.d("获取项目下需要上传的图纸: "+drawingList)
+                LogUtils.d("获取项目下需要上传的图纸: " + drawingList)
+
 
                 var parts = ArrayList<MultipartBody.Part>()
 
-                drawingList.forEach { path->
+                drawingList.forEach { path ->
                     var fileBody = RequestBody.create(MediaType.parse("image/*"), File(path))
-                    var filePart = MultipartBody.Part.createFormData("files",path,fileBody)
+                    var filePart = MultipartBody.Part.createFormData("files", path, fileBody)
                     parts.add(filePart)
                 }
 
-                HttpManager.instance.getHttpService<HttpApi>()
-                    .uploadFile(parts)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(Schedulers.computation())
-                    .subscribe({ res->
-                        LogUtils.d("文件上传成功: ${res}")
-
-                        var V3UploadBuildingList = ArrayList<String>()
-
-                        var V3UploadBuildingModuleList = ArrayList<String>()
-
-                        var V3UploadBuildingReq = ArrayList<V3UploadBuildingReq>()
-
-                        var V3UploadModuleReq = ArrayList<V3UploadModuleReq>()
-
-                        buildingModuleList.forEach {
-                            V3UploadBuildingModuleList.add(if(it.remoteId.isNullOrEmpty()) it.moduleUUID!! else it.remoteId!!)
-                            var V3UploadDrawingReq = ArrayList<V3UploadDrawingReq>()
-                            it.drawings?.forEach { b->
-
-                                var resId = res.data?.filter {
-                                    it.fileName.equals(b.localAbsPath)
-                                }
-
-                                V3UploadDrawingReq.add(
-                                    V3UploadDrawingReq(
-                                        if(it.buildingRemoteId.isNullOrEmpty()) it.buildingUUID!! else it.buildingRemoteId!!,
-                                        "",
-                                        b.fileName!!,
-                                        b.fileType!!,
-                                        inspectorList,
-                                        if(it.remoteId.isNullOrEmpty()) it.moduleUUID!! else it.remoteId!!,
-                                        resId?.get(0)?.resId?:"",
-                                        "",
-                                        /*  b.damage?:ArrayList()*/
-                                    ))
-                            }
-
-                            V3UploadModuleReq.add(
-                                com.sribs.common.bean.net.v3.V3UploadModuleReq(
-                                    V3UploadDrawingReq,
-                                    inspectorList,
-                                    it.isChanged?:false,
-                                    if(it.remoteId.isNullOrEmpty()) it.moduleUUID!! else it.remoteId!!,
-                                    it.moduleName!!,
-                                    it.parentVersion!!,
-                                    it.superiorVersion!!,
-                                    it.version!!
-                                )
+                if (parts.size > 0) {
+                    HttpManager.instance.getHttpService<HttpApi>()
+                        .uploadFile(parts)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(Schedulers.computation())
+                        .subscribe({ res ->
+                            LogUtils.d("文件上传成功: ${res}")
+                            makeUploadProject(
+                                buildingList, buildingFloorList, buildingModuleList,
+                                buildingModuleFloorList, res.data, bean, cb
                             )
+                        }, {
+                            LogUtils.d("文件上传失败: ${it}")
+                            cb(false)
+                        })
+                } else {
+                    makeUploadProject(
+                        buildingList, buildingFloorList, buildingModuleList,
+                        buildingModuleFloorList, ArrayList(), bean, cb
+                    )
+                }
+            }, {
+                cb(false)
+            })
 
-                        }
-
-                        buildingList.forEach {
-                            V3UploadBuildingList.add(if(it.remoteId.isNullOrEmpty()) it.UUID!! else it.remoteId!!)
-                            V3UploadBuildingReq.add(
-                                V3UploadBuildingReq(
-                                    if(it.remoteId.isNullOrEmpty()) it.UUID!! else it.remoteId!!,
-                                    it.bldName!!,
-                                    it.bldType!!,
-                                    inspectorList,
-                                    it.isChanged?:false,
-                                    Dict.getLeaderId(it.leader!!)!!,
-                                    it.leader!!,
-                                    V3UploadBuildingModuleList,
-                                    V3UploadModuleReq,
-                                    it.parentVersion?:0,
-                                    if(it.projectRemoteId.isNullOrEmpty()) it.projectUUID!! else it.projectRemoteId!!,
-                                    it.superiorVersion?:0,
-                                    it.version?:System.currentTimeMillis(),
-                                )
-                            )
-                        }
-
-                        var V3UploadProjectReq = V3UploadProjectReq(
-                            V3UploadBuildingList,
-                            V3UploadBuildingReq,
-                            bean.createTime,
-                            inspectorList,
-                            true,
-                            Dict.getLeaderId(bean.leader!!)!!,
-                            bean.leader!!,
-                            bean.parentVersion,
-                            if(bean.remoteId.isNullOrEmpty()) bean.localUUID!! else bean.remoteId!!,
-                            bean.address,
-                            bean.version
-                        )
-
-                        LogUtils.d("生成上传数据: "+Gson().toJson(V3UploadProjectReq))
-
-                        addDisposable(HttpManager.instance.getHttpService<HttpApi>()
-                            .createOrUpdateProject(V3UploadProjectReq)
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe({
-                                mView?.onMsg("项目上传成功")
-                            }, {
-                                mView?.onMsg("上传项目失败: "+checkError(it))
-
-                            }))
-
-                    },{
-                        LogUtils.d("文件上传失败: ${it}")
-                    })
-
-                    },{
-
-            }))
-
-     /*   ProjectCreateReq().also {
-            it.inspectors = inspectorList
-            it.leaderId = Dict.getLeaderId(bean.leader)!!
-            it.leaderName = bean.leader
-            it.projectName = bean.address
-            it.projectId = bean.localUUID
-        }*/
+        /*   ProjectCreateReq().also {
+               it.inspectors = inspectorList
+               it.leaderId = Dict.getLeaderId(bean.leader)!!
+               it.leaderName = bean.leader
+               it.projectName = bean.address
+               it.projectId = bean.localUUID
+           }*/
 
     }
 
-    private fun updateProject(bean: MainProjectBean):Observable<Long>{
-        var b = bean.remoteData?:throw NullPointerException("remoteData==null")
-        return mDb.updateProject( ProjectBean(
+    fun isCopyFloorDrawing(moduleName: String?): Boolean {
+        if (moduleName == "建筑结构复核" ||
+            moduleName == "构建检测"
+        ) {
+            return true
+        }
+        return false
+    }
+
+    var buildingList = ArrayList<BuildingBean>()
+
+    var buildingFloorList = ArrayList<FloorBean>()
+
+    var buildingModuleList = ArrayList<BuildingModule>()
+
+    var buildingModuleFloorList = ArrayList<v3ModuleFloorDbBean>()
+
+    private fun makeUploadProject(
+        buildingList: ArrayList<BuildingBean>,
+        buildingFloorList: ArrayList<FloorBean>,
+        buildingModuleList: ArrayList<BuildingModule>,
+        buildingModuleFloorList: ArrayList<v3ModuleFloorDbBean>, res: List<V3UploadDrawingRes>?,
+        bean: MainProjectBean,
+        cb: (Boolean) -> Unit
+    ) {
+
+        var inspectorList: List<String> =
+            if (bean.inspector.contains("、")) bean.inspector.split("、") else Arrays.asList(bean.inspector)
+
+        var V3UploadBuildingList = ArrayList<String>()
+
+        var V3UploadBuildingModuleList = ArrayList<String>()
+
+        var V3UploadBuildingReq = ArrayList<V3UploadBuildingReq>()
+
+        var V3UploadModuleReq = ArrayList<V3UploadModuleReq>()
+
+
+        buildingModuleList.forEach {
+            V3UploadBuildingModuleList.add(if (it.remoteId.isNullOrEmpty()) it.moduleUUID!! else it.remoteId!!)
+            var V3UploadDrawingReq = ArrayList<V3UploadDrawingReq>()
+
+            // 模块无层概念下图纸损伤数据
+            if (isCopyFloorDrawing(it.moduleName)) {
+
+                it.drawings?.forEachIndexed { index, b ->
+
+                    var V3UploadDamageReq = ArrayList<V3UploadDamageReq>()
+
+                    var resId = res?.filter {
+                        it.fileName.equals(b.localAbsPath)
+                    }
+
+                    b.damage?.forEach { d ->
+                        V3UploadDamageReq.add(
+                            V3UploadDamageReq(
+                                d.annotRef,
+                                d.type ?: "",
+                                Gson().toJson(d),
+                                resId?.get(0)?.resId ?: "",
+                                b.fileName ?: "",
+                                b.floorName ?: "",
+                                inspectorList,
+                                if (it.remoteId.isNullOrEmpty()) it.moduleUUID!! else it.remoteId!!,
+                                it.moduleName ?: "",
+                                it.version ?: System.currentTimeMillis()
+                            )
+                        )
+                    }
+
+                    V3UploadDrawingReq.add(
+                        V3UploadDrawingReq(
+                            if (it.buildingRemoteId.isNullOrEmpty()) it.buildingUUID!! else it.buildingRemoteId!!,
+                            "",
+                            b.fileName!!,
+                            b.fileType!!,
+                            "",
+                            index,
+                            inspectorList,
+                            if (it.remoteId.isNullOrEmpty()) it.moduleUUID!! else it.remoteId!!,
+                            resId?.get(0)?.resId ?: "",
+                            "",
+                            V3UploadDamageReq
+                        )
+                    )
+                }
+            } else { //层概念下的图纸
+
+                var currentModuleFloorList = buildingModuleFloorList.filter { bb ->
+                    it.moduleid == bb.moduleId
+                }
+
+                currentModuleFloorList.forEachIndexed { index, cc ->
+                    cc.drawingsList?.forEach { bbb ->
+                        var V3UploadDamageReq = ArrayList<V3UploadDamageReq>()
+
+                        var resId = res?.filter {
+                            it.fileName.equals(bbb.localAbsPath)
+                        }
+
+                        bbb.damage?.forEach { ddd ->
+                            V3UploadDamageReq.add(
+                                V3UploadDamageReq(
+                                    ddd.annotRef,
+                                    ddd.type ?: "",
+                                    Gson().toJson(ddd),
+                                    resId?.get(0)?.resId ?: "",
+                                    bbb.fileName ?: "",
+                                    bbb.floorName ?: "",
+                                    inspectorList,
+                                    if (it.remoteId.isNullOrEmpty()) it.moduleUUID!! else it.remoteId!!,
+                                    it.moduleName ?: "",
+                                    it.version ?: System.currentTimeMillis()
+                                )
+                            )
+                        }
+
+                        V3UploadDrawingReq.add(
+                            V3UploadDrawingReq(
+                                if (it.buildingRemoteId.isNullOrEmpty()) it.buildingUUID!! else it.buildingRemoteId!!,
+                                "",
+                                bbb.fileName!!,
+                                bbb.fileType!!,
+                                cc.floorName ?: "",
+                                index,
+                                inspectorList,
+                                if (it.remoteId.isNullOrEmpty()) it.moduleUUID!! else it.remoteId!!,
+                                resId?.get(0)?.resId ?: "",
+                                "",
+                                V3UploadDamageReq
+                            )
+                        )
+                    }
+                }
+            }
+
+            V3UploadModuleReq.add(
+                com.sribs.common.bean.net.v3.V3UploadModuleReq(
+                    if (it.buildingRemoteId.isNullOrEmpty()) it.buildingUUID!! else it.buildingRemoteId!!,
+                    V3UploadDrawingReq,
+                    inspectorList,
+                    it.isChanged ?: false,
+                    if (it.remoteId.isNullOrEmpty()) it.moduleUUID!! else it.remoteId!!,
+                    it.moduleName!!,
+                    it.parentVersion!!,
+                    it.superiorVersion!!,
+                    it.version!!
+                )
+            )
+        }
+
+        buildingList.forEach {
+            var V3UploadDrawingReq = ArrayList<V3UploadDrawingReq>()
+
+            it.drawing?.forEachIndexed { index, drawingV3Bean ->
+                var resId = res?.filter {
+                    it.fileName.equals(drawingV3Bean.localAbsPath)
+                }
+
+                V3UploadDrawingReq.add(
+                    V3UploadDrawingReq(
+                        if (it.remoteId.isNullOrEmpty()) it.UUID!! else it.remoteId!!,
+                        "",
+                        drawingV3Bean.fileName!!,
+                        drawingV3Bean.fileType!!,
+                        "",
+                        index,
+                        inspectorList,
+                        "",
+                        resId?.get(0)?.resId ?: "",
+                        "",
+                        ArrayList()
+                    )
+                )
+            }
+
+            var currentBuildingFloorList = buildingFloorList.filter { cc ->
+                it.id == cc.bldId
+            }
+
+            currentBuildingFloorList.forEachIndexed { index, floorBean ->
+
+                floorBean.drawing?.forEach { dd ->
+                    var resId = res?.filter { ff ->
+                        ff.fileName.equals(dd.localAbsPath)
+                    }
+
+                    V3UploadDrawingReq.add(
+                        V3UploadDrawingReq(
+                            if (it.remoteId.isNullOrEmpty()) it.UUID!! else it.remoteId!!,
+                            "",
+                            dd.fileName!!,
+                            dd.fileType!!,
+                            floorBean.floorName ?: "",
+                            index,
+                            inspectorList,
+                            "",
+                            resId?.get(0)?.resId ?: "",
+                            "",
+                            ArrayList()
+                        )
+                    )
+
+                }
+            }
+
+            V3UploadBuildingList.add(if (it.remoteId.isNullOrEmpty()) it.UUID!! else it.remoteId!!)
+            V3UploadBuildingReq.add(
+                V3UploadBuildingReq(
+                    if (it.remoteId.isNullOrEmpty()) it.UUID!! else it.remoteId!!,
+                    it.bldName!!,
+                    it.bldType!!,
+                    inspectorList,
+                    it.isChanged ?: false,
+                    Dict.getLeaderId(it.leader!!)!!,
+                    it.leader!!,
+                    V3UploadBuildingModuleList,
+                    V3UploadModuleReq,
+                    V3UploadDrawingReq,
+                    it.parentVersion ?: 0,
+                    if (it.projectRemoteId.isNullOrEmpty()) it.projectUUID!! else it.projectRemoteId!!,
+                    it.superiorVersion ?: 0,
+                    it.version ?: System.currentTimeMillis(),
+                )
+            )
+        }
+
+        var V3UploadProjectReq = V3UploadProjectReq(
+            V3UploadBuildingList,
+            V3UploadBuildingReq,
+            //            TimeUtil.dateToStamp(bean.createTime),
+            inspectorList,
+            true,
+            Dict.getLeaderId(bean.leader!!)!!,
+            bean.leader!!,
+            bean.parentVersion,
+            if (bean.remoteId.isNullOrEmpty()) bean.localUUID!! else bean.remoteId!!,
+            bean.address,
+            bean.version
+        )
+
+        LogUtils.d("生成上传数据: " + Gson().toJson(V3UploadProjectReq))
+
+        HttpManager.instance.getHttpService<HttpApi>()
+            .saveV3Project(V3UploadProjectReq)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                mView?.onMsg("项目上传成功")
+                cb(true)
+            }, {
+                mView?.onMsg("上传项目失败: " + checkError(it))
+                cb(false)
+            })
+
+    }
+
+
+    private fun updateProject(bean: MainProjectBean): Observable<Long> {
+        var b = bean.remoteData ?: throw NullPointerException("remoteData==null")
+        return mDb.updateProject(ProjectBean(
             name = b!!.projectName,
             leader = b.leaderName,
             inspector = b.inspectors?.joinToString(separator = "、"),
             buildNo = "",
-            createTime = Date(TimeUtil.YMD_HMS.parse(b.createTime).time),
-            updateTime = Date(TimeUtil.YMD_HMS.parse(b.updateTime).time),
+            //      createTime = Date(TimeUtil.YMD_HMS.parse(b.createTime).time),
+            //      updateTime = Date(TimeUtil.YMD_HMS.parse(b.updateTime).time),
             remoteId = b.projectId
         ).also {
-            if (bean.localId>0){
+            if (bean.localId > 0) {
                 it.id = bean.localId
             }
-            var status =  mView?.getContext()?.resources?.getStringArray(R.array.main_project_status)?.indexOf(bean.status)
-            if (status?:-1<0) status = null
-            if (status?:-1>=0){
+            var status = mView?.getContext()?.resources?.getStringArray(R.array.main_project_status)
+                ?.indexOf(bean.status)
+            if (status ?: -1 < 0) status = null
+            if (status ?: -1 >= 0) {
                 it.status = status
             }
         })
@@ -422,25 +614,27 @@ class MainPresenter:BaseUnitConfigPresenter(),IMainListContrast.IMainPresenter {
      * V3下载指定版本的项目
      */
     fun projectV3DownloadConfig(
-        beanMain:MainProjectBean,
-        remoteProjectId:String,
-        version:Int,
+        beanMain: MainProjectBean,
+        remoteProjectId: String,
+        version: Int,
         cb: (Boolean) -> Unit
-    ){
-        addDisposable(HttpManager.instance.getHttpService<HttpApi>()
-            .downloadV3ProjectVersionList(V3VersionDownloadReq(remoteProjectId,version))
-            .subscribeOn(Schedulers.io())
-            .observeOn(Schedulers.computation())
-            .subscribe({
-                LogUtils.d("下载的项目版本数据: "+it)
-                cb(true)
-            },{
-                cb(false)
-            }))
-            /*.concatMap {
-                LogUtils.d("下载的项目版本数据")
+    ) {
+        addDisposable(
+            HttpManager.instance.getHttpService<HttpApi>()
+                .downloadV3ProjectVersionList(V3VersionDownloadReq(remoteProjectId, version))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    LogUtils.d("下载的项目版本数据: " + it)
+                    cb(true)
+                }, {
+                    cb(false)
+                })
+        )
+        /*.concatMap {
+            LogUtils.d("下载的项目版本数据")
 
-            }*/
+        }*/
 
     }
 
@@ -449,7 +643,7 @@ class MainPresenter:BaseUnitConfigPresenter(),IMainListContrast.IMainPresenter {
         bean: MainProjectBean,
         cb: (Boolean) -> Unit
     ) {
-        var resConfig:ProjectConfigDownloadRes?=null
+        var resConfig: ProjectConfigDownloadRes? = null
         var resNo = 0;
         addDisposable(HttpManager.instance.getHttpService<HttpApi>()
             .projectConfigDownload(ProjectDownloadReq(historyId))
@@ -462,16 +656,16 @@ class MainPresenter:BaseUnitConfigPresenter(),IMainListContrast.IMainPresenter {
 
             }
             .map {
-                if (bean.localId>0)bean.localId else it
+                if (bean.localId > 0) bean.localId else it
             }
             .observeOn(Schedulers.computation())
             .concatMap { //更新 unit
-                checkUnitConfig(it,1,resConfig!!.configUnits)
+                checkUnitConfig(it, 1, resConfig!!.configUnits)
             }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 cb(it)
-            },{
+            }, {
                 mView?.onMsg(checkError(it))
                 cb(false)
             })
@@ -492,7 +686,7 @@ class MainPresenter:BaseUnitConfigPresenter(),IMainListContrast.IMainPresenter {
         TODO("Not yet implemented")
     }
 
-    private fun createPartNo(b:ConfigBean):String = when(b.configType) {
+    private fun createPartNo(b: ConfigBean): String = when (b.configType) {
         UnitConfigType.CONFIG_TYPE_FLOOR_BOTTOM.value -> b.floorNum + "层"
         UnitConfigType.CONFIG_TYPE_FLOOR_NORMAL.value -> b.floorNum + "层"
         UnitConfigType.CONFIG_TYPE_FLOOR_TOP.value -> b.floorNum + "层"
@@ -502,54 +696,60 @@ class MainPresenter:BaseUnitConfigPresenter(),IMainListContrast.IMainPresenter {
         else -> ""
     }
 
-    private fun updateHouseStatus(){
+    private fun updateHouseStatus() {
 
     }
 
 
-    private fun searchLocalConfig(projectId: Long, unitId: Long, remoteUnit:RecordUnit){
+    private fun searchLocalConfig(projectId: Long, unitId: Long, remoteUnit: RecordUnit) {
         mDb.getUnitConfigOnce(unitId).toObservable()
             .subscribe({
-                LOG.I("123","it=$it")
-                remoteUnit.parts.forEach { r->//查找configId
-                    var localConfigBean = it.find { local-> r.partNo.contains(createPartNo(local)) }
-                    if (localConfigBean!=null){
+                LOG.I("123", "it=$it")
+                remoteUnit.parts.forEach { r ->//查找configId
+                    var localConfigBean =
+                        it.find { local -> r.partNo.contains(createPartNo(local)) }
+                    if (localConfigBean != null) {
                         var configId = localConfigBean.configId
 
 
-
-                    }else{ //error 有记录缺没有配置
+                    } else { //error 有记录缺没有配置
                     }
                 }
-            },{
+            }, {
                 it.printStackTrace()
-            },{
+            }, {
 
             })
     }
 
-    private fun searchLocalUnit(units:List<RecordUnit>):Observable<Long>{
+    private fun searchLocalUnit(units: List<RecordUnit>): Observable<Long> {
         var obList = ArrayList<Observable<List<UnitBean>>>()
         units.forEach {
-            LOG.I("123","remoteId=${it.unitId}")
+            LOG.I("123", "remoteId=${it.unitId}")
             obList.add(mDb.getUnitOnce(it.unitId).toObservable())
         }
         return Observable.merge(obList)
             .subscribeOn(Schedulers.computation())
             .observeOn(Schedulers.computation())
             .flatMap {
-                if (it.isEmpty()){
+                if (it.isEmpty()) {
                     throw MsgThrowable("记录的单元id与配置的单元id不符")
                 }
                 var localUnit = it[0]
                 var projectId = localUnit.projectId!!
                 var unitId = localUnit.unitId!!
-                var remoteUnit = units.find { r-> r.unitId == localUnit.remoteId }
-                checkConfigRecord(projectId,unitId,remoteUnit!!.parts,remoteUnit.createTime,remoteUnit.updateTime)
+                var remoteUnit = units.find { r -> r.unitId == localUnit.remoteId }
+                checkConfigRecord(
+                    projectId,
+                    unitId,
+                    remoteUnit!!.parts,
+                    remoteUnit.createTime,
+                    remoteUnit.updateTime
+                )
             }
     }
 
-    private fun downloadProjectRecord(historyId: String,  cb:(Boolean)->Unit){
+    private fun downloadProjectRecord(historyId: String, cb: (Boolean) -> Unit) {
         var unitIdx = 0
         addDisposable(HttpManager.instance.getHttpService<HttpApi>()
             .projectRecordDownload(ProjectDownloadReq(historyId))
@@ -562,9 +762,9 @@ class MainPresenter:BaseUnitConfigPresenter(),IMainListContrast.IMainPresenter {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 unitIdx++
-                LOG.I("123","单元 idx:$unitIdx  更新:$it")
+                LOG.I("123", "单元 idx:$unitIdx  更新:$it")
                 cb(true)//更新了至少一个单元
-            },{
+            }, {
                 mView?.onMsg(checkError(it))
                 cb(false)
             })
@@ -577,11 +777,11 @@ class MainPresenter:BaseUnitConfigPresenter(),IMainListContrast.IMainPresenter {
         configHistoryId: String,
         recordHistoryId: String,
         bean: MainProjectBean,
-        cb:(Boolean)->Unit
+        cb: (Boolean) -> Unit
     ) {
-        projectDownLoadConfig(configHistoryId, bean){
-            LOG.I("123","downLoadProjectConfig  $it")
-            downloadProjectRecord(recordHistoryId,cb)
+        projectDownLoadConfig(configHistoryId, bean) {
+            LOG.I("123", "downLoadProjectConfig  $it")
+            downloadProjectRecord(recordHistoryId, cb)
         }
     }
 
@@ -592,28 +792,36 @@ class MainPresenter:BaseUnitConfigPresenter(),IMainListContrast.IMainPresenter {
             .subscribeOn(Schedulers.computation())
             .observeOn(Schedulers.computation())
             .flatMap {
-                it.forEach { u->
-                    var t = u.floorSize?.times(u.neighborSize?:0)
-                    allCount += t?:0
+                it.forEach { u ->
+                    var t = u.floorSize?.times(u.neighborSize ?: 0)
+                    allCount += t ?: 0
                 }
                 mDb.getHouseStatusByProjectOnce(projectId).toObservable()
             }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                var roomList = it.filter { s->s.houseType == 2 }
-                var noAccess = roomList.filter { s-> s.houseStatus?.contains("不让进")?:false && !(s.houseStatus?.contains("无人")?:false) }.count()
-                var noOne = roomList.filter { s-> !(s.houseStatus?.contains("不让进")?:false) && s.houseStatus?.contains("无人")?:false }.count()
-                var both = roomList.filter { s-> s.houseStatus?.contains("不让进")?:false && s.houseStatus?.contains("无人")?:false }.count()
-                var finish = roomList.filter { s-> s.isFinish == 1}.count()
+                var roomList = it.filter { s -> s.houseType == 2 }
+                var noAccess = roomList.filter { s ->
+                    s.houseStatus?.contains("不让进") ?: false && !(s.houseStatus?.contains("无人")
+                        ?: false)
+                }.count()
+                var noOne = roomList.filter { s ->
+                    !(s.houseStatus?.contains("不让进")
+                        ?: false) && s.houseStatus?.contains("无人") ?: false
+                }.count()
+                var both = roomList.filter { s ->
+                    s.houseStatus?.contains("不让进") ?: false && s.houseStatus?.contains("无人") ?: false
+                }.count()
+                var finish = roomList.filter { s -> s.isFinish == 1 }.count()
                 var res = ProjectSummaryRes(
                     allCount,
                     finish,
-                    noAccess+both,
-                    noOne+both,
-                    (finish-noAccess-noOne-both).toFloat()*100f / allCount
+                    noAccess + both,
+                    noOne + both,
+                    (finish - noAccess - noOne - both).toFloat() * 100f / allCount
                 )
                 cb(res)
-            },{
+            }, {
                 it.printStackTrace()
             })
     }
@@ -626,7 +834,7 @@ class MainPresenter:BaseUnitConfigPresenter(),IMainListContrast.IMainPresenter {
             .subscribe({
                 checkResult(it)
                 cb(it.data!!)
-            },{
+            }, {
                 mView?.onMsg(checkError(it))
             })
     }
@@ -634,9 +842,9 @@ class MainPresenter:BaseUnitConfigPresenter(),IMainListContrast.IMainPresenter {
     /**
      * 三期删除
      */
-    override fun projectDelete(beanMain:MainProjectBean) {
+    override fun projectDelete(beanMain: MainProjectBean) {
         //删除本地数据库
-        if(beanMain.localId>0) {
+        if (beanMain.localId > 0) {
             LogUtils.d("删除本地数据")
             var obList = ArrayList<Observable<Boolean>>()
             var projectId = beanMain.localId
@@ -666,10 +874,10 @@ class MainPresenter:BaseUnitConfigPresenter(),IMainListContrast.IMainPresenter {
                 })
         }
 
-        if(!beanMain.remoteId.isNullOrEmpty()) {
+        if (!beanMain.remoteId.isNullOrEmpty()) {
             //删除网络数据
             LogUtils.d("删除网络数据")
-            addDisposable(HttpManager.instance.getHttpService<HttpApi>()
+            HttpManager.instance.getHttpService<HttpApi>()
                 .deleteProject(
                     V3VersionDeleteReq(
                         beanMain.remoteId,
@@ -682,11 +890,11 @@ class MainPresenter:BaseUnitConfigPresenter(),IMainListContrast.IMainPresenter {
                 .subscribe({
                     checkResult(it)
                     LogUtils.d("删除远端项目成功：" + it.toString())
+                    RxBus.getDefault().post(RefreshProjectListEvent(true))
                     mView?.onMsg("删除项目成功")
                 }, {
                     mView?.onMsg("删除远端项目失败" + checkError(it))
                 })
-            )
         }
     }
 

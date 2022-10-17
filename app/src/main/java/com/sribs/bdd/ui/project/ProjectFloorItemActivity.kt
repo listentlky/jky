@@ -104,13 +104,7 @@ class ProjectFloorItemActivity : BaseActivity(), IProjectContrast.IProjectFloorD
 
         initRecycleView()
 
-        //    if (mRemoteId.isNullOrEmpty()) {
-        //TODO 查询本地数据库
         mPresenter.getLocalModule(mLocalProjectId, mBuildingId)
-        /*     } else {
-                 //TODO 查询网络接口
-                 mPresent.getRemoteModule(mLocalProjectId, mBuildingId)
-             }*/
 
         mBinding.matchMainFab.setOnClickListener {
             showMutilAlertDialog(it)

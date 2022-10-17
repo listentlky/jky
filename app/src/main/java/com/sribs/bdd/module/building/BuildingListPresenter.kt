@@ -231,7 +231,8 @@ class BuildingListPresenter : BasePresenter(), IBuildingContrast.IBuildingListPr
                         it.inspectors,
                         it.parentVersion,
                         it.version,
-                        it.createTime
+                    //    it.createTime
+                        ""+System.currentTimeMillis()
                     )
                 }))
             },{

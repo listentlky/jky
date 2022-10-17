@@ -59,7 +59,7 @@
         android:text="绘制完成"
         app:layout_constraintLeft_toRightOf="@id/cancel"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginLeft="@dimen/_20sdp"
+        android:layout_marginLeft="@dimen/_10sdp"
         android:background="@drawable/draw_pdf_but_bg"
         android:layout_height="@dimen/_25sdp"/>
 

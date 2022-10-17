@@ -2259,12 +2259,13 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
                         Log.i("bruce", "m_layout.vGetX()  " + m_layout.vGetX() + "-----------" +
                                 m_layout.vGetY());
 
-                        Matrix mat = vpage.CreateInvertMatrix(m_layout.vGetX(), m_layout.vGetY());
+                        Matrix mat = vpage.CreateInvertMatrix(m_layout.vGetX(),m_layout.vGetY());
+
                         mat.TransformPoint(pt1);
                         mat.TransformPoint(pt2);
                         Log.i("bruce", "第二次 pt1[0] " + pt1[0] + " pt1[1] " + pt1[1] +
                                 "pt2[0] " + pt2[0] + " pt2[1] " + pt2[1]);
-                        page.AddAnnotLine(pt1, pt2, Global.g_line_annot_style1, Global.g_line_annot_style2, vpage.ToPDFSize(Global.g_line_annot_width), Global.g_line_annot_color, Global.g_line_annot_fill_color);
+                        page.AddAnnotLine(pt1, pt2, 0, 0, vpage.ToPDFSize(Global.g_line_annot_width), Global.g_line_annot_color, Global.g_line_annot_fill_color);
                         mat.Destroy();
                         onAnnotCreated(page.GetAnnot(page.GetAnnotCount() - 1));
                         //add to redo/undo stack.

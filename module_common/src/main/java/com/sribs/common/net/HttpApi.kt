@@ -134,13 +134,13 @@ interface HttpApi {
      */
     //
     @GET("api/v3/app/building/project/list")
-    fun getV3ProjectList():Observable<ResultBean<ListBean<ProjectListRes>>>
+    fun getV3ProjectList():Observable<ResultBean<List<ProjectListRes>>>
 
     /**
      * 查询指定项目版本列表
      */
     @GET("api/v3/app/building/project/version/list")
-    fun getV3ProjectVersionList(@Query("projectId") remoteProjectId: String):Observable<ResultBean<ListBean<V3VersionListRes>>>
+    fun getV3ProjectVersionList(@Query("projectId") remoteProjectId: String):Observable<ResultBean<List<V3VersionListRes>>>
 
     /**
      * 下载项目的指定版本
@@ -150,7 +150,7 @@ interface HttpApi {
 
 
     @POST("api/v3/app/project/save")
-    fun createOrUpdateProject(@Body req:V3UploadProjectReq):Observable<ResultBean<Any>>
+    fun saveV3Project(@Body req:V3UploadProjectReq):Observable<ResultBean<Any>>
 
     @POST("api/v3/app/project/delete")
     fun deleteProject(@Body req:V3VersionDeleteReq):Observable<ResultBean<Any>>

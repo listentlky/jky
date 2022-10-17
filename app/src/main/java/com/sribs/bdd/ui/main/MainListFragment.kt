@@ -7,6 +7,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.cbj.sdk.databinding.LayoutBaseListMvpBinding
+import com.cbj.sdk.libbase.rxbus.RxBus
 import com.cbj.sdk.libui.mvp.BaseListFragment
 import com.cbj.sdk.libui.mvp.adapter.BaseListAdapter
 import com.cbj.sdk.libui.mvp.bindView
@@ -17,6 +18,8 @@ import com.sribs.bdd.module.main.IMainListContrast
 import com.sribs.bdd.module.main.MainListPresenter
 import com.sribs.bdd.ui.adapter.MainListAdapter
 import com.sribs.bdd.utils.ModuleHelper
+import com.sribs.bdd.v3.event.RefreshPDFEvent
+import com.sribs.bdd.v3.event.RefreshProjectListEvent
 import com.sribs.bdd.v3.util.LogUtils
 import com.sribs.common.bean.db.DrawingBean
 import com.sribs.common.bean.db.UnitBean
@@ -223,8 +226,6 @@ class MainListFragment :
     }
 
     override fun onProjectList(l: ArrayList<MainProjectBean>) {
-        LogUtils.d("onProjectList")
-
         LogUtils.d("数据源: "+l.size)
 
         mAdapter.setData(l)
@@ -304,6 +305,13 @@ class MainListFragment :
         println("leon MainListFragment mCurProjectType = ${mCurProjectType}")
 
         mPresenter.getProjectList()
+
+        RxBus.getDefault().toObservable<RefreshProjectListEvent>(RefreshProjectListEvent::class.java)
+            .subscribe {
+                if (it.isRefresh) {
+                    mPresenter.getProjectList()
+                }
+            }
     }
 
     override fun deinitView() {

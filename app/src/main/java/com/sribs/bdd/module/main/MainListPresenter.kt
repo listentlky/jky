@@ -38,7 +38,7 @@ class MainListPresenter:BasePresenter(),IMainListContrast.IPresenter {
      * 本地获取项目列表
      */
     override fun getProjectList() {
-        addDisposable(mDb.getAllProject()
+        mDb.getAllProject()
             .subscribeOn(Schedulers.computation())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
@@ -75,7 +75,7 @@ class MainListPresenter:BasePresenter(),IMainListContrast.IPresenter {
             },{
                 mView?.onProjectList(ArrayList())
                 it.printStackTrace()
-            }))
+            })
 
     }
 
@@ -84,7 +84,7 @@ class MainListPresenter:BasePresenter(),IMainListContrast.IPresenter {
      */
     private fun getProjectRemote(localList:ArrayList<MainProjectBean>){
         LogUtils.d("有网络 请求网络数据: ")
-        addDisposable(HttpManager.instance.getHttpService<HttpApi>()
+        HttpManager.instance.getHttpService<HttpApi>()
             .getV3ProjectList()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -97,7 +97,7 @@ class MainListPresenter:BasePresenter(),IMainListContrast.IPresenter {
                     mView?.onProjectList(ArrayList(localList.sortedByDescending { b->b.updateTime }))
                     return@subscribe
                 }
-                it.data!!.records.forEach { remoteBean->
+                it.data!!.forEach { remoteBean->
                     var i = localList.indexOfFirst { localBean->
                         !localBean.remoteId.isNullOrEmpty() && localBean.remoteId == remoteBean.projectId
                     }
@@ -105,15 +105,15 @@ class MainListPresenter:BasePresenter(),IMainListContrast.IPresenter {
                     if (i>=0) {
                         var localBean = localList[i]
                         //判断时间
-                        if (TimeUtil.isBefore(localBean.updateTime, remoteBean.updateTime)) {
+                   /*     if (TimeUtil.isBefore(localBean.updateTime, remoteBean.updateTime)) {
                             localList[i].hasNewer = true
-                        }
+                        }*/
                         localBean.localUUID = remoteBean.projectId
                         localBean.remoteData = remoteBean
                     }
                 }
                 // 远程项目在本地中已有 本地remoteId为空  项目名称、楼号相同，更新状态
-                it.data!!.records.forEach {  remoteBean->
+                it.data!!.forEach {  remoteBean->
                     var i = localList.indexOfFirst { localBean->
                         localBean.remoteId.isNullOrEmpty() &&
                                 localBean.name == remoteBean.projectName
@@ -121,9 +121,9 @@ class MainListPresenter:BasePresenter(),IMainListContrast.IPresenter {
                     if (i>=0) {
                         var localBean = localList[i]
                         //判断时间
-                        if (TimeUtil.isBefore(localBean.updateTime , remoteBean.updateTime)) {
+                       /* if (TimeUtil.isBefore(localBean.updateTime , remoteBean.updateTime)) {
                             localList[i].hasNewer = true
-                        }
+                        }*/
                         localBean.remoteData = remoteBean
                         localBean.remoteId = remoteBean.projectId
                     }
@@ -145,7 +145,7 @@ class MainListPresenter:BasePresenter(),IMainListContrast.IPresenter {
                 }*/
 
                 // 本地中没有
-                var onlyRemoteList =  it.data!!.records.filter { remoteBean->
+                var onlyRemoteList =  it.data!!.filter { remoteBean->
                     localList.find { localBean->
                         (!localBean.remoteId.isNullOrEmpty() && localBean.remoteId == remoteBean.projectId) ||
                                 (localBean.name == remoteBean.projectName && localBean.remoteId.isNullOrEmpty())
@@ -154,7 +154,8 @@ class MainListPresenter:BasePresenter(),IMainListContrast.IPresenter {
                     localId = -1,
                     localUUID = b.projectId,
                     remoteId= b.projectId,
-                    updateTimeYMD = TimeUtil.time2YMD(b.updateTime),
+            //        updateTimeYMD = TimeUtil.time2YMD(b.updateTime),
+                    updateTimeYMD = "",
                     status = mStateArr[2],
                     parentVersion = b.parentVersion,
                     version = b.version,
@@ -162,8 +163,8 @@ class MainListPresenter:BasePresenter(),IMainListContrast.IPresenter {
                     leader = b.leaderName?:"",
                     inspector = b.inspectors?.joinToString(separator = "、")?:""
                 ).also { _b->
-                    _b.updateTime = b.updateTime
-                    _b.createTime = b.createTime
+           //         _b.updateTime = b.updateTime
+           //         _b.createTime = b.createTime
                     _b.name = b.projectName
                     _b.remoteData = b
                 } }
@@ -177,7 +178,7 @@ class MainListPresenter:BasePresenter(),IMainListContrast.IPresenter {
 //                mView?.onProjectList(ArrayList(localList.sortedWith(compareBy({b->b.name},{b->b.sortedBuildNo}))))
                 mView?.onProjectList(ArrayList(localList.sortedByDescending { b->b.updateTime }))
 
-            }))
+            })
     }
 
     override fun getAllUnitsInProject(projectId: Long) {

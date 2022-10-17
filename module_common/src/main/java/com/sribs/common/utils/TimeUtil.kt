@@ -27,6 +27,10 @@ object TimeUtil {
         }
     }
 
+    fun dateToStamp(time:String):String{
+        return ""+YMD_HMS.parse(time).time
+    }
+
     fun time2YMD(t:String):String =
         try{
             val d1 = YMD_HMS.parse(t)

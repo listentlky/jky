@@ -16,6 +16,7 @@ import com.cbj.sdk.libui.mvp.BaseActivity
 import com.cbj.sdk.libui.mvp.inflate
 import com.hjq.permissions.Permission
 import com.hjq.permissions.XXPermissions
+import com.radaee.annotui.UIAnnotMenu
 import com.radaee.pdf.Document
 import com.radaee.pdf.Global
 import com.radaee.pdf.Page
@@ -66,6 +67,8 @@ class DrawPDFActivity : BaseActivity() {
         return mBinding.root
     }
 
+    var checkedIndex = -1
+
     override fun initView() {
         initToolbar()
         mMenuList.add(DrawPDFMenuModule().also {
@@ -92,40 +95,43 @@ class DrawPDFActivity : BaseActivity() {
         mMenuAdapter!!.setItemClickListener {position,checked->
             LogUtils.d("当前选中position: " + position)
             mChecked = checked
-            when (position) {
+
+            when(checkedIndex){
                 0 -> {
-                    if(checked){
-                        mBinding.pdfView.PDFSetLine(0)
-                    }else{
-                        mBinding.pdfView.PDFSetLine(1)
-                    }
+                    mBinding.pdfView.PDFSetLine(1)
                 }
                 1 -> {
-                    if(checked){
-                        mBinding.pdfView.PDFSetRect(0)
-                    }else{
-                        mBinding.pdfView.PDFSetRect(1)
-                    }
+                    mBinding.pdfView.PDFSetRect(1)
                 }
                 2 -> {
-                    if(checked){
-                        mBinding.pdfView.PDFSetEllipse(0)
-                    }else{
-                        mBinding.pdfView.PDFSetEllipse(1)
-                    }
+                    mBinding.pdfView.PDFSetEllipse(1)
                 }
                 3 -> {
-                    if(checked){
-                        mBinding.pdfView.PDFSetEditbox(0)
-                    }else{
-                        mBinding.pdfView.PDFSetEditbox(1)
-                    }
+                    mBinding.pdfView.PDFSetEditbox(1)
                 }
                 4 -> {
-                    if(checked){
+                    mBinding.pdfView.PDFSetInk(1)
+                }
+            }
+
+            checkedIndex = position
+
+            if(checked) {
+                when (position) {
+                    0 -> {
+                        mBinding.pdfView.PDFSetLine(0)
+                    }
+                    1 -> {
+                        mBinding.pdfView.PDFSetRect(0)
+                    }
+                    2 -> {
+                        mBinding.pdfView.PDFSetEllipse(0)
+                    }
+                    3 -> {
+                        mBinding.pdfView.PDFSetEditbox(0)
+                    }
+                    4 -> {
                         mBinding.pdfView.PDFSetInk(0)
-                    }else{
-                        mBinding.pdfView.PDFSetInk(1)
                     }
                 }
             }
@@ -289,6 +295,8 @@ class DrawPDFActivity : BaseActivity() {
             }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
+                mBinding.pdfView?.setReadOnly(false)
+                mBinding.pdfView?.setAnnotMenu(UIAnnotMenu(mBinding.pdfRoot))
                 mBinding.pdfView.PDFOpen(mDoc, object : ILayoutView.PDFLayoutListener {
                     override fun OnPDFPageModified(pageno: Int) {
                         mPDFNoteModified = true
