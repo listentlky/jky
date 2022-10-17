@@ -12,6 +12,7 @@ import com.baidu.mapapi.ModuleName
 import com.cbj.sdk.libui.mvp.moudles.IBasePresenter
 import com.sribs.common.module.BasePresenter
 import com.cbj.sdk.libui.mvp.moudles.IBaseView
+import com.radaee.util.CommonUtil
 
 import com.sribs.bdd.bean.*
 import com.sribs.bdd.bean.data.ModuleFloor
@@ -134,14 +135,20 @@ class ModuleFloorCreateTypeBuildingPresenter : BasePresenter(), IBasePresenter {
         }
         LogUtils.d("filters: " + filters)*/
         var index = -1
+
+        var name= ""
+        var needToPDF = false
+        var cacheFileParent =File("")
+        var cacheFile = File("")
+
         addDisposable(Observable.fromIterable(pictureBean)
             .subscribeOn(Schedulers.io())
             .observeOn(Schedulers.io())
             .flatMap {
                 ++index
-                var cacheFileParent = File(cacheRootDir + mCurDrawingsDir+index)
+                 cacheFileParent = File(cacheRootDir + mCurDrawingsDir+index)
                 cacheFileParent.mkdirs()
-                var cacheFile = File(cacheFileParent, it.name)
+               /*  cacheFile = File(cacheFileParent, it.name)
 
                 if (cacheFile.isFile){
                     cacheFile.delete()
@@ -154,7 +161,42 @@ class ModuleFloorCreateTypeBuildingPresenter : BasePresenter(), IBasePresenter {
                     }else{
                         FileUtil.copyTo(File(it.url),cacheFile)
                     }
+                }*/
+
+                if(!it.name.endsWith("pdf")){
+                    name = it.name.replace(".","")+".pdf"
+                    needToPDF =true
+
+                }else{
+                    name = it.name
+                    needToPDF =false
                 }
+                cacheFile = File(cacheFileParent,name)
+                if (cacheFile != null) {
+                    if (needToPDF){
+                        if (it.uri==null){
+                            //  FileUtil.copyTo(File(it.url),File(cacheFileParent,it.name))
+                            CommonUtil.imageToPDF(it.url,cacheFile.absolutePath)
+
+                            LogUtils.d("url: "+cacheFile.absolutePath)
+                        }else{
+                            //   CommonUtil.imageToPDF(,cacheFile.absolutePath)
+                            FileUtil.copyFileTo(activity, Uri.parse(it.uri),File(cacheFileParent,it.name).absolutePath)
+                            CommonUtil.imageToPDF(File(cacheFileParent,it.name).absolutePath,cacheFile.absolutePath)
+                        }
+                        //       CommonUtil.imageToPDF(File(defaultName).absolutePath,cacheFile.absolutePath)
+
+                    }else{
+                        if(!it.uri.isNullOrEmpty()) {
+                            FileUtil.copyFileTo(activity, Uri.parse(it.uri), cacheFile.absolutePath)
+                        }else{
+                            FileUtil.copyTo(File(it.url),cacheFile)
+                        }
+                    }
+
+                }
+
+
                 Observable.just("Done")
             }
             .subscribeOn(Schedulers.io())
@@ -190,13 +232,21 @@ class ModuleFloorCreateTypeBuildingPresenter : BasePresenter(), IBasePresenter {
 
             picList!!.forEachIndexed { index, it ->
 
-                var cacheFilePath = File(cacheRootDir + mCurDrawingsDir+index, it.name)
+                var name =""
+                if(!it.name.endsWith("pdf")){
+                    name = it.name.replace(".","")+".pdf"
+                }else{
+                    name = it.name
+                }
+
+
+                var cacheFilePath = File(cacheRootDir + mCurDrawingsDir+index, name)
 
                 LogUtils.d("absolutePath "+ cacheFilePath.absolutePath)
                 var drawingV3ToBuild = DrawingV3Bean(
                     -1,
-                    it.name,
-                    FileUtil.getFileExtension(it.name),
+                   name,
+                    FileUtil.getFileExtension(name),
                     "overall",
                     cacheFilePath.absolutePath,
                     "",

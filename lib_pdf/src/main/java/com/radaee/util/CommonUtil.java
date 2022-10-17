@@ -22,6 +22,17 @@ import android.widget.Toast;
 import androidx.annotation.ColorRes;
 import androidx.annotation.DrawableRes;
 
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.PageSize;
+import com.itextpdf.text.RectangleReadOnly;
+import com.itextpdf.text.pdf.PdfCopy;
+import com.itextpdf.text.pdf.PdfDictionary;
+import com.itextpdf.text.pdf.PdfName;
+import com.itextpdf.text.pdf.PdfNumber;
+import com.itextpdf.text.pdf.PdfPage;
+import com.itextpdf.text.pdf.PdfPageEventHelper;
+import com.itextpdf.text.pdf.PdfReader;
+import com.itextpdf.text.pdf.PdfSmartCopy;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.radaee.pdf.Document;
 import com.radaee.pdf.Global;
@@ -593,20 +604,35 @@ public class CommonUtil {
         return result;
     }
 
+    private static  class RotateEvent extends PdfPageEventHelper {
+        @Override
+        public void onStartPage(PdfWriter writer, com.itextpdf.text.Document document) {
+            writer.addPageDictEntry(PdfName.ROTATE, PdfPage.SEASCAPE);
+        }
+    }
+
     public static void imageToPDF(String imgPaths, String pdf_save_address) {
         try {
-            com.itextpdf.text.Document document = new  com.itextpdf.text.Document();
-            PdfWriter.getInstance(document, new FileOutputStream(pdf_save_address));
+            com.itextpdf.text.Document document = new  com.itextpdf.text.Document(PageSize.A4);
+
+            PdfWriter pdfWriter = PdfWriter.getInstance(document, new FileOutputStream(pdf_save_address));
+            pdfWriter.setPageEvent(new RotateEvent());
             document.open();
+
             com.itextpdf.text.Image img = com.itextpdf.text.Image.getInstance(imgPaths);
-            float scale = ((document.getPageSize().getWidth() - document.leftMargin()
+            float scale = ((document.getPageSize().getHeight()  - document.leftMargin()
                     - document.rightMargin() - 0) / img.getWidth()) * 100;
             img.scalePercent(scale);
+            img.setRotationDegrees(-90);
             img.setAlignment(com.itextpdf.text.Image.ALIGN_CENTER | com.itextpdf.text.Image.ALIGN_TOP);
             document.add(img);
+
+
             document.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
+
 }

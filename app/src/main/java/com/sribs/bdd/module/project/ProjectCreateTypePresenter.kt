@@ -11,6 +11,7 @@ import com.alibaba.android.arouter.launcher.ARouter
 import com.cbj.sdk.libnet.http.HttpManager
 import com.cbj.sdk.libui.mvp.moudles.IBaseView
 import com.cbj.sdk.utils.NumberUtil
+import com.radaee.util.CommonUtil
 import com.sribs.bdd.Config
 import com.sribs.bdd.action.Dict
 import com.sribs.bdd.bean.BuildingFloorBean
@@ -28,7 +29,6 @@ import com.sribs.common.module.BasePresenter
 import com.sribs.common.net.HttpApi
 import com.sribs.common.server.IDatabaseService
 import com.sribs.common.utils.FileUtil
-import com.sribs.db.project.building.BuildingBean
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -471,15 +471,20 @@ class ProjectCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCre
             copyDrawingsToLocalCache(activity,picList!!,null,cacheRootDir)
 
             picList!!.forEach {
-
-                var cacheFilePath = File(cacheRootDir + mCurDrawingsDir,it.name)
+                var name =""
+                if(!it.name.endsWith("pdf")){
+                    name = it.name.replace(".","")+".pdf"
+                }else{
+                    name = it.name
+                }
+                var cacheFilePath = File(cacheRootDir + mCurDrawingsDir,name)
 
                 var drawingV3ToBuild = DrawingV3Bean(
                     -1,
-                    it.name,
-                    FileUtil.getFileExtension(it.name),
+                    name,
+                    FileUtil.getFileExtension(name),
                     "overall",
-                    if(it.url != null) it.url else cacheFilePath.absolutePath,
+                    cacheFilePath.absolutePath,
                     "",
                     ArrayList()
                 )
@@ -520,13 +525,21 @@ class ProjectCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCre
 
             for (i in originList!!.indices) {
                 var  item = originList!![i]
-                var cacheFilePath = File(cacheRootDir + mCurDrawingsDir+floorBean.name,item.name)
+
+                var name =""
+                if(!item.name.endsWith("pdf")){
+                    name = item.name.replace(".","")+".pdf"
+                }else{
+                    name = item.name
+                }
+
+                var cacheFilePath = File(cacheRootDir + mCurDrawingsDir+floorBean.name,name)
                 var drawingV3ToBuild = DrawingV3Bean(
                     -1,
-                    item.name,
-                    FileUtil.getFileExtension(item.name),
+                    name,
+                    FileUtil.getFileExtension(name),
                     "floor",
-                    if(item.url != null) item.url else cacheFilePath.absolutePath,
+                    cacheFilePath.absolutePath,
                     "",
                     ArrayList()
                 )
@@ -544,28 +557,57 @@ class ProjectCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCre
                                          floorName:String?,
                                          cacheRootDir:String){
         LogUtils.d("copyDrawingsToLocalCache: "+pictureBean.size)
-        var filters = pictureBean.filter {
-            it.uri != null
-        }
-        addDisposable(Observable.fromIterable(filters)
+        /*var filters = pictureBean.filter {
+         //   it.uri != null
+        }*/
+        var name= ""
+        var needToPDF = false
+        var cacheFileParent =File("")
+        var cacheFile = File("")
+        addDisposable(Observable.fromIterable(pictureBean)
             .subscribeOn(Schedulers.io())
             .observeOn(Schedulers.io())
             .flatMap{
-                var cacheFileParent = File(cacheRootDir + mCurDrawingsDir)
+                 cacheFileParent = File(cacheRootDir + mCurDrawingsDir)
                 if(!floorName.isNullOrEmpty()) { // 不为空认为是楼图纸   为空认为是楼层图纸
                     cacheFileParent = File(cacheRootDir + mCurDrawingsDir + floorName)
                 }
                 cacheFileParent.mkdirs()
-                var cacheFile = File(cacheFileParent,it.name)
-                LogUtils.d("图纸缓存目录： "+cacheFile.toString())
-                if (cacheFile != null) {
-                    FileUtil.copyFileTo(activity, Uri.parse(it.uri),cacheFile.absolutePath)
+                if(!it.name.endsWith("pdf")){
+                     name = it.name.replace(".","")+".pdf"
+                    needToPDF =true
+
+                }else{
+                   name = it.name
+                    needToPDF =false
                 }
+                 cacheFile = File(cacheFileParent,name)
+                    if (cacheFile != null) {
+                        if (needToPDF){
+                            if (it.uri==null){
+                              //  FileUtil.copyTo(File(it.url),File(cacheFileParent,it.name))
+                                CommonUtil.imageToPDF(it.url,cacheFile.absolutePath)
+
+                                LogUtils.d("url: "+cacheFile.absolutePath)
+                            }else{
+                             //   CommonUtil.imageToPDF(,cacheFile.absolutePath)
+                                FileUtil.copyFileTo(activity, Uri.parse(it.uri),File(cacheFileParent,it.name).absolutePath)
+                                CommonUtil.imageToPDF(File(cacheFileParent,it.name).absolutePath,cacheFile.absolutePath)
+                            }
+                         //       CommonUtil.imageToPDF(File(defaultName).absolutePath,cacheFile.absolutePath)
+
+                        }else{
+                            FileUtil.copyFileTo(activity, Uri.parse(it.uri),cacheFile.absolutePath)
+                        }
+                    }
+
+                LogUtils.d("图纸缓存目录： "+cacheFile.toString())
                 Observable.just("Done")
             }
             .subscribeOn(Schedulers.io())
             .observeOn(Schedulers.io())
             .subscribe({
+
                 LogUtils.d("复制图纸到缓存目录: ${it}")
             },{
                 it.printStackTrace()

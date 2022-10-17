@@ -13,7 +13,7 @@ import com.alibaba.android.arouter.launcher.ARouter
 import com.sribs.common.module.BasePresenter
 import com.cbj.sdk.libui.mvp.moudles.IBaseView
 import com.cbj.sdk.utils.NumberUtil
-import com.sribs.bdd.bean.*
+import com.radaee.util.CommonUtil
 import com.sribs.bdd.bean.data.ModuleFloor
 import com.sribs.bdd.bean.data.ModuleFloorBean
 import com.sribs.bdd.bean.data.ModuleFloorPictureBean
@@ -436,13 +436,21 @@ class ModuleCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCrea
             copyDrawingsToLocalCache(activity, originList!!,floorBean.name, cacheRootDir)
 
             originList.forEachIndexed { index, item ->
-                var cacheFilePath = File(cacheRootDir + mCurDrawingsDir+floorBean.name+"/"+index, item.name)
+
+                var name =""
+                if(!item.name.endsWith("pdf")){
+                    name = item.name.replace(".","")+".pdf"
+                }else{
+                    name = item.name
+                }
+
+                var cacheFilePath = File(cacheRootDir + mCurDrawingsDir+floorBean.name+"/"+index,name)
                 LogUtils.d("楼层图纸缓存目录：" + cacheFilePath)
 
                 drawingItem = DrawingV3Bean(
                     -1,
-                    item.name,
-                    FileUtil.getFileExtension(item.name),
+                    name,
+                    FileUtil.getFileExtension(name),
                     "floor",
                     cacheFilePath.absolutePath,
                     "",
@@ -470,6 +478,10 @@ class ModuleCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCrea
         LogUtils.d("过滤uri不等于null后: " + filters)*/
 
         var index = -1
+        var name= ""
+        var needToPDF = false
+        var cacheFileParent =File("")
+        var cacheFile = File("")
 
         addDisposable(Observable.fromIterable(pictureBean)
             .subscribeOn(Schedulers.io())
@@ -481,7 +493,7 @@ class ModuleCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCrea
                     cacheFileParent = File(cacheRootDir + mCurDrawingsDir + floorName+"/"+index)
                 }
                 cacheFileParent.mkdirs()
-                var cacheFile = File(cacheFileParent,it.name)
+                /*var cacheFile = File(cacheFileParent,it.name)
                 LogUtils.d("图纸缓存目录： "+cacheFile.toString())
                 if (cacheFile != null) {
                     if(!it.uri.isNullOrEmpty()) {
@@ -489,7 +501,41 @@ class ModuleCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCrea
                     }else{
                         FileUtil.copyTo(File(it.url),cacheFile)
                     }
+                }*/
+
+                if(!it.name.endsWith("pdf")){
+                    name = it.name.replace(".","")+".pdf"
+                    needToPDF =true
+
+                }else{
+                    name = it.name
+                    needToPDF =false
                 }
+                cacheFile = File(cacheFileParent,name)
+                if (cacheFile != null) {
+                    if (needToPDF){
+                        if (it.uri==null){
+                            //  FileUtil.copyTo(File(it.url),File(cacheFileParent,it.name))
+                            CommonUtil.imageToPDF(it.url,cacheFile.absolutePath)
+
+                            LogUtils.d("url: "+cacheFile.absolutePath)
+                        }else{
+                            //   CommonUtil.imageToPDF(,cacheFile.absolutePath)
+                            FileUtil.copyFileTo(activity, Uri.parse(it.uri),File(cacheFileParent,it.name).absolutePath)
+                            CommonUtil.imageToPDF(File(cacheFileParent,it.name).absolutePath,cacheFile.absolutePath)
+                        }
+                        //       CommonUtil.imageToPDF(File(defaultName).absolutePath,cacheFile.absolutePath)
+
+                    }else{
+                        if(!it.uri.isNullOrEmpty()) {
+                            FileUtil.copyFileTo(activity, Uri.parse(it.uri), cacheFile.absolutePath)
+                        }else{
+                            FileUtil.copyTo(File(it.url),cacheFile)
+                        }
+                    }
+
+                }
+
                 Observable.just("Done")
             }
             .subscribeOn(Schedulers.io())
@@ -502,7 +548,7 @@ class ModuleCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCrea
         )
     }
 
-    private fun getPicList(activity: Activity, mLocalProjectId: Int, mBuildingId: Long) {
+  /*  private fun getPicList(activity: Activity, mLocalProjectId: Int, mBuildingId: Long) {
         if (picList != null && picList!!.size > 0) {
             var cachePath: String
             var cacheRootDir: String = FileUtil.getDrawingCacheRootDir(mView!!.getContext()!!)
@@ -510,8 +556,19 @@ class ModuleCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCrea
 
             copyDrawingsToLocalCache(activity, picList!!,null, cacheRootDir)
 
+
+
             picList!!.forEach {
-                cachePath = cacheRootDir + mCurDrawingsDir + it.name
+
+
+                var name =""
+                if(!it.name.endsWith("pdf")){
+                    name = it.name.replace(".","")+".pdf"
+                }else{
+                    name = it.name
+                }
+
+                cachePath = cacheRootDir + mCurDrawingsDir + name
                 LogUtils.d("楼图纸缓存目录：" + cachePath)
                 var drawing = Drawing(
                     -1,
@@ -520,12 +577,12 @@ class ModuleCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCrea
                     -1,
                     -1,
                     "",
-                    it.name,
+                    name,
                     "overall",
                     null,
-                    FileUtil.getFileExtension(it.name),
-                    if (it.url != null) it.url else it.uri,
-                    if (it.url != null) it.url else cachePath,
+                    FileUtil.getFileExtension(name),
+                    cachePath,
+                    cachePath,
                     curTime,
                     curTime,
                     mProLeader!!,
@@ -537,7 +594,7 @@ class ModuleCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCrea
             }
         }
 
-    }
+    }*/
 
     private lateinit var mPrefs: SharedPreferences
     private var mCurDrawingsDir: String? = ""

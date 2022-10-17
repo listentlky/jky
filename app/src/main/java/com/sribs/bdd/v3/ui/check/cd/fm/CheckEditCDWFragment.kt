@@ -500,7 +500,8 @@ class CheckEditCDWFragment : BaseFragment(R.layout.fragment_check_componentdetec
             {
                 mBinding.checkCdpPlateRightDesignUi.checkCdpPlatePic.setImageURI(uri)
                 mRightDesignPicSrc = uri.toString()
-                CommonUtil.imageToPDF(mRightDesignPicSrc,"/storage/emulated/0/Android/data/com.sribs.bdd/files/图纸/1.pdf")
+                LogUtils.d(mRightDesignPicSrc+"gogogo")
+            //    CommonUtil.imageToPDF(mRightDesignPicSrc,"/storage/emulated/0/Android/data/com.sribs.bdd/files/图纸/1.jpg.pdf")
             }
         }
     }
