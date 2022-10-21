@@ -281,6 +281,8 @@ class ModuleCreateByTypeFloorActivity : BaseActivity(), IProjectContrast.IModule
         mBinding.aboveNumber.setEditText(""+beanList.get(0).aboveNumber)
         mBinding.afterNumber.setEditText(""+beanList.get(0).afterNumber)
         moduleCreateTypePresenter.setData(beanList)
+        moduleCreateTypePresenter.mBeforeOldIndex = afterNumber
+        moduleCreateTypePresenter.mAboveOldIndex = aboveNumber
 
     }
 
@@ -322,16 +324,16 @@ class ModuleCreateByTypeFloorActivity : BaseActivity(), IProjectContrast.IModule
 
     }
 
-    override fun deleteModuleFloor(floorType: String, aboveSize: Int, beforeSize: Int) {
+    override fun deleteModuleFloor(floorType: Int, aboveSize: Int, beforeSize: Int) {
         currentFocus?.clearFocus()
         isDeleteModuleFloor = true
         when(floorType){
-            "地上"->{
+            1->{
 
                 mBinding.aboveNumber.setEditText(aboveSize.toString())
 
             }
-            "地下"->{
+            0->{
                 mBinding.afterNumber.setEditText(beforeSize.toString())
             }
         }

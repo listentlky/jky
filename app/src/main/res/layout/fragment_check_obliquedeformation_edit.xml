@@ -32,6 +32,11 @@
             android:textSize="@dimen/_7ssp"
             android:layout_height="wrap_content"/>
 
+
+
+
+
+
         <com.radaee.reader.PDFLayoutView
             android:id="@+id/check_obd_ui"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -43,12 +48,29 @@
             android:layout_width="0dp"
             android:layout_height="0dp"/>
 
+
+        <include
+            android:id="@+id/check_obd_ui_capture_view"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            layout="@layout/check_obli_item"
+            android:layout_marginTop="@dimen/_30sdp"
+            app:layout_constraintRight_toRightOf="@id/check_obd_ui"
+            app:layout_constraintBottom_toBottomOf="@id/check_obd_ui"
+            app:layout_constraintDimensionRatio="1:1"
+
+            android:layout_width="0dp"
+            android:layout_height="0dp"></include>
+
         <TextView
             android:id="@+id/check_obd_count"
             app:layout_constraintTop_toBottomOf="@id/check_obd_ui"
             app:layout_constraintLeft_toLeftOf="@id/check_obd_index"
             android:layout_marginTop="@dimen/_6sdp"
             android:textColor="@color/black"
+            android:focusable="false"
+            android:clickable="false"
+            android:focusableInTouchMode="false"
             android:text="倾斜数量"
             android:layout_width="wrap_content"
             android:textSize="@dimen/_7ssp"

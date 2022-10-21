@@ -2,6 +2,7 @@ package com.sribs.bdd.v3.ui.check.obd
 
 import android.app.AlertDialog
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.view.Menu
 import android.view.MenuItem
@@ -26,6 +27,7 @@ import com.radaee.pdf.Page
 import com.radaee.reader.PDFLayoutView
 import com.radaee.reader.PDFPagesAct
 import com.radaee.reader.PDFViewController
+import com.radaee.util.CommonUtil
 import com.radaee.util.PDFAssetStream
 import com.radaee.util.PDFHttpStream
 import com.radaee.util.RadaeePluginCallback
@@ -363,7 +365,6 @@ class CheckObliqueDeformationActivity : BaseActivity(), ICheckOBDContrast.ICheck
         resetDamageList()
     }
 
-
     /**
      * 保存损伤
      */
@@ -397,7 +398,50 @@ class CheckObliqueDeformationActivity : BaseActivity(), ICheckOBDContrast.ICheck
 
         mDamageBeanList!!.put(mCurrentLocalPDF, exitDamageBeanList)
         resetDamageList()
+
         mBinding.checkVp.currentItem = 0
+
+
+    }
+
+    /**
+     * 保存损伤
+     */
+    fun saveDamage(damageInfo: DamageV3Bean,bitmap: Bitmap) {
+
+        var exitDamageBeanList = mDamageBeanList!!.get(mCurrentLocalPDF)
+
+
+        LogUtils.d("当前数据：" + damageInfo)
+        if (exitDamageBeanList == null) {
+            exitDamageBeanList = ArrayList()
+        }
+        LogUtils.d("过滤前损伤数据：" + exitDamageBeanList)
+        /**
+         * 先过滤相同损伤
+         */
+        var totleDamageBranList = exitDamageBeanList!!.filter {
+            it.createTime != damageInfo.createTime
+        }
+
+        LogUtils.d("过滤后损伤数据：" + totleDamageBranList)
+
+        /***
+         * 再添加
+         */
+        exitDamageBeanList.clear()
+        exitDamageBeanList.addAll(totleDamageBranList)
+        exitDamageBeanList!!.add(damageInfo)
+
+        LogUtils.d("再添加损伤数据：" + totleDamageBranList)
+
+        mDamageBeanList!!.put(mCurrentLocalPDF, exitDamageBeanList)
+        resetDamageList()
+
+        mBinding.checkVp.currentItem = 0
+        CommonUtil.screenCapture(this,"1","2",bitmap)
+        mView!!.PDFSetStamp(0,bitmap,0f,0f)
+        mView!!.PDFSetStamp(1,bitmap,100f,200f)
 
     }
 
@@ -674,6 +718,7 @@ class CheckObliqueDeformationActivity : BaseActivity(), ICheckOBDContrast.ICheck
 
     override fun OnPDFLongPressed(pagebo: Int, x: Float, y: Float) {
         LogUtils.d("OnPDFLongPressed")
+
     }
 
     override fun OnPDFSearchFinished(found: Boolean) {

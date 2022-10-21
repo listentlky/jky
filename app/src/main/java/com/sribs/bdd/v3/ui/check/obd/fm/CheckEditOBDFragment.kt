@@ -17,22 +17,18 @@ import com.radaee.pdf.Page
 import com.radaee.reader.PDFLayoutView
 import com.radaee.reader.PDFPagesAct
 import com.radaee.reader.PDFViewController
+import com.radaee.util.CommonUtil
 import com.radaee.util.PDFThumbGrid.mDoc
-import com.radaee.util.RadaeePluginCallback
 import com.radaee.view.ILayoutView
 import com.sribs.bdd.R
 import com.sribs.bdd.databinding.FragmentCheckObliquedeformationEditBinding
-import com.sribs.bdd.v3.ui.check.bs.CheckBuildStructureActivity
 import com.sribs.bdd.v3.ui.check.obd.CheckObliqueDeformationActivity
 import com.sribs.bdd.v3.util.LogUtils
 import com.sribs.common.ARouterPath
 import com.sribs.common.bean.db.DamageV3Bean
-import com.sribs.common.bean.db.DrawingV3Bean
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import java.math.RoundingMode
-import java.text.DecimalFormat
 
 @Route(path = ARouterPath.CHECK_OBLIQUE_DEFORMATION_Edit_FRAGMENT)
 class CheckEditOBDFragment : BaseFragment(R.layout.fragment_check_obliquedeformation_edit),
@@ -83,6 +79,17 @@ class CheckEditOBDFragment : BaseFragment(R.layout.fragment_check_obliquedeforma
                         .toDouble()/1000) / it.toString().toDouble()) + "%")
             }
         }
+
+        mBinding.checkObdUiCaptureView.content1.setContent("方向1")
+        mBinding.checkObdUiCaptureView.content1.setViewHeight(500)
+        mBinding.checkObdUiCaptureView.content1.init()
+        mBinding.checkObdUiCaptureView.content1.requestFocus()
+        mBinding.checkObdUiCaptureView.content2.setContent("方向2")
+        mBinding.checkObdUiCaptureView.content2.setViewHeight(500)
+        mBinding.checkObdUiCaptureView.content2.setDrawViewType(0)
+        mBinding.checkObdUiCaptureView.content2.setOriRotation(90F)
+        mBinding.checkObdUiCaptureView.content2.init()
+
 
         mBinding.checkEditH2.checkEdit.addTextChangedListener {
             LogUtils.d(" mBinding.checkEditH2.checkEdit：" + it)
@@ -237,7 +244,13 @@ class CheckEditOBDFragment : BaseFragment(R.layout.fragment_check_obliquedeforma
                 mBinding.checkEditQx1.checkEdit.text.toString(),
                 mBinding.checkEditQx2.checkEdit.text.toString()
             )
+        //    var layout = mBinding.checkObdUiCaptureView.subContent
+         //   layout.setBackgroundColor(Color.TRANSPARENT)
             (context as CheckObliqueDeformationActivity).saveDamage(damage)
+
+     //       (context as CheckObliqueDeformationActivity).saveDamage(damage, CommonUtil.viewToBitmap(layout))
+
+
         }
     }
 
@@ -307,6 +320,7 @@ class CheckEditOBDFragment : BaseFragment(R.layout.fragment_check_obliquedeforma
         }
         this.mView = mBinding.checkObdUi
         mView!!.setShowDamage(false)
+        mView!!.setIntercept(true)
 
       /*   mView?.PDFSetZoom((activity as CheckObliqueDeformationActivity).mView?.markX!!.toInt(),(activity as CheckObliqueDeformationActivity).mView?.markY!!.toInt(),
              mView?.markPDFPos,5f)*/

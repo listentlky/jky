@@ -206,6 +206,9 @@ class ModuleCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCrea
         var manager = LinearLayoutManager(mView?.getContext())
         mView?.getFloorRecycleView()?.layoutManager = manager
         array = ArrayList()
+        array!!.addAll(before)
+        array!!.addAll(above)
+
         floorAdapter.setData(array!!)
         mView?.getFloorRecycleView()?.adapter = floorAdapter
 
@@ -235,7 +238,12 @@ class ModuleCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCrea
         }
 
         array?.clear()
-        array?.addAll(beanList!!)
+        before.addAll(beanList!!.filter {
+            it.floorType == 0
+        })
+        above.addAll(beanList!!.filter {
+            it.floorType == 1
+        })
         array?.addAll(before)
         array?.addAll(above)
 
@@ -632,25 +640,21 @@ class ModuleCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCrea
 
     override fun deleteModuleFloor(bean: ModuleFloorBean, position: Int) {
 
-        when (bean.floor) {
-            "地上" -> {
-                above.removeAt(position - before.size-beanList!!.size)
+        when (bean.floorType) {
+            1 -> {
+                above.removeAt(position - before.size)
             }
-            "地下" -> {
-                before.removeAt(position-beanList!!.size)
-            }
-            ""->{
-                beanList!!.removeAt(position)
+            0 -> {
+                before.removeAt(position)
             }
         }
         array!!.clear()
-        array!!.addAll(beanList!!)
         array!!.addAll(before)
         array!!.addAll(above)
 
         floorAdapter.notifyDataSetChanged()
         Log.e("TAG", "deleteBuildingFloor: "+array )
-     //   mView?.deleteModuleFloor(bean.floor!!, above.size, before.size)
+        mView?.deleteModuleFloor(bean.floorType, above.size, before.size)
     }
 
 }

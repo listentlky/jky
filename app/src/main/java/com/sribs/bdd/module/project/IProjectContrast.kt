@@ -92,7 +92,7 @@ interface IProjectContrast {
         fun chosePic(bean: ModuleFloorBean)
         fun takePhoto(bean: ModuleFloorBean)
         fun choseWhite(bean: ModuleFloorBean)
-        fun deleteModuleFloor(floorType:String ,aboveSize: Int,beforeSize:Int)
+        fun deleteModuleFloor(floorType:Int ,aboveSize: Int,beforeSize:Int)
         fun createModuleConfigSuccess()
     }
 

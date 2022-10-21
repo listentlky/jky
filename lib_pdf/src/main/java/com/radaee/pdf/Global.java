@@ -26,7 +26,7 @@ public class Global
 {
 	public static String mCompany = "Shanghai Research Institute of Building Sciences Co.,Ltd";
 	public static String mEmail = "snn188@163.com";
-	public static String mKey = "G9EJMF-SX9NGM-56DXN5-TBSVDY-HPLFRS-8848A6";
+	public static String mKey = "TNLQ8E-W9FWMU-56DXN5-TBSVDY-HPLFRS-8848A6";
 
 	//binding to app ID "com.radaee.reader", can avtive version before "20220910".
 	//the version string can be retrieved by Global.getVersion().

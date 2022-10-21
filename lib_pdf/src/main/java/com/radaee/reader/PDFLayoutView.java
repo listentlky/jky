@@ -43,9 +43,11 @@ import com.radaee.pdf.Ink;
 import com.radaee.pdf.Matrix;
 import com.radaee.pdf.Page;
 import com.radaee.pdf.Page.Annotation;
+import com.radaee.pdf.PageContent;
 import com.radaee.pdf.Path;
 //import com.radaee.sribs.DamageTypeAdapter;
 //import com.radaee.sribs.DamageTypeItem;
+import com.radaee.pdf.ResImage;
 import com.radaee.util.ComboList;
 import com.radaee.util.CommonUtil;
 import com.radaee.util.PopupEditAct;
@@ -85,7 +87,7 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
     static final protected int STA_POLYLINE = 11;
     static final protected int STA_ANNOT = 100;
     protected Bitmap.Config m_bmp_format = Bitmap.Config.ALPHA_8;
-    protected PDFLayout m_layout;
+    public PDFLayout m_layout;
     private Document m_doc;
     protected int m_status = STA_NONE;
     private boolean m_zooming = false;
@@ -141,6 +143,7 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
     public float mMarkX, mMarkY;
 
     public PDFPos mMarkPDFPos;
+    private boolean mIsIntercept;
 
     public PDFPos getMarkPDFPos() {
         return mMarkPDFPos;
@@ -233,7 +236,8 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
             if (!isShowDamage) {
                 return;
             }
-            if (mIsV3) {
+           if (mIsV3) {
+
                 if (mCurrentModuleType.equals(mModuleType.get(0)) || mCurrentModuleType.equals(mModuleType.get(1))) {
                     showV3DamagePopupWindow();
                 } else if (mCurrentModuleType.equals(mModuleType.get(2))) {
@@ -816,12 +820,13 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
             paint1.setStrokeWidth(Global.g_line_annot_width);
             paint1.setColor(Global.g_line_annot_color);
             for (cur = 0; cur < len; cur += 4) {
-                canvas.drawLine(m_rects[cur], m_rects[cur + 1], m_rects[cur + 2], m_rects[cur + 3], paint1);
+                canvas.drawLine(m_rects[cur], m_rects[cur + 1], m_rects[cur+2 ], m_rects[cur + 3], paint1);
             }
         }
     }
 
     private void onDrawStamp(Canvas canvas) {
+
         if (m_status == STA_STAMP && m_rects != null) {
             int len = m_rects.length;
             int cur;
@@ -1628,6 +1633,9 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        if (mIsIntercept){
+            return true;
+        }
         if (m_layout == null) return false;
         if (onTouchNone(event)) return true;
         if (onTouchZoom(event)) return true;
@@ -1910,6 +1918,11 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
         }
     }
 
+
+    public void  setIntercept(boolean isIntercept){
+        mIsIntercept = isIntercept;
+    }
+
     public boolean PDFSetAttachment(String attachmentPath) {
         boolean result = false;
         Page page = m_doc.GetPage(0);
@@ -2102,6 +2115,8 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
         }
     }
 
+
+
     public void PDFSetEllipse(int code) {
         if (code == 0)//start
         {
@@ -2229,6 +2244,8 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
         }
     }
 
+
+
     public void PDFSetLine(int code) {
         Log.i("leon", "PDFLayoutView PDFSetLine code=" + code + ", status=" + m_status);
         if (code == 0)//start
@@ -2292,6 +2309,86 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
             m_status = STA_NONE;
             m_rects = null;
             invalidate();
+        }
+    }
+
+
+    public void PDFSetStamp(int code,Bitmap bitmap,float x,float y) {
+        if (code == 0)//start
+        {
+            m_status = STA_STAMP;
+            m_icon = BitmapFactory.decodeResource(this.getResources(), R.drawable.ic_custom_stamp).copy(Bitmap.Config.ARGB_8888, true);
+
+        } else if (code == 1)//end
+        {
+            m_status = STA_STAMP;
+            m_icon = BitmapFactory.decodeResource(this.getResources(), R.drawable.ic_custom_stamp).copy(Bitmap.Config.ARGB_8888, true);
+
+            m_rects = new float[4];
+            m_rects[0]= x;
+            m_rects[1]= y;
+            m_rects[2]= x;
+            m_rects[3]= y;
+            m_dicon = m_doc.NewImage(m_icon, 0);
+            if (m_rects != null) {
+                int len = m_rects.length;
+                int cur;
+                PDFVPageSet pset = new PDFVPageSet(len);
+                for (cur = 0; cur < len; cur += 4) {
+                    PDFPos pos = m_layout.vGetPos((int) m_rects[cur], (int) m_rects[cur + 1]);
+                    VPage vpage = m_layout.vGetPage(pos.pageno);
+                    Page page = m_doc.GetPage(vpage.GetPageNo());
+                    if (page != null) {
+                        Matrix mat = vpage.CreateInvertMatrix(m_layout.vGetX(), m_layout.vGetY());
+                        float[] rect = new float[4];
+                        if (m_rects[cur] > m_rects[cur + 2]) {
+                            rect[0] = 100f;
+                            rect[2] = 200f;
+                        } else {
+                            rect[0] = m_rects[cur];
+                            rect[2] = m_rects[cur + 2];
+                        }
+                        if (m_rects[cur + 1] > m_rects[cur + 3]) {
+                            rect[1] = m_rects[cur + 3];
+                            rect[3] = m_rects[cur + 1];
+                        } else {
+                            rect[1] = m_rects[cur + 1];
+                            rect[3] = m_rects[cur + 3];
+                        }
+                        mat.TransformRect(rect);
+                        page.ObjsStart();
+                        boolean isAdd= page.AddAnnotBitmap(m_dicon, rect);
+                        Log.e("PDFSetStamp", "PDFSetStamp: "+isAdd );
+                        mat.Destroy();
+                        onAnnotCreated(page.GetAnnot(page.GetAnnotCount() - 1));
+                        //add to redo/undo stack.
+                        m_opstack.push(new OPAdd(pos.pageno, page, page.GetAnnotCount() - 1));
+                        page.Close();
+                        pset.Insert(vpage);
+
+                    }
+                }
+                for (cur = 0; cur < pset.pages_cnt; cur++) {
+                    VPage vpage = pset.pages[cur];
+                    m_layout.vRenderSync(vpage);
+                    if (m_listener != null)
+                        m_listener.OnPDFPageModified(vpage.GetPageNo());
+                }
+            }
+            invalidate();
+            m_status = STA_NONE;
+            m_rects = null;
+            if (m_icon != null)
+                m_icon.recycle();
+            m_icon = null;
+        } else//cancel
+        {
+            m_status = STA_NONE;
+            m_rects = null;
+            invalidate();
+            if (m_icon != null)
+                m_icon.recycle();
+            m_icon = null;
         }
     }
 
