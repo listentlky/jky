@@ -2,10 +2,7 @@ package com.sribs.bdd.ui.project
 
 import android.app.Dialog
 import android.content.Context
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.ListView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.forEachIndexed
@@ -61,7 +58,7 @@ class ProjectFloorItemActivity : BaseActivity(), IProjectContrast.IProjectFloorD
 
     @JvmField
     @Autowired(name = com.sribs.common.ARouterPath.VAL_COMMON_VERSION)
-    var mVersion = 0
+    var mVersion = 0L
 
     @JvmField
     @Autowired(name = com.sribs.common.ARouterPath.VAL_COMMON_REMOTE_ID)
@@ -200,17 +197,21 @@ class ProjectFloorItemActivity : BaseActivity(), IProjectContrast.IProjectFloorD
                 DialogUtil.showBottomDialog(this, R.layout.dialog_common_bottom_building_select, true) {
                     when (it) {
                         0->{ //上传配置
-                            if(beanMain.moduleid!!<0){
-                                showToast("请先下载再上传")
+                            if(beanMain.buildingRemoteId.isNullOrEmpty()){
+                                showToast("请先上传楼")
                                 return@showBottomDialog
                             }
-                            mPresenter.uploadModule(beanMain)
+
+                            showPb(true)
+                            mPresenter.uploadModule(beanMain){
+                                showPb(false)
+                            }
                         }
                         1 -> { //下载配置
-                            if(beanMain.remoteId.isNullOrEmpty()){
+                           /* if(beanMain.remoteId.isNullOrEmpty()){
                                 showToast("非云端项目，请先上传再下载")
                                 return@showBottomDialog
-                            }
+                            }*/
                             doDownload(beanMain)
                         }
                         2 -> { // 删除
@@ -219,8 +220,12 @@ class ProjectFloorItemActivity : BaseActivity(), IProjectContrast.IProjectFloorD
                             })
 
                         }
+                        else ->{
+                            showFab(true)
+                        }
                     }
                 }
+            showFab(false)
         } else {
             if (mBottomDialog == null || mBottomDialog?.isShowing == false) {
                 mBottomDialog = null
@@ -231,9 +236,33 @@ class ProjectFloorItemActivity : BaseActivity(), IProjectContrast.IProjectFloorD
         }
     }
 
+    private fun showFab(b: Boolean) {
+        if (b) {
+            mBinding.matchMainFab.visibility = View.VISIBLE
+        } else {
+            mBinding.matchMainFab.visibility = View.GONE
+        }
+    }
+
+    private fun showPb(b:Boolean){
+        runOnUiThread(object :Runnable{
+            override fun run() {
+                if (b){
+                    mBinding.pb.visibility = View.VISIBLE
+                    window.setFlags(
+                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+                }else{
+                    mBinding.pb.visibility = View.GONE
+                    window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+                }
+            }
+        })
+    }
+
     private fun doDownload(beanMain: BuildingModule){
-        if (beanMain.remoteId.isNullOrEmpty()){
-            showToast(getString(R.string.error_no_remote))
+        if (beanMain.status == "0"){
+            showToast("请先上传楼")
             return
         }
         if (!Config.isNetAvailable){
@@ -241,7 +270,7 @@ class ProjectFloorItemActivity : BaseActivity(), IProjectContrast.IProjectFloorD
             return
         }
 
-        mPresenter.getV3ModuleVersionHistory(mRemoteId,beanMain.remoteId!!){ versionList->
+        mPresenter.getV3ModuleVersionHistory(beanMain.buildingRemoteId!!,beanMain.moduleUUID!!){ versionList->
             if (versionList.isNullOrEmpty()){
                 showToast(getString(R.string.error_no_history))
                 return@getV3ModuleVersionHistory
@@ -253,16 +282,19 @@ class ProjectFloorItemActivity : BaseActivity(), IProjectContrast.IProjectFloorD
                 LOG.I("123","${l[0]}")
                 var idx = l[0]!!
                 DialogUtil.showMsgDialog(this,"覆盖本地版本？",{
+                    showPb(true)
                     mPresenter.downloadModuleConfig(
-                        beanMain.remoteId!!,
+                        mProjectName,
+                        mBldName,
+                        beanMain,
+                        beanMain.moduleUUID!!,
                         versionList[idx].version,
-                    ){
-                        if(it){
-                            showToast("下载成功")
+                    ){isSuccess,msg->
+                        showToast(msg)
+                        if(isSuccess){
                             beanMain.also { b->b.status = resources.getStringArray(R.array.main_project_status)[4] }
-                        }else{
-                            showToast("下载失败")
                         }
+                        showPb(false)
                     }
                 },{})
 
@@ -284,7 +316,7 @@ class ProjectFloorItemActivity : BaseActivity(), IProjectContrast.IProjectFloorD
         when (item?.itemId) {
             R.id.menu_module_refresh ->{ //从远端获取更新
                 if(mRemoteId.isNullOrEmpty()){
-                    showToast("云端无该楼，请先上传")
+                    showToast("请先上传楼")
                     return super.onOptionsItemSelected(item)
                 }
                 mPresenter.getRemoteModule(mRemoteId,mVersion)
@@ -488,7 +520,7 @@ class ProjectFloorItemActivity : BaseActivity(), IProjectContrast.IProjectFloorD
                     mRemoteId,
                     mProjectName,
                     mBldName,
-                    items.get(choseType)
+                    items.get(choseType),
                 )
             }
             alertDialog3?.dismiss();

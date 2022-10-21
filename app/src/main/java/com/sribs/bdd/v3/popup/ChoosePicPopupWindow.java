@@ -39,6 +39,9 @@ public class ChoosePicPopupWindow extends android.widget.PopupWindow {
         setBackgroundDrawable(null);
         setOutsideTouchable(true);
         setWidth(width);
+        if(list.size()>0) {
+            mDrawingV3Bean = list.get(0);
+        }
 
         mRecyclerView = (RecyclerView)view.findViewById(R.id.popup_recyclerView);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));

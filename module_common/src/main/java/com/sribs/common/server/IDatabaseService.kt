@@ -72,6 +72,8 @@ interface IDatabaseService:IProvider {
 
     fun updatev3BuildingModuleDrawing(id:Long,drawingList:List<DrawingV3Bean>): Observable<Int>
 
+    fun updateBuildingModule(moduleId: Long, drawings:List<DrawingV3Bean>, isChanged:Int): Observable<Int>
+
     fun deletev3BuildingModule(b: v3BuildingModuleDbBean): Observable<Int>
 
     fun updatev3ModuleFloor(b:v3ModuleFloorDbBean):Observable<Long>
@@ -91,6 +93,8 @@ interface IDatabaseService:IProvider {
     fun deleteModuleFloorByProjectId(projectId: Long): Observable<Boolean>
 
     fun deleteModuleFloorByBuildingId(buildingId: Long): Observable<Boolean>
+
+    fun deleteModuleFloorByModuleId(moduleId: Long):Observable<Boolean>
 
     /**
      * 3期项目end
@@ -260,6 +264,7 @@ interface IDatabaseService:IProvider {
     fun createLocalDrawing(dw: DrawingBean):Observable<Long>
 //    fun getLocalFloorsInTheBuilding(bldId: Long): Flowable<List<FloorBean>>
     fun getBuildingIdByProjectId(proId: Long): Observable<Long>
+
     fun deleteBuildingByProjectId(projectId: Long): Observable<Boolean>
     fun deleteBuilding(bld: Long): Observable<Boolean>
     fun getLocalDrawingListInBuilding(proId:Long, bldId:Long): Maybe<List<DrawingBean>>
@@ -287,5 +292,19 @@ interface IDatabaseService:IProvider {
      * 更新模块层表图纸数据
      */
     fun updateModuleFloorDrawing(drawingList:List<DrawingV3Bean>, id: Long):Observable<Int>
+
+    fun updateProject(id:Long,isChanged:Int,status:Int): Observable<Long>
+
+    fun updateBuilding(id:Long,isChanged:Int,status:Int): Observable<Long>
+
+    fun updateBuildingByProjectId(projectId:Long,isChanged:Int,status:Int): Observable<Long>
+
+    fun updateBuildingModule(id:Long,isChanged:Int,status:Int): Observable<Long>
+
+    fun updateBuildingModule(id:Long,isChanged:Int): Observable<Long>
+
+    fun updateBuildingModuleByProjectId(projectId:Long,isChanged:Int,status:Int): Observable<Long>
+
+    fun updateBuildingModuleByBuildingId(buildingId :Long,isChanged:Int,status:Int): Observable<Long>
 
 }

@@ -1,6 +1,5 @@
 package com.sribs.common.bean.db
 
-import java.sql.Date
 
 /**
  * @date 2021/7/8
@@ -18,12 +17,12 @@ data class ProjectBean(
     var parentVersion:Long?=0,
     var version:Long?=System.currentTimeMillis(),
 
-    var createTime:Date?=null,
-    var updateTime:Date?=null,
+    var createTime:String?=null,
+    var updateTime:String?=null,
 
     var remoteId:String?=null,
     var flag:Int?=null,
-    var isChanged: Boolean? = false
+    var isChanged: Int? = 0
 ){
     fun isSame(name:String?,leader:String?,buildNo: String?):Boolean =
         this.name == name && this.leader == leader && this.buildNo == buildNo

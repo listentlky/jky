@@ -17,6 +17,7 @@ import com.sribs.common.bean.db.ProjectBean
 import com.sribs.common.bean.net.ProjectCreateReq
 import com.sribs.common.net.HttpApi
 import com.sribs.common.server.IDatabaseService
+import com.sribs.common.utils.TimeUtil
 import java.sql.Date
 import java.util.*
 
@@ -69,7 +70,7 @@ class ProjectProjectPresenter : BasePresenter(), IProjectContrast.IProjectPresen
             it.name = name
             it.leader = leader
             it.buildNo = myBuildNo
-            it.updateTime = Date(java.util.Date().time)
+            it.updateTime = TimeUtil.stampToDate(""+System.currentTimeMillis())
         }
         addDisposable(mDb.getProjectOnce(name, myBuildNo).toObservable()
             .subscribeOn(Schedulers.computation())
@@ -115,7 +116,8 @@ class ProjectProjectPresenter : BasePresenter(), IProjectContrast.IProjectPresen
             it.name = name
             it.leader = leader
             it.inspector = inspector
-            it.updateTime = Date(java.util.Date().time)
+            it.updateTime = TimeUtil.stampToDate(""+System.currentTimeMillis())
+            it.isChanged = 1
         }
         mDb.getProjectOnce(name).toObservable()
             .subscribeOn(Schedulers.computation())

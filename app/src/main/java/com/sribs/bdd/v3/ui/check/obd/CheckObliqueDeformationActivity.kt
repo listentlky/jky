@@ -439,7 +439,7 @@ class CheckObliqueDeformationActivity : BaseActivity(), ICheckOBDContrast.ICheck
         resetDamageList()
 
         mBinding.checkVp.currentItem = 0
-        CommonUtil.screenCapture(this,"1","2",bitmap)
+   //     CommonUtil.screenCapture(this,"1","2",bitmap)
         mView!!.PDFSetStamp(0,bitmap,0f,0f)
         mView!!.PDFSetStamp(1,bitmap,100f,200f)
 

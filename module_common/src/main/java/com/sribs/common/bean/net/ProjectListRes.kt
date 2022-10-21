@@ -16,6 +16,6 @@ data class ProjectListRes(
     @SerializedName("inspectors")        var inspectors:List<String>?,
     @SerializedName("parentVersion")     var parentVersion:Long,
     @SerializedName("version")           var version:Long,
- //   @SerializedName("createTime")        var createTime:String,
- //   @SerializedName("updateTime")        var updateTime:String
+    @SerializedName("createTime")        var createTime:String,
+/*    @SerializedName("updateTime")        var updateTime:String*/
 )

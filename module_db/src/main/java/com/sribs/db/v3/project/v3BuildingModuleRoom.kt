@@ -34,7 +34,7 @@ data class v3BuildingModuleRoom(
     @ColumnInfo(name = "delete_time") var deleteTime: String? = null,
     @ColumnInfo(name = "update_time") var updateTime: String? = null,
     @ColumnInfo(name = "remote_id") var remoteId: String? = null, //远端ID
-    @ColumnInfo(name = "isChanged") var isChanged: Boolean? = false,
+    @ColumnInfo(name = "isChanged") var isChanged: Int? = 0,
 ) {
     @ColumnInfo(name = "id")
     @PrimaryKey(autoGenerate = true)

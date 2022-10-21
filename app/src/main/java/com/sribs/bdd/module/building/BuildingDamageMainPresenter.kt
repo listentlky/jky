@@ -19,6 +19,7 @@ import io.reactivex.schedulers.Schedulers
 import org.apache.commons.lang3.math.NumberUtils
 
 import com.sribs.common.server.IDatabaseService
+import com.sribs.common.utils.TimeUtil
 import com.sribs.db.project.building.BuildingBean
 import com.sribs.db.project.drawing.DrawingBean
 import com.sribs.db.project.floor.FloorBean
@@ -115,9 +116,9 @@ class BuildingDamageMainPresenter :BasePresenter(), IBuildingContrast.IBuildingP
                     proId,
                     bb.buildingName,
                     bb.bldType,
-                    curTime,
-                    curTime,
-                    0L,
+                    TimeUtil.stampToDate(""+curTime),
+                    TimeUtil.stampToDate(""+curTime),
+                    "",
                     0,
                     "",
                     "",
@@ -176,9 +177,9 @@ class BuildingDamageMainPresenter :BasePresenter(), IBuildingContrast.IBuildingP
                         it.floorId?.toLong(),
                         it.floorName,
                         it.floorType,
-                        it.createTime,
-                        it.createTime,
-                        0L,
+                        TimeUtil.stampToDate(""+it.createTime),
+                        TimeUtil.stampToDate(""+it.createTime),
+                        "",
                         "",
                         1,
                         "",

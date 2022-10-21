@@ -29,33 +29,37 @@ import com.sribs.common.utils.FileUtil
  * 创建楼栋
  */
 @Route(path = com.sribs.common.ARouterPath.PRO_CREATE_ATY_TYPE)
-class ProjectCreateByTypeActivity:BaseActivity(), IProjectContrast.IProjectCreateTypeView {
+class ProjectCreateByTypeActivity : BaseActivity(), IProjectContrast.IProjectCreateTypeView {
 
     @JvmField
-    @Autowired(name= com.sribs.common.ARouterPath.VAL_COMMON_LOCAL_ID)
+    @Autowired(name = com.sribs.common.ARouterPath.VAL_COMMON_LOCAL_ID)
     var mLocalProjectId = -1L
 
     @JvmField
-    @Autowired(name= com.sribs.common.ARouterPath.VAL_PROJECT_UUID)
+    @Autowired(name = com.sribs.common.ARouterPath.VAL_PROJECT_UUID)
     var mLocalProjectUUID = ""
 
     @JvmField
-    @Autowired(name= com.sribs.common.ARouterPath.VAL_COMMON_REMOTE_ID)
+    @Autowired(name = com.sribs.common.ARouterPath.VAL_COMMON_VERSION)
+    var mVersion = 0L
+
+    @JvmField
+    @Autowired(name = com.sribs.common.ARouterPath.VAL_COMMON_REMOTE_ID)
     var mRemoteId = ""
 
     @JvmField
-    @Autowired(name= com.sribs.common.ARouterPath.VAL_BUILDING_ID)
+    @Autowired(name = com.sribs.common.ARouterPath.VAL_BUILDING_ID)
     var mBuildingId = -1L
 
     @JvmField
-    @Autowired(name= com.sribs.common.ARouterPath.VAL_COMMON_LEADER)
+    @Autowired(name = com.sribs.common.ARouterPath.VAL_COMMON_LEADER)
     var mLeader = ""
 
     @JvmField
-    @Autowired(name= com.sribs.common.ARouterPath.VAL_COMMON_INSPECTOR)
+    @Autowired(name = com.sribs.common.ARouterPath.VAL_COMMON_INSPECTOR)
     var mInspector = ""
 
-    private val mBinding:ActivityCreateProjectTypeBinding by inflate()
+    private val mBinding: ActivityCreateProjectTypeBinding by inflate()
 
     private val projectCreateTypePresenter by lazy { ProjectCreateTypePresenter() }
 
@@ -72,7 +76,7 @@ class ProjectCreateByTypeActivity:BaseActivity(), IProjectContrast.IProjectCreat
 
     private val REQUEST_CODE_WHITE_BUILDING = 16 //基于楼的白板
 
-    private  var isDeleteBuildingFloor = false
+    private var isDeleteBuildingFloor = false
     override fun deinitView() {
 
     }
@@ -87,50 +91,50 @@ class ProjectCreateByTypeActivity:BaseActivity(), IProjectContrast.IProjectCreat
             projectCreateTypePresenter.mBeforeOldIndex = 0
             finish()
         }
-       mBinding.toolbar.tbTitle.text = "新建项目"
-       mBinding.aboveNumber.setTextCallback(object :TagEditView.ITextChanged{
-           override fun onTextChange(s: Editable?) {
-
-               if (isDeleteBuildingFloor){
-                   isDeleteBuildingFloor = false
-                   if ((s == null) || (s.toString() == "")){
-                       projectCreateTypePresenter.addAboveFlourList(0)
-                   }else{
-                       projectCreateTypePresenter.mAboveOldIndex = s.toString().toInt()
-
-                   }
-                   return
-               }
-
-               if ((s == null) || (s.toString() == "")){
-                   projectCreateTypePresenter.addAboveFlourList(0)
-                   return
-               }
-               val num: Int = s.toString().toInt()
-               if (num>=0){//执行
-                   projectCreateTypePresenter.addAboveFlourList(num)
-               }
-           }
-       })
-
-        mBinding.afterNumber.setTextCallback(object :TagEditView.ITextChanged{
+        mBinding.toolbar.tbTitle.text = "新建项目"
+        mBinding.aboveNumber.setTextCallback(object : TagEditView.ITextChanged {
             override fun onTextChange(s: Editable?) {
-                if (isDeleteBuildingFloor){
+
+                if (isDeleteBuildingFloor) {
                     isDeleteBuildingFloor = false
-                    if ((s == null) || (s.toString() == "")){
+                    if ((s == null) || (s.toString() == "")) {
+                        projectCreateTypePresenter.addAboveFlourList(0)
+                    } else {
+                        projectCreateTypePresenter.mAboveOldIndex = s.toString().toInt()
+
+                    }
+                    return
+                }
+
+                if ((s == null) || (s.toString() == "")) {
+                    projectCreateTypePresenter.addAboveFlourList(0)
+                    return
+                }
+                val num: Int = s.toString().toInt()
+                if (num >= 0) {//执行
+                    projectCreateTypePresenter.addAboveFlourList(num)
+                }
+            }
+        })
+
+        mBinding.afterNumber.setTextCallback(object : TagEditView.ITextChanged {
+            override fun onTextChange(s: Editable?) {
+                if (isDeleteBuildingFloor) {
+                    isDeleteBuildingFloor = false
+                    if ((s == null) || (s.toString() == "")) {
                         projectCreateTypePresenter.addAfterFlourList(0)
-                    }else{
+                    } else {
                         projectCreateTypePresenter.mBeforeOldIndex = s.toString().toInt()
 
                     }
                     return
                 }
-                if ((s == null) || (s.toString() == "")){
+                if ((s == null) || (s.toString() == "")) {
                     projectCreateTypePresenter.addAfterFlourList(0)
                     return
                 }
                 val num: Int = s.toString().toInt()
-                if (num>=0){//执行
+                if (num >= 0) {//执行
                     projectCreateTypePresenter.addAfterFlourList(num)
                 }
             }
@@ -139,30 +143,30 @@ class ProjectCreateByTypeActivity:BaseActivity(), IProjectContrast.IProjectCreat
 
         mBinding.chosePic.setOnClickListener {//选择图片
             //不限数量的多选
-         /*   ImageSelector.builder()
-                .useCamera(false) // 设置是否使用拍照
-                .setSingle(false)  //设置是否单选
-                .setMaxSelectCount(0) // 图片的最大选择数量，小于等于0时，不限数量。
-                .setSelected(selected) // 把已选的图片传入默认选中。
-                .canPreview(true) //是否可以预览图片，默认为true
-                .start(this, REQUEST_CODE) // 打开相册*/
+            /*   ImageSelector.builder()
+                   .useCamera(false) // 设置是否使用拍照
+                   .setSingle(false)  //设置是否单选
+                   .setMaxSelectCount(0) // 图片的最大选择数量，小于等于0时，不限数量。
+                   .setSelected(selected) // 把已选的图片传入默认选中。
+                   .canPreview(true) //是否可以预览图片，默认为true
+                   .start(this, REQUEST_CODE) // 打开相册*/
             openPdfOrImgSelector()
         }
 
 
         mBinding.chosePicList.setOnClickListener {
 
-            if (selected.size==0){
+            if (selected.size == 0) {
                 return@setOnClickListener
             }
             selectedPic.clear()
             selected.forEach {
-                var name = FileUtil.uriToFileName(Uri.parse(it),this)
+                var name = FileUtil.uriToFileName(Uri.parse(it), this)
                 name = name ?: it
-                selectedPic.add(BuildingFloorPictureBean(name,it,null))
+                selectedPic.add(BuildingFloorPictureBean(name, it, null))
             }
 
-            var dialog = ChosePicDialog(this,selectedPic){
+            var dialog = ChosePicDialog(this, selectedPic) {
                 projectCreateTypePresenter.refreshPicList(it)
             }
             dialog.show()
@@ -178,29 +182,30 @@ class ProjectCreateByTypeActivity:BaseActivity(), IProjectContrast.IProjectCreat
 
         mBinding.choseWhiteList.setOnClickListener {
             ARouter.getInstance().build(com.sribs.common.ARouterPath.DRAW_WHITE)
-                .navigation(this,REQUEST_CODE_WHITE_BUILDING)
+                .navigation(this, REQUEST_CODE_WHITE_BUILDING)
         }
 
         mBinding.createComplete.setOnClickListener {//保存到数据库中Building
-            if (mBinding.builderName.getEditText().text!=null){
-                projectCreateTypePresenter.createLocalBuilding(this,
+            if (mBinding.builderName.getEditText().text != null) {
+                projectCreateTypePresenter.createLocalBuilding(
+                    this,
                     mLocalProjectId.toInt(),
                     mLocalProjectUUID,
                     mRemoteId,
                     mBuildingId,
-                    mBinding.builderName.getEditText().text.toString()
-                    ,mLeader!!
-                    ,mInspector!!)
-            }else{
+                    mBinding.builderName.getEditText().text.toString(), mLeader!!, mInspector!!,
+                    mVersion
+                )
+            } else {
                 showToast("请输入楼名称")
             }
 
         }
     }
 
-    fun openPdfOrImgSelector(){
+    fun openPdfOrImgSelector() {
         val supportedMimeTypes = arrayOf("application/pdf", "image/*")
-        var intent:Intent = Intent()
+        var intent: Intent = Intent()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             intent.type = if (supportedMimeTypes.size === 1) supportedMimeTypes[0] else "*/*"
             if (supportedMimeTypes.size > 0) {
@@ -224,46 +229,66 @@ class ProjectCreateByTypeActivity:BaseActivity(), IProjectContrast.IProjectCreat
         if (requestCode == REQUEST_CODE && data != null) { //上传图片
             var uri = data.data
             selected.add(uri.toString())
-        }else if(requestCode == REQUEST_CODE_PIC_FLOOR && data != null){
-            var  isCameraImage = data.getBooleanExtra(ImageSelector.IS_CAMERA_IMAGE, false)
-            if (isCameraImage){
+        } else if (requestCode == REQUEST_CODE_PIC_FLOOR && data != null) {
+            var isCameraImage = data.getBooleanExtra(ImageSelector.IS_CAMERA_IMAGE, false)
+            if (isCameraImage) {
                 var images = data.getStringArrayListExtra(ImageSelector.SELECT_RESULT)
-                if (images!=null&&images.size>0){
+                if (images != null && images.size > 0) {
                     var name = FileUtil.getFileName(images[0])
                     name = name ?: images[0]
-                    LogUtils.d("基于楼层选择图片返回: "+images[0])
-                    currentBean?.pictureList?.add(BuildingFloorPictureBean(name!!,null,images[0]).also {
-                    })
+                    LogUtils.d("基于楼层选择图片返回: " + images[0])
+                    currentBean?.pictureList?.add(
+                        BuildingFloorPictureBean(
+                            name!!,
+                            null,
+                            images[0]
+                        ).also {
+                        })
                     projectCreateTypePresenter.refeshData()
                 }
             }
-        }
-        else if (requestCode == REQUEST_CODE_PIC_BUIlDING && data != null){
-            var  isCameraImage = data.getBooleanExtra(ImageSelector.IS_CAMERA_IMAGE, false)
-            if (isCameraImage){
+        } else if (requestCode == REQUEST_CODE_PIC_BUIlDING && data != null) {
+            var isCameraImage = data.getBooleanExtra(ImageSelector.IS_CAMERA_IMAGE, false)
+            if (isCameraImage) {
                 var images = data.getStringArrayListExtra(ImageSelector.SELECT_RESULT)
-                if (images!=null&&images.size>0){
+                if (images != null && images.size > 0) {
                     var name = FileUtil.getFileName(images[0])
                     name = name ?: images[0]
-                    LogUtils.d("基于楼拍照返回: "+images[0])
-                    projectCreateTypePresenter.refreshPicList(arrayListOf(BuildingFloorPictureBean(name!!,null,images[0])))
+                    LogUtils.d("基于楼拍照返回: " + images[0])
+                    projectCreateTypePresenter.refreshPicList(
+                        arrayListOf(
+                            BuildingFloorPictureBean(
+                                name!!,
+                                null,
+                                images[0]
+                            )
+                        )
+                    )
                 }
             }
-        }else if (requestCode == REQUEST_CODE_WHITE_BUILDING && data != null){//
-                var file = data.getStringExtra("File")
-            LogUtils.d("基于楼白板："+file)
+        } else if (requestCode == REQUEST_CODE_WHITE_BUILDING && data != null) {//
+            var file = data.getStringExtra("File")
+            LogUtils.d("基于楼白板：" + file)
             if (file != null) {
                 var name = FileUtil.getFileName(file)
                 name = name ?: file
-                projectCreateTypePresenter.refreshPicList(arrayListOf(BuildingFloorPictureBean(name,null,file)))
+                projectCreateTypePresenter.refreshPicList(
+                    arrayListOf(
+                        BuildingFloorPictureBean(
+                            name,
+                            null,
+                            file
+                        )
+                    )
+                )
             }
-        }else if (requestCode == REQUEST_CODE_BEAN_WHITE_FLLOR && data != null){
+        } else if (requestCode == REQUEST_CODE_BEAN_WHITE_FLLOR && data != null) {
             var file = data.getStringExtra("File")
-            LogUtils.d("基于楼层白板："+file)
-            if (file!=null){
+            LogUtils.d("基于楼层白板：" + file)
+            if (file != null) {
                 var name = FileUtil.getFileName(file)
                 name = name ?: file
-                currentBean?.pictureList?.add(BuildingFloorPictureBean(name!!,null,file))
+                currentBean?.pictureList?.add(BuildingFloorPictureBean(name!!, null, file))
                 projectCreateTypePresenter.refeshData()
             }
         }
@@ -274,22 +299,23 @@ class ProjectCreateByTypeActivity:BaseActivity(), IProjectContrast.IProjectCreat
 
     override fun getPicRecycleView(): RecyclerView = mBinding.picRecycleview
     override fun chosePic(bean: BuildingFloorBean) {
-        if (selected.size==0){
+        if (selected.size == 0) {
             return
         }
         selectedPic.clear()
         selected.forEach {
-            var name = FileUtil.uriToFileName(Uri.parse(it),this)
+            var name = FileUtil.uriToFileName(Uri.parse(it), this)
             name = name ?: it
-            selectedPic.add(BuildingFloorPictureBean(name,it,null))
+            selectedPic.add(BuildingFloorPictureBean(name, it, null))
         }
 
-        var dialog = ChosePicDialog(this,selectedPic){
+        var dialog = ChosePicDialog(this, selectedPic) {
             bean.pictureList?.addAll(it)
         }
         dialog.show()
 
     }
+
     var currentBean: BuildingFloorBean? = null
     override fun takePhone(bean: BuildingFloorBean) {
         //仅拍照
@@ -303,24 +329,24 @@ class ProjectCreateByTypeActivity:BaseActivity(), IProjectContrast.IProjectCreat
 
     override fun choseWhite(bean: BuildingFloorBean) {
         ARouter.getInstance().build(com.sribs.common.ARouterPath.DRAW_WHITE)
-            .navigation(this,REQUEST_CODE_BEAN_WHITE_FLLOR)
+            .navigation(this, REQUEST_CODE_BEAN_WHITE_FLLOR)
         currentBean = bean
 
     }
 
-    override fun deleteBuildingFloor(floorType:String,adboveSize: Int,beforeSize:Int) {
+    override fun deleteBuildingFloor(floorType: String, adboveSize: Int, beforeSize: Int) {
         currentFocus?.clearFocus()
         isDeleteBuildingFloor = true
-            when(floorType){
-                "地上"->{
+        when (floorType) {
+            "地上" -> {
 
-                    mBinding.aboveNumber.setEditText(adboveSize.toString())
+                mBinding.aboveNumber.setEditText(adboveSize.toString())
 
-                }
-                "地下"->{
-                    mBinding.afterNumber.setEditText(beforeSize.toString())
-                }
             }
+            "地下" -> {
+                mBinding.afterNumber.setEditText(beforeSize.toString())
+            }
+        }
     }
 
     override fun createBuildingSuccess() {
@@ -331,14 +357,14 @@ class ProjectCreateByTypeActivity:BaseActivity(), IProjectContrast.IProjectCreat
     override fun getContext(): Context? = this
 
     override fun bindPresenter() {
-       projectCreateTypePresenter.bindView(this)
+        projectCreateTypePresenter.bindView(this)
     }
 
     override fun onMsg(msg: String) {
-      showToast(msg)
+        showToast(msg)
     }
 
     override fun unbindPresenter() {
-       projectCreateTypePresenter.unbindView()
+        projectCreateTypePresenter.unbindView()
     }
 }

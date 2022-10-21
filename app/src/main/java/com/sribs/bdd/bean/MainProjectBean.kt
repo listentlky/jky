@@ -13,14 +13,13 @@ data class MainProjectBean(
     var localId:Long=-1,
     var localUUID:String,
     var remoteId:String="",
-    var updateTimeYMD:String,
     var status: String,
     var address:String,
     var leader:String="",
     var inspector:String="",
     var parentVersion:Long=0,
     var version:Long=0,
-    var isChanged: Boolean?= false
+    var isChanged: Int?= 0
 ){
     var isCardSel:Boolean = false
     var isMenuChecked:Boolean = false
@@ -42,7 +41,7 @@ data class MainProjectBean(
     }
 
     override fun toString(): String {
-        return "MainProjectBean(localId=$localId, localUUID='$localUUID', remoteId='$remoteId', updateTimeYMD='$updateTimeYMD', status='$status', address='$address', leader='$leader', inspector='$inspector', isCardSel=$isCardSel, isMenuChecked=$isMenuChecked, hasNewer=$hasNewer, updateTime='$updateTime', createTime='$createTime', name=$name, buildNo=$buildNo, remoteData=$remoteData)"
+        return "MainProjectBean(localId=$localId, localUUID='$localUUID', remoteId='$remoteId', status='$status', address='$address', leader='$leader', inspector='$inspector', isCardSel=$isCardSel, isMenuChecked=$isMenuChecked, hasNewer=$hasNewer, updateTime='$updateTime', createTime='$createTime', name=$name, buildNo=$buildNo, remoteData=$remoteData)"
     }
 
 

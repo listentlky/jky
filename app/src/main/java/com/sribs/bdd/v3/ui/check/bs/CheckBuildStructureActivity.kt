@@ -495,7 +495,7 @@ class CheckBuildStructureActivity : BaseActivity(), ICheckBSContrast.ICheckBSVie
             it.drawing?.forEach { b ->
                 b.damage = mDamageBeanList?.get(b.localAbsPath)
             }
-            mPresenter.saveDamageToDb(it.drawing!!, it.id!!)
+            mPresenter.saveDamageToDb(it)
         }
     }
 

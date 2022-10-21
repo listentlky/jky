@@ -16,7 +16,7 @@ interface ICheckBSContrast {
     interface ICheckBSPresenter: IBasePresenter {
         fun getModuleInfo(localProjectId:Long,localBldId:Long,localModuleId:Long,remoteId:String?)
 
-        fun saveDamageToDb(drawingV3Bean:List<DrawingV3Bean>,id:Long)
+        fun saveDamageToDb(bean:CheckBSMainBean)
 
     }
 

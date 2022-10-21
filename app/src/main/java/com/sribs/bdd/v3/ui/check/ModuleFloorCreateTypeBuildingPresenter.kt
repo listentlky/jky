@@ -8,14 +8,12 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.android.arouter.launcher.ARouter
-import com.baidu.mapapi.ModuleName
 import com.cbj.sdk.libui.mvp.moudles.IBasePresenter
 import com.sribs.common.module.BasePresenter
 import com.cbj.sdk.libui.mvp.moudles.IBaseView
 import com.radaee.util.CommonUtil
 
 import com.sribs.bdd.bean.*
-import com.sribs.bdd.bean.data.ModuleFloor
 import com.sribs.bdd.bean.data.ModuleFloorBean
 import com.sribs.bdd.bean.data.ModuleFloorPictureBean
 import com.sribs.bdd.module.project.IProjectContrast
@@ -24,7 +22,6 @@ import com.sribs.bdd.utils.ModuleHelper
 import com.sribs.bdd.v3.util.LogUtils
 import com.sribs.common.bean.db.DrawingV3Bean
 import com.sribs.common.bean.db.v3.project.v3BuildingModuleDbBean
-import com.sribs.common.bean.v3.v3ModuleFloorDbBean
 import com.sribs.common.server.IDatabaseService
 import com.sribs.common.utils.FileUtil
 import com.sribs.common.utils.TimeUtil
@@ -97,20 +94,23 @@ class ModuleFloorCreateTypeBuildingPresenter : BasePresenter(), IBasePresenter {
 
         createLocalFacadesDrawingInTheBuilding(activity, mLocalProjectId, mBuildingId, moduleName)
 
+/*
         var bean = v3BuildingModuleDbBean()
+
+        bean.id = mModuleId
 
         bean.drawings = mAppFacadeDrawingList
         bean.buildingId = mBuildingId
         bean.projectId = mLocalProjectId.toLong()
         bean.moduleName = moduleName
-        bean.id = mModuleId
+
         bean.updateTime = TimeUtil.YMD_HMS.format(Date())
         bean.remoteId = remoteId
-        bean.isChanged = true
-
+        bean.isChanged = 1
+*/
 
         addDisposable(
-            mDb.updatev3BuildingModuleDrawing(bean)
+            mDb.updateBuildingModule(mModuleId,mAppFacadeDrawingList?:ArrayList(),1)
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({

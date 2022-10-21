@@ -379,12 +379,13 @@ class ModuleCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCrea
                         createTime = TimeUtil.YMD_HMS.format(Date()),
                         updateTime = TimeUtil.YMD_HMS.format(Date()),
                         status = 0,
-                        isChanged = true
                     )
                     mDb.updatev3ModuleFloor(bean)
                 }
                 .observeOn(Schedulers.computation())
                 .subscribe({
+                    mDb.updateBuildingModule(moduleId,1)
+                    dispose()
                     mView?.createModuleConfigSuccess()
                 }, {
                     mView?.onMsg("保存到本地楼层表失败")

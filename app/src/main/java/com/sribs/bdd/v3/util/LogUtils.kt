@@ -9,9 +9,21 @@ import android.util.Log
  */
 object LogUtils {
 
+    var MAX_LENGTH = 3900
+
     val TAG: String? = "bruce"
 
     fun d(msg: String) {
-        Log.d(TAG, msg)
+        var content = msg
+        if(content.length> MAX_LENGTH){
+            while (content.length> MAX_LENGTH){
+                var splitMsg = content.substring(0, MAX_LENGTH)
+                content = content.replace(splitMsg,"")
+                Log.d(TAG, splitMsg)
+            }
+            Log.d(TAG, content)
+        }else{
+            Log.d(TAG, content)
+        }
     }
 }

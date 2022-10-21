@@ -226,7 +226,7 @@ class MainListFragment :
     }
 
     override fun onProjectList(l: ArrayList<MainProjectBean>) {
-        LogUtils.d("数据源: "+l.size)
+        LogUtils.d("onProjectList: "+l)
 
         mAdapter.setData(l)
         refreshFinish()

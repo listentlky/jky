@@ -14,9 +14,9 @@ data class BuildingBean(
     var projectId:Long?=null,
     var bldName:String?=null,
     var bldType:String?=null,
-    var createTime:Long?=null,
-    var updateTime:Long?=null,
-    var deleteTime:Long?=null,
+    var createTime:String?=null,
+    var updateTime:String?=null,
+    var deleteTime:String?=null,
     var isDeleted:Int?=0,
     var leader:String?=null,
     var inspectorName:String?="",
@@ -28,7 +28,7 @@ data class BuildingBean(
     var drawing:List<DrawingV3Bean>?= ArrayList(),
     var aboveGroundNumber:Int?=0, //楼上层数
     var underGroundNumber:Int?=0, //地下层数
-    var isChanged: Boolean? = false
+    var isChanged: Int? = 0
 
 ){
     fun isSame(id: Long?,projectId:Long?):Boolean =

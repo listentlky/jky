@@ -8,6 +8,10 @@ import com.google.gson.annotations.SerializedName
  * description:
  */
 data class V3VersionDownloadReq (
+    @SerializedName("parameters") var parameters:List<V3DownloadReq>,
+)
+
+data class V3DownloadReq(
     @SerializedName("id") var id:String,
-    @SerializedName("version") var version:Int,
+    @SerializedName("version") var version:String,
 )

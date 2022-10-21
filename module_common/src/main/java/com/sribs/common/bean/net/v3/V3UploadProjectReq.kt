@@ -8,7 +8,7 @@ package com.sribs.common.bean.net.v3
 data class V3UploadProjectReq (
     var buildingIds:List<String>,
     var buildings:List<V3UploadBuildingReq>,
-  //  var createTime:String,
+    var createTime:Long,
     var inspectors:List<String>,
     var isChanged:Boolean,
     var leaderId:String,

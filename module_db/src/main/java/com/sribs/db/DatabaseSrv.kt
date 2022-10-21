@@ -7,7 +7,6 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.cbj.sdk.libbase.utils.LOG
 import com.sribs.common.bean.db.*
 import com.sribs.common.bean.db.v3.project.v3BuildingModuleDbBean
-import com.sribs.common.bean.db.v3.project.v3ProjectDbBean
 import com.sribs.common.bean.v3.v3ModuleFloorDbBean
 import com.sribs.common.server.IDatabaseService
 import com.sribs.db.project.unit.UnitBean
@@ -70,6 +69,11 @@ class DatabaseSrv : IDatabaseService {
         it.onNext(dao.insertProject(ConverterHelper.covertProjectBean(b)))
     }
 
+    override fun updateProject(id: Long, isChanged: Int,status:Int):Observable<Long> = Observable.create {
+        var dao = mDb!!.projectDao()
+        it.onNext(dao.updateProject(id,isChanged,status).toLong())
+    }
+
     override fun deleteProject(b: ProjectBean): Observable<Int> = Observable.create {
         var dao = mDb!!.projectDao()
         it.onNext(dao.deleteProject(ConverterHelper.covertProjectBean(b)))
@@ -82,7 +86,7 @@ class DatabaseSrv : IDatabaseService {
     // 3007 查询楼建筑下的模块
     override fun getv3AllBuildingModule(): Flowable<List<v3BuildingModuleDbBean>> {
         var dao = mDb!!.v3BuildingModuleDao()
-        return dao.getAllProject().run {
+        return dao.getAllBuildingModule().run {
             ConverterHelper.convertv3BuildingModuleBean(this)
         }
     }
@@ -110,7 +114,7 @@ class DatabaseSrv : IDatabaseService {
         buildingId: Long
     ): Flowable<List<v3BuildingModuleDbBean>> {
         var dao = mDb!!.v3BuildingModuleDao()
-        return dao.getProject(projectId, buildingId).run {
+        return dao.getBuildingModule(projectId, buildingId).run {
             ConverterHelper.convertv3BuildingModuleBean(this)
         }
     }
@@ -120,7 +124,7 @@ class DatabaseSrv : IDatabaseService {
         buildingId: String
     ): Flowable<List<v3BuildingModuleDbBean>> {
         var dao = mDb!!.v3BuildingModuleDao()
-        return dao.getProject(projectId, buildingId.toLong()).run {
+        return dao.getBuildingModule(projectId, buildingId.toLong()).run {
             ConverterHelper.convertv3BuildingModuleBean(this)
         }
     }
@@ -129,14 +133,14 @@ class DatabaseSrv : IDatabaseService {
         moduleId: Long,
     ): Single<v3BuildingModuleDbBean> {
         var dao = mDb!!.v3BuildingModuleDao()
-        return dao.getProject(moduleId).run {
+        return dao.getBuildingModule(moduleId).run {
             ConverterHelper.convertOnlyv3BuildingModuleBeanOnce(this)
         }
     }
 
     override fun getv3BuildingModuleOnce(buildingId: String): Single<List<v3BuildingModuleDbBean>> {
         var dao = mDb!!.v3BuildingModuleDao()
-        return dao.getProjectOnce(buildingId.toLong()).run {
+        return dao.getBuildingModuleOnce(buildingId.toLong()).run {
             ConverterHelper.convertOnlyv3BuildingModuleBean(this)
         }
     }
@@ -146,7 +150,7 @@ class DatabaseSrv : IDatabaseService {
         buildingId: Long
     ): Single<List<v3BuildingModuleDbBean>> {
         var dao = mDb!!.v3BuildingModuleDao()
-        return dao.getProjectOnce(projectId, buildingId).run {
+        return dao.getBuildingModuleOnce(projectId, buildingId).run {
             ConverterHelper.convertOnlyv3BuildingModuleBean(this)
         }
     }
@@ -157,14 +161,14 @@ class DatabaseSrv : IDatabaseService {
         moduleId: Long
     ): Single<List<v3BuildingModuleDbBean>> {
         var dao = mDb!!.v3BuildingModuleDao()
-        return dao.getProjectOnce(projectId, buildingId,moduleId).run {
+        return dao.getBuildingModuleOnce(projectId, buildingId,moduleId).run {
             ConverterHelper.convertOnlyv3BuildingModuleBean(this)
         }
     }
 
     override fun getv3BuildingModuleOnce(moduleId: Long): Single<List<v3BuildingModuleDbBean>> {
         var dao = mDb!!.v3BuildingModuleDao()
-        return dao.getProjectOnce(moduleId).run {
+        return dao.getBuildingModuleOnce(moduleId).run {
             ConverterHelper.convertOnlyv3BuildingModuleBean(this)
         }
     }
@@ -172,7 +176,7 @@ class DatabaseSrv : IDatabaseService {
     override fun updatev3BuildingModule(b: v3BuildingModuleDbBean): Observable<Long> =
         Observable.create {
             var dao = mDb!!.v3BuildingModuleDao()
-            it.onNext(dao.insertProject(ConverterHelper.convertv3BuildingModuleRoom(b)))
+            it.onNext(dao.insertBuildingModule(ConverterHelper.convertv3BuildingModuleRoom(b)))
         }
 
     override fun deleteBuildingModuleByProjectId(projectId: Long): Observable<Boolean> = Observable.create{
@@ -190,15 +194,21 @@ class DatabaseSrv : IDatabaseService {
     override fun updatev3BuildingModuleDrawing(b: v3BuildingModuleDbBean): Observable<Int> =
         Observable.create {
             var dao = mDb!!.v3BuildingModuleDao()
-            it.onNext(dao.updateProjectOneData(b.id!!,b.drawings!!,true))
+            it.onNext(dao.updateBuildingModuleOneData(b.id!!,b.drawings!!,1))
 
             Log.e("llf", "updatev3BuildingModuleOneData: "+it )
+        }
+
+    override fun updateBuildingModule(moduleId: Long, drawings:List<DrawingV3Bean>, isChanged:Int): Observable<Int> =
+        Observable.create {
+            var dao = mDb!!.v3BuildingModuleDao()
+            it.onNext(dao.updateBuildingModule(moduleId,drawings,isChanged))
         }
 
     override fun updatev3BuildingModuleDrawing(id:Long,drawingList:List<DrawingV3Bean>): Observable<Int> =
         Observable.create {
             var dao = mDb!!.v3BuildingModuleDao()
-            it.onNext(dao.updateProjectOneData(id,drawingList,true))
+            it.onNext(dao.updateBuildingModuleOneData(id,drawingList,1))
             Log.e("llf", "updatev3BuildingModuleOneData: "+it )
         }
 
@@ -206,7 +216,7 @@ class DatabaseSrv : IDatabaseService {
     override fun deletev3BuildingModule(b: v3BuildingModuleDbBean): Observable<Int> =
         Observable.create {
             var dao = mDb!!.v3BuildingModuleDao()
-            it.onNext(dao.deleteProject(ConverterHelper.convertv3BuildingModuleRoom(b)))
+            it.onNext(dao.deleteBuildingModule(ConverterHelper.convertv3BuildingModuleRoom(b)))
         }
 
     override fun getv3ModuleFloor(
@@ -284,6 +294,12 @@ class DatabaseSrv : IDatabaseService {
     override fun deleteModuleFloorByBuildingId(buildingId: Long): Observable<Boolean> =Observable.create {
         var dao = mDb!!.v3ModuleFloorDao()
         dao.deleteModuleFloorByBuildingId(buildingId)
+        it.onNext(true)
+    }
+
+    override fun deleteModuleFloorByModuleId(moduleId: Long): Observable<Boolean> =Observable.create {
+        var dao = mDb!!.v3ModuleFloorDao()
+        dao.deleteModuleFloorByModuleId(moduleId)
         it.onNext(true)
     }
 
@@ -828,9 +844,39 @@ class DatabaseSrv : IDatabaseService {
         drawingList: List<DrawingV3Bean>,
         id: Long
     ):Observable<Int> = Observable.create {
-        var dao = mDb!!.v3ModuleFloorDao();
-        var moduleFloorId = dao.updateModuleFloorDrawing(drawingList,true,id)
+        var dao = mDb!!.v3ModuleFloorDao()
+        var moduleFloorId = dao.updateModuleFloorDrawing(drawingList,id)
         it.onNext(moduleFloorId)
+    }
+
+    override fun updateBuilding(id: Long, isChanged: Int,status:Int):Observable<Long> = Observable.create{
+        var dao = mDb!!.buildingDao()
+        it.onNext(dao.updateBuilding(id,isChanged,status).toLong())
+    }
+
+    override fun updateBuildingByProjectId(projectId: Long, isChanged: Int,status:Int):Observable<Long> = Observable.create  {
+        var dao = mDb!!.buildingDao()
+        it.onNext(dao.updateBuildingByProjectId(projectId,isChanged,status).toLong())
+    }
+
+    override fun updateBuildingModule(id: Long, isChanged: Int,status:Int):Observable<Long> = Observable.create {
+        var dao = mDb!!.v3BuildingModuleDao()
+        it.onNext(dao.updateBuildingModule(id,isChanged,status).toLong())
+    }
+
+    override fun updateBuildingModule(id: Long, isChanged: Int):Observable<Long> = Observable.create {
+        var dao = mDb!!.v3BuildingModuleDao()
+        it.onNext(dao.updateBuildingModule(id,isChanged).toLong())
+    }
+
+    override fun updateBuildingModuleByProjectId(projectId: Long, isChanged: Int,status:Int):Observable<Long> = Observable.create{
+        var dao = mDb!!.v3BuildingModuleDao()
+        it.onNext(dao.updateBuildingModuleByProjectId(projectId,isChanged,status).toLong())
+    }
+
+    override fun updateBuildingModuleByBuildingId(buildingId: Long, isChanged: Int,status:Int):Observable<Long> = Observable.create {
+        var dao = mDb!!.v3BuildingModuleDao()
+        it.onNext(dao.updateBuildingModuleByBuildingId(buildingId,isChanged,status).toLong())
     }
 
     override fun getBuildingIdByProjectId(proId: Long): Observable<Long> = Observable.create {

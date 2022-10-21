@@ -57,7 +57,7 @@ data class BuildingModule(
     var moduleid:Long?,
     var moduleName: String?,
     var drawings: List<DrawingV3Bean>?=ArrayList(),
-    var inspectors: String?,
+    var inspectors: String="",
     var leaderId: String?,
     var leaderName: String?,
     var aboveGroundNumber: Int?,
@@ -71,7 +71,7 @@ data class BuildingModule(
     var deleteTime: String?,
     var updateTime:String?,
     var remoteId: String?,
-    var isChanged: Boolean?
+    var isChanged: Int?
     ){
 
 }

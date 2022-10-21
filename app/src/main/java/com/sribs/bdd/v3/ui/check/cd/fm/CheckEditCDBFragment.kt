@@ -17,6 +17,8 @@ import com.sribs.bdd.v3.util.LogUtils
 import com.sribs.common.ARouterPath
 import com.sribs.common.bean.db.DamageV3Bean
 import com.sribs.common.bean.db.DrawingV3Bean
+import com.sribs.common.utils.FileUtil
+import java.io.File
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -727,7 +729,10 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
                     rightRealView.checkCpdBeamRightRealProtect.checkEditProtect2.text.toString()
                 ),
                 rightRealView.checkCpdLeftRealRemarkContent.text.toString(),
-                mRightRealPicSrc,
+                arrayListOf(
+                    FileUtil.getFileName(mRightRealPicSrc)?:"",
+                    mRightRealPicSrc
+                ),
                 mTypeRightList!!.get(currentRightDesignType),
                 rightDesignSectionTypeParamsList,
                 arrayListOf(
@@ -737,9 +742,11 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
                     rightDesignView.checkEdit.text.toString()
                 ),
                 rightDesignView.checkCpdLeftRealRemarkContent.text.toString(),
-                mRightDesignPicSrc
+                arrayListOf(
+                    FileUtil.getFileName(mRightDesignPicSrc)?:"",
+                    mRightDesignPicSrc
+                )
             )
-            LogUtils.d(damage.toBeamString())
             (context as CheckComponentDetectionActivity).saveDamage(damage)
         }
 
@@ -929,7 +936,6 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
             rightDesignView.checkCpdLeftRealRemarkContent.setText("")
             rightDesignView.checkCpdBeamPic.setImageResource(R.color.gray)
         } else {
-            LogUtils.d("子控件进去的Damage梁bean"+damageV3Bean.toBeamString())
             mBinding.checkCpdSubtitle1.checkEdit.setText(damageV3Bean.beamName)
             mBinding.checkCpdSubtitle2Second.checkEditName.text = "轴线"
             if (!damageV3Bean.beamAxisNoteList!!.isNullOrEmpty() && !damageV3Bean.beamAxisNoteList!!.get(
@@ -1345,8 +1351,8 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
             }
 
 
-            rightRealView.checkCpdBeamPic.setImageURI(Uri.parse(damageV3Bean.beamRightRealPic))
-            rightDesignView.checkCpdBeamPic.setImageURI(Uri.parse(damageV3Bean.beamRightDesignPic))
+            rightRealView.checkCpdBeamPic.setImageURI(Uri.fromFile(File(damageV3Bean.beamRightRealPic?.get(0))))
+            rightDesignView.checkCpdBeamPic.setImageURI(Uri.fromFile(File(damageV3Bean.beamRightDesignPic?.get(0))))
 
             rightDesignView.checkEdit.setText(damageV3Bean.beamRightDesignStirrupsTypeList!!.get(3))
 
@@ -1411,17 +1417,17 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
 
     }
 
-    fun setImgaeBitmap(uri: Uri, type:Int){
+    fun setImageBitmap(filePath: String, type:Int){
         when(type){
             REQUEST_BEAM_REAL_TAKE_PHOTO->
             {
-                rightRealView.checkCpdBeamPic.setImageURI(uri)
-                mRightRealPicSrc = uri.toString()
+                rightRealView.checkCpdBeamPic.setImageURI(Uri.fromFile(File(filePath)))
+                mRightRealPicSrc = filePath
             }
             REQUEST_BEAM_DESIGN_TAKE_PHOTO->
             {
-                rightDesignView.checkCpdBeamPic.setImageURI(uri)
-                mRightDesignPicSrc = uri.toString()
+                rightDesignView.checkCpdBeamPic.setImageURI(Uri.fromFile(File(filePath)))
+                mRightDesignPicSrc = filePath
             }
         }
     }

@@ -12,7 +12,10 @@ data class V3UploadModuleReq(
     var isChanged: Boolean,
     var moduleId: String,
     var moduleName: String,
+    var aboveGroundNumber:Int,
+    var underGroundNumber:Int,
     var parentVersion: Long,
     var superiorVersion: Long,
     var version: Long,
+    var createTime:Long
 )

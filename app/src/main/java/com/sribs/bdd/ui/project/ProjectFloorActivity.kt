@@ -5,9 +5,11 @@ import android.content.Context
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.WindowManager
 import android.widget.ListView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SearchView
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.forEachIndexed
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -55,7 +57,7 @@ class ProjectFloorActivity : BaseActivity(), IBuildingContrast.IBuildingListView
 
     @JvmField
     @Autowired(name = com.sribs.common.ARouterPath.VAL_COMMON_VERSION)
-    var mVersion = 0
+    var mVersion = 0L
 
     @JvmField
     @Autowired(name = com.sribs.common.ARouterPath.VAL_COMMON_LEADER)
@@ -122,6 +124,7 @@ class ProjectFloorActivity : BaseActivity(), IBuildingContrast.IBuildingListView
                 .withLong(com.sribs.common.ARouterPath.VAL_COMMON_LOCAL_ID, mLocalProjectId)
                 .withString(com.sribs.common.ARouterPath.VAL_PROJECT_UUID, mLocalProjectUUID)
                 .withString(com.sribs.common.ARouterPath.VAL_COMMON_REMOTE_ID, mRemoteId)
+                .withLong(com.sribs.common.ARouterPath.VAL_COMMON_VERSION, mVersion)
                 .withString(com.sribs.common.ARouterPath.VAL_COMMON_LEADER, mLeader)
                 .withString(com.sribs.common.ARouterPath.VAL_COMMON_INSPECTOR, mInspector)
                 .navigation()
@@ -138,7 +141,7 @@ class ProjectFloorActivity : BaseActivity(), IBuildingContrast.IBuildingListView
         when (item?.itemId) {
             R.id.menu_bld_refresh->{ //从云端获取更新
                 if(mRemoteId.isNullOrEmpty()){
-                    showToast("云端无该项目，请先上传")
+                    showToast("请先上传项目")
                     return super.onOptionsItemSelected(item)
                 }
                 mPresenter.getBuildingRemote(mRemoteId,mVersion,dataList)
@@ -340,18 +343,21 @@ class ProjectFloorActivity : BaseActivity(), IBuildingContrast.IBuildingListView
                 DialogUtil.showBottomDialog(this, R.layout.dialog_common_bottom_building_select, true) {
                     when (it) {
                         0->{ //上传楼配置
-                            if(beanMain.bldId!! < 0){
-                                showToast("请先下载再上传")
+                            if(beanMain.projectRemoteId.isNullOrEmpty()){
+                                showToast("请先上传项目")
                                 return@showBottomDialog
                             }
-                            mPresenter.uploadBuilding(beanMain)
+                            showPb(true)
+                            mPresenter.uploadBuilding(beanMain){
+                                showPb(false)
+                            }
 
                         }
                         1 -> { //下载配置
-                            if(beanMain.remoteId.isNullOrEmpty()){
+                           /* if(beanMain.remoteId.isNullOrEmpty()){
                                 showToast("非云端项目，请先上传再下载")
                                 return@showBottomDialog
-                            }
+                            }*/
                             doDownload(beanMain)
                         }
                         2 -> { // 删除
@@ -376,19 +382,35 @@ class ProjectFloorActivity : BaseActivity(), IBuildingContrast.IBuildingListView
         }
     }
 
+    private fun showPb(b:Boolean){
+        runOnUiThread(object :Runnable{
+            override fun run() {
+                if (b){
+                    mBinding.pb.visibility = View.VISIBLE
+                    window.setFlags(
+                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+                }else{
+                    mBinding.pb.visibility = View.GONE
+                    window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+                }
+            }
+        })
+    }
+
     /**
      * 下载配置
      */
     private fun doDownload(beanMain: BuildingMainBean){
-        if (beanMain.remoteId.isNullOrEmpty()){
-            showToast(getString(R.string.error_no_remote))
+        if (beanMain.status == "0"){
+            showToast("请先上传项目")
             return
         }
         if (!Config.isNetAvailable){
             showToast(getString(R.string.error_no_network))
             return
         }
-        mPresenter.getV3BuildingVersionHistory(mRemoteId,beanMain.remoteId!!){ versionList->
+        mPresenter.getV3BuildingVersionHistory(beanMain.projectUUID,beanMain.bldUUID){ versionList->
             if (versionList.isNullOrEmpty()){
                 showToast(getString(R.string.error_no_history))
                 return@getV3BuildingVersionHistory
@@ -400,20 +422,21 @@ class ProjectFloorActivity : BaseActivity(), IBuildingContrast.IBuildingListView
                 LOG.I("123","${l[0]}")
                 var idx = l[0]!!
                 DialogUtil.showMsgDialog(this,"覆盖本地版本？",{
-                    showFab(true)
+                    showPb(true)
                     mPresenter.downloadBuildingConfig(
-                        beanMain.remoteId!!,
+                        beanMain,
+                        mTitle,
+                        beanMain.bldUUID,
                         versionList[idx].version,
-                    ){
-                        if(it){
-                            showToast("下载成功")
+                    ){ isSuccess,msg->
+                        showToast(msg)
+                        if(isSuccess){
                             beanMain.also { b->b.status = resources.getStringArray(R.array.main_project_status)[4] }
-                        }else{
-                            showToast("下载失败")
                         }
-                        showFab(false)
+                        showPb(false)
                     }
-                },{})
+                },{
+                })
 
             }
         }

@@ -250,10 +250,10 @@ class DamageMainActivity :BaseActivity(),IMainListContrast.IMainView{
                     1->{
                         doDownload(beanMain,false)
                     }
-                    2-> {
+                   /* 2-> {
                         doDownload(beanMain,true)
-                    }
-                    3->{
+                    }*/
+                    2->{
                         DialogUtil.showMsgDialog(this,"是否确认删除项目?",{
                             //TODO del project
                             /*  if (beanMain.localId>0){
@@ -323,7 +323,6 @@ class DamageMainActivity :BaseActivity(),IMainListContrast.IMainView{
                     showToast(getString(R.string.error_no_history))
                     return@projectV3GetConfigVersionList
                 }
-                LogUtils.d("版本个数: ${versionList.size}")
                 com.sribs.bdd.utils.DialogUtil.showDownloadV3ProjectDialog(this,null,beanMain.updateTime,
                     versionList!!.toTypedArray()){ l->
                     if (l.isEmpty())return@showDownloadV3ProjectDialog
@@ -333,14 +332,12 @@ class DamageMainActivity :BaseActivity(),IMainListContrast.IMainView{
                         showPb(true)
                         mPresenter.projectV3DownloadConfig(
                             beanMain,
-                            versionList[idx].projectId,
+                            versionList[idx].projectId?:"",
                             versionList[idx].version,
-                        ){
-                            if(it){
-                                showToast("下载成功")
+                        ){ isSuccess,msg->
+                            showToast(msg)
+                            if(isSuccess){
                                 beanMain.also { b->b.status = resources.getStringArray(R.array.main_project_status)[4] }
-                            }else{
-                                showToast("下载失败")
                             }
                             showPb(false)
                         }
@@ -459,7 +456,11 @@ class DamageMainActivity :BaseActivity(),IMainListContrast.IMainView{
     }
 
     override fun onMsg(msg: String) {
-        showToast(msg)
+        runOnUiThread(object :Runnable{
+            override fun run() {
+                showToast(msg)
+            }
+        })
     }
 
     override fun unbindPresenter() {

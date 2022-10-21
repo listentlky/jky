@@ -20,7 +20,7 @@ class CheckHDiffMainBean (
     var deleteTime:String?="",
     var version:Long?=System.currentTimeMillis(),
     var status:Int?=0,
-    var isChanged:Boolean?=false
+    var isChanged:Int?=0
         ){
 
     override fun toString(): String {

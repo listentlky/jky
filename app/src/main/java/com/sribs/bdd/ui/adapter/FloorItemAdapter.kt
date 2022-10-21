@@ -64,7 +64,7 @@ class FloorItemAdapter : BaseListAdapter<BuildingModule, ItemFloorDetailBinding>
         }
 
         bind.name.text = text
-        bind.time.text = bean.updateTime
+        bind.time.text = bean.createTime
         bind.more.setOnClickListener {
             mItemClickCallback?.onMore(bean)
         }

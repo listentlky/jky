@@ -1,6 +1,7 @@
 package com.sribs.bdd.bean
 
 import com.sribs.bdd.bean.RoomItemBean.Companion.TYPE_CONTENT
+import com.sribs.common.bean.db.DrawingV3Bean
 
 /**
  * create time: 2022/9/19
@@ -26,7 +27,8 @@ class BuildingMainBean (
     var status:String="0",  //0 本地
     var aboveGroundNumber:Int=0,
     var underGroundNumber:Int=0,
-    var isChanged:Boolean?= false
+    var drawingList:List<DrawingV3Bean>?=ArrayList(),
+    var isChanged:Int?= 0
 ){
     var isMenuChecked:Boolean = false
     var isCardSel:Boolean = false
@@ -47,7 +49,7 @@ class BuildingMainBean (
     }
 
     override fun toString(): String {
-        return "BuildingMainBean(projectId=$projectId, bldUUID=$bldUUID, bldId=$bldId, bldName=$bldName, bldType=$bldType, leader=$leader, inspectorName=$inspectorName, remoteId=$remoteId, createTime=$createTime, updateTime=$updateTime, version=$version, status=$status, aboveGroundNumber=$aboveGroundNumber, underGroundNumber=$underGroundNumber, isMenuChecked=$isMenuChecked, isCardSel=$isCardSel, hasNewer=$hasNewer, type=$type, houseType=$houseType, tag='$tag', spanCount=$spanCount)"
+        return "BuildingMainBean(projectRemoteId='$projectRemoteId', projectUUID='$projectUUID', projectId=$projectId, bldUUID='$bldUUID', bldId=$bldId, bldName='$bldName', bldType='$bldType', leader='$leader', inspectorName='$inspectorName', remoteId=$remoteId, createTime='$createTime', updateTime='$updateTime', superiorVersion=$superiorVersion, parentVersion=$parentVersion, version=$version, status='$status', aboveGroundNumber=$aboveGroundNumber, underGroundNumber=$underGroundNumber, drawingList=$drawingList, isChanged=$isChanged, isMenuChecked=$isMenuChecked, isCardSel=$isCardSel, hasNewer=$hasNewer, type=$type, houseType=$houseType, tag='$tag', spanCount=$spanCount)"
     }
 
 

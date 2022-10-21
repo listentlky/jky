@@ -389,7 +389,7 @@ class CheckComponentDetectionActivity : BaseActivity(), ICheckCDContrast.ICheckC
             it.drawing?.forEach { b ->
                 b.damage = mDamageBeanList?.get(b.localAbsPath)
             }
-            mPresenter.saveDamageToDb(it.drawing!!, it.id!!)
+            mPresenter.saveDamageToDb(it)
         }
     }
 
@@ -926,8 +926,8 @@ class CheckComponentDetectionActivity : BaseActivity(), ICheckCDContrast.ICheckC
                 name = name ?: images[0]
                 LogUtils.d("梁-实测图片: " + images[0])
 
-                (mFragments[1] as CheckEditCDBFragment).setImgaeBitmap(
-                    Uri.parse(images[0]),
+                (mFragments[1] as CheckEditCDBFragment).setImageBitmap(
+                    images[0],
                     REQUEST_BEAM_REAL_TAKE_PHOTO
                 )
             }
@@ -938,8 +938,8 @@ class CheckComponentDetectionActivity : BaseActivity(), ICheckCDContrast.ICheckC
                 name = name ?: images[0]
                 LogUtils.d("梁-设计图片: " + images[0])
 
-                (mFragments[1] as CheckEditCDBFragment).setImgaeBitmap(
-                    Uri.parse(images[0]),
+                (mFragments[1] as CheckEditCDBFragment).setImageBitmap(
+                    images[0],
                     REQUEST_BEAM_DESIGN_TAKE_PHOTO
                 )
             }
@@ -950,8 +950,8 @@ class CheckComponentDetectionActivity : BaseActivity(), ICheckCDContrast.ICheckC
                 name = name ?: images[0]
                 LogUtils.d("柱-实测图片: " + images[0])
 
-                (mFragments[2] as CheckEditCDCFragment).setImgaeBitmap(
-                    Uri.parse(images[0]),
+                (mFragments[2] as CheckEditCDCFragment).setImageBitmap(
+                    images[0],
                     REQUEST_COLUMN_REAL_TAKE_PHOTO
                 )
             }
@@ -963,8 +963,8 @@ class CheckComponentDetectionActivity : BaseActivity(), ICheckCDContrast.ICheckC
                 name = name ?: images[0]
                 LogUtils.d("柱-设计图片: " + images[0])
 
-                (mFragments[2] as CheckEditCDCFragment).setImgaeBitmap(
-                    Uri.parse(images[0]),
+                (mFragments[2] as CheckEditCDCFragment).setImageBitmap(
+                    images[0],
                     REQUEST_COLUMN_DESIGN_TAKE_PHOTO
                 )
             }
@@ -976,8 +976,8 @@ class CheckComponentDetectionActivity : BaseActivity(), ICheckCDContrast.ICheckC
                 name = name ?: images[0]
                 LogUtils.d("墙-实测图片: " + images[0])
 
-                (mFragments[3] as CheckEditCDWFragment).setImgaeBitmap(
-                    Uri.parse(images[0]),
+                (mFragments[3] as CheckEditCDWFragment).setImageBitmap(
+                    images[0],
                     REQUEST_WALL_REAL_TAKE_PHOTO
                 )
             }
@@ -989,8 +989,8 @@ class CheckComponentDetectionActivity : BaseActivity(), ICheckCDContrast.ICheckC
                 name = name ?: images[0]
                 LogUtils.d("墙-设计图片: " + images[0])
 
-                (mFragments[3] as CheckEditCDWFragment).setImgaeBitmap(
-                    Uri.parse(images[0]),
+                (mFragments[3] as CheckEditCDWFragment).setImageBitmap(
+                    images[0],
                     REQUEST_WALL_DESIGN_TAKE_PHOTO
                 )
             }
@@ -1002,8 +1002,8 @@ class CheckComponentDetectionActivity : BaseActivity(), ICheckCDContrast.ICheckC
                 name = name ?: images[0]
                 LogUtils.d("板-实测图片: " + images[0])
 
-                (mFragments[4] as CheckEditCDPFragment).setImgaeBitmap(
-                    Uri.parse(images[0]),
+                (mFragments[4] as CheckEditCDPFragment).setImageBitmap(
+                    images[0],
                     REQUEST_PLATE_REAL_TAKE_PHOTO
                 )
             }
@@ -1015,8 +1015,8 @@ class CheckComponentDetectionActivity : BaseActivity(), ICheckCDContrast.ICheckC
                 name = name ?: images[0]
                 LogUtils.d("板-设计图片: " + images[0])
 
-                (mFragments[4] as CheckEditCDPFragment).setImgaeBitmap(
-                    Uri.parse(images[0]),
+                (mFragments[4] as CheckEditCDPFragment).setImageBitmap(
+                    images[0],
                     REQUEST_PLATE_DESIGN_TAKE_PHOTO
                 )
             }

@@ -97,7 +97,7 @@ object ConverterHelper {
         if (b.createTime != null) {
             it.createTime = b.createTime
         } else {
-            it.createTime = Date(Date().time)
+            it.createTime = TimeUtil.stampToDate(""+System.currentTimeMillis())
         }
     }
 
@@ -220,6 +220,7 @@ object ConverterHelper {
             drawings = b.drawings,
             inspectors = b.inspectors,
             remoteId = b.remoteId,
+            superiorVersion = b.superiorVersion,
             parentVersion = b.parentVersion,
             version = b.version,
             status = b.status,
@@ -262,8 +263,6 @@ object ConverterHelper {
                     b.version,
                     b.remoteId,
                     b.status,
-                    b.isChanged
-
                 )
             }
         }
@@ -284,7 +283,6 @@ object ConverterHelper {
             createTime = b.createTime.toString(),
             updateTime = b.updateTime.toString(),
             deleteTime = b.deleteTime.toString(),
-            isChanged = b.isChanged
 
         ).also {
             if (b.id ?: -1 > 0) {

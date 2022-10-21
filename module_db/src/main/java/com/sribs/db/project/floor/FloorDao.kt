@@ -30,7 +30,7 @@ interface FloorDao {
     @Query("Select * from project_floor where remote_id = :remoteId")
     fun getFloorByRemoteIdOnce(remoteId:String):Single<List<FloorBean>>
 
-    @Query("Select * from project_floor where bld_id = :bldId and status == 0 order by floor_id asc ")
+    @Query("Select * from project_floor where bld_id = :bldId order by floor_id asc ")
     fun getLocalFloorsInTheBuilding(bldId:Long):Flowable<List<FloorBean>>
 
     @Insert(onConflict = REPLACE)

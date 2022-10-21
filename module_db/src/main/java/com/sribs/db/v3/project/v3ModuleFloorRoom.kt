@@ -24,7 +24,6 @@ data class v3ModuleFloorRoom(
     @ColumnInfo(name = "remote_id") var remoteId: String? = null,
     @ColumnInfo(name = "version") var version: Int? = 1,
     @ColumnInfo(name = "status") var status: Int? = 0,//1,删除；0，正常，与云端is_deleted相同
-    @ColumnInfo(name = "isChanged") var isChanged: Boolean? = false
 ) {
     @ColumnInfo(name = "id")
     @PrimaryKey(autoGenerate = true)

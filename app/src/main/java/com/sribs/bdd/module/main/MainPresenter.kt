@@ -5,24 +5,28 @@ import com.cbj.sdk.libbase.exception.MsgThrowable
 import com.cbj.sdk.libbase.rxbus.RxBus
 import com.cbj.sdk.libbase.utils.LOG
 import com.cbj.sdk.libnet.http.HttpManager
-import com.cbj.sdk.libnet.http.bean.ResultBean
 import com.cbj.sdk.libui.mvp.moudles.IBaseView
 import com.google.gson.Gson
 import com.sribs.bdd.R
 import com.sribs.bdd.action.Dict
 import com.sribs.bdd.bean.BuildingModule
+import com.sribs.bdd.bean.FloorSortBean
 import com.sribs.bdd.bean.MainProjectBean
 import com.sribs.bdd.bean.UnitConfigType
 import com.sribs.bdd.module.BaseUnitConfigPresenter
+import com.sribs.bdd.utils.ModuleHelper
 import com.sribs.bdd.v3.event.RefreshProjectListEvent
 import com.sribs.bdd.v3.util.LogUtils
 import com.sribs.common.bean.HistoryBean
 import com.sribs.common.bean.V3VersionBean
 import com.sribs.common.bean.db.*
+import com.sribs.common.bean.db.v3.project.v3BuildingModuleDbBean
 import com.sribs.common.bean.net.*
 import com.sribs.common.bean.net.v3.*
 import com.sribs.common.bean.v3.v3ModuleFloorDbBean
 import com.sribs.common.net.HttpApi
+import com.sribs.common.utils.FileUtil
+import com.sribs.common.utils.TimeUtil
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -30,9 +34,12 @@ import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import java.io.File
+import java.nio.file.Files
+import java.nio.file.StandardCopyOption
 import java.sql.Date
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 /**
  * @date 2021/8/5
@@ -54,35 +61,31 @@ class MainPresenter : BaseUnitConfigPresenter(), IMainListContrast.IMainPresente
         remoteProjectId: String,
         cb: (ArrayList<V3VersionBean>?) -> Unit
     ) {
-        addDisposable(
-            HttpManager.instance.getHttpService<HttpApi>()
-                .getV3ProjectVersionList(remoteProjectId)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    checkResult(it)
-                    LogUtils.d("查询项目版本列表：" + it)
-                    cb(ArrayList(it.data!!.map {
-                        V3VersionBean(
-                            it.projectId,
-                            it.projectName,
-                            it.leaderName,
-                            it.leaderId,
-                            //     it.inspectors,
-                            ArrayList<String>(),
-                            it.parentVersion,
-                            it.version,
-                            //        it.createTime
-                            "" + System.currentTimeMillis()
-                        )
-                    }))
-                }, {
-                    LogUtils.d("查询项目版本列表失败：" + it)
-                    mView?.onMsg(ERROR_HTTP)
-                    cb(null)
-                    it.printStackTrace()
-                })
-        )
+        HttpManager.instance.getHttpService<HttpApi>()
+            .getV3ProjectVersionList(remoteProjectId)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                checkResult(it)
+                LogUtils.d("查询项目版本列表：" + it)
+                cb(ArrayList(it.data!!.map {
+                    V3VersionBean(
+                        it.projectId,
+                        it.projectName,
+                        it.leaderName ?: "",
+                        it.leaderId ?: "",
+                        it.inspectors,
+                        it.parentVersion,
+                        it.version,
+                        TimeUtil.stampToDate(it.createTime)
+                    )
+                }))
+            }, {
+                LogUtils.d("查询项目版本列表失败：" + it)
+                mView?.onMsg(ERROR_HTTP)
+                cb(null)
+                it.printStackTrace()
+            })
     }
 
 
@@ -183,7 +186,21 @@ class MainPresenter : BaseUnitConfigPresenter(), IMainListContrast.IMainPresente
 
         var drawingList = ArrayList<String>()
 
-        mDb.getBuildingByProjectId(bean.localId)
+/*        Observable.just("uploadProject")
+            .subscribeOn(Schedulers.computation())
+            .observeOn(Schedulers.computation())
+            .subscribe({
+                var list = mDb.getBuildingByProjectId(bean.localId)
+                LogUtils.d("查询项目下楼表"+list.)
+                dispose()
+                cb(true)
+            },{
+                cb(false)
+            })
+
+return*/
+
+        addDisposable(mDb.getBuildingByProjectId(bean.localId)
             .subscribeOn(Schedulers.computation())
             .observeOn(Schedulers.computation())
             .flatMap {
@@ -225,7 +242,7 @@ class MainPresenter : BaseUnitConfigPresenter(), IMainListContrast.IMainPresente
                         b.id,
                         b.moduleName,
                         b.drawings,
-                        b.inspectors,
+                        b.inspectors ?: "",
                         b.leaderId,
                         b.leaderName,
                         b.aboveGroundNumber,
@@ -248,6 +265,7 @@ class MainPresenter : BaseUnitConfigPresenter(), IMainListContrast.IMainPresente
             .subscribeOn(Schedulers.computation())
             .observeOn(Schedulers.computation())
             .subscribe({
+                dispose()
                 it.forEach {
                     it.drawingsList?.forEach {
                         drawingList.add(it.localAbsPath!!)
@@ -285,6 +303,90 @@ class MainPresenter : BaseUnitConfigPresenter(), IMainListContrast.IMainPresente
 
                 LogUtils.d("获取项目下需要上传的图纸: " + drawingList)
 
+                buildingModuleList?.forEach { buildingModule ->
+
+                    if (buildingModule.moduleName.equals("构建检测")) {
+                        buildingModuleFloorList?.forEach { buildingModuleFloor ->
+                            if (buildingModuleFloor.moduleId!!.equals(buildingModule.moduleid)) {
+                                buildingModuleFloor.drawingsList?.forEach { drawing ->
+                                    drawing?.damage?.forEach { damage ->
+                                        when (damage.type) {
+                                            "梁" -> {
+                                                if (damage.beamLeftRealPicList?.size!! > 0) {
+                                                    drawingList.add(
+                                                        damage.beamLeftRealPicList!!.get(
+                                                            1
+                                                        )
+                                                    )
+                                                }
+                                                if (damage.beamLeftDesignPicList?.size!! > 0) {
+                                                    drawingList.add(
+                                                        damage.beamLeftDesignPicList!!.get(
+                                                            1
+                                                        )
+                                                    )
+                                                }
+                                                if (damage.beamRightRealPic?.size!! > 0) {
+                                                    drawingList.add(
+                                                        damage.beamRightRealPic!!.get(
+                                                            1
+                                                        )
+                                                    )
+                                                }
+                                                if (damage.beamRightDesignPic?.size!! > 0) {
+                                                    drawingList.add(
+                                                        damage.beamRightDesignPic!!.get(
+                                                            1
+                                                        )
+                                                    )
+                                                }
+                                            }
+                                            "柱" -> {
+                                                if (damage.columnLeftRealPicList?.size!! > 0) {
+                                                    drawingList.add(
+                                                        damage.columnLeftRealPicList!!.get(
+                                                            1
+                                                        )
+                                                    )
+                                                }
+                                                if (damage.columnLeftDesignPicList?.size!! > 0) {
+                                                    drawingList.add(
+                                                        damage.columnLeftDesignPicList!!.get(
+                                                            1
+                                                        )
+                                                    )
+                                                }
+                                                if (damage.columnRightRealPic?.size!! > 0) {
+                                                    drawingList.add(
+                                                        damage.columnRightRealPic!!.get(
+                                                            1
+                                                        )
+                                                    )
+                                                }
+                                                if (damage.columnRightDesignPic?.size!! > 0) {
+                                                    drawingList.add(
+                                                        damage.columnRightDesignPic!!.get(
+                                                            1
+                                                        )
+                                                    )
+                                                }
+                                            }
+                                            "墙", "板" -> {
+                                                if (damage.realPicture?.size!! > 0) {
+                                                    drawingList.add(damage.realPicture!!.get(1))
+                                                }
+                                                if (damage.designPicture?.size!! > 0) {
+                                                    drawingList.add(damage.designPicture!!.get(1))
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
 
                 var parts = ArrayList<MultipartBody.Part>()
 
@@ -318,6 +420,7 @@ class MainPresenter : BaseUnitConfigPresenter(), IMainListContrast.IMainPresente
             }, {
                 cb(false)
             })
+        )
 
         /*   ProjectCreateReq().also {
                it.inspectors = inspectorList
@@ -355,6 +458,7 @@ class MainPresenter : BaseUnitConfigPresenter(), IMainListContrast.IMainPresente
         cb: (Boolean) -> Unit
     ) {
 
+        LogUtils.d("makeUploadProject")
         var inspectorList: List<String> =
             if (bean.inspector.contains("、")) bean.inspector.split("、") else Arrays.asList(bean.inspector)
 
@@ -372,7 +476,7 @@ class MainPresenter : BaseUnitConfigPresenter(), IMainListContrast.IMainPresente
             var V3UploadDrawingReq = ArrayList<V3UploadDrawingReq>()
 
             // 模块无层概念下图纸损伤数据
-            if (isCopyFloorDrawing(it.moduleName)) {
+            if (!isCopyFloorDrawing(it.moduleName)) {
 
                 it.drawings?.forEachIndexed { index, b ->
 
@@ -402,10 +506,11 @@ class MainPresenter : BaseUnitConfigPresenter(), IMainListContrast.IMainPresente
                     V3UploadDrawingReq.add(
                         V3UploadDrawingReq(
                             if (it.buildingRemoteId.isNullOrEmpty()) it.buildingUUID!! else it.buildingRemoteId!!,
-                            "",
+                            "drawing:" + resId?.get(0)?.resId,
                             b.fileName!!,
                             b.fileType!!,
                             "",
+                            1,
                             index,
                             inspectorList,
                             if (it.remoteId.isNullOrEmpty()) it.moduleUUID!! else it.remoteId!!,
@@ -430,6 +535,101 @@ class MainPresenter : BaseUnitConfigPresenter(), IMainListContrast.IMainPresente
                         }
 
                         bbb.damage?.forEach { ddd ->
+
+                            when (ddd.type) {
+                                "梁" -> {
+
+                                    if (ddd.beamLeftRealPicList?.size!! > 0) {
+                                        //实测草图
+                                        var resId1 = res?.filter {
+                                            it.fileName.equals(ddd.beamLeftRealPicList?.get(1))
+                                        }
+                                        ddd.beamLeftRealPicList?.add(resId1?.get(0)?.resId ?: "")
+                                    }
+
+                                    if (ddd.beamLeftDesignPicList?.size!! > 0) {
+                                        //设计草图
+                                        var resId2 = res?.filter {
+                                            it.fileName.equals(ddd.beamLeftDesignPicList?.get(1))
+                                        }
+                                        ddd.beamLeftDesignPicList?.add(resId2?.get(0)?.resId ?: "")
+                                    }
+
+                                    if (ddd.beamRightRealPic?.size!! > 0) {
+                                        //实测图
+                                        var resId3 = res?.filter {
+                                            it.fileName.equals(ddd.beamRightRealPic?.get(1))
+                                        }
+                                        ddd.beamRightRealPic?.add(resId3?.get(0)?.resId ?: "")
+                                    }
+
+                                    if (ddd.beamRightDesignPic?.size!! > 0) {
+                                        //设计图
+                                        var resId4 = res?.filter {
+                                            it.fileName.equals(ddd.beamRightDesignPic?.get(1))
+                                        }
+                                        ddd.beamRightDesignPic?.add(resId4?.get(0)?.resId ?: "")
+                                    }
+
+                                }
+                                "柱" -> {
+
+                                    if (ddd.columnLeftRealPicList?.size!! > 0) {
+                                        //实测草图
+                                        var resId1 = res?.filter {
+                                            it.fileName.equals(ddd.columnLeftRealPicList?.get(1))
+                                        }
+                                        ddd.columnLeftRealPicList?.add(resId1?.get(0)?.resId ?: "")
+                                    }
+
+                                    if (ddd.columnLeftDesignPicList?.size!! > 0) {
+                                        //设计草图
+                                        var resId2 = res?.filter {
+                                            it.fileName.equals(ddd.columnLeftDesignPicList?.get(1))
+                                        }
+                                        ddd.columnLeftDesignPicList?.add(
+                                            resId2?.get(0)?.resId ?: ""
+                                        )
+                                    }
+
+                                    if (ddd.columnRightRealPic?.size!! > 0) {
+                                        //实测图
+                                        var resId3 = res?.filter {
+                                            it.fileName.equals(ddd.columnRightRealPic?.get(1))
+                                        }
+                                        ddd.columnRightRealPic?.add(resId3?.get(0)?.resId ?: "")
+                                    }
+
+                                    if (ddd.columnRightDesignPic?.size!! > 0) {
+                                        //设计图
+                                        var resId4 = res?.filter {
+                                            it.fileName.equals(ddd.columnRightDesignPic?.get(1))
+                                        }
+                                        ddd.columnRightDesignPic?.add(resId4?.get(0)?.resId ?: "")
+                                    }
+
+                                }
+                                "墙", "板" -> {
+                                    if (ddd.realPicture?.size!! > 0) {
+                                        //实测图
+                                        var resId3 = res?.filter {
+                                            it.fileName.equals(ddd.realPicture?.get(1))
+                                        }
+                                        ddd.realPicture?.add(resId3?.get(0)?.resId ?: "")
+                                    }
+
+                                    if (ddd.designPicture?.size!! > 0) {
+                                        //设计图
+                                        var resId4 = res?.filter {
+                                            it.fileName.equals(ddd.designPicture?.get(1))
+                                        }
+                                        ddd.designPicture?.add(resId4?.get(0)?.resId ?: "")
+                                    }
+
+                                }
+
+                            }
+
                             V3UploadDamageReq.add(
                                 V3UploadDamageReq(
                                     ddd.annotRef,
@@ -449,10 +649,11 @@ class MainPresenter : BaseUnitConfigPresenter(), IMainListContrast.IMainPresente
                         V3UploadDrawingReq.add(
                             V3UploadDrawingReq(
                                 if (it.buildingRemoteId.isNullOrEmpty()) it.buildingUUID!! else it.buildingRemoteId!!,
-                                "",
+                                "drawing:" + resId?.get(0)?.resId,
                                 bbb.fileName!!,
                                 bbb.fileType!!,
                                 cc.floorName ?: "",
+                                cc.floorType,
                                 index,
                                 inspectorList,
                                 if (it.remoteId.isNullOrEmpty()) it.moduleUUID!! else it.remoteId!!,
@@ -470,12 +671,15 @@ class MainPresenter : BaseUnitConfigPresenter(), IMainListContrast.IMainPresente
                     if (it.buildingRemoteId.isNullOrEmpty()) it.buildingUUID!! else it.buildingRemoteId!!,
                     V3UploadDrawingReq,
                     inspectorList,
-                    it.isChanged ?: false,
+                    it.isChanged == 1,
                     if (it.remoteId.isNullOrEmpty()) it.moduleUUID!! else it.remoteId!!,
                     it.moduleName!!,
+                    it.aboveGroundNumber ?: 0,
+                    it.underGroundNumber ?: 0,
                     it.parentVersion!!,
                     it.superiorVersion!!,
-                    it.version!!
+                    it.version!!,
+                    System.currentTimeMillis()
                 )
             )
         }
@@ -491,10 +695,11 @@ class MainPresenter : BaseUnitConfigPresenter(), IMainListContrast.IMainPresente
                 V3UploadDrawingReq.add(
                     V3UploadDrawingReq(
                         if (it.remoteId.isNullOrEmpty()) it.UUID!! else it.remoteId!!,
-                        "",
+                        "drawing:" + resId?.get(0)?.resId,
                         drawingV3Bean.fileName!!,
                         drawingV3Bean.fileType!!,
                         "",
+                        1,
                         index,
                         inspectorList,
                         "",
@@ -519,10 +724,11 @@ class MainPresenter : BaseUnitConfigPresenter(), IMainListContrast.IMainPresente
                     V3UploadDrawingReq.add(
                         V3UploadDrawingReq(
                             if (it.remoteId.isNullOrEmpty()) it.UUID!! else it.remoteId!!,
-                            "",
+                            "drawing:" + resId?.get(0)?.resId,
                             dd.fileName!!,
                             dd.fileType!!,
                             floorBean.floorName ?: "",
+                            floorBean.floorType ?: 0,
                             index,
                             inspectorList,
                             "",
@@ -542,16 +748,19 @@ class MainPresenter : BaseUnitConfigPresenter(), IMainListContrast.IMainPresente
                     it.bldName!!,
                     it.bldType!!,
                     inspectorList,
-                    it.isChanged ?: false,
-                    Dict.getLeaderId(it.leader!!)!!,
-                    it.leader!!,
+                    it.isChanged == 1,
+                    Dict.getLeaderId(bean.leader) ?: "",
+                    it.leader ?: "",
                     V3UploadBuildingModuleList,
                     V3UploadModuleReq,
                     V3UploadDrawingReq,
+                    it.aboveGroundNumber ?: 0,
+                    it.underGroundNumber ?: 0,
                     it.parentVersion ?: 0,
                     if (it.projectRemoteId.isNullOrEmpty()) it.projectUUID!! else it.projectRemoteId!!,
                     it.superiorVersion ?: 0,
                     it.version ?: System.currentTimeMillis(),
+                    TimeUtil.dateToStamp(it.createTime ?: "" + System.currentTimeMillis())
                 )
             )
         }
@@ -559,9 +768,9 @@ class MainPresenter : BaseUnitConfigPresenter(), IMainListContrast.IMainPresente
         var V3UploadProjectReq = V3UploadProjectReq(
             V3UploadBuildingList,
             V3UploadBuildingReq,
-            //            TimeUtil.dateToStamp(bean.createTime),
+            TimeUtil.dateToStamp(bean.createTime),
             inspectorList,
-            true,
+            bean.isChanged == 1,
             Dict.getLeaderId(bean.leader!!)!!,
             bean.leader!!,
             bean.parentVersion,
@@ -574,18 +783,33 @@ class MainPresenter : BaseUnitConfigPresenter(), IMainListContrast.IMainPresente
 
         HttpManager.instance.getHttpService<HttpApi>()
             .saveV3Project(V3UploadProjectReq)
-            .subscribeOn(Schedulers.io())
+            .subscribeOn(Schedulers.computation())
+            .observeOn(Schedulers.computation())
+            .flatMap {
+                LogUtils.d("更新项目 ischanged")
+                mDb.updateProject(bean.localId, 0, 1)
+            }
+            .flatMap {
+                LogUtils.d("更新楼 ischanged")
+                mDb.updateBuildingByProjectId(bean.localId, 0, 1)
+            }
+            .flatMap {
+                LogUtils.d("更新模块 ischanged")
+                mDb.updateBuildingModuleByProjectId(bean.localId, 0, 1)
+            }
+            .subscribeOn(Schedulers.computation())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
+                dispose()
                 mView?.onMsg("项目上传成功")
+            //    RxBus.getDefault().post(RefreshProjectListEvent(true))
                 cb(true)
             }, {
+                dispose()
                 mView?.onMsg("上传项目失败: " + checkError(it))
                 cb(false)
             })
-
     }
-
 
     private fun updateProject(bean: MainProjectBean): Observable<Long> {
         var b = bean.remoteData ?: throw NullPointerException("remoteData==null")
@@ -611,31 +835,767 @@ class MainPresenter : BaseUnitConfigPresenter(), IMainListContrast.IMainPresente
     }
 
     /**
+     * 更新本地数据
+     */
+    fun projectUpdateV3Version(a: V3UploadProjectReq?, beanMain: MainProjectBean,cb: (Boolean, String) -> Unit) {
+
+        var cacheRootDir: String = FileUtil.getDrawingCacheRootDir(mView!!.getContext()!!)
+
+        var projectName = a?.projectName
+        var projectLocalId = beanMain.localId
+        var projectBean = ProjectBean(
+            id = beanMain.localId,
+            uuid = a?.projectId,
+            name = a?.projectName,
+            leader = a?.leaderName,
+            inspector = a?.inspectors?.joinToString(separator = "、") ?: "",
+            parentVersion = a?.parentVersion,
+            version = a?.version,
+            createTime = TimeUtil.stampToDate("" + a?.createTime),
+            updateTime = TimeUtil.stampToDate("" + a?.createTime),
+            remoteId = a?.projectId,
+            status = 4,
+        )
+        addDisposable(mDb.updateProject(projectBean)
+            .subscribeOn(Schedulers.computation())
+            .observeOn(Schedulers.computation())
+            .flatMap {
+                projectLocalId = it
+                LogUtils.d("更新项目成功: " + projectLocalId)
+                mDb.deleteBuildingByProjectId(projectLocalId)
+            }
+            .subscribeOn(Schedulers.computation())
+            .observeOn(Schedulers.computation())
+            .flatMap {
+                LogUtils.d("项目下楼删除成功")
+                mDb.deleteFloorByProjectId(projectLocalId)
+            }
+            .subscribeOn(Schedulers.computation())
+            .observeOn(Schedulers.computation())
+            .flatMap {
+                LogUtils.d("项目下楼层删除成功")
+                mDb.deleteBuildingModuleByProjectId(projectLocalId)
+            }
+            .subscribeOn(Schedulers.computation())
+            .observeOn(Schedulers.computation())
+            .flatMap {
+                LogUtils.d("项目下模块删除成功")
+                mDb.deleteModuleFloorByProjectId(projectLocalId)
+            }
+            .observeOn(Schedulers.computation())
+            .subscribeOn(Schedulers.computation())
+            .subscribe({
+
+
+                LogUtils.d("项目下模块层删除成功 " + a)
+
+                LogUtils.d("项目下楼数据长度 " + a?.buildings?.size)
+
+                a?.buildings?.forEach { bb ->
+
+                    var updateBuildingDrawing = ArrayList<DrawingV3Bean>()
+
+                    var updateBuildingFloorDrawing =
+                        HashMap<String, ArrayList<DrawingV3Bean>>()
+
+                    var floorSortBean = ArrayList<FloorSortBean>()
+
+                    var mCurDrawingsDir =
+                        "/" + ModuleHelper.DRAWING_CACHE_FOLDER + "/" + projectName + "/" + bb.buildingNo + "/"
+
+                    bb.drawings?.forEach { dd ->
+                        var drawingLocalPath: String
+                        if (dd.floorNo.isNullOrEmpty()) {
+                            drawingLocalPath = File(
+                                cacheRootDir + mCurDrawingsDir,
+                                dd.drawingName
+                            ).absolutePath
+                        } else {
+                            drawingLocalPath = File(
+                                cacheRootDir + mCurDrawingsDir + dd.floorNo,
+                                dd.drawingName
+                            ).absolutePath
+                        }
+                        var DrawingV3Bean = DrawingV3Bean(
+                            -1,
+                            dd.drawingName,
+                            dd.fileType,
+                            "overall",
+                            drawingLocalPath,
+                            dd.resId,
+                            dd.sort,
+                            ArrayList()
+                        )
+
+                        if (dd.floorNo.isNullOrEmpty()) {
+                            updateBuildingDrawing.add(DrawingV3Bean)
+                        } else {
+                            floorSortBean.add(
+                                FloorSortBean(
+                                    dd.floorNo,
+                                    dd.direction,
+                                    DrawingV3Bean.sort!!
+                                )
+                            )
+                            var buildingFloorDrawingList =
+                                updateBuildingFloorDrawing.get(dd.floorNo)
+                            if (buildingFloorDrawingList == null) {
+                                buildingFloorDrawingList = ArrayList()
+                            }
+                            buildingFloorDrawingList.add(DrawingV3Bean)
+                            updateBuildingFloorDrawing.put(
+                                dd.floorNo,
+                                buildingFloorDrawingList
+                            )
+                        }
+
+                    }
+
+
+                    var buildingBean = BuildingBean(
+                        -1,
+                        bb.buildingId,
+                        a?.projectId,
+                        a?.projectId,
+                        projectLocalId,
+                        bb.buildingNo,
+                        "all",
+                        TimeUtil.stampToDate("" + bb.createTime),
+                        TimeUtil.stampToDate("" + bb.createTime),
+                        "",
+                        0,
+                        bb.leaderName,
+                        bb.inspectors?.joinToString(separator = "、") ?: "",
+                        bb.superiorVersion,
+                        bb.parentVersion,
+                        bb.version,
+                        bb.buildingId,
+                        4,
+                        updateBuildingDrawing,
+                        bb.aboveGroundNumber,
+                        bb.underGroundNumber,
+                        0
+                    )
+                    LogUtils.d("创建楼数据: " + buildingBean)
+                    mDb.createLocalBuilding(buildingBean)
+                        .subscribeOn(Schedulers.computation())
+                        .observeOn(Schedulers.computation())
+                        .subscribe({ BUIDINGID ->
+                            LogUtils.d("创建楼成功: " + BUIDINGID)
+
+                            /**
+                             * 创建楼层
+                             */
+                            var floorSortList =
+                                ArrayList(floorSortBean.sortedBy { b -> b.sort })
+
+                            floorSortList.forEach { ff ->
+                                LogUtils.d("当前楼层: " + ff)
+                                var drawingV3Bean =
+                                    updateBuildingFloorDrawing.get(ff.floorNo)
+
+                                var appFloor = FloorBean(
+                                    -1,
+                                    projectLocalId,
+                                    BUIDINGID,
+                                    -1,
+                                    -1,
+                                    ff.floorNo,
+                                    ff.direction,
+                                    TimeUtil.stampToDate("" + System.currentTimeMillis()),
+                                    TimeUtil.stampToDate("" + System.currentTimeMillis()),
+                                    "",
+                                    bb.inspectors?.joinToString(
+                                        separator = "、" ?: ""
+                                    ),
+                                    bb.version,
+                                    bb.projectId,
+                                    0,
+                                    drawingV3Bean,
+                                    bb.aboveGroundNumber,
+                                    bb.underGroundNumber,
+                                )
+
+                                LogUtils.d("创建楼层数据: " + appFloor)
+                                mDb.createLocalFloor(appFloor)
+                                    .subscribeOn(Schedulers.computation())
+                                    .observeOn(Schedulers.computation())
+                                    .subscribe({
+                                        if (bb.modules.size <= 0) {
+                                            cb(true, "下载成功")
+                                        }
+                                        LogUtils.d("创建楼层成功: " + it)
+                                    }, {
+                                        mView?.onMsg("部分楼层创建失败")
+                                    })
+                            }
+                            LogUtils.d("过滤前1111的模块数据: "+bb.modules)
+
+                            /**
+                             * 创建楼下模块
+                             */
+
+                            bb.modules?.forEach { mm ->
+
+                                var updateModuleDrawing = ArrayList<DrawingV3Bean>()
+
+                                var updateModuleFloorDrawing =
+                                    HashMap<String, ArrayList<DrawingV3Bean>>()
+
+                                var moduleFloorSortBean = ArrayList<FloorSortBean>()
+
+                                mCurDrawingsDir =
+                                    "/" + ModuleHelper.DRAWING_CACHE_FOLDER + "/" + projectName + "/" + bb.buildingNo + "/" + mm.moduleName + "/"
+
+                                mm.drawings.forEach { dd ->
+
+                                    var drawingLocalPath: String
+                                    if (dd.floorNo.isNullOrEmpty()) {
+                                        drawingLocalPath = File(
+                                            cacheRootDir + mCurDrawingsDir,
+                                            dd.drawingName
+                                        ).absolutePath
+                                    } else {
+                                        drawingLocalPath = File(
+                                            cacheRootDir + mCurDrawingsDir + dd.floorNo,
+                                            dd.drawingName
+                                        ).absolutePath
+                                    }
+                                    var damageV3List = ArrayList<DamageV3Bean>()
+                                    dd.damageMixes?.forEach {damage->
+                                        var damageV3Bean =
+                                            Gson().fromJson(damage.desc, DamageV3Bean::class.java)
+                                        if(mm.moduleName == "构建检测"){
+                                            when(damageV3Bean.type){
+                                                "梁"->{
+                                                    if (damageV3Bean?.beamLeftRealPicList?.size!! > 1) {
+                                                        damageV3Bean?.beamLeftRealPicList?.set(1,File(
+                                                            cacheRootDir + mCurDrawingsDir + dd.floorNo + "/damage/" + damageV3Bean?.type,
+                                                            damageV3Bean?.beamLeftRealPicList?.get(0)
+                                                        ).absolutePath)
+                                                    }
+
+                                                    if (damageV3Bean?.beamLeftDesignPicList?.size!! > 1) {
+                                                        damageV3Bean?.beamLeftDesignPicList?.set(1,File(
+                                                            cacheRootDir + mCurDrawingsDir + dd.floorNo + "/damage/" + damageV3Bean?.type,
+                                                            damageV3Bean?.beamLeftDesignPicList?.get(0)
+                                                        ).absolutePath)
+                                                    }
+
+                                                    if (damageV3Bean?.beamRightRealPic?.size!! > 1) {
+                                                        damageV3Bean?.beamRightRealPic?.set(1,File(
+                                                            cacheRootDir + mCurDrawingsDir + dd.floorNo + "/damage/" + damageV3Bean?.type,
+                                                            damageV3Bean?.beamRightRealPic?.get(0)
+                                                        ).absolutePath)
+                                                    }
+
+                                                    if (damageV3Bean?.beamRightDesignPic?.size!! > 1) {
+                                                        damageV3Bean?.beamRightDesignPic?.set(1,File(
+                                                            cacheRootDir + mCurDrawingsDir + dd.floorNo + "/damage/" + damageV3Bean?.type,
+                                                            damageV3Bean?.beamRightDesignPic?.get(0)
+                                                        ).absolutePath)
+                                                    }
+
+                                                }
+                                                "柱"->{
+                                                    if (damageV3Bean?.columnLeftRealPicList?.size!! > 1) {
+                                                        damageV3Bean?.columnLeftRealPicList?.set(1,File(
+                                                            cacheRootDir + mCurDrawingsDir + dd.floorNo + "/damage/" + damageV3Bean?.type,
+                                                            damageV3Bean?.columnLeftRealPicList?.get(0)
+                                                        ).absolutePath)
+                                                    }
+
+                                                    if (damageV3Bean?.columnLeftDesignPicList?.size!! > 1) {
+                                                        damageV3Bean?.columnLeftDesignPicList?.set(1,File(
+                                                            cacheRootDir + mCurDrawingsDir + dd.floorNo + "/damage/" + damageV3Bean?.type,
+                                                            damageV3Bean?.columnLeftDesignPicList?.get(0)
+                                                        ).absolutePath)
+                                                    }
+
+                                                    if (damageV3Bean?.columnRightRealPic?.size!! > 1) {
+                                                        damageV3Bean?.columnRightRealPic?.set(1,File(
+                                                            cacheRootDir + mCurDrawingsDir + dd.floorNo + "/damage/" + damageV3Bean?.type,
+                                                            damageV3Bean?.columnRightRealPic?.get(0)
+                                                        ).absolutePath)
+                                                    }
+
+                                                    if (damageV3Bean?.columnRightDesignPic?.size!! > 1) {
+                                                        damageV3Bean?.columnRightDesignPic?.set(1,File(
+                                                            cacheRootDir + mCurDrawingsDir + dd.floorNo + "/damage/" + damageV3Bean?.type,
+                                                            damageV3Bean?.columnRightDesignPic?.get(0)
+                                                        ).absolutePath)
+                                                    }
+
+                                                }
+                                                "墙","板"->{
+
+                                                    if (damageV3Bean?.realPicture?.size!! > 1) {
+                                                        damageV3Bean?.realPicture?.set(1,File(
+                                                            cacheRootDir + mCurDrawingsDir + dd.floorNo + "/damage/" + damageV3Bean?.type,
+                                                            damageV3Bean?.realPicture?.get(0)
+                                                        ).absolutePath)
+                                                    }
+
+                                                    if (damageV3Bean?.designPicture?.size!! > 1) {
+                                                        damageV3Bean?.designPicture?.set(1,File(
+                                                            cacheRootDir + mCurDrawingsDir + dd.floorNo + "/damage/" + damageV3Bean?.type,
+                                                            damageV3Bean?.designPicture?.get(0)
+                                                        ).absolutePath)
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        damageV3List?.add(damageV3Bean)
+                                    }
+
+
+                                    var DrawingV3Bean = DrawingV3Bean(
+                                        -1,
+                                        dd.drawingName,
+                                        dd.fileType,
+                                        "overall",
+                                        drawingLocalPath,
+                                        dd.resId,
+                                        dd.sort,
+                                        damageV3List
+                                    )
+
+                                    if (dd.floorNo.isNullOrEmpty()) {
+                                        updateModuleDrawing.add(DrawingV3Bean)
+                                    } else {
+                                        moduleFloorSortBean.add(
+                                            FloorSortBean(
+                                                dd.floorNo,
+                                                dd.direction,
+                                                DrawingV3Bean.sort!!
+                                            )
+                                        )
+                                        var moduleFloorDrawingList =
+                                            updateModuleFloorDrawing.get(dd.floorNo)
+                                        if (moduleFloorDrawingList == null) {
+                                            moduleFloorDrawingList = ArrayList()
+                                        }
+                                        moduleFloorDrawingList.add(DrawingV3Bean)
+                                        updateModuleFloorDrawing.put(
+                                            dd.floorNo,
+                                            moduleFloorDrawingList
+                                        )
+                                    }
+                                }
+
+                                var v3BuildingModuleDbBean = v3BuildingModuleDbBean(
+                                    -1,
+                                    mm.moduleId,
+                                    bb.buildingId,
+                                    bb.buildingId,
+                                    BUIDINGID,
+                                    a?.projectId,
+                                    projectLocalId,
+                                    mm.moduleName,
+                                    a?.leaderId,
+                                    a?.leaderName,
+                                    0,
+                                    mm.aboveGroundNumber,
+                                    mm.underGroundNumber,
+                                    updateModuleDrawing,
+                                    mm.inspectors?.joinToString(separator = "、"),
+                                    "",
+                                    TimeUtil.stampToDate("" + mm.createTime),
+                                    "",
+                                    mm.moduleId,
+                                    mm.superiorVersion,
+                                    mm.parentVersion,
+                                    mm.version,
+                                    4,
+                                    0
+                                )
+
+                                mDb.updatev3BuildingModule(v3BuildingModuleDbBean)
+                                    .subscribeOn(Schedulers.computation())
+                                    .observeOn(Schedulers.computation())
+                                    .subscribe({ MODULEID ->
+                                        LogUtils.d(mm.moduleName + " 模块创建成功 " + it)
+                                        if (moduleFloorSortBean.size <= 0) {
+                                            dispose()
+                                            cb(true, "下载成功")
+                                        }
+
+                                        /**
+                                         * 创建模块层
+                                         */
+
+                                        var moduleFloorSortList =
+                                            ArrayList(moduleFloorSortBean.sortedBy { b -> b.sort })
+
+                                        moduleFloorSortList.forEach { ff ->
+                                            var drawingV3Bean =
+                                                updateModuleFloorDrawing.get(ff.floorNo)
+                                            var v3ModuleFloorDbBean =
+                                                v3ModuleFloorDbBean(
+                                                    id = -1,
+                                                    projectId = projectLocalId,
+                                                    bldId = BUIDINGID,
+                                                    moduleId = MODULEID,
+                                                    floorId = -1,
+                                                    floorName = ff.floorNo,
+                                                    floorType = ff.direction,
+                                                    drawingsList = drawingV3Bean,
+                                                    remoteId = mm.moduleId,
+                                                    aboveNumber = mm.aboveGroundNumber,
+                                                    afterNumber = mm.underGroundNumber,
+                                                    version = 1,
+                                                    status = 0,
+                                                    createTime = TimeUtil.YMD_HMS.format(
+                                                        Date()
+                                                    ),
+                                                    updateTime = TimeUtil.YMD_HMS.format(
+                                                        Date()
+                                                    ),
+                                                )
+                                            mDb.updatev3ModuleFloor(
+                                                v3ModuleFloorDbBean
+                                            )
+                                                .subscribeOn(Schedulers.computation())
+                                                .observeOn(Schedulers.computation())
+                                                .subscribe({
+                                                    LogUtils.d("创建模块层成功: " + it)
+                                                    cb(true, "下载成功")
+                                                    dispose()
+                                                }, {
+                                                    LogUtils.d("部分模块层创建失败")
+                                                    dispose()
+                                                })
+                                        }
+                                        dispose()
+                                    }, {
+                                        dispose()
+                                    })
+                            }
+                            dispose()
+                        }, {
+                            dispose()
+                        })
+
+                }
+                dispose()
+            }, {
+                dispose()
+            }))
+    }
+
+
+    /**
      * V3下载指定版本的项目
      */
     fun projectV3DownloadConfig(
         beanMain: MainProjectBean,
         remoteProjectId: String,
-        version: Int,
-        cb: (Boolean) -> Unit
+        version: String,
+        cb: (Boolean, String) -> Unit
     ) {
+
+        var list = ArrayList<V3DownloadReq>()
+        list.add(V3DownloadReq(remoteProjectId, version))
+
+        var V3UploadProjectReq: V3UploadProjectReq?
+
+        var projectName = beanMain.name
+
+        var uploadPDFSuccess = true
+
+        var downloadMsg = "下载成功"
+
+        var cacheRootDir: String = FileUtil.getDrawingCacheRootDir(mView!!.getContext()!!)
+
+        var needDownloadDrawingList = ArrayList<V3UploadDrawingRes>()
+
         addDisposable(
             HttpManager.instance.getHttpService<HttpApi>()
-                .downloadV3ProjectVersionList(V3VersionDownloadReq(remoteProjectId, version))
+                .downloadV3ProjectVersionList(V3VersionDownloadReq(list))
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .observeOn(Schedulers.computation())
                 .subscribe({
-                    LogUtils.d("下载的项目版本数据: " + it)
-                    cb(true)
+                    checkResult(it)
+                    var a = it.data?.get(0)
+                    V3UploadProjectReq = a
+                    LogUtils.d("当前版本数据: " + V3UploadProjectReq)
+
+                    V3UploadProjectReq?.buildings?.forEach { bb ->
+                        var mCurDrawingsDir =
+                            "/" + ModuleHelper.DRAWING_CACHE_FOLDER + "/" + projectName + "/" + bb.buildingNo + "/"
+                        bb.drawings.forEach { dd ->
+                            var drawingLocalPath = ""
+                            if (dd.floorNo.isNullOrEmpty()) {
+                                drawingLocalPath = File(
+                                    cacheRootDir + mCurDrawingsDir,
+                                    dd.drawingName
+                                ).absolutePath
+                            } else {
+                                drawingLocalPath = File(
+                                    cacheRootDir + mCurDrawingsDir + dd.floorNo,
+                                    dd.drawingName
+                                ).absolutePath
+                            }
+                            needDownloadDrawingList.add(
+                                V3UploadDrawingRes(
+                                    dd.resId,
+                                    drawingLocalPath
+                                )
+                            )
+                        }
+
+                        /**
+                         * 过滤出最新模块记录
+                         */
+                        var iterator = bb.modules.iterator()
+                        var filterModuleList = ArrayList<V3UploadModuleReq>()
+                        var ModuleList = bb.modules
+
+                        while (iterator.hasNext()){
+                            var next = iterator.next()
+                            var isSmallTime = false
+                            ModuleList.forEach { filter->
+                                if(filter.moduleName == next.moduleName
+                                    && next.createTime< filter.createTime){
+                                    isSmallTime = true
+                                }
+                            }
+                            if(!isSmallTime){
+                                filterModuleList.add(next)
+                            }
+                        }
+
+                        bb.modules.clear()
+
+                        bb.modules.addAll(filterModuleList)
+
+
+                        bb.modules?.forEach { mm ->
+                            mCurDrawingsDir =
+                                "/" + ModuleHelper.DRAWING_CACHE_FOLDER + "/" + projectName + "/" + bb.buildingNo + "/" + mm.moduleName + "/"
+                            mm?.drawings?.forEach { dd ->
+                                var drawingLocalPath = ""
+                                if (dd.floorNo.isNullOrEmpty()) {
+                                    drawingLocalPath = File(
+                                        cacheRootDir + mCurDrawingsDir,
+                                        dd.drawingName
+                                    ).absolutePath
+                                } else {
+                                    drawingLocalPath = File(
+                                        cacheRootDir + mCurDrawingsDir + dd.floorNo,
+                                        dd.drawingName
+                                    ).absolutePath
+                                }
+                                needDownloadDrawingList.add(
+                                    V3UploadDrawingRes(
+                                        dd.resId,
+                                        drawingLocalPath
+                                    )
+                                )
+
+                                if (mm.equals("构建测量")) {
+                                    dd.damageMixes.forEach { damage ->
+                                        var damageV3Bean =
+                                            Gson().fromJson(damage.desc, DamageV3Bean::class.java)
+                                        when (damageV3Bean?.type) {
+                                            "梁" -> {
+                                                if (damageV3Bean?.beamLeftRealPicList?.size!! > 0) {
+                                                    drawingLocalPath = File(
+                                                        cacheRootDir + mCurDrawingsDir + dd.floorNo + "/damage/" + damageV3Bean?.type,
+                                                        damageV3Bean?.beamLeftRealPicList?.get(0)
+                                                    ).absolutePath
+                                                    needDownloadDrawingList.add(
+                                                        V3UploadDrawingRes(
+                                                            drawingLocalPath,
+                                                            damageV3Bean?.beamLeftRealPicList?.get(2)!!
+                                                        )
+                                                    )
+                                                }
+
+                                                if (damageV3Bean?.beamLeftDesignPicList?.size!! > 0) {
+                                                    drawingLocalPath = File(
+                                                        cacheRootDir + mCurDrawingsDir + dd.floorNo + "/damage/" + damageV3Bean?.type,
+                                                        damageV3Bean?.beamLeftDesignPicList?.get(0)
+                                                    ).absolutePath
+                                                    needDownloadDrawingList.add(
+                                                        V3UploadDrawingRes(
+                                                            drawingLocalPath,
+                                                            damageV3Bean?.beamLeftDesignPicList?.get(
+                                                                2
+                                                            )!!
+                                                        )
+                                                    )
+                                                }
+
+                                                if (damageV3Bean?.beamRightRealPic?.size!! > 0) {
+                                                    drawingLocalPath = File(
+                                                        cacheRootDir + mCurDrawingsDir + dd.floorNo + "/damage/" + damageV3Bean?.type,
+                                                        damageV3Bean?.beamRightRealPic?.get(0)
+                                                    ).absolutePath
+                                                    needDownloadDrawingList.add(
+                                                        V3UploadDrawingRes(
+                                                            drawingLocalPath,
+                                                            damageV3Bean?.beamRightRealPic?.get(2)!!
+                                                        )
+                                                    )
+                                                }
+
+                                                if (damageV3Bean?.beamRightDesignPic?.size!! > 0) {
+                                                    drawingLocalPath = File(
+                                                        cacheRootDir + mCurDrawingsDir + dd.floorNo + "/damage/" + damageV3Bean?.type,
+                                                        damageV3Bean?.beamRightDesignPic?.get(0)
+                                                    ).absolutePath
+                                                    needDownloadDrawingList.add(
+                                                        V3UploadDrawingRes(
+                                                            drawingLocalPath,
+                                                            damageV3Bean?.beamRightDesignPic?.get(2)!!
+                                                        )
+                                                    )
+                                                }
+
+                                            }
+                                            "柱" -> {
+                                                if (damageV3Bean?.columnLeftRealPicList?.size!! > 0) {
+                                                    drawingLocalPath = File(
+                                                        cacheRootDir + mCurDrawingsDir + dd.floorNo + "/damage/" + damageV3Bean?.type,
+                                                        damageV3Bean?.columnLeftRealPicList?.get(0)
+                                                    ).absolutePath
+                                                    needDownloadDrawingList.add(
+                                                        V3UploadDrawingRes(
+                                                            drawingLocalPath,
+                                                            damageV3Bean?.columnLeftRealPicList?.get(
+                                                                2
+                                                            )!!
+                                                        )
+                                                    )
+                                                }
+
+                                                if (damageV3Bean?.columnLeftDesignPicList?.size!! > 0) {
+                                                    drawingLocalPath = File(
+                                                        cacheRootDir + mCurDrawingsDir + dd.floorNo + "/damage/" + damageV3Bean?.type,
+                                                        damageV3Bean?.columnLeftDesignPicList?.get(0)
+                                                    ).absolutePath
+                                                    needDownloadDrawingList.add(
+                                                        V3UploadDrawingRes(
+                                                            drawingLocalPath,
+                                                            damageV3Bean?.columnLeftDesignPicList?.get(
+                                                                2
+                                                            )!!
+                                                        )
+                                                    )
+                                                }
+
+                                                if (damageV3Bean?.columnRightRealPic?.size!! > 0) {
+                                                    drawingLocalPath = File(
+                                                        cacheRootDir + mCurDrawingsDir + dd.floorNo + "/damage/" + damageV3Bean?.type,
+                                                        damageV3Bean?.columnRightRealPic?.get(0)
+                                                    ).absolutePath
+                                                    needDownloadDrawingList.add(
+                                                        V3UploadDrawingRes(
+                                                            drawingLocalPath,
+                                                            damageV3Bean?.columnRightRealPic?.get(2)!!
+                                                        )
+                                                    )
+                                                }
+
+                                                if (damageV3Bean?.columnRightDesignPic?.size!! > 0) {
+                                                    drawingLocalPath = File(
+                                                        cacheRootDir + mCurDrawingsDir + dd.floorNo + "/damage/" + damageV3Bean?.type,
+                                                        damageV3Bean?.columnRightDesignPic?.get(0)
+                                                    ).absolutePath
+                                                    needDownloadDrawingList.add(
+                                                        V3UploadDrawingRes(
+                                                            drawingLocalPath,
+                                                            damageV3Bean?.columnRightDesignPic?.get(
+                                                                2
+                                                            )!!
+                                                        )
+                                                    )
+                                                }
+
+                                            }
+                                            "墙", "板" -> {
+                                                if (damageV3Bean?.realPicture?.size!! > 0) {
+                                                    drawingLocalPath = File(
+                                                        cacheRootDir + mCurDrawingsDir + dd.floorNo + "/damage/" + damageV3Bean?.type,
+                                                        damageV3Bean?.realPicture?.get(0)
+                                                    ).absolutePath
+                                                    needDownloadDrawingList.add(
+                                                        V3UploadDrawingRes(
+                                                            drawingLocalPath,
+                                                            damageV3Bean?.realPicture?.get(2)!!
+                                                        )
+                                                    )
+                                                }
+
+                                                if (damageV3Bean?.designPicture?.size!! > 0) {
+                                                    drawingLocalPath = File(
+                                                        cacheRootDir + mCurDrawingsDir + dd.floorNo + "/damage/" + damageV3Bean?.type,
+                                                        damageV3Bean?.designPicture?.get(0)
+                                                    ).absolutePath
+                                                    needDownloadDrawingList.add(
+                                                        V3UploadDrawingRes(
+                                                            drawingLocalPath,
+                                                            damageV3Bean?.designPicture?.get(2)!!
+                                                        )
+                                                    )
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    LogUtils.d("需要下载的图纸个数: " + needDownloadDrawingList.size)
+                    var uploadDrawingIndex = 0
+
+                    needDownloadDrawingList?.forEach { res ->
+                        HttpManager.instance.getHttpService<HttpApi>()
+                            .downloadFile(res.resId)
+                            .subscribeOn(Schedulers.computation())
+                            .observeOn(Schedulers.computation())
+                            .subscribe({
+                                LogUtils.d("图纸下载本地成功")
+                                var file = File(res.fileName)
+                                if (!file.parentFile.exists()) {
+                                    file.parentFile.mkdirs()
+                                }
+                                Files.copy(
+                                    it.byteStream(),
+                                    file.toPath(),
+                                    StandardCopyOption.REPLACE_EXISTING
+                                )
+                                uploadDrawingIndex++
+                                if (uploadDrawingIndex == needDownloadDrawingList.size) {
+                                    if (uploadPDFSuccess) {
+                                        LogUtils.d("图纸全部下载成功")
+                                        projectUpdateV3Version(V3UploadProjectReq, beanMain,cb)
+                                    } else {
+                                        cb(false,downloadMsg)
+                                        LogUtils.d("图纸下载失败" + downloadMsg)
+                                    }
+                                }
+                            }, {
+                                uploadPDFSuccess = false
+                                downloadMsg = "图纸下载失败: " + it.message
+                                LogUtils.d("图纸下载本地失败 " + it + " ; " + it.message)
+                                uploadDrawingIndex++
+                                if (uploadDrawingIndex == needDownloadDrawingList.size) {
+                                    if (uploadPDFSuccess) {
+                                        LogUtils.d("图纸全部下载成功")
+                                        projectUpdateV3Version(V3UploadProjectReq, beanMain,cb)
+                                    } else {
+                                        cb(false,downloadMsg)
+                                        LogUtils.d("图纸下载失败" + downloadMsg)
+                                    }
+                                }
+                            })
+                    }
                 }, {
-                    cb(false)
+                    cb(false, checkError(it))
                 })
         )
-        /*.concatMap {
-            LogUtils.d("下载的项目版本数据")
-
-        }*/
-
     }
 
     override fun projectDownLoadConfig(
@@ -701,7 +1661,11 @@ class MainPresenter : BaseUnitConfigPresenter(), IMainListContrast.IMainPresente
     }
 
 
-    private fun searchLocalConfig(projectId: Long, unitId: Long, remoteUnit: RecordUnit) {
+    private fun searchLocalConfig(
+        projectId: Long,
+        unitId: Long,
+        remoteUnit: RecordUnit
+    ) {
         mDb.getUnitConfigOnce(unitId).toObservable()
             .subscribe({
                 LOG.I("123", "it=$it")
@@ -749,7 +1713,10 @@ class MainPresenter : BaseUnitConfigPresenter(), IMainListContrast.IMainPresente
             }
     }
 
-    private fun downloadProjectRecord(historyId: String, cb: (Boolean) -> Unit) {
+    private fun downloadProjectRecord(
+        historyId: String,
+        cb: (Boolean) -> Unit
+    ) {
         var unitIdx = 0
         addDisposable(HttpManager.instance.getHttpService<HttpApi>()
             .projectRecordDownload(ProjectDownloadReq(historyId))
@@ -785,7 +1752,10 @@ class MainPresenter : BaseUnitConfigPresenter(), IMainListContrast.IMainPresente
         }
     }
 
-    override fun projectGetLocalSummary(projectId: Long, cb: (ProjectSummaryRes) -> Unit) {
+    override fun projectGetLocalSummary(
+        projectId: Long,
+        cb: (ProjectSummaryRes) -> Unit
+    ) {
         var allCount = 0
 
         mDb.getAllUnitOnce(projectId).toObservable()
@@ -802,7 +1772,9 @@ class MainPresenter : BaseUnitConfigPresenter(), IMainListContrast.IMainPresente
             .subscribe({
                 var roomList = it.filter { s -> s.houseType == 2 }
                 var noAccess = roomList.filter { s ->
-                    s.houseStatus?.contains("不让进") ?: false && !(s.houseStatus?.contains("无人")
+                    s.houseStatus?.contains("不让进") ?: false && !(s.houseStatus?.contains(
+                        "无人"
+                    )
                         ?: false)
                 }.count()
                 var noOne = roomList.filter { s ->
@@ -826,7 +1798,10 @@ class MainPresenter : BaseUnitConfigPresenter(), IMainListContrast.IMainPresente
             })
     }
 
-    override fun projectGetSummary(remoteProjectId: String, cb: (ProjectSummaryRes) -> Unit) {
+    override fun projectGetSummary(
+        remoteProjectId: String,
+        cb: (ProjectSummaryRes) -> Unit
+    ) {
         HttpManager.instance.getHttpService<HttpApi>()
             .getProjectSummary(ProjectSummaryReq(remoteProjectId))
             .subscribeOn(Schedulers.io())
@@ -865,7 +1840,7 @@ class MainPresenter : BaseUnitConfigPresenter(), IMainListContrast.IMainPresente
             var count = 0
             Observable.merge(obList)
                 .subscribeOn(Schedulers.computation())
-                .observeOn(AndroidSchedulers.mainThread())
+                .observeOn(Schedulers.computation())
                 .subscribe({
                     count++
                     LOG.I("123", "delete project count=$count  $it")
@@ -876,7 +1851,13 @@ class MainPresenter : BaseUnitConfigPresenter(), IMainListContrast.IMainPresente
 
         if (!beanMain.remoteId.isNullOrEmpty()) {
             //删除网络数据
-            LogUtils.d("删除网络数据")
+
+            var dd = V3VersionDeleteReq(
+                beanMain.remoteId,
+                0,
+                beanMain.version
+            )
+            LogUtils.d("删除网络数据 " + Gson().toJson(dd))
             HttpManager.instance.getHttpService<HttpApi>()
                 .deleteProject(
                     V3VersionDeleteReq(
@@ -885,14 +1866,15 @@ class MainPresenter : BaseUnitConfigPresenter(), IMainListContrast.IMainPresente
                         beanMain.version
                     )
                 )
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.computation())
+                .observeOn(Schedulers.computation())
                 .subscribe({
                     checkResult(it)
                     LogUtils.d("删除远端项目成功：" + it.toString())
                     RxBus.getDefault().post(RefreshProjectListEvent(true))
                     mView?.onMsg("删除项目成功")
                 }, {
+                    LogUtils.d("删除远端项目成功：" + checkError(it))
                     mView?.onMsg("删除远端项目失败" + checkError(it))
                 })
         }

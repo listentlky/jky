@@ -17,16 +17,15 @@ interface v3ModuleFloorDao {
     @Query("Select * from V3_MODULE_FLOOR where id = :id")
     fun getModuleFloorOnce(id: Long): Single<List<v3ModuleFloorRoom>>
 
-    @Query("Select * from V3_MODULE_FLOOR where project_id = :projectId and building_id =:buildingId and module_id =:moduleId and status == 0")
+    @Query("Select * from V3_MODULE_FLOOR where project_id = :projectId and building_id =:buildingId and module_id =:moduleId")
     fun getModuleFloorByProjectIdOnce(
         projectId: Long,
         buildingId: Long,
         moduleId: Long
     ): Flowable<List<v3ModuleFloorRoom>>
 
-    @Query("Update V3_MODULE_FLOOR SET drawingsList = :drawingList,isChanged = :isChange  WHERE id = :id and status == 0")
-    fun updateModuleFloorDrawing(drawingList:List<DrawingV3Bean>,isChange:Boolean
-                                 , id: Long): Int
+    @Query("Update V3_MODULE_FLOOR SET drawingsList = :drawingList WHERE id = :id")
+    fun updateModuleFloorDrawing(drawingList:List<DrawingV3Bean>,id: Long): Int
 
     @Query("Select * from V3_MODULE_FLOOR where project_id = :project_id")
     fun getModuleFloorByProjectId(project_id: Long): Flowable<List<v3ModuleFloorRoom>>
@@ -63,4 +62,7 @@ interface v3ModuleFloorDao {
 
     @Query("Delete from V3_MODULE_FLOOR where building_id = :buildingId")
     fun deleteModuleFloorByBuildingId(buildingId: Long)
+
+    @Query("Delete from V3_MODULE_FLOOR where module_id = :moduleId")
+    fun deleteModuleFloorByModuleId(moduleId: Long)
 }

@@ -1,5 +1,6 @@
 package com.sribs.bdd.module.main
 
+import android.annotation.SuppressLint
 import com.alibaba.android.arouter.launcher.ARouter
 import com.cbj.sdk.libnet.http.HttpManager
 import com.sribs.common.module.BasePresenter
@@ -46,7 +47,6 @@ class MainListPresenter:BasePresenter(),IMainListContrast.IPresenter {
                     localId= b.id?:-1,
                     localUUID = b.uuid?:"",
                     remoteId= b.remoteId?:"",
-                    updateTimeYMD = if (b.updateTime==null)"" else TimeUtil.YMD_HMS.format(b.updateTime),
                     status = mStateArr[b.status?:0],
                     address = b.name+"",
                     leader = b.leader?:"",
@@ -55,8 +55,8 @@ class MainListPresenter:BasePresenter(),IMainListContrast.IPresenter {
                     version = b.version!!,
                     isChanged = b.isChanged
                 ).also { _b->
-                    _b.updateTime = TimeUtil.YMD_HMS.format(b.updateTime)
-                    _b.createTime = TimeUtil.YMD_HMS.format(b.createTime)
+                    _b.updateTime = b.updateTime?:""
+                    _b.createTime = b.createTime?:""
                     _b.name = b.name
                 } })
 
@@ -82,6 +82,7 @@ class MainListPresenter:BasePresenter(),IMainListContrast.IPresenter {
     /**
      * 从网络获取项目列表
      */
+    @SuppressLint("CheckResult")
     private fun getProjectRemote(localList:ArrayList<MainProjectBean>){
         LogUtils.d("有网络 请求网络数据: ")
         HttpManager.instance.getHttpService<HttpApi>()
@@ -94,7 +95,7 @@ class MainListPresenter:BasePresenter(),IMainListContrast.IPresenter {
                 var l = ArrayList<MainProjectBean>()
                 // 远程项目在本地中已有 remoteId相同，更新状态
                 if(it.data == null){
-                    mView?.onProjectList(ArrayList(localList.sortedByDescending { b->b.updateTime }))
+                    mView?.onProjectList(ArrayList(localList.sortedByDescending { b->b.createTime }))
                     return@subscribe
                 }
                 it.data!!.forEach { remoteBean->
@@ -105,9 +106,9 @@ class MainListPresenter:BasePresenter(),IMainListContrast.IPresenter {
                     if (i>=0) {
                         var localBean = localList[i]
                         //判断时间
-                   /*     if (TimeUtil.isBefore(localBean.updateTime, remoteBean.updateTime)) {
+                        if (TimeUtil.isBefore(localBean.createTime, TimeUtil.stampToDate(remoteBean.createTime))) {
                             localList[i].hasNewer = true
-                        }*/
+                        }
                         localBean.localUUID = remoteBean.projectId
                         localBean.remoteData = remoteBean
                     }
@@ -121,9 +122,9 @@ class MainListPresenter:BasePresenter(),IMainListContrast.IPresenter {
                     if (i>=0) {
                         var localBean = localList[i]
                         //判断时间
-                       /* if (TimeUtil.isBefore(localBean.updateTime , remoteBean.updateTime)) {
+                        if (TimeUtil.isBefore(localBean.createTime , TimeUtil.stampToDate(remoteBean.createTime))) {
                             localList[i].hasNewer = true
-                        }*/
+                        }
                         localBean.remoteData = remoteBean
                         localBean.remoteId = remoteBean.projectId
                     }
@@ -154,8 +155,6 @@ class MainListPresenter:BasePresenter(),IMainListContrast.IPresenter {
                     localId = -1,
                     localUUID = b.projectId,
                     remoteId= b.projectId,
-            //        updateTimeYMD = TimeUtil.time2YMD(b.updateTime),
-                    updateTimeYMD = "",
                     status = mStateArr[2],
                     parentVersion = b.parentVersion,
                     version = b.version,
@@ -163,20 +162,19 @@ class MainListPresenter:BasePresenter(),IMainListContrast.IPresenter {
                     leader = b.leaderName?:"",
                     inspector = b.inspectors?.joinToString(separator = "、")?:""
                 ).also { _b->
-           //         _b.updateTime = b.updateTime
-           //         _b.createTime = b.createTime
+                    _b.createTime = TimeUtil.stampToDate(b.createTime)
                     _b.name = b.projectName
                     _b.remoteData = b
                 } }
                 l.addAll(localList)
                 l.addAll(onlyRemoteList!!)
 //                mView?.onProjectList(ArrayList(l.sortedWith(compareBy({b->b.name},{b->b.sortedBuildNo})) ))
-                mView?.onProjectList(ArrayList(l.sortedByDescending { b->b.updateTime }))
+                mView?.onProjectList(ArrayList(l.sortedByDescending { b->b.createTime }))
 
             },{
                 mView?.onMsg(checkError(it))
 //                mView?.onProjectList(ArrayList(localList.sortedWith(compareBy({b->b.name},{b->b.sortedBuildNo}))))
-                mView?.onProjectList(ArrayList(localList.sortedByDescending { b->b.updateTime }))
+                mView?.onProjectList(ArrayList(localList.sortedByDescending { b->b.createTime }))
 
             })
     }

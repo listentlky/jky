@@ -34,7 +34,7 @@ class BuildingListAdapter (private val mCb: ICallback) :
     )
 
     override fun init(bind: ItemMainListBinding, beanMain: BuildingMainBean, pos: Int) {
-        bind.itemMainTimeTv.text = beanMain.updateTime
+        bind.itemMainTimeTv.text = beanMain.createTime
         bind.itemMainHasNew.visibility = View.GONE
         bind.itemMainAddressTv.text = beanMain.bldName
         bind.itemMainAddressTv.isSelected = true
@@ -123,7 +123,7 @@ class BuildingListAdapter (private val mCb: ICallback) :
                     it.bldName!!.contains(mKeyword!!) })
         }
         if (!mTime.isNullOrEmpty()){
-            mList = ArrayList(mAll!!.filter { inTimeRange(it.updateTime!!,mTime!!) })
+            mList = ArrayList(mAll!!.filter { inTimeRange(it.createTime!!,mTime!!) })
         }
 
         notifyDataSetChanged()

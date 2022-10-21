@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.sribs.common.bean.db.DrawingV3Bean
+import com.sribs.common.utils.TimeUtil
 import java.sql.Date
 import java.util.*
 import kotlin.collections.ArrayList
@@ -21,9 +22,9 @@ data class BuildingBean(
     @ColumnInfo(name="project_id")          var projectId:Long?,//project 表主键
     @ColumnInfo(name="bld_name")            var bldName:String?,//楼名称
     @ColumnInfo(name="bld_type")            var bldType:String?,//楼类别，居住类、非居住类 all
-    @ColumnInfo(name="create_time")         var createTime:Long?=0,
-    @ColumnInfo(name="update_time")         var updateTime:Long?=0,
-    @ColumnInfo(name="delete_time")         var deleteTime:Long?=0,
+    @ColumnInfo(name="create_time")         var createTime:String?=TimeUtil.stampToDate(""+System.currentTimeMillis()),
+    @ColumnInfo(name="update_time")         var updateTime:String?=TimeUtil.stampToDate(""+System.currentTimeMillis()),
+    @ColumnInfo(name="delete_time")         var deleteTime:String?="",
     @ColumnInfo(name="isDeleted")         var isDeleted:Int?=0,
     @ColumnInfo(name="leader")              var leader:String?="",//负责人
     @ColumnInfo(name="inspector_name")      var inspectorName:String?="",//用jsonString记录多人检测情况
@@ -35,15 +36,15 @@ data class BuildingBean(
     @ColumnInfo(name="drawing")              var drawing:List<DrawingV3Bean>?=ArrayList(),//基于楼图纸列表
     @ColumnInfo(name="aboveGroundNumber")             var aboveGroundNumber:Int?=0,//楼上层数
     @ColumnInfo(name="underGroundNumber")              var underGroundNumber:Int?=0,//地下层数
-    @ColumnInfo(name = "isChanged") var isChanged: Boolean? = false
+    @ColumnInfo(name = "isChanged") var isChanged: Int? = 0
 ) {
     @ColumnInfo(name="id")
     @PrimaryKey(autoGenerate = true)
     var id:Long = 0
 
-    constructor(uuid:String,projectRemoteId:String,projectUUID:String,id:Long, bldName: String, bldType: String, createTime: Long, updateTime: Long, deleteTime: Long,
-                leader: String?,inspectorName: String, remoteId: String,superiorVersion:Long,parentVersion:Long, version: Long, status: Int,drawing: List<DrawingV3Bean>?):this(
-        "","","",0L,"","",null,null,-1,0,"","","",0,0,0,0,
+    constructor(uuid:String,projectRemoteId:String,projectUUID:String,id:Long, bldName: String, bldType: String, createTime: String, updateTime: String, deleteTime: String,
+                leader: String?,inspectorName: String, remoteId: String,superiorVersion:Long,parentVersion:Long, version: Long, status: Int,drawing: List<DrawingV3Bean>?,isChanged: Int):this(
+        "","","",0L,"","","","","",0,"","","",0,0,0,0,
         ArrayList(),0,0
     ){
         this.id = id
@@ -65,6 +66,7 @@ data class BuildingBean(
         this.version = version
         this.status = status
         this.drawing = drawing
+        this.isChanged = isChanged
     }
 
 }

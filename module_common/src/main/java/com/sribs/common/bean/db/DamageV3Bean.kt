@@ -1,6 +1,5 @@
 package com.sribs.common.bean.db
 
-import java.util.*
 import kotlin.collections.ArrayList
 
 /**
@@ -45,13 +44,13 @@ class DamageV3Bean(){
     var beamRightRealStirrupsTypeNonEncryptList: ArrayList<String>? = ArrayList() //实测箍筋-非加密区
     var beamRightRealProtectList: ArrayList<String>? = ArrayList() //实测保护层厚度
     var beamRightRealNote:String?="" //实测配筋-备注
-    var beamRightRealPic :String?= ""
+    var beamRightRealPic :ArrayList<String>?= ArrayList() //实测图
 
     var beamRightDesignSectionType : String?="" //设计纵筋
     var beamRightDesignSectionTypeParamsList: ArrayList<String>? = ArrayList() //设计纵筋-矩形
     var beamRightDesignStirrupsTypeList: ArrayList<String>? = ArrayList() //设计箍筋
     var beamRightDesignNote: String? = ""//设计配筋-备注
-    var beamRightDesignPic :String?= ""
+    var beamRightDesignPic :ArrayList<String>?= ArrayList() //设计图
 
 
     constructor(
@@ -80,12 +79,12 @@ class DamageV3Bean(){
         beamRightRealStirrupsTypeNonEncryptList: ArrayList<String>,
         beamRightRealProtectList: ArrayList<String>,
         beamRightRealNote:String,
-        beamRightRealPic :String,
+        beamRightRealPic :ArrayList<String>,
         beamRightDesignSectionType:String,
         beamRightDesignSectionTypeParamsList: ArrayList<String>,
         beamRightDesignStirrupsTypeList: ArrayList<String>,
         beamRightDesignNote: String,
-        beamRightDesignPic :String
+        beamRightDesignPic :ArrayList<String>
 
     ) : this() {
         this.id = id
@@ -147,13 +146,13 @@ class DamageV3Bean(){
     var rightRealStirrupsTypeNonEncryptList: ArrayList<String>? = ArrayList() //实测箍筋-加密区
     var rightRealProtectList: ArrayList<String>? = ArrayList() //实测保护层厚度
     var rightRealNote: String? = ""//实测配筋-备注
-    var columnRightRealPic :String?= ""
+    var columnRightRealPic :ArrayList<String>?= ArrayList()
 
     var rightDesignSectionTypeList: ArrayList<String>? = ArrayList() //设计纵筋
     var rightDesignSectionTypeParamsList: ArrayList<String>? = ArrayList() //设计纵筋-矩形
     var rightDesignStirrupsTypeList: ArrayList<String>? = ArrayList() //设计箍筋
     var rightDesignNote: String? = ""//设计配筋-备注
-    var columnRightDesignPic :String?= ""
+    var columnRightDesignPic :ArrayList<String>?= ArrayList()
 
     constructor(
         id: Long,
@@ -181,12 +180,12 @@ class DamageV3Bean(){
         rightRealStirrupsTypeNonEncryptList: ArrayList<String>,
         rightRealProtectList: ArrayList<String>,
         rightRealNote: String,
-        columnRightRealPic: String,
+        columnRightRealPic: ArrayList<String>,
         rightDesignSectionTypeList: ArrayList<String>,
         rightDesignSectionTypeParamsList: ArrayList<String>,
         rightDesignStirrupsTypeList: ArrayList<String>,
         rightDesignNote: String,
-        columnRightDesignPic: String
+        columnRightDesignPic: ArrayList<String>
     ) : this() {
         this.id = id
         this.drawingId = drawingId
@@ -223,14 +222,7 @@ class DamageV3Bean(){
     }
 
 
-    fun toColumnString(): String {
-        return "DamageV3Bean(id=$id, drawingId=$drawingId, type=$type, action=$action, annotRef=$annotRef, note=$note, createTime=$createTime, columnName=$columnName, columnAxisNote=$columnAxisNote, columnAxisNoteList=$columnAxisNoteList, leftRealSectionType=$leftRealSectionType, leftRealSectionTypeParamsList=$leftRealSectionTypeParamsList, leftRealNote=$leftRealNote, leftDesignSectionType=$leftDesignSectionType, leftDesignSectionTypeParamsList=$leftDesignSectionTypeParamsList, leftDesignNote=$leftDesignNote, rightRealSectionTypeList=$rightRealSectionTypeList, rightRealSectionTypeParamsList=$rightRealSectionTypeParamsList, rightRealStirrupsTypeList=$rightRealStirrupsTypeList, rightRealStirrupsTypeEncryptList=$rightRealStirrupsTypeEncryptList, rightRealStirrupsTypeNonEncryptList=$rightRealStirrupsTypeNonEncryptList, rightRealProtectList=$rightRealProtectList, rightRealNote=$rightRealNote, rightDesignSectionTypeList=$rightDesignSectionTypeList, rightDesignSectionTypeParamsList=$rightDesignSectionTypeParamsList, rightDesignStirrupsTypeList=$rightDesignStirrupsTypeList, rightDesignNote=$rightDesignNote)"
-    }
 
-
-     fun toBeamString(): String {
-        return "DamageV3Bean(id=$id, drawingId=$drawingId, type=$type, action=$action, annotRef=$annotRef, note=$note, createTime=$createTime, beamName=$beamName, beamAxisNote=$beamAxisNote, beamAxisNoteList=$beamAxisNoteList, beamLeftRealTypeList=$beamLeftRealTypeList, beamLeftRealParamsList=$beamLeftRealParamsList, beamLeftRealNote='$beamLeftRealNote', beamLeftRealPicList=$beamLeftRealPicList, beamLeftDesignTypeList=$beamLeftDesignTypeList, beamLeftDesignParamsList=$beamLeftDesignParamsList, beamLeftDesignNote='$beamLeftDesignNote', beamLeftDesignPicList=$beamLeftDesignPicList, beamRightRealSectionType=$beamRightRealSectionType, beamRightRealSectionParamsList=$beamRightRealSectionParamsList, beamRightRealStirrupsTypeList=$beamRightRealStirrupsTypeList, beamRightRealStirrupsTypeEncryptList=$beamRightRealStirrupsTypeEncryptList, beamRightRealStirrupsTypeNonEncryptList=$beamRightRealStirrupsTypeNonEncryptList, beamRightRealProtectList=$beamRightRealProtectList, beamRightRealNote=$beamRightRealNote, beamRightRealPic=$beamRightRealPic, beamRightDesignSectionType=$beamRightDesignSectionType, beamRightDesignSectionTypeParamsList=$beamRightDesignSectionTypeParamsList, beamRightDesignStirrupsTypeList=$beamRightDesignStirrupsTypeList, beamRightDesignNote=$beamRightDesignNote, beamRightDesignPic=$beamRightDesignPic)"
-    }
 
     //构建检测-板 墙 通用
     var realPlateThickness: String? = "" //实测 板厚度
@@ -249,7 +241,7 @@ class DamageV3Bean(){
     var realNorthSouthRebarNumber: String? = "" //实测-南北向钢筋-档数*/
     var realProtectThickness: String? = "" //实测-保护层厚度
     var realNote: String? = "" //实测-备注
-    var realPicture: String? = "" //实测-照片
+    var realPicture: ArrayList<String>? = ArrayList() //实测-照片
     var designEastWestRebarList: ArrayList<String>? = ArrayList()
 /*    var designEastWestRebarType: String? = "" //设计-东西向钢筋-类型
     var designEastWestRebarLength: String? = "" //设计-东西向钢筋-长度*/
@@ -257,7 +249,7 @@ var designNorthSouthRebarList: ArrayList<String>? = ArrayList()
 /*    var designNorthSouthRebarType: String? = "" //设计-南北向钢筋-类型
     var designNorthSouthRebarLength: String? = "" //设计-南北向钢筋-长度*/
     var designNote: String? = "" //设计-备注
-    var designPicture: String? = "" //设计-照片
+    var designPicture:  ArrayList<String>? = ArrayList() //设计-照片
 
     //构建检测-板/墙
     constructor(
@@ -277,11 +269,11 @@ var designNorthSouthRebarList: ArrayList<String>? = ArrayList()
         realNorthSouthRebarList:ArrayList<String>,
         realProtectThickness: String,
         realNote: String,
-        realPicture: String,
+        realPicture: ArrayList<String>,
         designEastWestRebarList:ArrayList<String>,
         designNorthSouthRebarList:ArrayList<String>,
         designNote: String,
-        designPicture: String
+        designPicture: ArrayList<String>
     ) : this() {
         this.id = id
         this.drawingId = drawingId
@@ -414,7 +406,7 @@ var designNorthSouthRebarList: ArrayList<String>? = ArrayList()
     }
 
     override fun toString(): String {
-        return "DamageV3Bean(id=$id, drawingId=$drawingId, type=$type, action=$action, annotRef=$annotRef, note=$note, createTime=$createTime, annotX=$annotX, annotY=$annotY, axisNote=$axisNote, axisNoteList=$axisNoteList, heightType=$heightType, floorName=$floorName, floorDesign=$floorDesign, floorReal=$floorReal, plateDesign=$plateDesign, decorateDesign=$decorateDesign, gridDesign=$gridDesign, gridReal=$gridReal, pointName=$pointName, measure1Height=$measure1Height, measure2Height=$measure2Height, tilt1=$tilt1, tilt2=$tilt2, closeDiff=$closeDiff,rhdiffInfo=$rhdiffInfo, pointList=$pointList)"
+        return "DamageV3Bean(id=$id, drawingId=$drawingId, type=$type, action=$action, annotRef=$annotRef, note=$note, createTime=$createTime, annotX=$annotX, annotY=$annotY, beamName=$beamName, beamAxisNote=$beamAxisNote, beamAxisNoteList=$beamAxisNoteList, beamLeftRealTypeList=$beamLeftRealTypeList, beamLeftRealParamsList=$beamLeftRealParamsList, beamLeftRealNote='$beamLeftRealNote', beamLeftRealPicList=$beamLeftRealPicList, beamLeftDesignTypeList=$beamLeftDesignTypeList, beamLeftDesignParamsList=$beamLeftDesignParamsList, beamLeftDesignNote='$beamLeftDesignNote', beamLeftDesignPicList=$beamLeftDesignPicList, beamRightRealSectionType=$beamRightRealSectionType, beamRightRealSectionParamsList=$beamRightRealSectionParamsList, beamRightRealStirrupsTypeList=$beamRightRealStirrupsTypeList, beamRightRealStirrupsTypeEncryptList=$beamRightRealStirrupsTypeEncryptList, beamRightRealStirrupsTypeNonEncryptList=$beamRightRealStirrupsTypeNonEncryptList, beamRightRealProtectList=$beamRightRealProtectList, beamRightRealNote=$beamRightRealNote, beamRightRealPic=$beamRightRealPic, beamRightDesignSectionType=$beamRightDesignSectionType, beamRightDesignSectionTypeParamsList=$beamRightDesignSectionTypeParamsList, beamRightDesignStirrupsTypeList=$beamRightDesignStirrupsTypeList, beamRightDesignNote=$beamRightDesignNote, beamRightDesignPic=$beamRightDesignPic, columnName=$columnName, columnAxisNote=$columnAxisNote, columnAxisNoteList=$columnAxisNoteList, leftRealSectionType=$leftRealSectionType, leftRealSectionTypeParamsList=$leftRealSectionTypeParamsList, leftRealNote=$leftRealNote, columnLeftRealPicList=$columnLeftRealPicList, leftDesignSectionType=$leftDesignSectionType, leftDesignSectionTypeParamsList=$leftDesignSectionTypeParamsList, leftDesignNote=$leftDesignNote, columnLeftDesignPicList=$columnLeftDesignPicList, rightRealSectionTypeList=$rightRealSectionTypeList, rightRealSectionTypeParamsList=$rightRealSectionTypeParamsList, rightRealStirrupsTypeList=$rightRealStirrupsTypeList, rightRealStirrupsTypeEncryptList=$rightRealStirrupsTypeEncryptList, rightRealStirrupsTypeNonEncryptList=$rightRealStirrupsTypeNonEncryptList, rightRealProtectList=$rightRealProtectList, rightRealNote=$rightRealNote, columnRightRealPic=$columnRightRealPic, rightDesignSectionTypeList=$rightDesignSectionTypeList, rightDesignSectionTypeParamsList=$rightDesignSectionTypeParamsList, rightDesignStirrupsTypeList=$rightDesignStirrupsTypeList, rightDesignNote=$rightDesignNote, columnRightDesignPic=$columnRightDesignPic, realPlateThickness=$realPlateThickness, designPlateThickness=$designPlateThickness, plateName='$plateName', axisSingleNote=$axisSingleNote, axisPlateNoteList=$axisPlateNoteList, realEastWestRebarList=$realEastWestRebarList, realNorthSouthRebarList=$realNorthSouthRebarList, realProtectThickness=$realProtectThickness, realNote=$realNote, realPicture=$realPicture, designEastWestRebarList=$designEastWestRebarList, designNorthSouthRebarList=$designNorthSouthRebarList, designNote=$designNote, designPicture=$designPicture, axisNote=$axisNote, axisNoteList=$axisNoteList, heightType=$heightType, floorName=$floorName, floorDesign=$floorDesign, floorReal=$floorReal, plateDesign=$plateDesign, decorateDesign=$decorateDesign, gridDesign=$gridDesign, gridReal=$gridReal, pointName=$pointName, measure1Height=$measure1Height, measure2Height=$measure2Height, guide=$guide, guideRotate=$guideRotate, tilt1=$tilt1, tilt2=$tilt2, closeDiff=$closeDiff, rhdiffInfo=$rhdiffInfo, pointList=$pointList)"
     }
 
 

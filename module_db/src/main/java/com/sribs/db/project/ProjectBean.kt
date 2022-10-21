@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.sribs.common.bean.db.ProjectBean
+import com.sribs.common.utils.TimeUtil
 import java.sql.Date
 
 /**
@@ -22,11 +23,10 @@ data class ProjectBean(
     @ColumnInfo(name="parentVersion")       var parentVersion:Long?=0,
     @ColumnInfo(name="version")              var version:Long?=System.currentTimeMillis(),//版本
 
-    @ColumnInfo(name="create_time")         var createTime:Date?=null,
-    @ColumnInfo(name="update_time")         var updateTime:Date?=Date(java.util.Date().time),
+    @ColumnInfo(name="create_time")         var createTime:String?=null,
+    @ColumnInfo(name="update_time")         var updateTime:String?= TimeUtil.stampToDate("" + System.currentTimeMillis()),
     @ColumnInfo(name="remote_id")           var remoteId:String?=null,
-    @ColumnInfo(name = "isChanged") var isChanged: Boolean? = false
-
+    @ColumnInfo(name = "isChanged") var isChanged: Int? = 0 // 0无变化 1变化
 ){
     @ColumnInfo(name="id")
     @PrimaryKey(autoGenerate = true)

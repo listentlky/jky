@@ -33,6 +33,9 @@ interface ProjectDao {
     @Update(onConflict = REPLACE)
     fun updateProject(bean:ProjectBean):Int
 
+    @Query("UPDATE project SET isChanged = :isChanged ,status = :status WHERE id = :id")
+    fun updateProject(id:Long,isChanged:Int,status:Int): Int
+
     @Delete
     fun deleteProject(bean:ProjectBean):Int
 

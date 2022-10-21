@@ -14,10 +14,13 @@ data class V3UploadBuildingReq (
     var leaderId:String,
     var leaderName:String,
     var moduleIds:List<String>,
-    var modules:List<V3UploadModuleReq>,
+    var modules:ArrayList<V3UploadModuleReq>,
     var drawings:List<V3UploadDrawingReq>,
+    var aboveGroundNumber:Int,
+    var underGroundNumber:Int,
     var parentVersion:Long,
     var projectId:String,
     var superiorVersion:Long,
-    var version:Long
+    var version:Long,
+    var createTime:Long
     )

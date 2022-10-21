@@ -32,7 +32,7 @@ data class v3BuildingModuleDbBean(
     var parentVersion: Long? = 0,
     var version: Long? = System.currentTimeMillis(),
     var status: Int? = 0,
-    var isChanged: Boolean? = false
+    var isChanged: Int? = 0
 ) {
 
     fun isSame(buildingId: Long?, projectId: Long?): Boolean =

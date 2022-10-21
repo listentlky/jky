@@ -41,6 +41,7 @@ class DrawingV3Bean():BaseDbBean(){
     var drawingType: String?=""//east,west,south,north,overall,floor
     var localAbsPath: String?=""//移动端缓存地址
     var remoteAbsPath: String?=""//服务端缓存地址,
+    var sort:Int?=0
     var damage:ArrayList<DamageV3Bean>?=ArrayList() //损伤
 
     constructor(drawingID:Long,fileName: String?,fileType: String?,drawingType: String?,localAbsPath: String?,
@@ -51,6 +52,18 @@ class DrawingV3Bean():BaseDbBean(){
         this.drawingType = drawingType
         this.localAbsPath = localAbsPath
         this.remoteAbsPath = remoteAbsPath
+        this.damage = damage
+    }
+
+    constructor(drawingID:Long,fileName: String?,fileType: String?,drawingType: String?,localAbsPath: String?,
+                remoteAbsPath: String?,sort:Int,damage:ArrayList<DamageV3Bean>):this(){
+        this.drawingID = drawingID
+        this.fileName = fileName
+        this.fileType = fileType
+        this.drawingType = drawingType
+        this.localAbsPath = localAbsPath
+        this.remoteAbsPath = remoteAbsPath
+        this.sort = sort
         this.damage = damage
     }
 

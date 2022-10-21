@@ -8,12 +8,12 @@ import com.google.gson.annotations.SerializedName
  * description:
  */
 data class V3VersionListRes(
-    @SerializedName("projectId") var projectId: String,
-    @SerializedName("projectName") var projectName: String,
-    @SerializedName("leaderName") var leaderName: String,
-    @SerializedName("leaderId") var leaderId: String,
-    @SerializedName("parentVersion") var parentVersion: Int,
-    @SerializedName("version") var version: Int,
+    @SerializedName("projectId") var projectId: String?,
+    @SerializedName("projectName") var projectName: String?,
+    @SerializedName("leaderName") var leaderName: String?,
+    @SerializedName("leaderId") var leaderId: String?,
+    @SerializedName("parentVersion") var parentVersion: String,
+    @SerializedName("version") var version: String,
     @SerializedName("inspectors") var inspectors: List<String>,
- //   @SerializedName("createTime") var createTime: String
+    @SerializedName("createTime") var createTime: String
 )

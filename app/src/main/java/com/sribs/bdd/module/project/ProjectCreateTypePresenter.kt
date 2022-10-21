@@ -29,6 +29,7 @@ import com.sribs.common.module.BasePresenter
 import com.sribs.common.net.HttpApi
 import com.sribs.common.server.IDatabaseService
 import com.sribs.common.utils.FileUtil
+import com.sribs.common.utils.TimeUtil
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -225,7 +226,7 @@ class ProjectCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCre
     private var mBldUUID:String? = ""
 
     fun createLocalBuilding(activity: Activity, mLocalProjectId:Int,mLocalProjectUUID:String,mProjectRemoteId:String,
-                            mBuildingId:Long, name:String,leader:String,inspector:String): Long? {
+                            mBuildingId:Long, name:String,leader:String,inspector:String,version:Long): Long? {
 
         if (array==null||array?.size==0){
             mView?.onMsg("楼层不能为空")
@@ -267,13 +268,13 @@ class ProjectCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCre
                     mLocalProjectId.toLong(),
                     name,
                     "all",
-                    curTime,
-                    curTime,
-                    0L,
+                    TimeUtil.stampToDate(""+curTime),
+                    TimeUtil.stampToDate(""+curTime),
+                    "",
                     0,
                     leader,
                     inspector,
-                    0,
+                    version,
                     0,
                      System.currentTimeMillis(),
                     "",
@@ -281,11 +282,12 @@ class ProjectCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCre
                     mAppFacadeDrawingList,
                     above.size,
                     before.size,
-                    true
+                    1
                 )
                 mDb.createLocalBuilding(dbBldBean)
             }
-            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.computation())
+            .observeOn(Schedulers.computation())
             .subscribe({
                 mBldId = it.toLong()
                 LogUtils.d("leon createLocalBuilding new building id=${mBldId}")
@@ -339,9 +341,9 @@ class ProjectCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCre
                         LogUtils.d("获取本地数据库楼层表: "+list.toString())
                     })*/
 
-                /**
+   /*             *//**
                  * 有网 走网络创建
-                 */
+                 *//*
                 var floorDrawingsMap: HashMap<String?, Any?> = HashMap()
                 var inspectorList: List<String> =
                     if (inspector.contains("、")) inspector.split("、") else Arrays.asList(inspector)
@@ -374,7 +376,7 @@ class ProjectCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCre
                 }else{
                     LogUtils.d("无网直接返回: ")
                     mView?.createBuildingSuccess()
-                }
+                }*/
 
                /* addDisposable(mDb.getAllDrawing()
                     .subscribeOn(Schedulers.computation())
@@ -437,9 +439,9 @@ class ProjectCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCre
                         it.floorId?.toLong(),
                         it.floorName,
                         it.floorType,
-                        it.createTime,
-                        it.createTime,
-                        0L,
+                        TimeUtil.stampToDate(""+it.createTime),
+                        TimeUtil.stampToDate(""+it.createTime),
+                        "",
                         "",
                         1,
                         "",
@@ -447,11 +449,11 @@ class ProjectCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCre
                         it.drawingsV3List,
                         above.size,
                         before.size,
-                        true
                     )
                     mDb.createLocalFloor(appFloor)
                 }
-                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.computation())
+                .observeOn(Schedulers.computation())
                 .subscribe({
                     print("leon createLocalFloorsInTheBuilding ret floor id=$it")
                 },{

@@ -33,7 +33,7 @@ class MainListAdapter(private val mCb:ICallback) :BaseListAdapter<MainProjectBea
 
 
     override fun init(bind: ItemMainListBinding, beanMain: MainProjectBean, pos: Int) {
-        bind.itemMainTimeTv.text = beanMain.updateTimeYMD
+        bind.itemMainTimeTv.text = beanMain.createTime
         bind.itemMainHasNew.visibility = if (beanMain.hasNewer) View.VISIBLE else View.GONE
         bind.itemMainAddressTv.text = beanMain.address
         bind.itemMainAddressTv.isSelected = true
@@ -108,7 +108,7 @@ class MainListAdapter(private val mCb:ICallback) :BaseListAdapter<MainProjectBea
                     it.address.contains(mKeyword!!) })
         }
         if (!mTime.isNullOrEmpty()){
-            mList = ArrayList(mAll!!.filter { inTimeRange(it.updateTimeYMD,mTime!!) })
+            mList = ArrayList(mAll!!.filter { inTimeRange(it.createTime,mTime!!) })
         }
 
         notifyDataSetChanged()
@@ -125,7 +125,7 @@ class MainListAdapter(private val mCb:ICallback) :BaseListAdapter<MainProjectBea
     fun setSearch(time:ArrayList<String>){
         mTime = time
         if (mAll.isNullOrEmpty())return
-        mList = ArrayList(mAll!!.filter { inTimeRange(it.updateTimeYMD,time) })
+        mList = ArrayList(mAll!!.filter { inTimeRange(it.createTime,time) })
         notifyDataSetChanged()
     }
 

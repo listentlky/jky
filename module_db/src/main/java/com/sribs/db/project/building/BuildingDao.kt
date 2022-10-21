@@ -24,14 +24,14 @@ interface BuildingDao {
     @Query("Select * from project_building where id = :bldId ")
     fun getBuildingByBldId(bldId:Long):Flowable<List<BuildingBean>>
 
-    @Query("Select * from project_building where project_id = :proId and status == 0")
+    @Query("Select * from project_building where project_id = :proId")
     fun getBuildingByProjectId(proId:Long):Flowable<List<BuildingBean>>
 
-    @Query("Select * from project_building where project_id = :proId and status == 0")
+    @Query("Select * from project_building where project_id = :proId")
     fun getBuildingOnceByProjectId(proId:Long):Single<List<BuildingBean>>
 
     //仅在二期使用，三期开始将弃用，因为同一个项目id有多个buildingId
-    @Query("Select max(id) from project_building where project_id = :proId and status == 0")
+    @Query("Select max(id) from project_building where project_id = :proId")
     fun getBuildingIdByProjectId(proId:Long):Long
 
     @Query("Select * from project_building where remote_id = :remoteId ")
@@ -42,6 +42,12 @@ interface BuildingDao {
 
     @Update(onConflict = REPLACE)
     fun updateBuilding(bean:BuildingBean):Int
+
+    @Query("UPDATE project_building SET isChanged = :isChanged,status = :status WHERE id = :id")
+    fun updateBuilding(id:Long,isChanged:Int,status:Int): Int
+
+    @Query("UPDATE project_building SET isChanged = :isChanged,status = :status WHERE project_id = :projectId")
+    fun updateBuildingByProjectId(projectId:Long,isChanged:Int,status:Int): Int
 
     @Delete
     fun deleteBuilding(bean:BuildingBean):Int

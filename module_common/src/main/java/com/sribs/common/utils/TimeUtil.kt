@@ -27,8 +27,13 @@ object TimeUtil {
         }
     }
 
-    fun dateToStamp(time:String):String{
-        return ""+YMD_HMS.parse(time).time
+    fun dateToStamp(time:String):Long{
+        return YMD_HMS.parse(time).time
+    }
+
+    fun stampToDate(stamp:String):String{
+        var date = Date(stamp.toLong())
+        return YMD_HMS.format(date)
     }
 
     fun time2YMD(t:String):String =
@@ -42,7 +47,6 @@ object TimeUtil {
             e.printStackTrace()
             ""
         }
-
 
     fun time2Date(t:String):Date? =
         try{

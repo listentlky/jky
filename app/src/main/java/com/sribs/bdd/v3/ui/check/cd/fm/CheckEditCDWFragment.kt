@@ -23,6 +23,8 @@ import com.sribs.bdd.v3.util.LogUtils
 import com.sribs.common.ARouterPath
 import com.sribs.common.bean.db.DamageV3Bean
 import com.sribs.common.bean.db.DrawingV3Bean
+import com.sribs.common.utils.FileUtil
+import java.io.File
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -322,7 +324,7 @@ class CheckEditCDWFragment : BaseFragment(R.layout.fragment_check_componentdetec
                 ),
                 mBinding.checkCdpPlateRightRealUi.checkCdpPlateRightRealProtect.checkEditProtect.text.toString(),
                 mBinding.checkCdpPlateRightRealUi.checkCdpLeftRealRemarkContent.text.toString(),
-                "图片",
+                arrayListOf(FileUtil.getFileName(mRightRealPicSrc)?:"",mRightRealPicSrc),
                 arrayListOf(
                     currentDesignPicType,
                     mBinding.checkCdpPlateRightDesignUi.checkCdpBeamRightDesinSingle.checkEdit2.text.toString()
@@ -332,7 +334,7 @@ class CheckEditCDWFragment : BaseFragment(R.layout.fragment_check_componentdetec
                     mBinding.checkCdpPlateRightDesignUi.checkCdpBeamRightDesinMeasured.checkEdit2.text.toString()
                 ),
                 mBinding.checkCdpPlateRightDesignUi.checkCdpLeftRealRemarkContent.text.toString(),
-                "图片"
+                arrayListOf(FileUtil.getFileName(mRightDesignPicSrc)?:"",mRightDesignPicSrc)
             )
 
             (context as CheckComponentDetectionActivity).saveDamage(damage)
@@ -473,8 +475,8 @@ class CheckEditCDWFragment : BaseFragment(R.layout.fragment_check_componentdetec
             mBinding.checkCdpPlateRightRealUi.checkCdpLeftRealRemarkContent.setText(damageV3Bean.realNote)
             mBinding.checkCdpPlateRightDesignUi.checkCdpLeftRealRemarkContent.setText(damageV3Bean.designNote)
 
-                 mBinding.checkCdpPlateRightRealUi.checkCdpPlatePic.setImageURI(Uri.parse(damageV3Bean.realPicture))
-                 mBinding.checkCdpPlateRightDesignUi.checkCdpPlatePic.setImageURI(Uri.parse(damageV3Bean.designPicture))
+            mBinding.checkCdpPlateRightRealUi.checkCdpPlatePic.setImageURI(Uri.fromFile(File(damageV3Bean.realPicture?.get(0))))
+            mBinding.checkCdpPlateRightDesignUi.checkCdpPlatePic.setImageURI(Uri.fromFile(File(damageV3Bean.designPicture?.get(0))))
 
             mDamageCreateTime = damageV3Bean.createTime
         }
@@ -489,17 +491,17 @@ class CheckEditCDWFragment : BaseFragment(R.layout.fragment_check_componentdetec
             .start(activity as CheckComponentDetectionActivity, requestCode)
     }
 
-    fun setImgaeBitmap(uri: Uri, type:Int){
+    fun setImageBitmap(filePath: String, type:Int){
         when(type){
             REQUEST_WALL_REAL_TAKE_PHOTO->
             {
-                mBinding.checkCdpPlateRightRealUi.checkCdpPlatePic.setImageURI(uri)
-                mRightRealPicSrc = uri.toString()
+                mBinding.checkCdpPlateRightRealUi.checkCdpPlatePic.setImageURI(Uri.fromFile(File(filePath)))
+                mRightRealPicSrc = filePath
             }
             REQUEST_WALL_DESIGN_TAKE_PHOTO->
             {
-                mBinding.checkCdpPlateRightDesignUi.checkCdpPlatePic.setImageURI(uri)
-                mRightDesignPicSrc = uri.toString()
+                mBinding.checkCdpPlateRightDesignUi.checkCdpPlatePic.setImageURI(Uri.fromFile(File(filePath)))
+                mRightDesignPicSrc = filePath
                 LogUtils.d(mRightDesignPicSrc+"gogogo")
             //    CommonUtil.imageToPDF(mRightDesignPicSrc,"/storage/emulated/0/Android/data/com.sribs.bdd/files/图纸/1.jpg.pdf")
             }

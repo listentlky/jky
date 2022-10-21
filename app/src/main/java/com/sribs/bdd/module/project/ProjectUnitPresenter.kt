@@ -265,7 +265,7 @@ class ProjectUnitPresenter:BasePresenter(),IProjectContrast.IUnitPresenter {
                     floors,
                     localUnit!!.version?:1,
                     if(bCover) 1 else 0,
-                    TimeUtil.date2Time(localProject!!.updateTime!!)?:""
+                    ""+TimeUtil.dateToStamp(localProject!!.updateTime!!)
                 )
                 HttpManager.instance.getHttpService<HttpApi>()
                     .unitUpload(req)

@@ -14,17 +14,16 @@ data class FloorBean(
     var floorName:String?=null,
     var floorType:Int?=0, // 0地下 1地上
 
-    var createTime:Long?=null,
-    var updateTime:Long?=null,
-    var deleteTime:Long?=null,
+    var createTime:String?=null,
+    var updateTime:String?=null,
+    var deleteTime:String?=null,
     var inspectorName:String?=null,
-    var version:Int?=null,
+    var version:Long?=null,
     var remoteId:String?=null,
     var status:Int?=null,
     var drawing:List<DrawingV3Bean>?=null,
     var aboveGroundNumber:Int?=0, //楼上层数
     var underGroundNumber:Int?=0, //地下层数
-    var isChanged: Boolean? = false
 
 ){
     fun isSame(projectId:Long?,bldId: Long?,unitId: Long?,floorId: Long?):Boolean =

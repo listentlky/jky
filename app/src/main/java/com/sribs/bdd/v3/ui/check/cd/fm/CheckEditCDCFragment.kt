@@ -18,7 +18,9 @@ import com.sribs.bdd.v3.util.LogUtils
 import com.sribs.common.ARouterPath
 import com.sribs.common.bean.db.DamageV3Bean
 import com.sribs.common.bean.db.DrawingV3Bean
+import com.sribs.common.utils.FileUtil
 import kotlinx.android.synthetic.main.fragment_check_componentdetection_column_right_design_edit.view.*
+import java.io.File
 import java.util.*
 
 
@@ -925,7 +927,7 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
                     rightRealProtectView!!.checkEditProtect2.text.toString()
                 ),
                 rightRealView!!.checkCpdLeftRealRemarkContent.text.toString(),
-                mRightRealPicSrc,
+                arrayListOf(FileUtil.getFileName(mRightRealPicSrc)?:"",mRightRealPicSrc),
                 //右侧设计
                 arrayListOf(
                     mTypeRightList!!.get(currentRightDesignType),
@@ -940,9 +942,8 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
                     rightDesignView!!.ll1.check_edit.text.toString()
                 ),
                 rightDesignView!!.checkCpdLeftRealRemarkContent.text.toString(),
-                mRightDesignPicSrc
+                arrayListOf(FileUtil.getFileName(mRightDesignPicSrc)?:"",mRightDesignPicSrc)
             )
-            LogUtils.d(damage.toColumnString())
             (context as CheckComponentDetectionActivity).saveDamage(damage)
         }
     }
@@ -1210,8 +1211,6 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
             mDamageCreateTime = -1L
         } else {
 
-            LogUtils.d("重新resetView：" + damageV3Bean!!.toColumnString())
-
             currentLeftRealType =  mTypeList!!.indexOf(damageV3Bean.leftRealSectionType)
             currentLeftDesignType =  mTypeList!!.indexOf(damageV3Bean.leftDesignSectionType)
             currentRightRealType = mTypeRightList!!.indexOf(damageV3Bean.rightRealSectionTypeList!!.get(0))
@@ -1244,8 +1243,8 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
             )
 
 
-            rightRealView!!.checkCpdBeamPic.setImageURI(Uri.parse(damageV3Bean.columnRightRealPic))
-            rightDesignView!!.checkCpdBeamPic.setImageURI(Uri.parse(damageV3Bean.columnRightDesignPic))
+            rightRealView!!.checkCpdBeamPic.setImageURI(Uri.fromFile(File(damageV3Bean.columnRightRealPic?.get(0))))
+            rightDesignView!!.checkCpdBeamPic.setImageURI(Uri.fromFile(File(damageV3Bean.columnRightDesignPic?.get(0))))
 
             when (damageV3Bean.leftRealSectionType) {
                 "矩形" -> {
@@ -1654,17 +1653,17 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
 
     }
 
-    fun setImgaeBitmap(uri: Uri, type:Int){
+    fun setImageBitmap(filePath: String, type:Int){
         when(type){
             REQUEST_COLUMN_REAL_TAKE_PHOTO->
             {
-                rightRealView!!.checkCpdBeamPic.setImageURI(uri)
-                mRightRealPicSrc = uri.toString()
+                rightRealView!!.checkCpdBeamPic.setImageURI(Uri.fromFile(File(filePath)))
+                mRightRealPicSrc = filePath
             }
             REQUEST_COLUMN_DESIGN_TAKE_PHOTO->
             {
-                rightDesignView!!.checkCpdBeamPic.setImageURI(uri)
-                mRightDesignPicSrc = uri.toString()
+                rightDesignView!!.checkCpdBeamPic.setImageURI(Uri.fromFile(File(filePath)))
+                mRightDesignPicSrc = filePath
             }
         }
     }

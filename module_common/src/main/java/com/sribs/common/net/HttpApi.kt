@@ -146,7 +146,7 @@ interface HttpApi {
      * 下载项目的指定版本
      */
     @POST("api/v3/app/building/project/download/versionList")
-    fun downloadV3ProjectVersionList(@Body req:V3VersionDownloadReq):Observable<ResultBean<Any>>
+    fun downloadV3ProjectVersionList(@Body req:V3VersionDownloadReq):Observable<ResultBean<List<V3UploadProjectReq>>>
 
 
     @POST("api/v3/app/project/save")
@@ -159,25 +159,25 @@ interface HttpApi {
      * 查询项目下所有楼
      */
     @POST("api/v3/app/building/list")
-    fun getV3BuildingList(@Query("projectId") projectId:String,@Query("version") version:Int):Observable<ResultBean<ListBean<Any>>>
+    fun getV3BuildingList(@Query("projectId") projectId:String,@Query("version") version:Long):Observable<ResultBean<List<Any>>>
 
     /**
      * 查询指定楼的楼版本列表
      */
     @POST("api/v3/app/building/version/list")
-    fun getV3BuildingVersionList(@Body req:V3VersionReq):Observable<ResultBean<ListBean<V3VersionListRes>>>
+    fun getV3BuildingVersionList(@Body req:V3VersionReq):Observable<ResultBean<List<V3VersionListRes>>>
 
     /**
      * 下载指定版本楼
      */
     @POST("api/v3/app/building/versionList")
-    fun downloadV3BuildingVersionList(@Body req:V3VersionDownloadReq):Observable<ResultBean<Any>>
+    fun downloadV3BuildingVersionList(@Body req:V3VersionDownloadReq):Observable<ResultBean<List<V3UploadBuildingReq>>>
 
     /**
      * 新建保存楼
      */
     @POST("api/v3/app/building/save")
-    fun saveV3Building(@Body req: V3BuildingSaveReq):Observable<ResultBean<Any>>
+    fun saveV3Building(@Body req: V3UploadBuildingReq):Observable<ResultBean<Any>>
 
     /**
      * 删除楼
@@ -189,25 +189,25 @@ interface HttpApi {
      * 查询楼下的模块
      */
     @POST("/api/v3/app/building/module/list")
-    fun getV3BuildingModuleList(@Query("buildingId") buildingRemoteId: String,@Query("version") version:Int):Observable<ResultBean<ListBean<Any>>>
+    fun getV3BuildingModuleList(@Query("buildingId") buildingRemoteId: String,@Query("version") version:Long):Observable<ResultBean<ListBean<Any>>>
 
     /**
      * 查询指定楼的楼模块列表
      */
     @POST("api/v3/app/building/module/version/list")
-    fun getV3ModuleVersionList(@Body req:V3VersionReq):Observable<ResultBean<ListBean<V3VersionListRes>>>
+    fun getV3ModuleVersionList(@Body req:V3VersionReq):Observable<ResultBean<List<V3VersionListRes>>>
 
     /**
      * 下载指定模块
      */
-    @POST("api/v3/app/building/versionList")
-    fun downloadV3ModuleVersionList(@Body req:V3VersionDownloadReq):Observable<ResultBean<Any>>
+    @POST("api/v3/app/building/module/VersionList")
+    fun downloadV3ModuleVersionList(@Body req:V3VersionDownloadReq):Observable<ResultBean<List<V3UploadModuleReq>>>
 
     /**
      * 新建保存模块
      */
     @POST("/api/v3/app/module/save")
-    fun saveBuildingModule(@Body req: V3BuildingModuleListRes):Observable<ResultBean<Any>>
+    fun saveBuildingModule(@Body req: V3UploadModuleReq):Observable<ResultBean<Any>>
 
     /**
      * 删除模块
@@ -224,5 +224,12 @@ interface HttpApi {
     fun uploadFile(
         @Part @NonNull file: List<MultipartBody.Part>
     ): Observable<ResultBean<List<V3UploadDrawingRes>>>
+
+    /**
+     * 文件下载
+     */
+    @Streaming
+    @GET("api/v3/res/selsect/{resId}")
+    fun downloadFile(@Path("resId") resId:String):Observable<ResponseBody>
 
 }

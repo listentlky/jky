@@ -46,7 +46,6 @@ class CheckBSPresenter : BasePresenter(),ICheckBSContrast.ICheckBSPresenter{
                     deleteTime = b.deleteTime,
                     version = b.version,
                     status = b.status,
-                    isChanged = b.isChanged
                 )
                 })
                 LogUtils.d("获取到该楼下所有楼层数据 "+list.toString())
@@ -88,9 +87,11 @@ class CheckBSPresenter : BasePresenter(),ICheckBSContrast.ICheckBSPresenter{
     /**
      * 保存图纸损伤信息
      */
-    override fun saveDamageToDb(drawingV3Bean:List<DrawingV3Bean>, id:Long) {
-        LogUtils.d("saveDamageToDb： "+drawingV3Bean+" ; id="+id)
-        addDisposable(mDb.updateModuleFloorDrawing(drawingV3Bean,id)
+    override fun saveDamageToDb(bean:CheckBSMainBean) {
+        addDisposable(mDb.updateModuleFloorDrawing(bean.drawing!!,bean.id!!)
+            .flatMap {
+                mDb.updateBuildingModule(bean.moduleId!!,1)
+            }
             .subscribeOn(Schedulers.computation())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
