@@ -524,8 +524,8 @@ class CheckEditCDPFragment : BaseFragment(R.layout.fragment_check_componentdetec
             mBinding.checkCdpPlateRightRealUi.checkCdpLeftRealRemarkContent.setText(damageV3Bean.realNote)
             mBinding.checkCdpPlateRightDesignUi.checkCdpLeftRealRemarkContent.setText(damageV3Bean.designNote)
 
-            mBinding.checkCdpPlateRightRealUi.checkCdpPlatePic.setImageURI(Uri.fromFile(File(damageV3Bean.realPicture?.get(0))))
-            mBinding.checkCdpPlateRightDesignUi.checkCdpPlatePic.setImageURI(Uri.fromFile(File(damageV3Bean.designPicture?.get(0))))
+            mBinding.checkCdpPlateRightRealUi.checkCdpPlatePic.setImageURI(Uri.fromFile(File(damageV3Bean.realPicture?.get(1))))
+            mBinding.checkCdpPlateRightDesignUi.checkCdpPlatePic.setImageURI(Uri.fromFile(File(damageV3Bean.designPicture?.get(1))))
 
             mDamageCreateTime = damageV3Bean.createTime
         }

@@ -10,6 +10,7 @@ data class V3UploadDamageReq (
     var damageType:String,
     var desc:String,
     var resId:String,
+    var drawingId:String,
     var drawingName:String,
     var floorNo:String,
     var inspectors:List<String>,

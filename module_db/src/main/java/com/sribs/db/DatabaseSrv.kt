@@ -879,6 +879,11 @@ class DatabaseSrv : IDatabaseService {
         it.onNext(dao.updateBuildingModuleByBuildingId(buildingId,isChanged,status).toLong())
     }
 
+    override fun updateBuildingModuleVersion(id: Long, version: Long):Observable<Long> = Observable.create {
+        var dao = mDb!!.v3BuildingModuleDao()
+        it.onNext(dao.updateBuildingModuleVersion(id,version).toLong())
+    }
+
     override fun getBuildingIdByProjectId(proId: Long): Observable<Long> = Observable.create {
         var dao = mDb!!.buildingDao()
         var bldId: Long = dao.getBuildingIdByProjectId(proId)

@@ -44,10 +44,8 @@ class LoginPresenter:BasePresenter(),ILoginContrast.IPresenter {
 
     private fun loginRemote(account: String, pwd: String){
         LOG.I("123","loginRemote")
-        var instance = HttpManager.instance
-        instance.mHost = "http://106.15.205.38:80"
-        LogUtils.d("host=${instance.mHost}")
-        addDisposable(instance.getHttpService<HttpApi>()
+        LogUtils.d("host=${HttpManager.instance.mHost}")
+        addDisposable(HttpManager.instance.getHttpService<HttpApi>()
             .login(LoginReq(account,pwd))
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -86,9 +84,7 @@ class LoginPresenter:BasePresenter(),ILoginContrast.IPresenter {
 
     private fun getUserInfoRemote(){
         val srv = ARouter.getInstance().build(com.sribs.common.ARouterPath.SRV_DB).navigation() as IDatabaseService
-        var instance = HttpManager.instance
-        instance.mHost = "http://106.15.205.38:80"
-        var ob1 = instance.getHttpService<HttpApi>()
+        var ob1 = HttpManager.instance.getHttpService<HttpApi>()
             .userInfos()
             .subscribeOn(Schedulers.io())
             .observeOn(Schedulers.computation())
@@ -104,7 +100,7 @@ class LoginPresenter:BasePresenter(),ILoginContrast.IPresenter {
                 ) })
             }
 
-        var ob2 = instance.getHttpService<HttpApi>()
+        var ob2 = HttpManager.instance.getHttpService<HttpApi>()
             .getRoleUserList(RoleUserListReq("admin"))
             .subscribeOn(Schedulers.io())
             .observeOn(Schedulers.computation())
@@ -115,7 +111,7 @@ class LoginPresenter:BasePresenter(),ILoginContrast.IPresenter {
                     b.name
                 ) })
             }
-        var ob3 = instance.getHttpService<HttpApi>()
+        var ob3 = HttpManager.instance.getHttpService<HttpApi>()
             .getRoleUserList(RoleUserListReq("inspector"))
             .subscribeOn(Schedulers.io())
             .observeOn(Schedulers.computation())
@@ -126,7 +122,7 @@ class LoginPresenter:BasePresenter(),ILoginContrast.IPresenter {
                     b.name
                 ) })
             }
-        var ob4 = instance.getHttpService<HttpApi>()
+        var ob4 = HttpManager.instance.getHttpService<HttpApi>()
             .userInfo()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())

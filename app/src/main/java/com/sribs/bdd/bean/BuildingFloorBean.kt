@@ -66,7 +66,7 @@ data class BuildingModule(
     var superiorVersion: Long?,
     var parentVersion: Long?,
     var version: Long?,
-    var status: String,
+    var status: Int,
     var createTime: String?,
     var deleteTime: String?,
     var updateTime:String?,

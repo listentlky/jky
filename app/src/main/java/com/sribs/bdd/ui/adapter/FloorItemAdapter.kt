@@ -58,10 +58,7 @@ class FloorItemAdapter : BaseListAdapter<BuildingModule, ItemFloorDetailBinding>
             }
         }
 
-        var resIdx = bind.root.context.resources.getStringArray(R.array.main_project_status).indexOf(bean.status)
-        if (resIdx in icons.indices) {
-            bind.status.setImageResource(icons[resIdx])
-        }
+        bind.status.setImageResource(icons[bean.status])
 
         bind.name.text = text
         bind.time.text = bean.createTime
@@ -70,13 +67,13 @@ class FloorItemAdapter : BaseListAdapter<BuildingModule, ItemFloorDetailBinding>
         }
         bind.edit.setOnClickListener {
             if (routing != null && mItemClickCallback != null) {
-                mItemClickCallback?.onEdit(text, routing, bean.moduleid!!)
+                mItemClickCallback?.onEdit(text, routing, bean.moduleid!!,bean.status == 2)
             }
         }
         bind.config.setOnClickListener {
             //todo 跳转对应配置页面
             if (routing != null && mItemClickCallback != null) {
-                mItemClickCallback?.onConfig(text, configRouting, bean.moduleid!!)
+                mItemClickCallback?.onConfig(text, configRouting, bean.moduleid!!,bean.status==2)
             }
         }
 
@@ -129,9 +126,9 @@ class FloorItemAdapter : BaseListAdapter<BuildingModule, ItemFloorDetailBinding>
     }
 
     interface ItemClickCallback {
-        fun onEdit(moduleName: String, routing: String, moduleId: Long);
+        fun onEdit(moduleName: String, routing: String, moduleId: Long,isLocal:Boolean);
 
-        fun onConfig(moduleName: String, routing: String, moduleId: Long);
+        fun onConfig(moduleName: String, routing: String, moduleId: Long,isLocal:Boolean);
 
         fun onMore(bean: BuildingModule);
     }

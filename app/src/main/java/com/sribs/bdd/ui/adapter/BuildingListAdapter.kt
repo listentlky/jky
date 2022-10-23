@@ -51,10 +51,9 @@ class BuildingListAdapter (private val mCb: ICallback) :
             selCard(bind,pos)
             mCb.onMoreChecked(beanMain,pos,mList!![pos].isMenuChecked)
         }
-        var resIdx = bind.root.context.resources.getStringArray(R.array.main_project_status).indexOf(beanMain.status)
-        if (resIdx in icons.indices){
-            bind.itemMainStatusIv.setImageResource(icons[resIdx])
-        }
+
+        bind.itemMainStatusIv.setImageResource(icons[beanMain.status])
+
     }
 
     private fun selCard(bind:ItemMainListBinding,pos:Int){

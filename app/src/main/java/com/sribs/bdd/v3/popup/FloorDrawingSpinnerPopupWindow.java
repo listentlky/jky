@@ -52,6 +52,11 @@ public class FloorDrawingSpinnerPopupWindow extends PopupWindow {
             @Override
             public void onClick(View v) {
                 if(mSelectData == null){
+                    if(data != null && data.size()>0 && data.get(0).getMNameList() !=null && data.get(0).getMNameList().size()>0){
+                        mSelectData = data.get(0).getMNameList().get(0);
+                    }
+                }
+                if(mSelectData == null){
                     Toast.makeText(context,"未选择图纸",Toast.LENGTH_SHORT).show();
                     return;
                 }

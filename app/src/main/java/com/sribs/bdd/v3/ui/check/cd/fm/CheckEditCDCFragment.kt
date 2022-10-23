@@ -1243,8 +1243,8 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
             )
 
 
-            rightRealView!!.checkCpdBeamPic.setImageURI(Uri.fromFile(File(damageV3Bean.columnRightRealPic?.get(0))))
-            rightDesignView!!.checkCpdBeamPic.setImageURI(Uri.fromFile(File(damageV3Bean.columnRightDesignPic?.get(0))))
+            rightRealView!!.checkCpdBeamPic.setImageURI(Uri.fromFile(File(damageV3Bean.columnRightRealPic?.get(1))))
+            rightDesignView!!.checkCpdBeamPic.setImageURI(Uri.fromFile(File(damageV3Bean.columnRightDesignPic?.get(1))))
 
             when (damageV3Bean.leftRealSectionType) {
                 "矩形" -> {
@@ -1537,8 +1537,6 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
                 }
             }
 
-
-            //TODO  lulf
             //实测箍筋
             if ("1".equals(damageV3Bean.rightRealStirrupsTypeList!!.get(1))) {
                 rightRealMeasuredView!!.checkCpdLeftRealSpinner3.setSelect(0)

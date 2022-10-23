@@ -65,6 +65,10 @@ class ProjectFloorItemActivity : BaseActivity(), IProjectContrast.IProjectFloorD
     var mRemoteId = ""
 
     @JvmField
+    @Autowired(name = com.sribs.common.ARouterPath.VAL_COMMON_STATUS)
+    var mStatus = 0
+
+    @JvmField
     @Autowired(name = com.sribs.common.ARouterPath.VAL_COMMON_TITLE)
     var mTitle = ""
 
@@ -112,7 +116,11 @@ class ProjectFloorItemActivity : BaseActivity(), IProjectContrast.IProjectFloorD
         mBinding.floorItem.layoutManager = LinearLayoutManager(this)
         mAdapter.setItemClickCallback(object : FloorItemAdapter.ItemClickCallback {
 
-            override fun onEdit(moduleName: String, routing: String, moduleId: Long) {
+            override fun onEdit(moduleName: String, routing: String, moduleId: Long,isLocal:Boolean) {
+                if(isLocal){
+                    showToast(getString(R.string.error_no_local))
+                    return
+                }
                 ARouter.getInstance().build(routing)
                     .withLong(
                         com.sribs.common.ARouterPath.VAL_PROJECT_ID,
@@ -146,7 +154,11 @@ class ProjectFloorItemActivity : BaseActivity(), IProjectContrast.IProjectFloorD
                     .navigation()
             }
 
-            override fun onConfig(moduleName: String, routing: String, moduleId: Long) {
+            override fun onConfig(moduleName: String, routing: String, moduleId: Long,isLocal:Boolean) {
+                if(isLocal){
+                    showToast(getString(R.string.error_no_local))
+                    return
+                }
                 ARouter.getInstance().build(routing)
                     .withLong(
                         com.sribs.common.ARouterPath.VAL_PROJECT_ID,
@@ -197,8 +209,13 @@ class ProjectFloorItemActivity : BaseActivity(), IProjectContrast.IProjectFloorD
                 DialogUtil.showBottomDialog(this, R.layout.dialog_common_bottom_building_select, true) {
                     when (it) {
                         0->{ //上传配置
-                            if(beanMain.buildingRemoteId.isNullOrEmpty()){
+                            if(mStatus == 0){
                                 showToast("请先上传楼")
+                                return@showBottomDialog
+                            }
+
+                            if(beanMain.status == 2){
+                                showToast(getString(R.string.error_no_local))
                                 return@showBottomDialog
                             }
 
@@ -261,7 +278,7 @@ class ProjectFloorItemActivity : BaseActivity(), IProjectContrast.IProjectFloorD
     }
 
     private fun doDownload(beanMain: BuildingModule){
-        if (beanMain.status == "0"){
+        if (mStatus == 0){
             showToast("请先上传楼")
             return
         }
@@ -270,7 +287,7 @@ class ProjectFloorItemActivity : BaseActivity(), IProjectContrast.IProjectFloorD
             return
         }
 
-        mPresenter.getV3ModuleVersionHistory(beanMain.buildingRemoteId!!,beanMain.moduleUUID!!){ versionList->
+        mPresenter.getV3ModuleVersionHistory(beanMain.buildingUUID!!,beanMain.moduleUUID!!){ versionList->
             if (versionList.isNullOrEmpty()){
                 showToast(getString(R.string.error_no_history))
                 return@getV3ModuleVersionHistory
@@ -292,7 +309,7 @@ class ProjectFloorItemActivity : BaseActivity(), IProjectContrast.IProjectFloorD
                     ){isSuccess,msg->
                         showToast(msg)
                         if(isSuccess){
-                            beanMain.also { b->b.status = resources.getStringArray(R.array.main_project_status)[4] }
+                            beanMain.also { b->b.status = 4 }
                         }
                         showPb(false)
                     }
@@ -315,11 +332,11 @@ class ProjectFloorItemActivity : BaseActivity(), IProjectContrast.IProjectFloorD
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item?.itemId) {
             R.id.menu_module_refresh ->{ //从远端获取更新
-                if(mRemoteId.isNullOrEmpty()){
+                /*if(mRemoteId.isNullOrEmpty()){
                     showToast("请先上传楼")
                     return super.onOptionsItemSelected(item)
-                }
-                mPresenter.getRemoteModule(mRemoteId,mVersion)
+                }*/
+                mPresenter.getRemoteModule(mLocalProjectId,mLocalProjectUUID,mBuildingUUID,mBuildingId,mVersion,localList)
             }
          /*   R.id.menu_bld_upload -> { //上传
                 var data = mAdapter?.getData()
@@ -451,10 +468,26 @@ class ProjectFloorItemActivity : BaseActivity(), IProjectContrast.IProjectFloorD
         }
         return super.onOptionsItemSelected(item)
     }
+    var localList=ArrayList<BuildingModule>()
 
     override fun handlItemList(list: ArrayList<BuildingModule>) {
         LogUtils.d("获取模块数据: "+list)
-        mAdapter.setData(list)
+        if(localList.size>0){
+            localList.clear()
+        }
+        localList.addAll(list)
+        localList.addAll(remoteList)
+        mAdapter.setData(ArrayList(localList.sortedByDescending { b -> b.createTime }))
+    }
+
+    var remoteList=ArrayList<BuildingModule>()
+
+    override fun handlRemoteItemList(list: ArrayList<BuildingModule>) {
+        LogUtils.d("获取云端模块数据: "+list)
+        remoteList.clear()
+        remoteList.addAll(list)
+        localList.addAll(remoteList)
+        mAdapter.setData(ArrayList(localList.sortedByDescending { b -> b.createTime }))
     }
 
     override fun addItem(bean: BuildingModule) {
@@ -486,7 +519,7 @@ class ProjectFloorItemActivity : BaseActivity(), IProjectContrast.IProjectFloorD
 
     )
     val items = arrayOf(
-        "建筑结构复核", "倾斜测量", "相对高差测量", "构建检测", "居民类检测测量", "非居民类检测测量"
+        "建筑结构复核", "倾斜测量", "相对高差测量", "构建检测"/*, "居民类检测测量", "非居民类检测测量"*/
     )
 
 

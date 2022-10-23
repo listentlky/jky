@@ -24,7 +24,7 @@ class BuildingMainBean (
     var superiorVersion:Long?=0,
     var parentVersion:Long?=0,
     var version:Long?=System.currentTimeMillis(),
-    var status:String="0",  //0 本地
+    var status:Int=0,  //0 本地
     var aboveGroundNumber:Int=0,
     var underGroundNumber:Int=0,
     var drawingList:List<DrawingV3Bean>?=ArrayList(),
@@ -42,7 +42,7 @@ class BuildingMainBean (
      * @Description 分类标签
      */
     constructor(tag:String):this("","",-1,"",-1,"","","","","","",
-        "",0,0,0,"0",0,0){
+        "",0,0,0,0,0,0){
         type = RoomItemBean.TYPE_GROUP
         this.tag = tag
         spanCount = 3

@@ -47,7 +47,7 @@ class MainListPresenter:BasePresenter(),IMainListContrast.IPresenter {
                     localId= b.id?:-1,
                     localUUID = b.uuid?:"",
                     remoteId= b.remoteId?:"",
-                    status = mStateArr[b.status?:0],
+                    status = b.status!!,
                     address = b.name+"",
                     leader = b.leader?:"",
                     inspector = b.inspector?:"",
@@ -110,6 +110,7 @@ class MainListPresenter:BasePresenter(),IMainListContrast.IPresenter {
                             localList[i].hasNewer = true
                         }
                         localBean.localUUID = remoteBean.projectId
+                        localBean.version = remoteBean.version
                         localBean.remoteData = remoteBean
                     }
                 }
@@ -126,6 +127,7 @@ class MainListPresenter:BasePresenter(),IMainListContrast.IPresenter {
                             localList[i].hasNewer = true
                         }
                         localBean.remoteData = remoteBean
+                        localBean.version = remoteBean.version
                         localBean.remoteId = remoteBean.projectId
                     }
                 }
@@ -155,7 +157,7 @@ class MainListPresenter:BasePresenter(),IMainListContrast.IPresenter {
                     localId = -1,
                     localUUID = b.projectId,
                     remoteId= b.projectId,
-                    status = mStateArr[2],
+                    status = 2,
                     parentVersion = b.parentVersion,
                     version = b.version,
                     address = b.projectName,

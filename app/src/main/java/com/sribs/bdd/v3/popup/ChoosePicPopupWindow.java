@@ -39,9 +39,6 @@ public class ChoosePicPopupWindow extends android.widget.PopupWindow {
         setBackgroundDrawable(null);
         setOutsideTouchable(true);
         setWidth(width);
-        if(list.size()>0) {
-            mDrawingV3Bean = list.get(0);
-        }
 
         mRecyclerView = (RecyclerView)view.findViewById(R.id.popup_recyclerView);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
@@ -62,7 +59,12 @@ public class ChoosePicPopupWindow extends android.widget.PopupWindow {
             @Override
             public void onClick(View view) {
                 if(mPopupCallback != null){
-                    mPopupCallback.onSelect(mDrawingV3Bean);
+                    if(mDrawingV3Bean == null){
+                        mDrawingV3Bean = list.get(0);
+                    }
+                    if(mDrawingV3Bean!= null) {
+                        mPopupCallback.onSelect(mDrawingV3Bean);
+                    }
                 }
                 dismiss();
             }

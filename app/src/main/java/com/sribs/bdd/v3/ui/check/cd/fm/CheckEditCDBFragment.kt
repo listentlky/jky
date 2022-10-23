@@ -1351,8 +1351,8 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
             }
 
 
-            rightRealView.checkCpdBeamPic.setImageURI(Uri.fromFile(File(damageV3Bean.beamRightRealPic?.get(0))))
-            rightDesignView.checkCpdBeamPic.setImageURI(Uri.fromFile(File(damageV3Bean.beamRightDesignPic?.get(0))))
+            rightRealView.checkCpdBeamPic.setImageURI(Uri.fromFile(File(damageV3Bean.beamRightRealPic?.get(1))))
+            rightDesignView.checkCpdBeamPic.setImageURI(Uri.fromFile(File(damageV3Bean.beamRightDesignPic?.get(1))))
 
             rightDesignView.checkEdit.setText(damageV3Bean.beamRightDesignStirrupsTypeList!!.get(3))
 

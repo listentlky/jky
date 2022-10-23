@@ -1,18 +1,15 @@
 package com.sribs.bdd.module.project
 
 import com.alibaba.android.arouter.launcher.ARouter
-import com.cbj.sdk.libbase.rxbus.RxBus
 import com.cbj.sdk.libnet.http.HttpManager
 import com.cbj.sdk.libui.mvp.moudles.IBaseView
 import com.google.gson.Gson
-import com.sribs.bdd.Config
 import com.sribs.bdd.R
 import com.sribs.bdd.action.Dict
 import com.sribs.bdd.bean.BuildingModule
 import com.sribs.bdd.bean.FloorSortBean
 import com.sribs.bdd.utils.ModuleHelper
 import com.sribs.bdd.utils.UUIDUtil
-import com.sribs.bdd.v3.event.RefreshProjectListEvent
 import com.sribs.bdd.v3.util.LogUtils
 import com.sribs.common.bean.V3VersionBean
 import com.sribs.common.bean.db.DamageV3Bean
@@ -54,17 +51,139 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
     /**
      * 查询楼建筑下的所有模块列表
      */
-    fun getRemoteModule(mBuildingRemoteId: String, version: Long) {
-        LogUtils.d("请求网络楼模块下数据 " + version)
+    fun getRemoteModule(
+        mLocalProjectId: Long,
+        mLocalProjectUUID: String,
+        mBuildingRemoteId: String,
+        mBuildingId:Long,
+        mVersion: Long,
+        localList:ArrayList<BuildingModule>) {
+        LogUtils.d("请求网络楼模块下数据 ${mBuildingRemoteId}  ${mVersion}" )
         addDisposable(
             HttpManager.instance.getHttpService<HttpApi>()
-                .getV3BuildingModuleList(mBuildingRemoteId, version)
+                .getV3BuildingModuleList(mBuildingRemoteId, mVersion)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     checkResult(it)
                     LogUtils.d("查询楼建筑下的模块： " + it)
 
+                    if (it.data == null || it.data?.size!! <= 0) {
+                        mView?.onMsg("云端未查到数据")
+                        return@subscribe
+                    }
+
+                  /*  it.data!!.forEach { remoteBean ->
+                        var i = localList.indexOfFirst { localBean ->
+                            !localBean.remoteId.isNullOrEmpty() && localBean.remoteId == remoteBean.moduleId
+                        }
+
+                        if (i >= 0) {
+                            var localBean = localList[i]
+                            //判断时间
+                            if (TimeUtil.isBefore(
+                                    localBean.createTime!!,
+                                    TimeUtil.stampToDate("" + remoteBean.createTime)
+                                )
+                            ) {
+                              //  localList[i].hasNewer = true
+                            }
+                            localBean.moduleUUID = remoteBean.moduleId
+                        }
+                    }*/
+
+                 /*   it.data!!.forEach { remoteBean ->
+                        var i = localList.indexOfFirst { localBean ->
+                            localBean.remoteId.isNullOrEmpty() &&
+                                    localBean.moduleUUID == remoteBean.moduleId
+                        }
+                        if (i >= 0) {
+                            var localBean = localList[i]
+                            //判断时间
+                            if (TimeUtil.isBefore(
+                                    localBean.createTime!!,
+                                    TimeUtil.stampToDate("" + remoteBean.createTime)
+                                )
+                            ) {
+                             //   localList[i].hasNewer = true
+                            }
+                            localBean.remoteId = remoteBean.moduleId
+                        }
+                    }*/
+
+                    var moduleMainBeanList = ArrayList<BuildingModule>()
+
+                    // 本地中没有
+                    var onlyRemoteList = it.data!!.filter { remoteBean ->
+                        localList.find { localBean ->
+                            localBean.moduleName == remoteBean.moduleName
+                        } == null
+                    }?.map { b ->
+
+                       /* var drawingV3Bean = ArrayList(b.drawings.map { drawing->DrawingV3Bean(
+                            -1,
+                            drawing.drawingName,
+                            drawing.fileType,
+                            drawing.
+
+                        )
+                        }
+
+                        )*/
+
+                        BuildingModule(
+                            projectUUID = mLocalProjectUUID,
+                            projectId = mLocalProjectId,
+                            buildingRemoteId = mBuildingRemoteId,
+                            buildingUUID = mBuildingRemoteId,
+                            buildingId = mBuildingId,
+                            moduleUUID = b.moduleId,
+                            moduleid = -1,
+                            moduleName = b.moduleName,
+                            inspectors = b.inspectors?.joinToString(separator = "、")?:"",
+                            superiorVersion = mVersion,
+                            parentVersion = b.parentVersion,
+                            version = b.version,
+                            status = 2,
+                            createTime = TimeUtil.stampToDate(""+b.createTime),
+                            updateTime = TimeUtil.stampToDate(""+b.createTime),
+                            remoteId = b.moduleId,
+                            isChanged = 0,
+                            drawings = ArrayList(),
+                            aboveGroundNumber = b.aboveGroundNumber,
+                            underGroundNumber = b.underGroundNumber,
+                            isDeleted = 0,
+                            leaderId="",
+                            leaderName = "",
+                            deleteTime=""
+                        )
+                    }
+
+
+                    /**
+                     * 过滤出最新模块记录
+                     */
+                    var iterator = onlyRemoteList.iterator()
+                    var filterModuleList = ArrayList<BuildingModule>()
+                    var ModuleList = onlyRemoteList
+
+                    while (iterator.hasNext()){
+                        var next = iterator.next()
+                        var isSmallTime = false
+                        ModuleList.forEach { filter->
+                            if(filter.moduleName == next.moduleName
+                                && TimeUtil.dateToStamp(next.createTime!!) < TimeUtil.dateToStamp(filter.createTime!!)){
+                                isSmallTime = true
+                            }
+                        }
+                        if(!isSmallTime){
+                            filterModuleList.add(next)
+                        }
+                    }
+
+                    moduleMainBeanList.addAll(filterModuleList)
+                    mView?.handlRemoteItemList(ArrayList(moduleMainBeanList.sortedByDescending { b -> b.createTime }))
+                    mView?.onMsg("更新成功")
                 }, {
                     mView?.onMsg(checkError(it))
                 })
@@ -98,7 +217,7 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
                         b.superiorVersion,
                         b.parentVersion,
                         b.version,
-                        mStateArr[b.status ?: 0],
+                        b.status!!,
                         b.createTime,
                         b.deleteTime,
                         b.updateTime,
@@ -106,7 +225,7 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
                         b.isChanged
                     )
                 })
-                mView?.handlItemList(list)
+                mView?.handlItemList(ArrayList(list.sortedByDescending { b -> b.createTime }))
             }, {
                 mView?.handlItemList(ArrayList())
                 it.printStackTrace()
@@ -138,12 +257,12 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
             )
         }
 
-        if (!beanMain.remoteId.isNullOrEmpty()) {
+     /*   if (beanMain.status != "0") {
             addDisposable(
                 HttpManager.instance.getHttpService<HttpApi>()
                     .deleteBuildingModule(
                         V3VersionDeleteReq(
-                            beanMain.remoteId!!,
+                            beanMain.moduleUUID!!,
                             beanMain.superiorVersion!!,
                             beanMain.version!!
                         )
@@ -158,7 +277,7 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
                         mView?.onMsg("删除模块失败" + checkError(it))
                     })
             )
-        }
+        }*/
     }
 
     /**
@@ -276,6 +395,7 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
                             d.type ?: "",
                             Gson().toJson(d),
                             resId?.get(0)?.resId ?: "",
+                            "drawing:" + resId?.get(0)?.resId,
                             b.fileName ?: "",
                             b.floorName ?: "",
                             inspectorList,
@@ -419,6 +539,7 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
                                 ddd.type ?: "",
                                 Gson().toJson(ddd),
                                 resId?.get(0)?.resId ?: "",
+                                "drawing:" + resId?.get(0)?.resId,
                                 bbb.fileName ?: "",
                                 bbb.floorName ?: "",
                                 inspectorList,
@@ -449,6 +570,7 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
             }
         }
 
+        var version = System.currentTimeMillis()
 
         var V3UploadModuleReq = V3UploadModuleReq(
             if (bean.buildingRemoteId.isNullOrEmpty()) bean.buildingUUID!! else bean.buildingRemoteId!!,
@@ -461,7 +583,7 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
             bean.underGroundNumber ?: 0,
             bean.parentVersion!!,
             bean.superiorVersion!!,
-            bean.version!!,
+            version,
             System.currentTimeMillis()
         )
 
@@ -474,6 +596,9 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
             .flatMap {
                 LogUtils.d("更新模块 ischanged")
                 mDb.updateBuildingModule(bean.moduleid!!, 0,1)
+            }
+            .flatMap {
+                mDb.updateBuildingModuleVersion(bean.moduleid!!, version)
             }
             .subscribeOn(Schedulers.computation())
             .observeOn(AndroidSchedulers.mainThread())
@@ -505,7 +630,7 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
                 .subscribe({
                     checkResult(it)
                     LogUtils.d("查询模块版本列表：" + it)
-                    cb(ArrayList(it.data!!.map {
+                    var versionList = ArrayList(it.data!!.map {
                         V3VersionBean(
                             it.projectId,
                             it.projectName,
@@ -516,7 +641,8 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
                             it.version,
                             TimeUtil.stampToDate(it.createTime)
                         )
-                    }))
+                    })
+                    cb(ArrayList(versionList.sortedByDescending { b -> b.createTime }))
                 }, {
                     LogUtils.d("查询模块版本列表失败：" + it)
                     mView?.onMsg(ERROR_HTTP)
@@ -584,7 +710,7 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
                             )
                         )
 
-                        if (a?.moduleName.equals("构建测量")) {
+                        if (a?.moduleName.equals("构建检测")) {
                             dd.damageMixes.forEach { damage ->
                                 var damageV3Bean =
                                     Gson().fromJson(damage.desc, DamageV3Bean::class.java)
@@ -597,8 +723,8 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
                                             ).absolutePath
                                             needDownloadDrawingList.add(
                                                 V3UploadDrawingRes(
-                                                    drawingLocalPath,
-                                                    damageV3Bean?.beamLeftRealPicList?.get(2)!!
+                                                    damageV3Bean?.beamLeftRealPicList?.get(2)!!,
+                                                    drawingLocalPath
                                                 )
                                             )
                                         }
@@ -610,10 +736,10 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
                                             ).absolutePath
                                             needDownloadDrawingList.add(
                                                 V3UploadDrawingRes(
-                                                    drawingLocalPath,
                                                     damageV3Bean?.beamLeftDesignPicList?.get(
                                                         2
-                                                    )!!
+                                                    )!!,
+                                                    drawingLocalPath
                                                 )
                                             )
                                         }
@@ -625,8 +751,8 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
                                             ).absolutePath
                                             needDownloadDrawingList.add(
                                                 V3UploadDrawingRes(
-                                                    drawingLocalPath,
-                                                    damageV3Bean?.beamRightRealPic?.get(2)!!
+                                                    damageV3Bean?.beamRightRealPic?.get(2)!!,
+                                                    drawingLocalPath
                                                 )
                                             )
                                         }
@@ -638,8 +764,8 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
                                             ).absolutePath
                                             needDownloadDrawingList.add(
                                                 V3UploadDrawingRes(
-                                                    drawingLocalPath,
-                                                    damageV3Bean?.beamRightDesignPic?.get(2)!!
+                                                    damageV3Bean?.beamRightDesignPic?.get(2)!!,
+                                                    drawingLocalPath
                                                 )
                                             )
                                         }
@@ -653,10 +779,10 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
                                             ).absolutePath
                                             needDownloadDrawingList.add(
                                                 V3UploadDrawingRes(
-                                                    drawingLocalPath,
                                                     damageV3Bean?.columnLeftRealPicList?.get(
                                                         2
-                                                    )!!
+                                                    )!!,
+                                                    drawingLocalPath
                                                 )
                                             )
                                         }
@@ -668,10 +794,10 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
                                             ).absolutePath
                                             needDownloadDrawingList.add(
                                                 V3UploadDrawingRes(
-                                                    drawingLocalPath,
                                                     damageV3Bean?.columnLeftDesignPicList?.get(
                                                         2
-                                                    )!!
+                                                    )!!,
+                                                    drawingLocalPath
                                                 )
                                             )
                                         }
@@ -683,8 +809,8 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
                                             ).absolutePath
                                             needDownloadDrawingList.add(
                                                 V3UploadDrawingRes(
-                                                    drawingLocalPath,
-                                                    damageV3Bean?.columnRightRealPic?.get(2)!!
+                                                    damageV3Bean?.columnRightRealPic?.get(2)!!,
+                                                    drawingLocalPath
                                                 )
                                             )
                                         }
@@ -696,10 +822,10 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
                                             ).absolutePath
                                             needDownloadDrawingList.add(
                                                 V3UploadDrawingRes(
-                                                    drawingLocalPath,
                                                     damageV3Bean?.columnRightDesignPic?.get(
                                                         2
-                                                    )!!
+                                                    )!!,
+                                                    drawingLocalPath
                                                 )
                                             )
                                         }
@@ -713,8 +839,8 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
                                             ).absolutePath
                                             needDownloadDrawingList.add(
                                                 V3UploadDrawingRes(
-                                                    drawingLocalPath,
-                                                    damageV3Bean?.realPicture?.get(2)!!
+                                                    damageV3Bean?.realPicture?.get(2)!!,
+                                                    drawingLocalPath
                                                 )
                                             )
                                         }
@@ -726,8 +852,8 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
                                             ).absolutePath
                                             needDownloadDrawingList.add(
                                                 V3UploadDrawingRes(
-                                                    drawingLocalPath,
-                                                    damageV3Bean?.designPicture?.get(2)!!
+                                                    damageV3Bean?.designPicture?.get(2)!!,
+                                                    drawingLocalPath
                                                 )
                                             )
                                         }
@@ -741,6 +867,7 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
                     var uploadDrawingIndex = 0
 
                     needDownloadDrawingList?.forEach { res ->
+                        LogUtils.d("下载的图纸: "+res)
                         HttpManager.instance.getHttpService<HttpApi>()
                             .downloadFile(res.resId)
                             .subscribeOn(Schedulers.computation())
@@ -972,7 +1099,7 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
                     TimeUtil.stampToDate("" + a?.createTime),
                     "",
                     a?.moduleId,
-                    a?.superiorVersion,
+                    beanMain.superiorVersion,
                     a?.parentVersion,
                     a?.version,
                     4,

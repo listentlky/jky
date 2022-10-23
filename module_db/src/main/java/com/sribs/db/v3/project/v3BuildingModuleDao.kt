@@ -51,6 +51,9 @@ interface v3BuildingModuleDao {
     @Query("UPDATE v3_building_module SET isChanged = :isChanged,status = :status WHERE building_id = :buildingId")
     fun updateBuildingModuleByBuildingId(buildingId :Long,isChanged:Int,status:Int): Int
 
+    @Query("UPDATE v3_building_module SET version = :version WHERE id = :id")
+    fun updateBuildingModuleVersion(id:Long,version:Long): Int
+
     @Delete
     fun deleteBuildingModule(bean: v3BuildingModuleRoom): Int
 

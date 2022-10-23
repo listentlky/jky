@@ -68,6 +68,8 @@ interface IBuildingContrast {
     interface IBuildingListView:IView{
 
         fun onAllBuilding(l:List<BuildingMainBean>)
+
+        fun onAllRemoteBuilding(l:List<BuildingMainBean>)
     }
 
 

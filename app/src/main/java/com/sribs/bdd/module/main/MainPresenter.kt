@@ -15,6 +15,7 @@ import com.sribs.bdd.bean.MainProjectBean
 import com.sribs.bdd.bean.UnitConfigType
 import com.sribs.bdd.module.BaseUnitConfigPresenter
 import com.sribs.bdd.utils.ModuleHelper
+import com.sribs.bdd.v3.bean.UpdateModuleVersionBean
 import com.sribs.bdd.v3.event.RefreshProjectListEvent
 import com.sribs.bdd.v3.util.LogUtils
 import com.sribs.common.bean.HistoryBean
@@ -68,7 +69,7 @@ class MainPresenter : BaseUnitConfigPresenter(), IMainListContrast.IMainPresente
             .subscribe({
                 checkResult(it)
                 LogUtils.d("查询项目版本列表：" + it)
-                cb(ArrayList(it.data!!.map {
+                var versionList = ArrayList(it.data!!.map {
                     V3VersionBean(
                         it.projectId,
                         it.projectName,
@@ -79,7 +80,8 @@ class MainPresenter : BaseUnitConfigPresenter(), IMainListContrast.IMainPresente
                         it.version,
                         TimeUtil.stampToDate(it.createTime)
                     )
-                }))
+                })
+                cb(ArrayList(versionList.sortedByDescending { b -> b.createTime }))
             }, {
                 LogUtils.d("查询项目版本列表失败：" + it)
                 mView?.onMsg(ERROR_HTTP)
@@ -251,7 +253,7 @@ return*/
                         b.superiorVersion,
                         b.parentVersion,
                         b.version,
-                        mStateArr[b.status ?: 0],
+                        b.status!!,
                         b.createTime,
                         b.deleteTime,
                         b.updateTime,
@@ -390,6 +392,8 @@ return*/
 
                 var parts = ArrayList<MultipartBody.Part>()
 
+                LogUtils.d("drawingList: "+drawingList.size+" ; "+drawingList)
+
                 drawingList.forEach { path ->
                     var fileBody = RequestBody.create(MediaType.parse("image/*"), File(path))
                     var filePart = MultipartBody.Part.createFormData("files", path, fileBody)
@@ -470,6 +474,7 @@ return*/
 
         var V3UploadModuleReq = ArrayList<V3UploadModuleReq>()
 
+        var UpdateModuleVersionBeanList = ArrayList<UpdateModuleVersionBean>()//模块版本
 
         buildingModuleList.forEach {
             V3UploadBuildingModuleList.add(if (it.remoteId.isNullOrEmpty()) it.moduleUUID!! else it.remoteId!!)
@@ -493,6 +498,7 @@ return*/
                                 d.type ?: "",
                                 Gson().toJson(d),
                                 resId?.get(0)?.resId ?: "",
+                                "drawing:" + resId?.get(0)?.resId,
                                 b.fileName ?: "",
                                 b.floorName ?: "",
                                 inspectorList,
@@ -636,6 +642,7 @@ return*/
                                     ddd.type ?: "",
                                     Gson().toJson(ddd),
                                     resId?.get(0)?.resId ?: "",
+                                    "drawing:" + resId?.get(0)?.resId,
                                     bbb.fileName ?: "",
                                     bbb.floorName ?: "",
                                     inspectorList,
@@ -666,6 +673,9 @@ return*/
                 }
             }
 
+            var version = System.currentTimeMillis()
+            UpdateModuleVersionBeanList.add(UpdateModuleVersionBean(it.moduleid!!,version))
+
             V3UploadModuleReq.add(
                 com.sribs.common.bean.net.v3.V3UploadModuleReq(
                     if (it.buildingRemoteId.isNullOrEmpty()) it.buildingUUID!! else it.buildingRemoteId!!,
@@ -678,7 +688,7 @@ return*/
                     it.underGroundNumber ?: 0,
                     it.parentVersion!!,
                     it.superiorVersion!!,
-                    it.version!!,
+                    version,
                     System.currentTimeMillis()
                 )
             )
@@ -801,9 +811,29 @@ return*/
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 dispose()
-                mView?.onMsg("项目上传成功")
-            //    RxBus.getDefault().post(RefreshProjectListEvent(true))
-                cb(true)
+                var updateModuleVersionCount = 0
+                if(UpdateModuleVersionBeanList.size>0){
+
+                    UpdateModuleVersionBeanList.forEach {
+                        mDb.updateBuildingModuleVersion(it.moduleId,it.version)
+                            .subscribeOn(Schedulers.computation())
+                            .observeOn(Schedulers.computation())
+                            .subscribe({
+                                LogUtils.d("更新模块版本成功 "+it)
+                                updateModuleVersionCount++
+                                if(updateModuleVersionCount == UpdateModuleVersionBeanList.size){
+                                    mView?.onMsg("项目上传成功")
+                                    //    RxBus.getDefault().post(RefreshProjectListEvent(true))
+                                    cb(true)
+                                }
+                            },{
+                            })
+                    }
+                }else{
+                    mView?.onMsg("项目上传成功")
+                    //    RxBus.getDefault().post(RefreshProjectListEvent(true))
+                    cb(true)
+                }
             }, {
                 dispose()
                 mView?.onMsg("上传项目失败: " + checkError(it))
@@ -825,12 +855,8 @@ return*/
             if (bean.localId > 0) {
                 it.id = bean.localId
             }
-            var status = mView?.getContext()?.resources?.getStringArray(R.array.main_project_status)
-                ?.indexOf(bean.status)
-            if (status ?: -1 < 0) status = null
-            if (status ?: -1 >= 0) {
-                it.status = status
-            }
+            var status = bean.status
+
         })
     }
 
@@ -890,6 +916,10 @@ return*/
                 LogUtils.d("项目下模块层删除成功 " + a)
 
                 LogUtils.d("项目下楼数据长度 " + a?.buildings?.size)
+
+                if(a?.buildings?.size!!<=0){
+                    cb(true, "下载成功")
+                }
 
                 a?.buildings?.forEach { bb ->
 
@@ -966,7 +996,7 @@ return*/
                         0,
                         bb.leaderName,
                         bb.inspectors?.joinToString(separator = "、") ?: "",
-                        bb.superiorVersion,
+                        a?.version,
                         bb.parentVersion,
                         bb.version,
                         bb.buildingId,
@@ -1029,7 +1059,6 @@ return*/
                                         mView?.onMsg("部分楼层创建失败")
                                     })
                             }
-                            LogUtils.d("过滤前1111的模块数据: "+bb.modules)
 
                             /**
                              * 创建楼下模块
@@ -1203,7 +1232,7 @@ return*/
                                     TimeUtil.stampToDate("" + mm.createTime),
                                     "",
                                     mm.moduleId,
-                                    mm.superiorVersion,
+                                    bb.version,
                                     mm.parentVersion,
                                     mm.version,
                                     4,
@@ -1369,7 +1398,6 @@ return*/
 
                         bb.modules.addAll(filterModuleList)
 
-
                         bb.modules?.forEach { mm ->
                             mCurDrawingsDir =
                                 "/" + ModuleHelper.DRAWING_CACHE_FOLDER + "/" + projectName + "/" + bb.buildingNo + "/" + mm.moduleName + "/"
@@ -1393,7 +1421,7 @@ return*/
                                     )
                                 )
 
-                                if (mm.equals("构建测量")) {
+                                if (mm.moduleName.equals("构建检测")) {
                                     dd.damageMixes.forEach { damage ->
                                         var damageV3Bean =
                                             Gson().fromJson(damage.desc, DamageV3Bean::class.java)
@@ -1406,8 +1434,8 @@ return*/
                                                     ).absolutePath
                                                     needDownloadDrawingList.add(
                                                         V3UploadDrawingRes(
-                                                            drawingLocalPath,
-                                                            damageV3Bean?.beamLeftRealPicList?.get(2)!!
+                                                            damageV3Bean?.beamLeftRealPicList?.get(2)!!,
+                                                            drawingLocalPath
                                                         )
                                                     )
                                                 }
@@ -1419,10 +1447,10 @@ return*/
                                                     ).absolutePath
                                                     needDownloadDrawingList.add(
                                                         V3UploadDrawingRes(
-                                                            drawingLocalPath,
                                                             damageV3Bean?.beamLeftDesignPicList?.get(
                                                                 2
-                                                            )!!
+                                                            )!!,
+                                                            drawingLocalPath
                                                         )
                                                     )
                                                 }
@@ -1434,8 +1462,8 @@ return*/
                                                     ).absolutePath
                                                     needDownloadDrawingList.add(
                                                         V3UploadDrawingRes(
-                                                            drawingLocalPath,
-                                                            damageV3Bean?.beamRightRealPic?.get(2)!!
+                                                            damageV3Bean?.beamRightRealPic?.get(2)!!,
+                                                            drawingLocalPath
                                                         )
                                                     )
                                                 }
@@ -1447,8 +1475,8 @@ return*/
                                                     ).absolutePath
                                                     needDownloadDrawingList.add(
                                                         V3UploadDrawingRes(
-                                                            drawingLocalPath,
-                                                            damageV3Bean?.beamRightDesignPic?.get(2)!!
+                                                            damageV3Bean?.beamRightDesignPic?.get(2)!!,
+                                                            drawingLocalPath
                                                         )
                                                     )
                                                 }
@@ -1462,10 +1490,10 @@ return*/
                                                     ).absolutePath
                                                     needDownloadDrawingList.add(
                                                         V3UploadDrawingRes(
-                                                            drawingLocalPath,
                                                             damageV3Bean?.columnLeftRealPicList?.get(
                                                                 2
-                                                            )!!
+                                                            )!!,
+                                                            drawingLocalPath
                                                         )
                                                     )
                                                 }
@@ -1477,10 +1505,10 @@ return*/
                                                     ).absolutePath
                                                     needDownloadDrawingList.add(
                                                         V3UploadDrawingRes(
-                                                            drawingLocalPath,
                                                             damageV3Bean?.columnLeftDesignPicList?.get(
                                                                 2
-                                                            )!!
+                                                            )!!,
+                                                            drawingLocalPath
                                                         )
                                                     )
                                                 }
@@ -1492,8 +1520,8 @@ return*/
                                                     ).absolutePath
                                                     needDownloadDrawingList.add(
                                                         V3UploadDrawingRes(
-                                                            drawingLocalPath,
-                                                            damageV3Bean?.columnRightRealPic?.get(2)!!
+                                                            damageV3Bean?.columnRightRealPic?.get(2)!!,
+                                                            drawingLocalPath
                                                         )
                                                     )
                                                 }
@@ -1505,10 +1533,10 @@ return*/
                                                     ).absolutePath
                                                     needDownloadDrawingList.add(
                                                         V3UploadDrawingRes(
-                                                            drawingLocalPath,
                                                             damageV3Bean?.columnRightDesignPic?.get(
                                                                 2
-                                                            )!!
+                                                            )!!,
+                                                            drawingLocalPath
                                                         )
                                                     )
                                                 }
@@ -1522,8 +1550,8 @@ return*/
                                                     ).absolutePath
                                                     needDownloadDrawingList.add(
                                                         V3UploadDrawingRes(
-                                                            drawingLocalPath,
-                                                            damageV3Bean?.realPicture?.get(2)!!
+                                                            damageV3Bean?.realPicture?.get(2)!!,
+                                                            drawingLocalPath
                                                         )
                                                     )
                                                 }
@@ -1535,8 +1563,8 @@ return*/
                                                     ).absolutePath
                                                     needDownloadDrawingList.add(
                                                         V3UploadDrawingRes(
-                                                            drawingLocalPath,
-                                                            damageV3Bean?.designPicture?.get(2)!!
+                                                            damageV3Bean?.designPicture?.get(2)!!,
+                                                            drawingLocalPath
                                                         )
                                                     )
                                                 }
@@ -1549,8 +1577,12 @@ return*/
                     }
                     LogUtils.d("需要下载的图纸个数: " + needDownloadDrawingList.size)
                     var uploadDrawingIndex = 0
+                    if(needDownloadDrawingList?.size<=0){
+                        projectUpdateV3Version(V3UploadProjectReq, beanMain,cb)
+                    }
 
                     needDownloadDrawingList?.forEach { res ->
+                        LogUtils.d("下载的图纸: "+res)
                         HttpManager.instance.getHttpService<HttpApi>()
                             .downloadFile(res.resId)
                             .subscribeOn(Schedulers.computation())

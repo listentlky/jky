@@ -46,6 +46,7 @@ object ARouterPath {
 
     const val VAL_COMMON_LOCAL_ID = "local_id"
     const val VAL_COMMON_REMOTE_ID = "remote_id"
+    const val VAL_COMMON_STATUS = "status"
     const val VAL_COMMON_VERSION = "version"
     const val VAL_COMMON_LEADER = "leader"
     const val VAL_COMMON_INSPECTOR = "inspector"

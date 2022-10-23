@@ -152,7 +152,7 @@ class DrawPDFActivity : BaseActivity() {
         }
 
         Global.Init(this)
-       // openPdf("111.pdf")
+
     //    browseDocuments(0)
         openPdf(mLocalPDF)
     }

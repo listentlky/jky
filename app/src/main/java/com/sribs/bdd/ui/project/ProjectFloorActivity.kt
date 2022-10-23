@@ -36,8 +36,8 @@ import com.sribs.common.utils.DialogUtil
  */
 @Route(path = com.sribs.common.ARouterPath.PRO_CREATE_ATY_FLOOR_LIST)
 class ProjectFloorActivity : BaseActivity(), IBuildingContrast.IBuildingListView,
-    BuildingListAdapter.ICallback,
-    SwipeRefreshLayout.OnRefreshListener {
+    BuildingListAdapter.ICallback{
+    /*SwipeRefreshLayout.OnRefreshListener*/
 
     @JvmField
     @Autowired(name = com.sribs.common.ARouterPath.VAL_PROJECT_UUID)
@@ -54,6 +54,10 @@ class ProjectFloorActivity : BaseActivity(), IBuildingContrast.IBuildingListView
     @JvmField
     @Autowired(name = com.sribs.common.ARouterPath.VAL_COMMON_REMOTE_ID)
     var mRemoteId = ""
+
+    @JvmField
+    @Autowired(name = com.sribs.common.ARouterPath.VAL_COMMON_STATUS)
+    var mStatus = 0
 
     @JvmField
     @Autowired(name = com.sribs.common.ARouterPath.VAL_COMMON_VERSION)
@@ -140,11 +144,11 @@ class ProjectFloorActivity : BaseActivity(), IBuildingContrast.IBuildingListView
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item?.itemId) {
             R.id.menu_bld_refresh->{ //从云端获取更新
-                if(mRemoteId.isNullOrEmpty()){
+               /* if(mRemoteId.isNullOrEmpty()){
                     showToast("请先上传项目")
                     return super.onOptionsItemSelected(item)
-                }
-                mPresenter.getBuildingRemote(mRemoteId,mVersion,dataList)
+                }*/
+                mPresenter.getBuildingRemote(mLocalProjectUUID,mVersion,dataList)
             }
 
           /*  R.id.menu_bld_upload -> { //上传
@@ -309,15 +313,24 @@ class ProjectFloorActivity : BaseActivity(), IBuildingContrast.IBuildingListView
 
         mBinding.recyclerView.adapter = buildingAdapter
 
-        mBinding.baseListSrl.setOnRefreshListener(this)
+     //   mBinding.baseListSrl.setOnRefreshListener(this)
     }
 
     override fun onAllBuilding(l: List<BuildingMainBean>) {
         dataList.clear()
         dataList.addAll(l)
+        dataList.addAll(remoteDateList)
         LogUtils.d("楼栋数据为: " + dataList.toString())
-        buildingAdapter?.setData(dataList)
-        mBinding.baseListSrl.isRefreshing = false
+        buildingAdapter?.setData(ArrayList(dataList.sortedByDescending { b -> b.createTime }))
+     //   mBinding.baseListSrl.isRefreshing = false
+    }
+
+    var remoteDateList = ArrayList<BuildingMainBean>()
+    override fun onAllRemoteBuilding(l: List<BuildingMainBean>) {
+        remoteDateList.clear()
+        remoteDateList.addAll(l)
+        dataList.addAll(remoteDateList)
+        buildingAdapter?.setData(ArrayList(dataList.sortedByDescending { b -> b.createTime }))
     }
 
     override fun getContext(): Context = this
@@ -343,8 +356,12 @@ class ProjectFloorActivity : BaseActivity(), IBuildingContrast.IBuildingListView
                 DialogUtil.showBottomDialog(this, R.layout.dialog_common_bottom_building_select, true) {
                     when (it) {
                         0->{ //上传楼配置
-                            if(beanMain.projectRemoteId.isNullOrEmpty()){
+                            if(mStatus == 0){
                                 showToast("请先上传项目")
+                                return@showBottomDialog
+                            }
+                            if(beanMain.status == 2){
+                                showToast("请先下载至本地")
                                 return@showBottomDialog
                             }
                             showPb(true)
@@ -402,7 +419,7 @@ class ProjectFloorActivity : BaseActivity(), IBuildingContrast.IBuildingListView
      * 下载配置
      */
     private fun doDownload(beanMain: BuildingMainBean){
-        if (beanMain.status == "0"){
+        if (mStatus == 0){
             showToast("请先上传项目")
             return
         }
@@ -431,7 +448,7 @@ class ProjectFloorActivity : BaseActivity(), IBuildingContrast.IBuildingListView
                     ){ isSuccess,msg->
                         showToast(msg)
                         if(isSuccess){
-                            beanMain.also { b->b.status = resources.getStringArray(R.array.main_project_status)[4] }
+                            beanMain.also { b->b.status = 4 }
                         }
                         showPb(false)
                     }
@@ -455,6 +472,11 @@ class ProjectFloorActivity : BaseActivity(), IBuildingContrast.IBuildingListView
     }
 
     override fun onCardSelect(beanMain: BuildingMainBean, pos: Int) {
+        LogUtils.d("onCardSelect: ${beanMain}")
+        if(beanMain.status == 0){
+            showToast(getString(R.string.error_no_local))
+            return
+        }
         ARouter.getInstance().build(com.sribs.common.ARouterPath.PRO_ITEM_ATY_FLOOR)
             .withString(com.sribs.common.ARouterPath.VAL_COMMON_TITLE, mTitle)
             .withLong(com.sribs.common.ARouterPath.VAL_PROJECT_ID, mLocalProjectId)
@@ -464,14 +486,15 @@ class ProjectFloorActivity : BaseActivity(), IBuildingContrast.IBuildingListView
             .withString(com.sribs.common.ARouterPath.VAL_COMMON_LEADER, mLeader)
             .withLong(com.sribs.common.ARouterPath.VAL_COMMON_VERSION, beanMain.version!!)
             .withString(com.sribs.common.ARouterPath.VAL_COMMON_REMOTE_ID, beanMain.remoteId)
+            .withInt(com.sribs.common.ARouterPath.VAL_COMMON_STATUS, beanMain.status)
             .withString(com.sribs.common.ARouterPath.VAL_COMMON_INSPECTOR,beanMain.inspectorName)
             .withString(com.sribs.common.ARouterPath.VAL_PROJECT_NAME, mProjectName)
             .withString(com.sribs.common.ARouterPath.VAL_BUILDING_NAME, beanMain.bldName)
             .navigation()
     }
 
-    override fun onRefresh() {
+/*    override fun onRefresh() {
         initData()
-    }
+    }*/
 
 }

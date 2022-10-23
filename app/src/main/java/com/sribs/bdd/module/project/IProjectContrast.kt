@@ -127,6 +127,7 @@ interface IProjectContrast {
 
     interface IProjectFloorDetailView:IView{
         fun handlItemList(list:ArrayList<BuildingModule>)
+        fun handlRemoteItemList(list:ArrayList<BuildingModule>)
         fun addItem(bean:BuildingModule)
         fun removeItem(bean:BuildingModule)
     }

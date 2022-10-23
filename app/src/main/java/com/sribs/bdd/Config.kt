@@ -39,8 +39,10 @@ object Config {
 //                URL ="http://building.mercs.xyz:8081"
 //                URL ="http://106.15.205.38:80"
 //                URL ="http://139.224.253.98:8190"
-                URL = "http://106.15.205.38:80"
-                host = "http://106.15.205.38:80"
+            //    URL = "http://106.15.205.38:80"
+            //    host = "http://106.15.205.38:80"
+                URL = "http://14.116.217.72:8180"
+                host = "http://14.116.217.72:8180"
             }
         }
         VERSION = try {

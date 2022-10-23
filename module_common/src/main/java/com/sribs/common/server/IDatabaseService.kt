@@ -307,4 +307,6 @@ interface IDatabaseService:IProvider {
 
     fun updateBuildingModuleByBuildingId(buildingId :Long,isChanged:Int,status:Int): Observable<Long>
 
+    fun updateBuildingModuleVersion(id:Long, version:Long):Observable<Long>
+
 }

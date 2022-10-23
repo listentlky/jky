@@ -337,7 +337,7 @@ class DamageMainActivity :BaseActivity(),IMainListContrast.IMainView{
                         ){ isSuccess,msg->
                             showToast(msg)
                             if(isSuccess){
-                                beanMain.also { b->b.status = resources.getStringArray(R.array.main_project_status)[4] }
+                                beanMain.also { b->b.status = 4 }
                             }
                             showPb(false)
                         }

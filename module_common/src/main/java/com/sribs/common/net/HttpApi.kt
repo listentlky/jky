@@ -159,7 +159,7 @@ interface HttpApi {
      * 查询项目下所有楼
      */
     @POST("api/v3/app/building/list")
-    fun getV3BuildingList(@Query("projectId") projectId:String,@Query("version") version:Long):Observable<ResultBean<List<Any>>>
+    fun getV3BuildingList(@Query("projectId") projectId:String,@Query("version") version:Long):Observable<ResultBean<List<V3UploadBuildingReq>>>
 
     /**
      * 查询指定楼的楼版本列表
@@ -189,7 +189,7 @@ interface HttpApi {
      * 查询楼下的模块
      */
     @POST("/api/v3/app/building/module/list")
-    fun getV3BuildingModuleList(@Query("buildingId") buildingRemoteId: String,@Query("version") version:Long):Observable<ResultBean<ListBean<Any>>>
+    fun getV3BuildingModuleList(@Query("buildingId") buildingRemoteId: String,@Query("version") version:Long):Observable<ResultBean<List<V3UploadModuleReq>>>
 
     /**
      * 查询指定楼的楼模块列表
