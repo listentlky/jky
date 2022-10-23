@@ -275,6 +275,7 @@ class DrawPDFActivity : BaseActivity() {
 
     @SuppressLint("CheckResult")
     private fun openPdf(pdfPath: String) {
+        mBinding.pdfView?.setV3Version(true)
         Observable.create<Boolean> { o ->
             o.onNext(XXPermissions.isGranted(this, Permission.MANAGE_EXTERNAL_STORAGE))
         }

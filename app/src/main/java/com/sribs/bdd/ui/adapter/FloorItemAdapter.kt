@@ -44,6 +44,7 @@ class FloorItemAdapter : BaseListAdapter<BuildingModule, ItemFloorDetailBinding>
             "构建检测" -> {
                 text = "构建检测"
                 routing = com.sribs.common.ARouterPath.CHECK_COMPONENT_DETECTION_ACTIVITY
+                configRouting = com.sribs.common.ARouterPath.CHECK_MODULE_CONFIG_TYPE_FLOOR_ACTIVITY
             }
             "居民类检测测量" -> {
                 text = "居民类检测测量"

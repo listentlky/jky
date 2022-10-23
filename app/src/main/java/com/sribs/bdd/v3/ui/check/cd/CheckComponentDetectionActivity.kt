@@ -443,6 +443,7 @@ class CheckComponentDetectionActivity : BaseActivity(), ICheckCDContrast.ICheckC
         LogUtils.d("openPDF " + pdfPath)
         this.mView = (mFragments[0] as CheckCDFragment).getPDFView()
         mView!!.setV3Version(true)
+        mView!!.setV3DamageType(mCurrentDamageType)
         this.mViewParent = (mFragments[0] as CheckCDFragment).getPDFParentView()
         this.mCurrentLocalPDF = pdfPath
         this.mCurrentDrawing = drawingV3Bean

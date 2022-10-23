@@ -68,6 +68,18 @@ public class V3ChoosePopupAdapter  extends RecyclerView.Adapter<V3ChoosePopupAda
                     case "点位":
                         holder.choose.setBackgroundResource(R.drawable.circle_red);
                         break;
+                    case "梁":
+                        holder.choose.setBackgroundResource(R.drawable.circle_yellow);
+                        break;
+                    case "柱":
+                        holder.choose.setBackgroundResource(R.drawable.circle_blue);
+                        break;
+                    case "墙":
+                        holder.choose.setBackgroundResource(R.drawable.circle_pink);
+                        break;
+                    case "板":
+                        holder.choose.setBackgroundResource(R.drawable.circle_indigo);
+                        break;
                 }
             } else {
                 holder.choose.setBackgroundResource(R.drawable.circle_gray);
@@ -82,6 +94,18 @@ public class V3ChoosePopupAdapter  extends RecyclerView.Adapter<V3ChoosePopupAda
                     break;
                 case "点位":
                     color = 16711680;
+                    break;
+                case "梁":
+                    color = 16776960;
+                    break;
+                case "柱":
+                    color = 255;
+                    break;
+                case "墙":
+                    color = 16711935;
+                    break;
+                case "板":
+                    color = 16751359;
                     break;
             }
             if (mItemClickCallback != null) {
