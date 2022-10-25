@@ -140,7 +140,6 @@
         <entry key="..\:/android/project/bdd-android/bdd-android/app/src/main/res/layout/popup_item.xml" value="0.13707865168539327" />
         <entry key="..\:/android/project/bdd-android/bdd-android/app/src/main/res/layout/popup_layout.xml" value="0.25" />
         <entry key="..\:/android/project/bdd-android/bdd-android/whiteboardlib/src/main/res/layout/include_draw_content_layout.xml" value="0.24365942028985507" />
-        <entry key="..\:/android/project/jky/app/src/main/res/layout/item_component_detection_beam_right_real_single_row_steel.xml" value="0.67" />
         <entry key="..\:/android/project/sribs03-android/sribs03-android/bdd-android/app/src/main/res/drawable/check_gray_storke_bg.xml" value="0.2935185185185185" />
         <entry key="..\:/android/project/sribs03-android/sribs03-android/bdd-android/app/src/main/res/drawable/ic_bk_damage_point_green.xml" value="0.1" />
         <entry key="..\:/android/project/sribs03-android/sribs03-android/bdd-android/app/src/main/res/drawable/radio_selector.xml" value="0.2935185185185185" />
@@ -369,11 +368,30 @@
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/fragment_check_build_structure_floor.xml" value="0.3421875" />
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/fragment_check_build_structure_grid.xml" value="0.33" />
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/fragment_check_componentdetection.xml" value="0.34791666666666665" />
-        <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/fragment_check_componentdetection_plate_edit.xml" value="0.34791666666666665" />
-        <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/fragment_check_componentdetection_wall_edit.xml" value="0.34791666666666665" />
+        <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/fragment_check_componentdetection_beam_edit_new.xml" value="0.1646403242147923" />
+        <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/fragment_check_componentdetection_beam_right_design_edit.xml" value="0.67" />
+        <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/fragment_check_componentdetection_beam_right_real_edit.xml" value="0.5" />
+        <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/fragment_check_componentdetection_column_edit.xml" value="0.1646403242147923" />
+        <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/fragment_check_componentdetection_column_left_design_edit.xml" value="0.3385416666666667" />
+        <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/fragment_check_componentdetection_column_left_real_edit.xml" value="0.67" />
+        <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/fragment_check_componentdetection_column_right_design_edit.xml" value="0.5" />
+        <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/fragment_check_componentdetection_column_right_real_edit.xml" value="0.6071428571428571" />
+        <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/fragment_check_componentdetection_plate_edit.xml" value="0.33" />
+        <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/fragment_check_componentdetection_plate_right_design_edit.xml" value="0.5" />
+        <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/fragment_check_componentdetection_plate_right_real_edit.xml" value="0.5" />
+        <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/fragment_check_componentdetection_wall_edit.xml" value="0.5" />
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/fragment_check_obliquedeformation.xml" value="0.34791666666666665" />
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/fragment_drawing_type_main.xml" value="0.3619791666666667" />
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/fragment_relative_h_diff.xml" value="0.286231884057971" />
+        <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/item_component_detection_beam_left_another_item.xml" value="0.67" />
+        <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/item_component_detection_beam_right_real_measured_stirrups_edit.xml" value="0.67" />
+        <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/item_component_detection_beam_right_real_single_row_steel.xml" value="0.67" />
+        <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/item_component_detection_beam_right_real_single_row_steel_2.xml" value="0.67" />
+        <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/item_component_detection_column_right_real_row_steel.xml" value="0.67" />
+        <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/item_component_detection_column_right_real_row_steel_params.xml" value="0.5" />
+        <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/item_component_detection_column_right_real_row_steel_params2.xml" value="0.67" />
+        <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/item_component_detection_plate_right_real_measured_stirrups_edit.xml" value="0.5" />
+        <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/item_component_detection_wall_right_design_design_edit.xml" value="0.5" />
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/item_floor_detail.xml" value="0.34791666666666665" />
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/item_floor_list.xml" value="0.33" />
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/item_floor_pic.xml" value="0.271286231884058" />

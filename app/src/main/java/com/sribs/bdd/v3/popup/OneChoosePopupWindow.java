@@ -1,6 +1,7 @@
 package com.sribs.bdd.v3.popup;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +30,7 @@ public class OneChoosePopupWindow extends android.widget.PopupWindow {
 
     private List<String> datas = new ArrayList<>();
 
-    public OneChoosePopupWindow(Context context, int width, List<String> list,int defaultSelect,
+    public OneChoosePopupWindow(Context context, int width, List<String> list,Typeface typeface,int defaultSelect,
                                 int mTextGravity,int textLeftMargin,PopupCallback popupCallback) {
         super(context);
         this.mContext = context;
@@ -47,7 +48,7 @@ public class OneChoosePopupWindow extends android.widget.PopupWindow {
 
         mRecyclerView = (RecyclerView)view.findViewById(R.id.popup_recyclerView);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
-        mOneChoosePopupAdapter = new OneChoosePopupAdapter(mContext, datas, defaultSelect, mTextGravity,textLeftMargin, new OneChoosePopupAdapter.ItemClickCallback() {
+        mOneChoosePopupAdapter = new OneChoosePopupAdapter(mContext, datas,typeface, defaultSelect, mTextGravity,textLeftMargin, new OneChoosePopupAdapter.ItemClickCallback() {
             @Override
             public void onItemClick(String text) {
                 if(popupCallback != null){

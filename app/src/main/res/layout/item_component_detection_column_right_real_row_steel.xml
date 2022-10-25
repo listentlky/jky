@@ -51,7 +51,7 @@
         <com.sribs.bdd.v3.view.OneChooseSpinnerView
             app:layout_constraintLeft_toRightOf="@id/tv_1"
             android:id="@+id/check_cpd_left_real_spinner_3"
-            android:layout_width="@dimen/_35sdp"
+            android:layout_width="@dimen/_40sdp"
             android:layout_marginTop="@dimen/_7sdp"
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginLeft="@dimen/_2sdp"

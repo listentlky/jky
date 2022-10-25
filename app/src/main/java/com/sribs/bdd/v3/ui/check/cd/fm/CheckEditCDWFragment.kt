@@ -1,22 +1,16 @@
 package com.sribs.bdd.v3.ui.check.cd.fm
 
 import android.graphics.Color
+import android.graphics.Typeface
 import android.net.Uri
-import android.text.InputType
 import android.view.Gravity
 import android.view.View
-import android.widget.ArrayAdapter
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.cbj.sdk.libui.mvp.BaseFragment
 import com.cbj.sdk.libui.mvp.bindView
 import com.donkingliang.imageselector.utils.ImageSelector
-import com.radaee.util.CommonUtil
 import com.sribs.bdd.R
-import com.sribs.bdd.databinding.FragmentCheckBuildStructureFloorBinding
-import com.sribs.bdd.databinding.FragmentCheckComponentdetectionBeamEditBinding
-import com.sribs.bdd.databinding.FragmentCheckComponentdetectionPlateEditBinding
 import com.sribs.bdd.databinding.FragmentCheckComponentdetectionWallEditBinding
-import com.sribs.bdd.v3.module.CheckMenuModule
 import com.sribs.bdd.v3.popup.FloorDrawingSpinnerPopupWindow
 import com.sribs.bdd.v3.ui.check.cd.CheckComponentDetectionActivity
 import com.sribs.bdd.v3.util.LogUtils
@@ -64,7 +58,7 @@ class CheckEditCDWFragment : BaseFragment(R.layout.fragment_check_componentdetec
     }
 
     override fun initView() {
-        mtypePicList!!.addAll(Arrays.asList("Φ", "二级钢筋"))
+        mtypePicList!!.addAll(Arrays.asList("A", "B"))
 
         currentRealPicType = mtypePicList!!.get(0)
         currentRealPicType2 = mtypePicList!!.get(0)
@@ -102,7 +96,8 @@ class CheckEditCDWFragment : BaseFragment(R.layout.fragment_check_componentdetec
         ).setSpinnerTextGravity(Gravity.CENTER_VERTICAL).setSpinnerCallback { position: Int ->
             LogUtils.d("当前选择：$position")
             currentRealPicType = mtypePicList!!.get(position)
-        }.build()
+        }.setTypeface(Typeface.createFromAsset(context?.assets,"fonts/SJQY.cb6e0829.TTF"))
+            .build()
 
 
         mBinding.checkCdpPlateRightRealUi.checkCdpPlateRightRealMeasured.checkEditName.text =
@@ -113,7 +108,8 @@ class CheckEditCDWFragment : BaseFragment(R.layout.fragment_check_componentdetec
         ).setSpinnerTextGravity(Gravity.CENTER_VERTICAL).setSpinnerCallback { position: Int ->
             LogUtils.d("当前选择：$position")
             currentRealPicType2 = mtypePicList!!.get(position)
-        }.build()
+        }.setTypeface(Typeface.createFromAsset(activity?.assets,"fonts/SJQY.cb6e0829.TTF"))
+            .build()
 
         mBinding.checkCdpPlateRightDesignUi.checkCdpBeamRightDesinSingle.checkEditName.text =
             "设计 竖向钢筋"
@@ -122,7 +118,8 @@ class CheckEditCDWFragment : BaseFragment(R.layout.fragment_check_componentdetec
         ).setSpinnerTextGravity(Gravity.CENTER_VERTICAL).setSpinnerCallback { position: Int ->
             LogUtils.d("当前选择：$position")
             currentDesignPicType = mtypePicList!!.get(position)
-        }.build()
+        }.setTypeface(Typeface.createFromAsset(activity?.assets,"fonts/SJQY.cb6e0829.TTF"))
+            .build()
 
         mBinding.checkCdpPlateRightDesignUi.checkCdpBeamRightDesinMeasured.checkEditName.text =
             "设计 水平钢筋"
@@ -131,7 +128,8 @@ class CheckEditCDWFragment : BaseFragment(R.layout.fragment_check_componentdetec
         ).setSpinnerTextGravity(Gravity.CENTER_VERTICAL).setSpinnerCallback { position: Int ->
             LogUtils.d("当前选择：$position")
             currentDesignPicType2 = mtypePicList!!.get(position)
-        }.build()
+        }.setTypeface(Typeface.createFromAsset(activity?.assets,"fonts/SJQY.cb6e0829.TTF"))
+            .build()
 
 
         /**
@@ -475,8 +473,11 @@ class CheckEditCDWFragment : BaseFragment(R.layout.fragment_check_componentdetec
             mBinding.checkCdpPlateRightRealUi.checkCdpLeftRealRemarkContent.setText(damageV3Bean.realNote)
             mBinding.checkCdpPlateRightDesignUi.checkCdpLeftRealRemarkContent.setText(damageV3Bean.designNote)
 
-            mBinding.checkCdpPlateRightRealUi.checkCdpPlatePic.setImageURI(Uri.fromFile(File(damageV3Bean.realPicture?.get(1))))
-            mBinding.checkCdpPlateRightDesignUi.checkCdpPlatePic.setImageURI(Uri.fromFile(File(damageV3Bean.designPicture?.get(1))))
+            mRightRealPicSrc = damageV3Bean.realPicture?.get(1)?:""
+            mRightDesignPicSrc = damageV3Bean.designPicture?.get(1)?:""
+
+            mBinding.checkCdpPlateRightRealUi.checkCdpPlatePic.setImageURI(Uri.fromFile(File(mRightRealPicSrc)))
+            mBinding.checkCdpPlateRightDesignUi.checkCdpPlatePic.setImageURI(Uri.fromFile(File(mRightDesignPicSrc)))
 
             mDamageCreateTime = damageV3Bean.createTime
         }

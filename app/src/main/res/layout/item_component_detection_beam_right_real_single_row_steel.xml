@@ -61,7 +61,7 @@
 
     <com.sribs.bdd.v3.view.OneChooseSpinnerView
         android:id="@+id/check_cpd_left_real_spinner"
-        android:layout_width="@dimen/_35sdp"
+        android:layout_width="@dimen/_40sdp"
         android:layout_marginTop="@dimen/_6sdp"
         android:layout_marginLeft="@dimen/_2sdp"
         android:layout_height="wrap_content"

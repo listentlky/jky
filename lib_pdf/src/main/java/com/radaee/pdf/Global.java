@@ -677,7 +677,7 @@ public class Global
         // if DroidSansFallback not exits, we using Arimo, loading from resource, which has good support EUR languages.
 		// For arabic support use setAnnotFont("Amiri-Regular")
         if (//!setAnnotFont("DroidSansFallback") &&
-            !setAnnotFont("Arimo") && face_name != null) {
+            !setAnnotFont("Noto Sans CJK SC Regular") && face_name != null) {
             setAnnotFont(face_name);
         }
 

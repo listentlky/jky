@@ -2,6 +2,7 @@ package com.sribs.bdd.v3.ui.check.bs
 
 import android.app.AlertDialog
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.view.Menu
 import android.view.MenuItem
@@ -752,13 +753,17 @@ class CheckBuildStructureActivity : BaseActivity(), ICheckBSContrast.ICheckBSVie
      * 当前选择新建损伤类型
      */
     override fun onSelect(type: String?) {
-        /*   when(type){
-               mCurrentDamageType[0]->{
-                   mBinding.checkVp.currentItem = 1
-               }
-               mCurrentDamageType[1]->{
-                   mBinding.checkVp.currentItem = 2
-               }
-           }*/
+     //   mView?.setBitmap(BitmapFactory.decodeResource(resources, R.mipmap.icon_pic_des))
+        LogUtils.d("onSelect："+type)
+        mView?.PDFSetStamp(0)
+        mView?.PDFSetStamp(1)
+        /*when (type) {
+            mCurrentDamageType[0] -> {
+                mBinding.checkVp.currentItem = 1
+            }
+            mCurrentDamageType[1] -> {
+                mBinding.checkVp.currentItem = 2
+            }
+        }*/
     }
 }

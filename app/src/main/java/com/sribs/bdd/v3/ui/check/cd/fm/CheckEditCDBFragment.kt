@@ -1,5 +1,6 @@
 package com.sribs.bdd.v3.ui.check.cd.fm
 
+import android.graphics.Typeface
 import android.net.Uri
 import android.view.Gravity
 import android.view.MotionEvent
@@ -13,7 +14,6 @@ import com.sribs.bdd.R
 import com.sribs.bdd.databinding.*
 import com.sribs.bdd.v3.popup.FloorDrawingSpinnerPopupWindow
 import com.sribs.bdd.v3.ui.check.cd.CheckComponentDetectionActivity
-import com.sribs.bdd.v3.util.LogUtils
 import com.sribs.common.ARouterPath
 import com.sribs.common.bean.db.DamageV3Bean
 import com.sribs.common.bean.db.DrawingV3Bean
@@ -111,7 +111,7 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
 
         mTypeLeftList!!.addAll(Arrays.asList("总高", "净高"))
         mTypeLeftList2!!.addAll(Arrays.asList("矩形", "H型", "T型", "其他"))
-        mPicList!!.addAll(Arrays.asList("1", "2"))
+        mPicList!!.addAll(Arrays.asList("A", "B"))
         mTypeRightList!!.addAll(Arrays.asList("单排钢筋", "双排钢筋"))
         mTypeRightList2!!.addAll(Arrays.asList("无加密", "有加密"))
 
@@ -244,9 +244,11 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
             mPicList
         ).setSpinnerTextGravity(Gravity.CENTER_VERTICAL).setSpinnerCallback {
             currentRightDesignType4 = it
-        }.build()
+        }.setTypeface(Typeface.createFromAsset(activity?.assets,"fonts/SJQY.cb6e0829.TTF"))
+            .build()
 
         rightDesignView.checkCpdBeamRightRealMeasured.checkCpdLeftRealSpinner3.setSelect(0)
+        rightDesignView.checkCpdBeamRightRealMeasured.checkCpdLeftRealSpinner3.setTypeface(Typeface.createFromAsset(activity?.assets,"fonts/SJQY.cb6e0829.TTF"))
         rightDesignView.checkCpdBeamRightRealMeasured.checkCpdLeftRealSpinner3.setText(
             mPicList!!.get(
                 0
@@ -286,20 +288,23 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
         }.build()
 
 
-
+        rightRealSingleParamsView.checkCpdLeftRealSpinner.setTypeface(Typeface.createFromAsset(activity?.assets,"fonts/SJQY.cb6e0829.TTF"))
         rightRealSingleParamsView.checkCpdLeftRealSpinner.setText(mPicList!!.get(0))
         rightRealSingleParamsView.checkCpdLeftRealSpinner.setSelect(0)
         rightRealSingleParamsView.checkCpdLeftRealSpinner.setSpinnerData(mPicList)
             .setSpinnerTextGravity(Gravity.CENTER_VERTICAL).setSpinnerCallback {
                 currentRightRealType2 = it
-            }.build()
+            }.setTypeface(Typeface.createFromAsset(activity?.assets,"fonts/SJQY.cb6e0829.TTF"))
+            .build()
 
+        rightDesignSingleParamsView.checkCpdLeftRealSpinner.setTypeface(Typeface.createFromAsset(activity?.assets,"fonts/SJQY.cb6e0829.TTF"))
         rightDesignSingleParamsView.checkCpdLeftRealSpinner.setText(mPicList!!.get(0))
         rightDesignSingleParamsView.checkCpdLeftRealSpinner.setSelect(0)
         rightDesignSingleParamsView.checkCpdLeftRealSpinner.setSpinnerData(mPicList)
             .setSpinnerTextGravity(Gravity.CENTER_VERTICAL).setSpinnerCallback {
                 currentRightDesignType2 = it
-            }.build()
+            }.setTypeface(Typeface.createFromAsset(activity?.assets,"fonts/SJQY.cb6e0829.TTF"))
+            .build()
 
         rightRealView.checkCpdBeamRightRealMeasured.checkCpdLeftRealSpinner2.setText(
             mTypeRightList2!!.get(
@@ -323,11 +328,14 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
             }
         }.build()
 
+        rightRealView.checkCpdBeamRightRealMeasured.checkCpdLeftRealSpinner3.setTypeface(Typeface.createFromAsset(activity?.assets,"fonts/SJQY.cb6e0829.TTF"))
+        rightRealView.checkCpdBeamRightRealMeasured.checkCpdLeftRealSpinner3.setText(mPicList!!.get(0))
         rightRealView.checkCpdBeamRightRealMeasured.checkCpdLeftRealSpinner3.setSpinnerData(
             mPicList
         ).setSpinnerTextGravity(Gravity.CENTER_VERTICAL).setSpinnerCallback {
             currentRightRealType4 = it
-        }.build()
+        }.setTypeface(Typeface.createFromAsset(activity?.assets,"fonts/SJQY.cb6e0829.TTF"))
+            .build()
 
 
         leftRealAnotherView.checkCpdSubtitleConfirm.setOnClickListener {
@@ -1350,9 +1358,12 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
                 rightDesignSingleParamsView.checkCpdLeftRealSpinner.setText(mPicList!!.get(0))
             }
 
+            mRightRealPicSrc = damageV3Bean.beamRightRealPic?.get(1)?:""
+            mRightDesignPicSrc = damageV3Bean.beamRightDesignPic?.get(1)?:""
 
-            rightRealView.checkCpdBeamPic.setImageURI(Uri.fromFile(File(damageV3Bean.beamRightRealPic?.get(1))))
-            rightDesignView.checkCpdBeamPic.setImageURI(Uri.fromFile(File(damageV3Bean.beamRightDesignPic?.get(1))))
+            rightRealView.checkCpdBeamPic.setImageURI(Uri.fromFile(File(mRightRealPicSrc)))
+
+            rightDesignView.checkCpdBeamPic.setImageURI(Uri.fromFile(File(mRightDesignPicSrc)))
 
             rightDesignView.checkEdit.setText(damageV3Bean.beamRightDesignStirrupsTypeList!!.get(3))
 

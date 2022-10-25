@@ -1,6 +1,7 @@
 package com.sribs.bdd.v3.adapter;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -27,6 +28,8 @@ public class OneChoosePopupAdapter extends RecyclerView.Adapter<OneChoosePopupAd
     private List<String> datas;
 
     private int select = 0;
+
+    private Typeface mTypeface;
 
     private int mTextGravity = Gravity.CENTER;
 
@@ -55,10 +58,11 @@ public class OneChoosePopupAdapter extends RecyclerView.Adapter<OneChoosePopupAd
         this.mItemClickCallback = mItemClickCallback;
     }
 
-    public OneChoosePopupAdapter(Context mContext, List<String> datas,int defaultSelect,
-                                 int mTextGravity,int textLeftMargin,ItemClickCallback mItemClickCallback) {
+    public OneChoosePopupAdapter(Context mContext, List<String> datas, Typeface typeface,int defaultSelect,
+                                 int mTextGravity, int textLeftMargin, ItemClickCallback mItemClickCallback) {
         this.mContext = mContext;
         this.datas = datas;
+        this.mTypeface = typeface;
         this.select = defaultSelect;
         this.mTextGravity = mTextGravity;
         this.mTextLeftMargin = textLeftMargin;
@@ -85,6 +89,9 @@ public class OneChoosePopupAdapter extends RecyclerView.Adapter<OneChoosePopupAd
     public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
         if (holder instanceof ItemViewHolder) {
             String s = datas.get(position);
+            if(mTypeface != null){
+                holder.text.setTypeface(mTypeface);
+            }
             holder.text.setText(s);
             if(mTextLeftMargin != 0){
                 holder.text.setPadding(mTextLeftMargin,0,0,0);

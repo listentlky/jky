@@ -1,5 +1,6 @@
 package com.sribs.bdd.v3.ui.check.cd.fm
 
+import android.graphics.Typeface
 import android.net.Uri
 import android.view.Gravity
 import android.view.MotionEvent
@@ -207,7 +208,7 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
 
         mTypeList!!.addAll(Arrays.asList("矩形", "圆形", "圆管", "H型", "其他"))
         mTypeRightList!!.addAll(Arrays.asList("矩形", "圆形", "其他"))
-        mPicList!!.addAll(Arrays.asList("1", "2"))
+        mPicList!!.addAll(Arrays.asList("A", "B"))
         mTypeRight2List!!.addAll(Arrays.asList("无加密", "有加密"))
 
         /**
@@ -471,7 +472,8 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
             ).setSpinnerCallback { position: Int ->
                 currentRightRealType2 = position
                 LogUtils.d("实测纵筋符号" + currentRightRealType2)
-            }.build()
+            }.setTypeface(Typeface.createFromAsset(activity?.assets,"fonts/SJQY.cb6e0829.TTF"))
+            .build()
 
         rightDesignRowSteelView!!.checkCpdLeftRealSpinner3.setSpinnerData(
             mPicList
@@ -482,7 +484,8 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
                 currentRightDesignType2 = position
                 LogUtils.d("设计纵筋符号" + currentRightDesignType2)
 
-            }.build()
+            }.setTypeface(Typeface.createFromAsset(activity?.assets,"fonts/SJQY.cb6e0829.TTF"))
+            .build()
 
 
         (rightRealMeasuredView!! as ItemComponentDetectionBeamRightRealMeasuredStirrupsEditBinding).checkCpdLeftRealSpinner2.setSpinnerData(
@@ -513,7 +516,8 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
             .setSpinnerCallback { position: Int ->
                 currentRightRealType4 = position
                 LogUtils.d("实测箍筋符号：" + mPicList!!.get(currentRightRealType4))
-            }.build()
+            }.setTypeface(Typeface.createFromAsset(activity?.assets,"fonts/SJQY.cb6e0829.TTF"))
+            .build()
 
 
         rightDesignRowSteelView!!.checkCpdLeftRealSpinner2.setSpinnerData(
@@ -575,7 +579,8 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
             .setSpinnerCallback { position: Int ->
                 currentRightDesignType4 = position
                 LogUtils.d("设计箍筋符号：" + mPicList!!.get(currentRightDesignType4))
-            }.build()
+            }.setTypeface(Typeface.createFromAsset(activity?.assets,"fonts/SJQY.cb6e0829.TTF"))
+            .build()
 
         mBinding.checkCpdSubtitleConfirm.setOnClickListener {
             if (mBinding.checkCpdSubtitle1.checkEdit.text.toString().isNullOrEmpty()) {
@@ -1241,10 +1246,11 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
             mBinding.checkCpdSubtitle2.checkCpdBeamMenuAxis2.setText(
                 damageV3Bean.columnAxisNoteList!!.get(1)
             )
+            mRightRealPicSrc = damageV3Bean.columnRightRealPic?.get(1)?:""
+            mRightDesignPicSrc = damageV3Bean.columnRightDesignPic?.get(1)?:""
 
-
-            rightRealView!!.checkCpdBeamPic.setImageURI(Uri.fromFile(File(damageV3Bean.columnRightRealPic?.get(1))))
-            rightDesignView!!.checkCpdBeamPic.setImageURI(Uri.fromFile(File(damageV3Bean.columnRightDesignPic?.get(1))))
+            rightRealView!!.checkCpdBeamPic.setImageURI(Uri.fromFile(File(mRightRealPicSrc)))
+            rightDesignView!!.checkCpdBeamPic.setImageURI(Uri.fromFile(File(mRightDesignPicSrc)))
 
             when (damageV3Bean.leftRealSectionType) {
                 "矩形" -> {

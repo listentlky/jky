@@ -1,6 +1,7 @@
 package com.sribs.bdd.v3.view;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
@@ -32,6 +33,7 @@ public class OneChooseSpinnerView extends LinearLayout {
     private boolean mIsOpen = false;
     private OneChoosePopupWindow mOneChoosePopupWindow;
     private List<String> mSpinnerData;
+    private Typeface mTypeface;
     private ImageView mSpinnerArrow;
     private SpinnerCallback mSpinnerCallback;
     private int mSelectPosition;
@@ -55,6 +57,11 @@ public class OneChooseSpinnerView extends LinearLayout {
 
     public OneChooseSpinnerView setSpinnerData(List<String> mSpinnerData) {
         this.mSpinnerData = mSpinnerData;
+        return this;
+    }
+
+    public OneChooseSpinnerView setTypeface(Typeface mTypeface) {
+        this.mTypeface = mTypeface;
         return this;
     }
 
@@ -82,7 +89,7 @@ public class OneChooseSpinnerView extends LinearLayout {
             @Override
             public void onClick(View v) {
                 if(mOneChoosePopupWindow == null){
-                    mOneChoosePopupWindow = new OneChoosePopupWindow(mContext, getWidth(), mSpinnerData,
+                    mOneChoosePopupWindow = new OneChoosePopupWindow(mContext, getWidth(), mSpinnerData,mTypeface,
                             mSelectPosition, mSpinnerTextGravity ,mContext.getResources().getDimensionPixelSize(R.dimen._10sdp),
                             new OneChoosePopupWindow.PopupCallback(){
                         @Override
@@ -111,6 +118,10 @@ public class OneChooseSpinnerView extends LinearLayout {
             }
         });
         mSpinnerText = (TextView)inflate.findViewById(R.id.spinner_Text);
+        LogUtils.INSTANCE.d("mTypeface: "+mTypeface);
+        if(mTypeface != null){
+            mSpinnerText.setTypeface(mTypeface);
+        }
         mSpinnerText.setText(mSpinnerData.get(0));
         mSpinnerArrow = (ImageView)inflate.findViewById(R.id.spinner_arrow);
 
