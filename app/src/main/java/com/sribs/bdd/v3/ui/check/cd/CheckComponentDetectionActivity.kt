@@ -3,7 +3,6 @@ package com.sribs.bdd.v3.ui.check.cd
 import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.Canvas
-import android.net.Uri
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -75,6 +74,9 @@ class CheckComponentDetectionActivity : BaseActivity(), ICheckCDContrast.ICheckC
     private val REQUEST_CODE_BEAN_DESIGN_WHITE_FLLOR = 15 //基于梁-草图
     private val REQUEST_CODE_COLUMN_REAL_WHITE_FLLOR = 16 //基于柱-草图
     private val REQUEST_CODE_COLUMN_DESIGN_WHITE_FLLOR = 17 //基于柱-草图
+    private val REQUEST_CODE_COLUMN_RIGHT_REAL_WHITE_FLLOR = 20 //基于柱-右侧草图
+    private val REQUEST_CODE_COLUMN_RIGHT_DESIGN_WHITE_FLLOR = 21 //基于柱-右侧草图
+
 
     @JvmField
     @Autowired(name = com.sribs.common.ARouterPath.VAL_COMMON_TITLE)
@@ -886,17 +888,37 @@ class CheckComponentDetectionActivity : BaseActivity(), ICheckCDContrast.ICheckC
                 if (file != null) {
                     var name = FileUtil.getFileName(file)
                     name = name ?: file
-                    (mFragments[2] as CheckEditCDCFragment).setRealPicList(
+                    (mFragments[2] as CheckEditCDCFragment).setLeftRealPicList(
                         arrayListOf(
                             name,
                             file
                         )
                     )
                 } else {
-                    (mFragments[2] as CheckEditCDCFragment).setRealPicList(arrayListOf())
+                    (mFragments[2] as CheckEditCDCFragment).setLeftRealPicList(arrayListOf())
                 }
             } else {
-                (mFragments[2] as CheckEditCDCFragment).setRealPicList(arrayListOf())
+                (mFragments[2] as CheckEditCDCFragment).setLeftRealPicList(arrayListOf())
+            }
+        }else if (requestCode == REQUEST_CODE_COLUMN_RIGHT_REAL_WHITE_FLLOR) {
+
+            if (data != null) {
+                var file = data.getStringExtra("File")
+                LogUtils.d("柱-右侧实测草图：" + file)
+                if (file != null) {
+                    var name = FileUtil.getFileName(file)
+                    name = name ?: file
+                    (mFragments[2] as CheckEditCDCFragment).setRightRealPicList(
+                        arrayListOf(
+                            name,
+                            file
+                        )
+                    )
+                } else {
+                    (mFragments[2] as CheckEditCDCFragment).setRightRealPicList(arrayListOf())
+                }
+            } else {
+                (mFragments[2] as CheckEditCDCFragment).setRightRealPicList(arrayListOf())
             }
         }else if (requestCode == REQUEST_CODE_COLUMN_DESIGN_WHITE_FLLOR) {
 
@@ -906,17 +928,38 @@ class CheckComponentDetectionActivity : BaseActivity(), ICheckCDContrast.ICheckC
                 if (file != null) {
                     var name = FileUtil.getFileName(file)
                     name = name ?: file
-                    (mFragments[2] as CheckEditCDCFragment).setDesignPicList(
+                    (mFragments[2] as CheckEditCDCFragment).setLeftDesignPicList(
                         arrayListOf(
                             name,
                             file
                         )
                     )
                 } else {
-                    (mFragments[2] as CheckEditCDCFragment).setDesignPicList(arrayListOf())
+                    (mFragments[2] as CheckEditCDCFragment).setLeftDesignPicList(arrayListOf())
                 }
             } else {
-                (mFragments[2] as CheckEditCDCFragment).setDesignPicList(arrayListOf())
+                (mFragments[2] as CheckEditCDCFragment).setLeftDesignPicList(arrayListOf())
+            }
+        }
+        else if (requestCode == REQUEST_CODE_COLUMN_RIGHT_DESIGN_WHITE_FLLOR) {
+
+            if (data != null) {
+                var file = data.getStringExtra("File")
+                LogUtils.d("柱-右侧设计草图：" + file)
+                if (file != null) {
+                    var name = FileUtil.getFileName(file)
+                    name = name ?: file
+                    (mFragments[2] as CheckEditCDCFragment).setRightDesignPicList(
+                        arrayListOf(
+                            name,
+                            file
+                        )
+                    )
+                } else {
+                    (mFragments[2] as CheckEditCDCFragment).setRightDesignPicList(arrayListOf())
+                }
+            } else {
+                (mFragments[2] as CheckEditCDCFragment).setRightDesignPicList(arrayListOf())
             }
         }
         else if (requestCode == REQUEST_BEAM_REAL_TAKE_PHOTO && data != null) {

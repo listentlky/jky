@@ -5,7 +5,6 @@ import android.content.Context
 import android.view.*
 import android.widget.ListView
 import androidx.appcompat.app.AlertDialog
-import androidx.core.view.forEachIndexed
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.android.arouter.facade.annotation.Autowired
 import com.alibaba.android.arouter.facade.annotation.Route
@@ -22,7 +21,6 @@ import com.sribs.bdd.module.project.ProjectFloorDetailPresent
 import com.sribs.bdd.ui.adapter.FloorItemAdapter
 import com.sribs.bdd.v3.util.LogUtils
 import com.sribs.common.utils.DialogUtil
-import java.util.*
 import kotlin.collections.ArrayList
 
 
@@ -116,8 +114,8 @@ class ProjectFloorItemActivity : BaseActivity(), IProjectContrast.IProjectFloorD
         mBinding.floorItem.layoutManager = LinearLayoutManager(this)
         mAdapter.setItemClickCallback(object : FloorItemAdapter.ItemClickCallback {
 
-            override fun onEdit(moduleName: String, routing: String, moduleId: Long,isLocal:Boolean) {
-                if(isLocal){
+            override fun onEdit(moduleName: String, routing: String, moduleId: Long, isRemote:Boolean) {
+                if(isRemote){
                     showToast(getString(R.string.error_no_local))
                     return
                 }
@@ -154,8 +152,8 @@ class ProjectFloorItemActivity : BaseActivity(), IProjectContrast.IProjectFloorD
                     .navigation()
             }
 
-            override fun onConfig(moduleName: String, routing: String, moduleId: Long,isLocal:Boolean) {
-                if(isLocal){
+            override fun onConfig(moduleName: String, routing: String, moduleId: Long, isRemote:Boolean) {
+                if(isRemote){
                     showToast(getString(R.string.error_no_local))
                     return
                 }

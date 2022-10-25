@@ -107,8 +107,8 @@
 
         <TextView
             android:id="@+id/check_cpd_beam_right_real_encrypted_text"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/_20sdp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/_15sdp"
             android:layout_marginTop="@dimen/_3sdp"
             android:text="长度 / 档数 = 间距"
@@ -126,6 +126,7 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/_20sdp"
             android:layout_marginLeft="@dimen/_15sdp"
+            android:layout_marginTop="@dimen/_3sdp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@id/check_cpd_beam_right_real_encrypted_text" />
 

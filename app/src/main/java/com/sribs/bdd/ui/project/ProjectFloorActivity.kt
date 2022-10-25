@@ -473,7 +473,7 @@ class ProjectFloorActivity : BaseActivity(), IBuildingContrast.IBuildingListView
 
     override fun onCardSelect(beanMain: BuildingMainBean, pos: Int) {
         LogUtils.d("onCardSelect: ${beanMain}")
-        if(beanMain.status == 0){
+        if(beanMain.status == 2){
             showToast(getString(R.string.error_no_local))
             return
         }

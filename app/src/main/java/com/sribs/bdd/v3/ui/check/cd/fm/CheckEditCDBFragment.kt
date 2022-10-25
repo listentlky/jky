@@ -14,6 +14,7 @@ import com.sribs.bdd.R
 import com.sribs.bdd.databinding.*
 import com.sribs.bdd.v3.popup.FloorDrawingSpinnerPopupWindow
 import com.sribs.bdd.v3.ui.check.cd.CheckComponentDetectionActivity
+import com.sribs.bdd.v3.util.LogUtils
 import com.sribs.common.ARouterPath
 import com.sribs.common.bean.db.DamageV3Bean
 import com.sribs.common.bean.db.DrawingV3Bean
@@ -543,7 +544,7 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
                     if (leftDesignAnotherView.checkCpdLeftDesignAnotherName.text.toString()
                             .isNullOrEmpty() ||
                         leftDesignAnotherView.checkCpdLeftDesignAnotherDescribe.text.toString()
-                            .isNullOrEmpty() || mPicLeftRealList.isNullOrEmpty()
+                            .isNullOrEmpty() || mPicLeftDesignList.isNullOrEmpty()
                     ) {
                         showToast("请输入 设计截面类型-其他")
                         return@setOnClickListener
@@ -694,7 +695,7 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
                 0,
                 mAddAnnotReF,
                 "",
-                mDamageCreateTime,
+                if (mDamageCreateTime < 0) System.currentTimeMillis() else mDamageCreateTime,
                 mBinding.checkCpdSubtitle1.checkEdit.text.toString(),
                 mBinding.checkCpdSubtitle2Second.checkEdit.text.toString(),
                 arrayListOf(
@@ -944,6 +945,9 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
             rightDesignView.checkCpdLeftRealRemarkContent.setText("")
             rightDesignView.checkCpdBeamPic.setImageResource(R.color.gray)
         } else {
+
+
+
             mBinding.checkCpdSubtitle1.checkEdit.setText(damageV3Bean.beamName)
             mBinding.checkCpdSubtitle2Second.checkEditName.text = "轴线"
             if (!damageV3Bean.beamAxisNoteList!!.isNullOrEmpty() && !damageV3Bean.beamAxisNoteList!!.get(
@@ -975,12 +979,35 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
             leftRealView.content.visibility = View.VISIBLE
             leftRealView.checkCpdLeftRealSpinner1.setText(damageV3Bean.beamLeftRealTypeList!!.get(0))
             leftRealView.checkCpdLeftRealSpinner1.setSelect(
-                mTypeLeftList!!.indexOf(
-                    damageV3Bean.beamLeftRealTypeList!!.get(
-                        0
-                    )
-                )
+                mTypeLeftList!!.indexOf(damageV3Bean.beamLeftRealTypeList!!.get(0))
             )
+
+
+            currentLeftRealType =  mTypeLeftList!!.indexOf(damageV3Bean.beamLeftRealTypeList!!.get(0))
+            currentLeftRealType2 =  mTypeLeftList2!!.indexOf(damageV3Bean.beamLeftRealTypeList!!.get(1))
+            mPicLeftRealList!!.addAll(damageV3Bean.beamLeftRealPicList!!)
+            mPicLeftDesignList!!.addAll(damageV3Bean.beamLeftDesignPicList!!)
+            currentLeftDesignType =  mTypeLeftList!!.indexOf(damageV3Bean.beamLeftDesignTypeList!!.get(0))
+            currentLeftDesignType2 =  mTypeLeftList2!!.indexOf(damageV3Bean.beamLeftDesignTypeList!!.get(1))
+
+
+            currentRightRealType = mTypeRightList!!.indexOf(damageV3Bean.beamRightRealSectionType)
+            currentRightRealType2 = mPicList!!.indexOf(damageV3Bean.beamRightRealSectionParamsList!!.get(1))
+            if (currentRightRealType2<0){
+                currentRightRealType2 = 0
+            }
+            currentRightRealType4 = mPicList!!.indexOf(damageV3Bean.beamRightRealStirrupsTypeList!!.get(1))
+
+
+            currentRightDesignType = mTypeRightList!!.indexOf(damageV3Bean.beamRightDesignSectionType)
+            currentRightDesignType2 = mPicList!!.indexOf(damageV3Bean.beamRightDesignSectionTypeParamsList!!.get(1))
+            if (currentRightDesignType2<0){
+                currentRightDesignType2 = 0
+            }
+            currentRightDesignType3 = mTypeRightList2!!.indexOf(damageV3Bean.beamRightDesignStirrupsTypeList!!.get(0))
+            currentRightDesignType4 = mPicList!!.indexOf(damageV3Bean.beamRightDesignStirrupsTypeList!!.get(1))
+
+
 
             leftRealView.checkCpdLeftRealSpinner2.setText(damageV3Bean.beamLeftRealTypeList!!.get(1))
             leftRealView.checkCpdLeftRealSpinner2.setSelect(
@@ -1208,7 +1235,6 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
             rightDesignView.checkCpdLeftRealDesignTv.checkCpdLeftRealSpinner2.setText(damageV3Bean.beamRightDesignSectionType)
             rightDesignView.checkCpdLeftRealDesignTv.checkCpdLeftRealSpinner2.setSelect(mTypeRightList!!.indexOf(damageV3Bean.beamRightDesignSectionType))
 
-            rightRealView.checkCpdBeamRightRealSingle
 
 
             rightRealView.checkCpdBeamRightRealMeasured.checkCpdLeftRealSpinner3.setText(
@@ -1230,6 +1256,8 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
                     0
                 ).isNullOrEmpty()
             ) {
+                currentRightRealType3 = 1
+
                 rightRealView.checkCpdBeamRightRealMeasured.checkCpdLeftRealSpinner2.setText(
                     mTypeRightList2!!.get(1)
                 )
@@ -1253,6 +1281,7 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
                     )
                 )
             } else {
+                currentRightRealType3 =0
                 rightRealView.checkCpdBeamRightRealEncrypted.content.visibility = View.GONE
                 rightRealView.checkCpdBeamRightRealEncryptedText.visibility = View.GONE
 
