@@ -147,14 +147,14 @@ class DamageV3Bean(){
     var rightRealStirrupsTypeNonEncryptList: ArrayList<String>? = ArrayList() //实测箍筋-加密区
     var rightRealProtectList: ArrayList<String>? = ArrayList() //实测保护层厚度
     var rightRealNote: String? = ""//实测配筋-备注
-    var columnRightRealPic :ArrayList<String>?= ArrayList()
+    var columnRightRealPic :ArrayList<String>?= ArrayList() //实测图(0 名称  1 路径  2 远端resId)
 
     var rightDesignSectionTypeList: ArrayList<String>? = ArrayList() //设计纵筋
     var rightDesignSectionTypeParamsList: ArrayList<String>? = ArrayList() //设计纵筋-矩形
     var rightDesignSectionTypeParamsPicList: ArrayList<String>? = ArrayList() //实测纵筋-草图
     var rightDesignStirrupsTypeList: ArrayList<String>? = ArrayList() //设计箍筋
     var rightDesignNote: String? = ""//设计配筋-备注
-    var columnRightDesignPic :ArrayList<String>?= ArrayList()
+    var columnRightDesignPic :ArrayList<String>?= ArrayList() //设计图(0 名称  1 路径  2 远端resId)
 
     constructor(
         id: Long,
@@ -236,26 +236,15 @@ class DamageV3Bean(){
     var plateName: String = "" //板名称
     var axisSingleNote: String? = ""//轴线
     var axisPlateNoteList: ArrayList<String>? = ArrayList()//多个轴线
-    var realEastWestRebarList: ArrayList<String>? = ArrayList()
-
-    /*    var realEastWestRebarType: String? = "" //实测-东西向钢筋-类型
-        var realEastWestRebarLength: String? = "" //实测-东西向钢筋-长度
-        var realEastWestRebarNumber: String? = "" //实测-东西向钢筋-档数*/
-    var realNorthSouthRebarList: ArrayList<String>? = ArrayList()
-/*    var realNorthSouthRebarType: String? = "" //实测-南北向钢筋-类型
-    var realNorthSouthRebarLength: String? = "" //实测-南北向钢筋-长度
-    var realNorthSouthRebarNumber: String? = "" //实测-南北向钢筋-档数*/
+    var realEastWestRebarList: ArrayList<String>? = ArrayList() // 0 实测-东西向钢筋-类型 // 1 实测-东西向钢筋-长度 // 2 实测-东西向钢筋-档数
+    var realNorthSouthRebarList: ArrayList<String>? = ArrayList()//0 实测-南北向钢筋-类型 // 1 实测-南北向钢筋-长度 // 2 实测-南北向钢筋-档数
     var realProtectThickness: String? = "" //实测-保护层厚度
     var realNote: String? = "" //实测-备注
-    var realPicture: ArrayList<String>? = ArrayList() //实测-照片
-    var designEastWestRebarList: ArrayList<String>? = ArrayList()
-/*    var designEastWestRebarType: String? = "" //设计-东西向钢筋-类型
-    var designEastWestRebarLength: String? = "" //设计-东西向钢筋-长度*/
-var designNorthSouthRebarList: ArrayList<String>? = ArrayList()
-/*    var designNorthSouthRebarType: String? = "" //设计-南北向钢筋-类型
-    var designNorthSouthRebarLength: String? = "" //设计-南北向钢筋-长度*/
+    var realPicture: ArrayList<String>? = ArrayList() //实测-照片 0名称 1路径 2远端resID
+    var designEastWestRebarList: ArrayList<String>? = ArrayList()//0 设计-东西向钢筋-类型 //1 设计-东西向钢筋-长度
+    var designNorthSouthRebarList: ArrayList<String>? = ArrayList() //0 设计-南北向钢筋-类型 // 1 设计-南北向钢筋-长度
     var designNote: String? = "" //设计-备注
-    var designPicture:  ArrayList<String>? = ArrayList() //设计-照片
+    var designPicture:  ArrayList<String>? = ArrayList() //设计-照片 0名称 1路径 2远端resID
 
     //构建检测-板/墙
     constructor(
@@ -392,9 +381,9 @@ var designNorthSouthRebarList: ArrayList<String>? = ArrayList()
     }
 
     //相对高差
-    var closeDiff:String?=""
-    var rhdiffInfo:ArrayList<RelativeHDiffInfoBean>?=ArrayList() //单条数据
-    var pointList:List<RelativeHDiffPointBean>?=ArrayList() //测点数据
+    var closeDiff:String?="" //闭合差
+    var rhdiffInfo:ArrayList<RelativeHDiffInfoBean>?=ArrayList() //顺序测量转点闭合数据
+    var pointList:List<RelativeHDiffPointBean>?=ArrayList() //添加的测点数据
 
     constructor(id:Long,drawingId:Long,type:String?,action:Int?,annotRef:Long,note:String?,createTime:Long, closeDiff:String,
                 rhdiffInfo:ArrayList<RelativeHDiffInfoBean>,pointList:List<RelativeHDiffPointBean>):this(){

@@ -124,7 +124,7 @@ class LoginActivity:BaseActivity(),ILoginContrast.IVew {
 //            }
 
 
-        mPresenter.login(account,pwd)
-       //    onLogin()
+     //   mPresenter.login(account,pwd)
+           onLogin()
     }
 }

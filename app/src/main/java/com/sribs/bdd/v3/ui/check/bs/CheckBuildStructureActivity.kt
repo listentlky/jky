@@ -2,12 +2,14 @@ package com.sribs.bdd.v3.ui.check.bs
 
 import android.app.AlertDialog
 import android.content.Intent
-import android.graphics.BitmapFactory
+import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.RelativeLayout
+import android.widget.TextView
 import com.alibaba.android.arouter.facade.annotation.Autowired
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
@@ -27,6 +29,7 @@ import com.radaee.pdf.Page
 import com.radaee.reader.PDFLayoutView
 import com.radaee.reader.PDFPagesAct
 import com.radaee.reader.PDFViewController
+import com.radaee.util.CommonUtil
 import com.radaee.util.PDFAssetStream
 import com.radaee.util.PDFHttpStream
 import com.radaee.util.RadaeePluginCallback
@@ -46,8 +49,6 @@ import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 
 /**
  * 建筑结构复核
@@ -486,6 +487,8 @@ class CheckBuildStructureActivity : BaseActivity(), ICheckBSContrast.ICheckBSVie
         resetDamageList()
         mBinding.checkVp.currentItem = 0
 
+        addDamageMark(exitDamageBeanList.size)
+
     }
 
     /**
@@ -750,20 +753,31 @@ class CheckBuildStructureActivity : BaseActivity(), ICheckBSContrast.ICheckBSVie
     }
 
     /**
+     * 添加mark标记
+     */
+    fun addDamageMark(index:Int){
+        val view: View =
+            LayoutInflater.from(this).inflate(com.radaee.viewlib.R.layout.damage_mark_index_layout, null)
+        val damageIndex = view.findViewById<TextView>(com.radaee.viewlib.R.id.damage_index)
+        damageIndex.text = ""+index
+        mView!!.layoutView(view, 200, 200)
+      //  var bitmap = CommonUtil.GetRoundedCornerBitmap(PDFLayoutView.getViewBitmap(view))
+        var bitmap = PDFLayoutView.getViewBitmap(view)
+        mView!!.PDFSetStamp(1,bitmap,30f,30f)
+    }
+
+    /**
      * 当前选择新建损伤类型
      */
     override fun onSelect(type: String?) {
-     //   mView?.setBitmap(BitmapFactory.decodeResource(resources, R.mipmap.icon_pic_des))
         LogUtils.d("onSelect："+type)
-        mView?.PDFSetStamp(0)
-        mView?.PDFSetStamp(1)
-        /*when (type) {
+        when (type) {
             mCurrentDamageType[0] -> {
                 mBinding.checkVp.currentItem = 1
             }
             mCurrentDamageType[1] -> {
                 mBinding.checkVp.currentItem = 2
             }
-        }*/
+        }
     }
 }

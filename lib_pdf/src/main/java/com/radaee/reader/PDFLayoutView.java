@@ -1,6 +1,7 @@
 package com.radaee.reader;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -31,6 +32,7 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.PopupWindow;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.radaee.annotui.UIAnnotDlgSign;
@@ -48,6 +50,7 @@ import com.radaee.pdf.Path;
 //import com.radaee.sribs.DamageTypeAdapter;
 //import com.radaee.sribs.DamageTypeItem;
 import com.radaee.pdf.ResFont;
+import com.radaee.pdf.ResForm;
 import com.radaee.pdf.ResImage;
 import com.radaee.util.ComboList;
 import com.radaee.util.CommonUtil;
@@ -242,13 +245,14 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
             if (mIsV3) {
                 if (mCurrentModuleType.equals(mModuleType.get(2))) {
                       PDFSetNote(0);
-                    mNewAnnotColor = 16711935;
+                      mNewAnnotColor = 16711935;
                       onTouchNote(mCacheMotionEvent);
                 //    PDFSetStamp(0);
                 //    onTouchStamp(e);
                 } else {
                 //    PDFSetStamp(0);
                 //    onTouchStamp(e);
+                    mCacheMotionEvent.setAction(0);
                     showV3DamagePopupWindow();
                 }
             } else {
@@ -1506,6 +1510,8 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
         }
     }
 
+    Page mPage = null;
+
     private boolean onTouchNote(MotionEvent event) {
         if (m_status != STA_NOTE) return false;
         switch (event.getActionMasked()) {
@@ -1513,6 +1519,7 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
                 PDFPos pos = m_layout.vGetPos((int) event.getX(), (int) event.getY());
                 VPage vpage = m_layout.vGetPage(pos.pageno);
                 Page page = m_doc.GetPage(vpage.GetPageNo());
+                mPage = page;
                 if (page != null) {
                     page.ObjsStart();
                     if (m_note_pages == null) {
@@ -1589,66 +1596,69 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
         return new float[]{m_annot_rect[0], m_annot_rect[1], m_annot_rect[2], m_annot_rect[3]};
     }
 
+    public static Bitmap getViewBitmap(View view) {
+        view.setDrawingCacheEnabled(true);
+        view.buildDrawingCache();
+        Bitmap drawingCache = view.getDrawingCache();
+        if (drawingCache == null) {
+            Bitmap bitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(bitmap);
+            view.draw(canvas);
+            return bitmap;
+        } else {
+            Bitmap bitmap = Bitmap.createBitmap(drawingCache); // 创建一个DrawingCache的拷贝，因为DrawingCache得到的位图在禁用后会被回收
+            if (bitmap == null) {
+                return null;
+            }
+            view.setDrawingCacheEnabled(false);
+            bitmap.setHasAlpha(false);
+            bitmap.prepareToDraw();
+            return bitmap;
+        }
+    }
 
-
-    Document.DocForm gen_form1(Document.DocImage dfont)
-    {
-        Document.DocForm form = m_doc.NewForm();
-        PageContent sform = new PageContent();
-        sform.Create();
-        Path path1 = new Path();
-        path1.MoveTo(0, 0);
-        path1.LineTo(320, 0);
-        path1.LineTo(320, 100);
-        path1.LineTo(0, 100);
-        path1.ClosePath();
-        sform.SetFillColor(0xFFFF0000);
-        sform.FillPath(path1, true);
-
-        ResImage res_font = form.AddResImage(dfont);
-        sform.DrawImage(res_font);
-
-
-     /*   sform.SetFillColor(0xFF0000FF);
-        sform.TextBegin();
-        sform.TextSetFont(res_font, 20);
-        sform.TextMove(20, 50);
-        sform.DrawText("This is form1, child of form2");
-        sform.TextEnd();*/
-
-        form.SetContent(sform, 0, 0, 320, 100);
-        return form;
+    public void layoutView(View v, int width, int height) {
+        v.layout(0, 0, width, height);
+        int measuredWidth = View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.EXACTLY);
+        int measuredHeight = View.MeasureSpec.makeMeasureSpec(height, View.MeasureSpec.AT_MOST);
+        v.measure(measuredWidth, measuredHeight);
+        v.layout(0, 0, v.getMeasuredWidth(), v.getMeasuredHeight());
     }
 
     private void onAnnotCreated(Annotation annot) {
         Log.i("leon", "PDFLayoutView onAnnotCreated in, m_status=" + m_status);
         if (annot != null) {
 
-            //leon add start
-            if (m_status == STA_NOTE) {
-                //     Log.d("bruce", "onAnnotCreated SetIcon： " + mIcon);
-                annot.SetIcon(8);//13 means star
+/*            if (m_status == STA_NOTE) {
+                int width = 80;
+                int height = 80;
+                Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.ic_custom_stamp);
+                switch (mSelectedDamageType){
+                    case "层高":
+                    case "轴网":
+                        View view = LayoutInflater.from(getContext()).inflate(R.layout.damage_mark_index_layout,null);
+                        TextView damageIndex = view.findViewById(R.id.damage_index);
+                        damageIndex.setText("1");
+                        layoutView(view, width, height);
+                        bitmap = getViewBitmap(view);
+                        break;
+                }
+                Log.d("leon", "bitmap: " + bitmap);
+                Document.DocForm form2 = CommonUtil.createImageForm(m_doc,bitmap, 500, 500);
 
-           //     Document.DocForm form = CommonUtil.createImageForm(m_doc, BitmapFactory.decodeResource(getResources(),R.drawable.btn_annot_ink), 100, 100);
+                Log.d("leon", "form: " + form2);
 
-                Bitmap bitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.ic_custom_stamp);
-                m_dicon = m_doc.NewImage(bitmap, 0);
+                boolean is = annot.SetIcon(mSelectedDamageType,form2);
 
-                Document.DocForm form = gen_form1(m_dicon);
-
-                Log.d("leon", "form: " + form);
-
-
-                boolean is = annot.SetIcon("我是测试图标",form);
                 Log.d("leon", "is: " + is);
                 int fillColor = (255 << 24) | mNewAnnotColor;
                 Log.d("leon", "mNewAnnotColor: " + mNewAnnotColor);
-                annot.SetFillColor(fillColor);
-                annot.SetStrokeWidth(20);
-                annot.SetName("1111111");
-                annot.SetStrokeColor(0xFFFF0000);
+              //  annot.SetFillColor(fillColor);
+             //   annot.SetStrokeWidth(20);
+             //   annot.SetName("1111111");
+             //   annot.SetStrokeColor(0xFFFF0000);
 
-            }
+            }*/
             //leon add end
 
           /*  if((m_status == STA_LINE) || (m_status == STA_RECT) || (m_status == STA_ELLIPSE) || (m_status == STA_INK) || (m_status == STA_EDITBOX)){
@@ -1658,6 +1668,7 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
             annot.SetModifyDate(CommonUtil.getCurrentDate());
             if (!TextUtils.isEmpty(Global.g_annot_def_author))
                 annot.SetPopupLabel(Global.g_annot_def_author);
+
             //Leon add start
             if (m_status == STA_NOTE && m_listener != null) {
                 Long ref = annot.GetRef();
@@ -2363,22 +2374,20 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
     }
 
 
-    public void PDFSetStamp(int code, Bitmap bitmap, float x, float y) {
+    public void PDFSetStamp(int code, Bitmap bitmap, float width, float height) {
+        m_icon = bitmap;
         if (code == 0)//start
         {
             m_status = STA_STAMP;
-            m_icon = BitmapFactory.decodeResource(this.getResources(), R.drawable.ic_custom_stamp).copy(Bitmap.Config.ARGB_8888, true);
-
+            if(m_icon == null) {
+                m_icon = BitmapFactory.decodeResource(this.getResources(), R.drawable.ic_custom_stamp).copy(Bitmap.Config.ARGB_8888, true);
+            }
         } else if (code == 1)//end
         {
             m_status = STA_STAMP;
-            m_icon = BitmapFactory.decodeResource(this.getResources(), R.drawable.ic_custom_stamp).copy(Bitmap.Config.ARGB_8888, true);
-
-            m_rects = new float[4];
-            m_rects[0] = x;
-            m_rects[1] = y;
-            m_rects[2] = x+100;
-            m_rects[3] = y+100;
+            if(m_icon == null) {
+                m_icon = BitmapFactory.decodeResource(this.getResources(), R.drawable.ic_custom_stamp).copy(Bitmap.Config.ARGB_8888, true);
+            }
             m_dicon = m_doc.NewImage(m_icon, 0);
             if (m_rects != null) {
                 int len = m_rects.length;
@@ -2392,8 +2401,8 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
                         Matrix mat = vpage.CreateInvertMatrix(m_layout.vGetX(), m_layout.vGetY());
                         float[] rect = new float[4];
                         if (m_rects[cur] > m_rects[cur + 2]) {
-                            rect[0] = 100f;
-                            rect[2] = 200f;
+                            rect[0] = m_rects[cur + 2];
+                            rect[2] = m_rects[cur];
                         } else {
                             rect[0] = m_rects[cur];
                             rect[2] = m_rects[cur + 2];
@@ -2405,17 +2414,19 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
                             rect[1] = m_rects[cur + 1];
                             rect[3] = m_rects[cur + 3];
                         }
+                        rect[0] = rect[0]-width/2;
+                        rect[1] = rect[1]-height/2;
+                        rect[2] = rect[2]+width/2;
+                        rect[3] = rect[3]+height/2;
                         mat.TransformRect(rect);
                         page.ObjsStart();
-                        boolean isAdd = page.AddAnnotBitmap(m_dicon, rect);
-                        Log.e("PDFSetStamp", "PDFSetStamp: " + isAdd);
+                        page.AddAnnotBitmap(m_dicon, rect);
                         mat.Destroy();
                         onAnnotCreated(page.GetAnnot(page.GetAnnotCount() - 1));
                         //add to redo/undo stack.
                         m_opstack.push(new OPAdd(pos.pageno, page, page.GetAnnotCount() - 1));
                         page.Close();
                         pset.Insert(vpage);
-
                     }
                 }
                 for (cur = 0; cur < pset.pages_cnt; cur++) {
@@ -2670,11 +2681,11 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
         public void onSelect(int position, int color) {
             Log.d("bruce", "当前选择损伤: " + mV3DamageType.get(position) + "color: " + color);
             mSelectedDamageType = mV3DamageType.get(position);
-            PDFSetNote(0);
+         //   PDFSetNote(0);
             mNewAnnotColor = color;
-            onTouchNote(mCacheMotionEvent);
-         //   PDFSetStamp(0);
-         //   onTouchStamp(mCacheMotionEvent);
+         //   onTouchNote(mCacheMotionEvent);
+            PDFSetStamp(0);
+            onTouchStamp(mCacheMotionEvent);
             if (mV3SelectDamageTypeCallback != null) {
                 mV3SelectDamageTypeCallback.onSelect(mV3DamageType.get(position));
             }

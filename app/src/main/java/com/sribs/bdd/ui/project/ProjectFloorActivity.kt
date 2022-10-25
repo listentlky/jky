@@ -76,6 +76,7 @@ class ProjectFloorActivity : BaseActivity(), IBuildingContrast.IBuildingListView
     var mTitle = ""
 
     private val mPresenter: BuildingListPresenter by lazy { BuildingListPresenter() }
+
     private val mBinding: ActivityFloorListBinding by inflate()
 
     override fun deinitView() {

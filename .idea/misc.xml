@@ -421,10 +421,12 @@
         <entry key="..\:/jiankeyuan/2022915/lib_pdf/src/main/res/drawable/rhd_blue_bg.xml" value="0.1" />
         <entry key="..\:/jiankeyuan/2022915/lib_pdf/src/main/res/drawable/rhd_blue_stroke_bg.xml" value="0.195" />
         <entry key="..\:/jiankeyuan/2022915/lib_pdf/src/main/res/drawable/rhd_delete_bg.xml" value="0.1" />
+        <entry key="..\:/jiankeyuan/2022915/lib_pdf/src/main/res/drawable/round_blue_bg.xml" value="0.2135" />
         <entry key="..\:/jiankeyuan/2022915/lib_pdf/src/main/res/drawable/v3_choose_pic_confirm_bg.xml" value="0.112" />
         <entry key="..\:/jiankeyuan/2022915/lib_pdf/src/main/res/drawable/v3_choose_pic_layout_bg.xml" value="0.112" />
         <entry key="..\:/jiankeyuan/2022915/lib_pdf/src/main/res/drawable/v3_radio_selector.xml" value="0.112" />
         <entry key="..\:/jiankeyuan/2022915/lib_pdf/src/main/res/drawable/v3popup_textcolor_selector.xml" value="0.256" />
+        <entry key="..\:/jiankeyuan/2022915/lib_pdf/src/main/res/layout/damage_mark_index_layout.xml" value="0.18" />
         <entry key="..\:/jiankeyuan/2022915/lib_pdf/src/main/res/layout/pop_annot.xml" value="0.34322916666666664" />
         <entry key="..\:/jiankeyuan/2022915/lib_pdf/src/main/res/layout/pop_combo.xml" value="0.3463541666666667" />
         <entry key="..\:/jiankeyuan/2022915/lib_pdf/src/main/res/layout/pop_damage_type_choice.xml" value="0.3421875" />
