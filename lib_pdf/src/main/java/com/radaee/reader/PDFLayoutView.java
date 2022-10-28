@@ -1,7 +1,6 @@
 package com.radaee.reader;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -32,7 +31,6 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.PopupWindow;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.radaee.annotui.UIAnnotDlgSign;
@@ -45,19 +43,13 @@ import com.radaee.pdf.Ink;
 import com.radaee.pdf.Matrix;
 import com.radaee.pdf.Page;
 import com.radaee.pdf.Page.Annotation;
-import com.radaee.pdf.PageContent;
 import com.radaee.pdf.Path;
 //import com.radaee.sribs.DamageTypeAdapter;
 //import com.radaee.sribs.DamageTypeItem;
-import com.radaee.pdf.ResFont;
-import com.radaee.pdf.ResForm;
-import com.radaee.pdf.ResImage;
 import com.radaee.util.ComboList;
 import com.radaee.util.CommonUtil;
 import com.radaee.util.PopupEditAct;
 import com.radaee.view.DamageTypeSelectDialog;
-import com.radaee.view.GLLayout;
-import com.radaee.view.GLPage;
 import com.radaee.view.ILayoutView;
 import com.radaee.view.PDFLayout;
 import com.radaee.view.PDFLayout.LayoutListener;
@@ -65,6 +57,7 @@ import com.radaee.view.PDFLayout.PDFPos;
 import com.radaee.view.PDFLayoutDual;
 import com.radaee.view.PDFLayoutHorz;
 import com.radaee.view.PDFLayoutVert;
+import com.radaee.view.RHDiffAddPointPopupWindow;
 import com.radaee.view.V3DamagePopupWindow;
 import com.radaee.view.VPage;
 import com.radaee.view.VSel;
@@ -140,7 +133,7 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
     //是否展示损伤
     private boolean isShowDamage = true;
 
-    public List<String> mModuleType = Arrays.asList("建筑结构复核", "倾斜测量", "相对高差测量", "构建检测");
+    public List<String> mModuleType = Arrays.asList("建筑结构复核", "倾斜测量", "相对高差测量", "构件检测");
 
     private String mCurrentModuleType = "建筑结构复核"; //默认模块
 
@@ -192,6 +185,7 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
             if (m_status == STA_NONE && m_hold) {
                 float dx = e2.getX() - e1.getX();
                 float dy = e2.getY() - e1.getY();
+                Log.d("bdd","onFling:"+dx+" ; "+dy+" ; "+velocityX+" ; "+velocityY);
                 return m_layout.vFling(m_hold_docx, m_hold_docy, dx, dy, velocityX, velocityY);
             } else return false;
         }
@@ -243,16 +237,10 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
                 return;
             }
             if (mIsV3) {
+                mCacheMotionEvent.setAction(0);
                 if (mCurrentModuleType.equals(mModuleType.get(2))) {
-                      PDFSetNote(0);
-                      mNewAnnotColor = 16711935;
-                      onTouchNote(mCacheMotionEvent);
-                //    PDFSetStamp(0);
-                //    onTouchStamp(e);
+                   showV3RHDiffAddPointPopupWindow(null,null,""+System.currentTimeMillis(),null,false);
                 } else {
-                //    PDFSetStamp(0);
-                //    onTouchStamp(e);
-                    mCacheMotionEvent.setAction(0);
                     showV3DamagePopupWindow();
                 }
             } else {
@@ -265,6 +253,7 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
 
         @Override
         public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+            Log.d("bdd","onScroll:"+distanceX+" ; "+distanceY);
             return false;
         }
 
@@ -371,7 +360,7 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
 
         @Override
         public boolean onSingleTapConfirmed(MotionEvent e) {
-            Log.i("leon", "onSingleTapConfirmed 111");
+            Log.i("bdd", "onSingleTapConfirmed "+e.getAction());
             if (m_layout == null) return false;
             if (m_status != STA_NONE && m_status != STA_ANNOT) return false;
             if (m_annot_pg != null) {
@@ -433,9 +422,10 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
                     if (m_listener != null)
                         m_listener.OnPDFPageModified(m_annot_page.GetPageNo());
                     PDFEndAnnot();
-                } else if (PDFCanSave() && m_annot.GetEditType() > 0) {//if form edit-box.
+                } /*else if (PDFCanSave() && m_annot.GetEditType() > 0) {//if form edit-box.
+                    Log.d("bruce","if form edit-box.: "+m_annot.GetEditType());
                     onEditAnnot();
-                } else if (PDFCanSave() && m_annot.GetComboItemCount() >= 0)//if form choice
+                } */else if (PDFCanSave() && m_annot.GetComboItemCount() >= 0)//if form choice
                 {
                     try {
                         int[] location = new int[2];
@@ -506,11 +496,22 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
                     m_listener.OnPDFAnnotTapped(m_annot_pos.pageno, m_annot);
                     if (PDFCanSave() && m_aMenu != null) {
                         Log.i("leon", "onSingleTapConfirmed m_aMenu.show");
+                        if(mIsV3){
+                            m_rects = m_annot_rect;
+                        }
+                        if(mCurrentModuleType == mModuleType.get(2) && m_annot.GetType() == 13){
+                            if(mV3AddGroupPointCallback != null){
+                                mMarkX = m_annot_rect[0];
+                                mMarkY = m_annot_rect[1];
+                                mV3AddGroupPointCallback.onShowPoint(m_annot,true);
+                            }
+                            return true;
+                        }
                         m_aMenu.show(m_annot, m_annot_rect, new UIAnnotMenu.IMemnuCallback() {
                             //the update need new operator in OPStack
                             @Override
                             public void onUpdate() {
-//                                Log.i("leon", "PDFLayoutView m_aMenu onUpdate");
+                                Log.d("bdd", "PDFLayoutView m_aMenu onUpdate");
                                 m_layout.vRenderSync(m_annot_page);
                                 if (m_listener != null)
                                     m_listener.OnPDFPageModified(m_annot_page.GetPageNo());
@@ -519,33 +520,37 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
 
                             @Override
                             public void onRemove() {
+                                Log.d("bdd", "PDFLayoutView m_aMenu onRemove");
                                 PDFRemoveAnnot();
                             }
 
                             @Override
                             public void onPerform() {
+                                Log.d("bdd", "PDFLayoutView m_aMenu onPerform");
                                 PDFPerformAnnot();
                             }
 
                             @Override
                             public void onCancel() {
+                                Log.d("bdd", "PDFLayoutView m_aMenu onCancel");
                                 PDFCancelAnnot();
                             }
 
                             @Override
-                            public void onMenuClicked(int whichBtn, long ref) {
-                                Log.i("leon", "PDFLayoutView onMenuClicked whichBtn=" + whichBtn + ", ref=" + ref);
+                            public void onMenuClicked(int whichBtn, Page.Annotation annot) {
+                                Log.i("leon", "PDFLayoutView onMenuClicked whichBtn=" + whichBtn + ", annot=" + annot);
                                 if (m_listener != null) {
 
                                     JSONObject jsonObject = new JSONObject();
                                     try {
                                         jsonObject.put("action", whichBtn);//BUTTON_POPMENU_EDIT/BUTTON_POPMENU_DEL
-                                        jsonObject.put("annotRef", ref);
+                                        jsonObject.put("annotRef", annot.GetRef());
                                         jsonObject.put("type", mSelectedDamageType);
                                         jsonObject.put("axis", "");
                                         jsonObject.put("content", "");
                                         jsonObject.put("annotX", (int) e.getX());
                                         jsonObject.put("annotY", (int) e.getY());
+                                        jsonObject.put("annotName",annot.GetName());
                                     } catch (JSONException e) {
                                         Log.i("leon", "PDFLayoutView onMenuClicked edit annot failed!");
                                     }
@@ -592,7 +597,7 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
                     }
 
                     @Override
-                    public void onMenuClicked(int whichBtn, long ref) {
+                    public void onMenuClicked(int whichBtn, Page.Annotation annot) {
 
                     }
                 });
@@ -620,7 +625,7 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
                     }
 
                     @Override
-                    public void onMenuClicked(int whichBtn, long ref) {
+                    public void onMenuClicked(int whichBtn, Page.Annotation annot) {
 
                     }
                 });
@@ -1070,9 +1075,9 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
                     public void onDismiss() {
                         if (m_annot != null) {
                             String txt = m_pEdit.getEditText();
-                            Log.i("leon", "get EditText=" + txt);
+                            Log.i("bruce", "get EditText=" + txt);
                             if (!m_annot.SetEditText(m_pEdit.getEditText())) {
-                                Log.e("leon", "set EditText failed.");
+                                Log.e("bruce", "set EditText failed.");
                             }
                             m_annot.SetModifyDate(CommonUtil.getCurrentDate());
                             //if (m_annot != null && Global.sExecuteAnnotJS) executeAnnotJS();//there is JS on free text annotation.
@@ -1463,6 +1468,39 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
                 m_rects[len - 2] = event.getX();
                 m_rects[len - 1] = event.getY();
                 Log.i("bdd", " bruce:  m_rects[2]" + m_rects[2] + "   " + m_rects[3]);
+                break;
+        }
+        invalidate();
+        return true;
+    }
+
+    private boolean onTouchStamp2(MotionEvent event) {
+        int len = 0;
+        if (m_rects != null) len = m_rects.length;
+        int cur;
+        Log.d("bruce","onTouchStamp2 event.getActionMasked(): "+event.getActionMasked());
+        switch (event.getActionMasked()) {
+            case MotionEvent.ACTION_DOWN:
+                float[] rects = new float[len + 4];
+                for (cur = 0; cur < len; cur++)
+                    rects[cur] = m_rects[cur];
+                rects[cur] = event.getX();
+                rects[cur + 1] = event.getY();
+                rects[cur + 2] = event.getX();
+                rects[cur + 3] = event.getY();
+                m_rects = rects;
+                for (float f:m_rects){
+                    Log.d("bruce","onTouchStamp2 ACTION_DOWN: "+f);
+                }
+                break;
+            case MotionEvent.ACTION_MOVE:
+            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_CANCEL:
+                for (float f:m_rects){
+                    Log.d("bruce","onTouchStamp2 ACTION_CANCEL: "+f);
+                }
+                m_rects[len - 2] = event.getX();
+                m_rects[len - 1] = event.getY();
                 break;
         }
         invalidate();
@@ -1969,6 +2007,7 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
     }
 
     public void OnPageDisplayed(Canvas canvas, VPage vpage) {
+        Log.d("bruce","OnPageDisplayed: "+vpage);
         if (m_listener != null) m_listener.OnPDFPageDisplayed(canvas, vpage);
     }
 
@@ -2373,8 +2412,15 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
         }
     }
 
+    public void PDFCancelStamp(){
+        m_status = STA_NONE;
+        invalidate();
+        if (m_icon != null)
+            m_icon.recycle();
+        m_icon = null;
+    }
 
-    public void PDFSetStamp(int code, Bitmap bitmap, float width, float height) {
+    public void PDFSetStamp(int code, Bitmap bitmap, float width, float height,String annotationName) {
         m_icon = bitmap;
         if (code == 0)//start
         {
@@ -2414,15 +2460,26 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
                             rect[1] = m_rects[cur + 1];
                             rect[3] = m_rects[cur + 3];
                         }
-                        rect[0] = rect[0]-width/2;
-                        rect[1] = rect[1]-height/2;
-                        rect[2] = rect[2]+width/2;
-                        rect[3] = rect[3]+height/2;
+                        
+                        if(rect[0] == rect[2]){
+                            rect[0] = rect[0]-(width/2);
+                            rect[2] = rect[2]+(width/2);
+                        }
+
+                        if(rect[1] == rect[3]){
+                            rect[1] = rect[1]-(height/2);
+                            rect[3] = rect[3]+(height/2);
+                        }
+
                         mat.TransformRect(rect);
                         page.ObjsStart();
                         page.AddAnnotBitmap(m_dicon, rect);
                         mat.Destroy();
-                        onAnnotCreated(page.GetAnnot(page.GetAnnotCount() - 1));
+                        Annotation annotation = page.GetAnnot(page.GetAnnotCount() - 1);
+                        if(!annotationName.isEmpty()){
+                            annotation.SetName(annotationName);
+                        }
+                        onAnnotCreated(annotation);
                         //add to redo/undo stack.
                         m_opstack.push(new OPAdd(pos.pageno, page, page.GetAnnotCount() - 1));
                         page.Close();
@@ -2558,7 +2615,7 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
                             rect[3] = m_rects[cur + 3];
                         }
                         mat.TransformRect(rect);
-                        if (rect[2] - rect[0] < 500) rect[2] = rect[0] + 500;
+                        if (rect[2] - rect[0] < 80) rect[2] = rect[0] + 80;
                         if (rect[3] - rect[1] < 16) rect[1] = rect[3] - 16;
                         page.AddAnnotEditbox(rect, 0xFFFF0000, 0, 0, 26, 0xFFFF0000);
                         mat.Destroy();
@@ -2617,7 +2674,8 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
 
 
     public void PDFRemoveAnnot() {
-        if (m_status != STA_ANNOT) return;
+        Log.d("bruce","PDFRemoveAnnot m_status "+m_status);
+        if (m_status != STA_ANNOT && m_status != STA_STAMP) return;
         if (!PDFCanSave() || (Global.g_annot_readonly && m_annot.IsReadOnly())
                 || (Global.g_annot_lock && m_annot.IsLocked())) {
             Toast.makeText(getContext(), R.string.cannot_write_or_encrypted, Toast.LENGTH_SHORT).show();
@@ -2641,7 +2699,7 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
     }
 
     public void PDFEndAnnot() {
-        if (m_status != STA_ANNOT) return;
+        if (m_status != STA_ANNOT && m_status != STA_STAMP) return;
         if (m_aMenu != null) m_aMenu.hide();
         if (m_annot_pg != null) {
             m_annot_pg.Close();
@@ -2682,9 +2740,10 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
             Log.d("bruce", "当前选择损伤: " + mV3DamageType.get(position) + "color: " + color);
             mSelectedDamageType = mV3DamageType.get(position);
          //   PDFSetNote(0);
-            mNewAnnotColor = color;
+         //   mNewAnnotColor = color;
          //   onTouchNote(mCacheMotionEvent);
             PDFSetStamp(0);
+            m_rects = null;
             onTouchStamp(mCacheMotionEvent);
             if (mV3SelectDamageTypeCallback != null) {
                 mV3SelectDamageTypeCallback.onSelect(mV3DamageType.get(position));
@@ -2709,14 +2768,70 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
         mV3DefaultColor = color;
     }
 
+    public interface V3AddGroupPointCallback {
+
+        void onAddPoint(String group, String point,String annotName,String colorBg);
+
+        void onShowPoint(Annotation annot,boolean isShowDelete);
+
+        void onDeletePoint(String annotName);
+    }
+
+    private V3AddGroupPointCallback mV3AddGroupPointCallback;
+
+    public void setV3AddGroupPointCallback(V3AddGroupPointCallback V3AddGroupPointCallback) {
+        this.mV3AddGroupPointCallback = V3AddGroupPointCallback;
+    }
+
+    /**
+     * 选择损伤类型popup
+     */
     private void showV3DamagePopupWindow() {
         if (v3DamagePopupWindow == null) {
             v3DamagePopupWindow = new V3DamagePopupWindow(getContext(), dp2px(getContext(), 90), mV3DamageType
                     , popupCallback);
             v3DamagePopupWindow.initFirstColor(mV3DefaultColor);
         }
-        v3DamagePopupWindow.showAtLocation(this, Gravity.NO_GRAVITY, (int) calculateX(), (int) mMarkY);
+        v3DamagePopupWindow.showAtLocation(this, Gravity.NO_GRAVITY, (int) calculateDamageTypeX(dp2px(getContext(), 90)), (int) mMarkY);
         //   v3DamagePopupWindow.showAsDropDown(this,(int)(Math.round(m_annot_note_x0)),(Math.round(m_annot_note_x0)));
+    }
+
+    /**
+     * 相对高差添加组名popup
+     */
+    private RHDiffAddPointPopupWindow rHDiffAddPointPopupWindow;
+
+    private RHDiffAddPointPopupWindow.RHDiffAddPointCallback rhDiffAddPointCallback = new RHDiffAddPointPopupWindow.RHDiffAddPointCallback() {
+        @Override
+        public void onCancel() {
+            PDFCancelStamp();
+        }
+
+        @Override
+        public void onAddPoint(String group, String point,String annotName,String colorBg) {
+            PDFSetStamp(0);
+            m_rects = null;
+            onTouchStamp(mCacheMotionEvent);
+            if(mV3AddGroupPointCallback != null){
+                mV3AddGroupPointCallback.onAddPoint(group,point,annotName,colorBg);
+            }
+        }
+
+        @Override
+        public void onDeletePoint(String group, String point,String annotName) {
+            PDFRemoveAnnot();
+            if(mV3AddGroupPointCallback != null){
+                mV3AddGroupPointCallback.onDeletePoint(annotName);
+            }
+        }
+    };
+
+    public void showV3RHDiffAddPointPopupWindow(String group,String point,String annotName,String colorBg,boolean isShowDelete){
+        if(rHDiffAddPointPopupWindow == null) {
+            rHDiffAddPointPopupWindow = new RHDiffAddPointPopupWindow(getContext(), dp2px(getContext(), 300), rhDiffAddPointCallback);
+        }
+        rHDiffAddPointPopupWindow.setInfo(group,point,annotName,colorBg,isShowDelete);
+        rHDiffAddPointPopupWindow.showAtLocation(this, Gravity.NO_GRAVITY, (int) calculateX(dp2px(getContext(), 300)), (int) mMarkY-dp2px(getContext(), 20));
     }
 
     /**
@@ -2731,13 +2846,20 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
                 dpVal, context.getResources().getDisplayMetrics());
     }
 
-    private float calculateX() {
+    private float calculateDamageTypeX(float menuWidth) {
         float screenWidth = getContext().getResources().getDisplayMetrics().widthPixels;
-        float menuWidth = dp2px(getContext(), 90);
         float x = mMarkX + menuWidth * 2;
         if (x + menuWidth >= screenWidth)
             x -= (x + menuWidth) - screenWidth;
+        return x;
+    }
 
+
+    private float calculateX(float menuWidth) {
+        float screenWidth = getContext().getResources().getDisplayMetrics().widthPixels;
+        float x = mMarkX-menuWidth/2;
+        if (x + menuWidth >= screenWidth)
+            x -= (x + menuWidth) - screenWidth;
         return x;
     }
 

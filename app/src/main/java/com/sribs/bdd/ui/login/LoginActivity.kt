@@ -1,6 +1,7 @@
 package com.sribs.bdd.ui.login
 
 import android.content.Intent
+import android.os.Bundle
 import android.text.InputType
 import android.view.View
 import android.widget.EditText
@@ -31,6 +32,18 @@ class LoginActivity:BaseActivity(),ILoginContrast.IVew {
     private val mData by lazy { LoginDataBean() }
 
     private val mPresenter by lazy { LoginPresenter() }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        if(!this.isTaskRoot){
+            var intent = intent
+            var action = intent.action
+            if(intent.hasCategory(Intent.CATEGORY_LAUNCHER) && Intent.ACTION_MAIN.equals(action)){
+                finish()
+                return
+            }
+        }
+    }
 
     override fun deinitView() {
         unbindPresenter()
@@ -124,7 +137,7 @@ class LoginActivity:BaseActivity(),ILoginContrast.IVew {
 //            }
 
 
-     //   mPresenter.login(account,pwd)
-           onLogin()
+        mPresenter.login(account,pwd)
+      //     onLogin()
     }
 }

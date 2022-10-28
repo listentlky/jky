@@ -83,7 +83,7 @@
             android:background="@drawable/check_gray_is_edit_selector"
             android:gravity="center_vertical"
             android:hint="请输入轴线"
-            android:inputType="number"
+            android:inputType="text"
             android:visibility="gone"
             android:paddingLeft="@dimen/_4sdp"
             android:paddingRight="@dimen/_4sdp"

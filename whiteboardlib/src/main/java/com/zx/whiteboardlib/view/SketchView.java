@@ -227,6 +227,7 @@ public class SketchView extends View implements OnTouchListener {
         getLocationInWindow(location); //获取在当前窗口内的绝对坐标
         curX = (event.getRawX() - location[0]) / drawDensity;
         curY = (event.getRawY() - location[1]) / drawDensity;
+
         int toolType = event.getToolType(0);
 //        //检测到手指点击自动进入拖动图片模式
 //        if (toolType == MotionEvent.TOOL_TYPE_FINGER&&curSketchData.editMode == EDIT_STROKE) {
@@ -291,7 +292,7 @@ public class SketchView extends View implements OnTouchListener {
 //            } catch (Exception e) {
 //                e.printStackTrace();
 //            canvas.drawColor(Color.rgb(246, 246, 246));
-            canvas.drawColor(Color.rgb(239, 234, 224));
+            canvas.drawColor(Color.rgb(255, 255, 255));
 //            }
         }
     }

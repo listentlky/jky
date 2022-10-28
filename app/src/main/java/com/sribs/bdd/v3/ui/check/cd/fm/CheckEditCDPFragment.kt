@@ -302,7 +302,7 @@ class CheckEditCDPFragment : BaseFragment(R.layout.fragment_check_componentdetec
 
             var damage = DamageV3Bean(
                 -1,
-                (activity as CheckComponentDetectionActivity).mCurrentDrawing!!.drawingID,
+                (activity as CheckComponentDetectionActivity).mCurrentDrawing!!.drawingID!!,
                 "板",
                 0,
                 mAddAnnotReF,
@@ -556,7 +556,6 @@ class CheckEditCDPFragment : BaseFragment(R.layout.fragment_check_componentdetec
 
     fun openImgSelector(requestCode: Int) {
 
-        //仅拍照
         ImageSelector
             .builder()
             .onlyTakePhoto(false)

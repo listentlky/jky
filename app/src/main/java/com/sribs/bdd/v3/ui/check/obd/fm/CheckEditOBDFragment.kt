@@ -29,6 +29,8 @@ import com.sribs.common.bean.db.DamageV3Bean
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import java.math.RoundingMode
+import java.text.DecimalFormat
 
 @Route(path = ARouterPath.CHECK_OBLIQUE_DEFORMATION_Edit_FRAGMENT)
 class CheckEditOBDFragment : BaseFragment(R.layout.fragment_check_obliquedeformation_edit),
@@ -66,17 +68,17 @@ class CheckEditOBDFragment : BaseFragment(R.layout.fragment_check_obliquedeforma
             LogUtils.d(" mBinding.checkEditH1.checkEdit：" + it)
             if (it.isNullOrEmpty()) {
                 if(mBinding.checkEditQx1.checkEdit.text.isNullOrEmpty()) {
-                    mBinding.checkObdQx1Hint.text = ("倾斜量/测量高度1=斜率%")
+                    mBinding.checkObdQx1Hint.text = ("倾斜量/测量高度1=斜率‰")
                 }else{
-                    mBinding.checkObdQx1Hint.text = (""+(mBinding.checkEditQx1.checkEdit.text.toString().toDouble()/1000)+"/测量高度1=斜率%")
+                    mBinding.checkObdQx1Hint.text = (""+mBinding.checkEditQx1.checkEdit.text.toString()+"/测量高度1=斜率‰")
                 }
             } else if (mBinding.checkEditQx1.checkEdit.text.isNullOrEmpty()) {
-                mBinding.checkObdQx1Hint.text = ("倾斜量/" + it + "=斜率%")
+                mBinding.checkObdQx1Hint.text = ("倾斜量/" + it + "=斜率‰")
             } else {
                 mBinding.checkObdQx1Hint.text =
-                    (""+(mBinding.checkEditQx1.checkEdit.text.toString().toDouble()/1000) + "/" + it
-                            + "=" + ((mBinding.checkEditQx1.checkEdit.text.toString()
-                        .toDouble()/1000) / it.toString().toDouble()) + "%")
+                    (""+(mBinding.checkEditQx1.checkEdit.text.toString().toDouble()) + "/" + it
+                            + "=" + getNoMoreThanTwoDigits((mBinding.checkEditQx1.checkEdit.text.toString()
+                        .toDouble()) / it.toString().toDouble()) + "‰")
             }
         }
 
@@ -95,17 +97,17 @@ class CheckEditOBDFragment : BaseFragment(R.layout.fragment_check_obliquedeforma
             LogUtils.d(" mBinding.checkEditH2.checkEdit：" + it)
             if (it.isNullOrEmpty()) {
                 if(mBinding.checkEditQx2.checkEdit.text.isNullOrEmpty()) {
-                    mBinding.checkObdQx2Hint.text = ("倾斜量/测量高度2=斜率%")
+                    mBinding.checkObdQx2Hint.text = ("倾斜量/测量高度2=斜率‰")
                 }else{
-                    mBinding.checkObdQx2Hint.text = (""+(mBinding.checkEditQx2.checkEdit.text.toString().toDouble()/1000)+"/测量高度2=斜率%")
+                    mBinding.checkObdQx2Hint.text = (""+mBinding.checkEditQx2.checkEdit.text.toString()+"/测量高度2=斜率%")
                 }
             } else if (mBinding.checkEditQx2.checkEdit.text.isNullOrEmpty()) {
-                mBinding.checkObdQx2Hint.text = ("倾斜量/" + it + "=斜率%")
+                mBinding.checkObdQx2Hint.text = ("倾斜量/" + it + "=斜率‰")
             } else {
                 mBinding.checkObdQx2Hint.text =
-                    (""+(mBinding.checkEditQx2.checkEdit.text.toString().toDouble()/1000) + "/" + it
-                            + "=" + ((mBinding.checkEditQx2.checkEdit.text.toString()
-                        .toDouble()/1000) / it.toString().toDouble()) + "%")
+                    (""+mBinding.checkEditQx2.checkEdit.text.toString() + "/" + it
+                            + "=" + getNoMoreThanTwoDigits((mBinding.checkEditQx2.checkEdit.text.toString()
+                        .toDouble()) / it.toString().toDouble()) + "‰")
             }
         }
 
@@ -113,18 +115,18 @@ class CheckEditOBDFragment : BaseFragment(R.layout.fragment_check_obliquedeforma
             LogUtils.d(" mBinding.checkEditQx1.checkEdit：" + it)
             if (it.isNullOrEmpty()) {
                 if(mBinding.checkEditH1.checkEdit.text.isNullOrEmpty()){
-                    mBinding.checkObdQx1Hint.text = ("倾斜量/测量高度1=斜率%")
+                    mBinding.checkObdQx1Hint.text = ("倾斜量/测量高度1=斜率‰")
                 }else{
-                    mBinding.checkObdQx1Hint.text = ("倾斜量/"+mBinding.checkEditH1.checkEdit.text.toString()+"=斜率%")
+                    mBinding.checkObdQx1Hint.text = ("倾斜量/"+mBinding.checkEditH1.checkEdit.text.toString()+"=斜率‰")
                 }
             } else if (mBinding.checkEditH1.checkEdit.text.isNullOrEmpty()) {
-                mBinding.checkObdQx1Hint.text =(""+(it.toString().toDouble()/1000) + "/测量高度1" + "=斜率%")
+                mBinding.checkObdQx1Hint.text =(""+it.toString() + "/测量高度1" + "=斜率‰")
             } else {
                 mBinding.checkObdQx1Hint.text =
-                    (""+(it.toString().toDouble()/1000) + "/" + mBinding.checkEditH1.checkEdit.text.toString()
-                            + "=" + ((it.toString()
-                        .toDouble()/1000) / mBinding.checkEditH1.checkEdit.text.toString()
-                        .toDouble()) + "%")
+                    (""+it.toString() + "/" + mBinding.checkEditH1.checkEdit.text.toString()
+                            + "=" + getNoMoreThanTwoDigits((it.toString()
+                        .toDouble()) / mBinding.checkEditH1.checkEdit.text.toString()
+                        .toDouble()) + "‰")
             }
         }
 
@@ -132,18 +134,18 @@ class CheckEditOBDFragment : BaseFragment(R.layout.fragment_check_obliquedeforma
             LogUtils.d(" mBinding.checkEditQx2.checkEdit：" + it)
             if (it.isNullOrEmpty()) {
                 if(mBinding.checkEditH2.checkEdit.text.isNullOrEmpty()){
-                    mBinding.checkObdQx2Hint.text = ("倾斜量/测量高度2=斜率%")
+                    mBinding.checkObdQx2Hint.text = ("倾斜量/测量高度2=斜率‰")
                 }else{
-                    mBinding.checkObdQx2Hint.text = ("倾斜量/"+mBinding.checkEditH2.checkEdit.text.toString()+"=斜率%")
+                    mBinding.checkObdQx2Hint.text = ("倾斜量/"+mBinding.checkEditH2.checkEdit.text.toString()+"=斜率‰")
                 }
             } else if (mBinding.checkEditH2.checkEdit.text.isNullOrEmpty()) {
-                mBinding.checkObdQx2Hint.text = (""+(it.toString().toDouble()/1000) + "/测量高度2" + "=斜率%")
+                mBinding.checkObdQx2Hint.text = (""+it.toString() + "/测量高度2" + "=斜率‰")
             } else {
                 mBinding.checkObdQx2Hint.text =
-                    (""+(it.toString().toDouble()/1000) + "/" + mBinding.checkEditH2.checkEdit.text.toString()
-                            + "=" + ((it.toString()
-                        .toDouble()/1000) / mBinding.checkEditH2.checkEdit.text.toString()
-                        .toDouble()) + "%")
+                    (""+it.toString() + "/" + mBinding.checkEditH2.checkEdit.text.toString()
+                            + "=" + getNoMoreThanTwoDigits((it.toString()
+                        .toDouble()) / mBinding.checkEditH2.checkEdit.text.toString()
+                        .toDouble()) + "‰")
             }
         }
 
@@ -230,7 +232,7 @@ class CheckEditOBDFragment : BaseFragment(R.layout.fragment_check_obliquedeforma
             mAddAnnotReF = (activity as CheckObliqueDeformationActivity).mCurrentAddAnnotReF
             var damage = DamageV3Bean(
                 -1,
-                (activity as CheckObliqueDeformationActivity).mCurrentDrawing!!.drawingID,
+                (activity as CheckObliqueDeformationActivity).mCurrentDrawing!!.drawingID!!,
                 "点位",
                 0,
                 mAddAnnotReF,
@@ -257,11 +259,11 @@ class CheckEditOBDFragment : BaseFragment(R.layout.fragment_check_obliquedeforma
     /**
      * 保留两位小数
      */
-/*    fun getNoMoreThanTwoDigits(number: Double): String {
-        val format = DecimalFormat("0.##")
+    fun getNoMoreThanTwoDigits(number: Double): String {
+        val format = DecimalFormat("0.#")
         format.roundingMode = RoundingMode.FLOOR
         return format.format(number)
-    }*/
+    }
 
     /**
      * 根据是否为null来设置数据

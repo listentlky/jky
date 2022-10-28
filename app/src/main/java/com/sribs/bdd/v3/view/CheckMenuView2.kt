@@ -2,6 +2,7 @@ package com.sribs.bdd.v3.view
 
 import android.content.Context
 import android.graphics.Color
+import android.text.TextUtils
 import android.util.AttributeSet
 import android.util.Log
 import android.util.TypedValue
@@ -10,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
+import android.widget.ScrollView
 import android.widget.TextView
 import androidx.core.view.forEachIndexed
 import com.sribs.bdd.R
@@ -50,12 +52,21 @@ class CheckMenuView2 : LinearLayout {
         menuModuleList!!.forEachIndexed { index, it ->
             addView(addItemView(MENU_TYPE, it.name, null, ""))
             addView(addLine())
+
+            var scrollView = ScrollView(mContext)
+            scrollView.overScrollMode = OVER_SCROLL_NEVER
+            addView(scrollView)
+
+            var layout = LinearLayout(mContext)
+            layout.orientation = VERTICAL
+            scrollView.addView(layout)
+
             it.menu!!.forEachIndexed { index, b ->
-                addView(addItemView(ITEM_TYPE, b.name, null, b.name))
-                addView(addLine())
+                layout.addView(addItemView(ITEM_TYPE, b.name, null, b.name))
+                layout.addView(addLine())
                 b.item!!.forEachIndexed { index, c ->
-                    addView(addItemView(MARK_TYPE, c.name, c.damage, b.name))
-                    addView(addLine())
+                    layout.addView(addItemView(MARK_TYPE, c.name, c.damage, b.name))
+                    layout.addView(addLine())
                 }
             }
         }
@@ -163,11 +174,14 @@ class CheckMenuView2 : LinearLayout {
                 )
 
                 val tv2 = TextView(mContext)
+                tv2.setLines(2)
+                tv2.ellipsize = TextUtils.TruncateAt.END
                 tv2.text = name
                 tv2.gravity = Gravity.CENTER_VERTICAL
+                tv2.setPadding(0,0,padding,0)
                 tv2.setTextSize(
                     TypedValue.COMPLEX_UNIT_PX,
-                    context.resources.getDimension(R.dimen._8ssp)
+                    context.resources.getDimension(R.dimen._7ssp)
                 )
                 tv2.setTextColor(Color.parseColor("#FFFFFF"))
                 val tv2Params = RelativeLayout.LayoutParams(

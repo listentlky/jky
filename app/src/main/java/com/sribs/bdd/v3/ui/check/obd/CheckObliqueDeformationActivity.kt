@@ -195,20 +195,20 @@ class CheckObliqueDeformationActivity : BaseActivity(), ICheckOBDContrast.ICheck
         return true
     }
 
-    var mMenuMapView: View? = null
-    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
-        super.onPrepareOptionsMenu(menu)
-        var item = menu?.findItem(R.id.menu_check_pop)
-
-        item?.icon?.setBounds(20, 50, 0, 0)
-        return true
-    }
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
         when (item?.itemId) {
-            R.id.menu_check_pop -> {
-                mPresenter.uploadFile(mDrawingV3BeanList)
+            R.id.menu_damage_save -> { //保存
+                AlertDialog.Builder(this).setTitle("提示")
+                    .setMessage(R.string.is_save_hint)
+                    .setPositiveButton(R.string.dialog_ok) { dialog, which ->
+                        mController?.savePDF()
+                        saveDamageDrawingToDb();
+                    }.setNegativeButton(
+                        R.string.dialog_cancel
+                    ) { dialog, which ->
+                    }
+                    .show()
             }
 
         }
@@ -440,8 +440,6 @@ class CheckObliqueDeformationActivity : BaseActivity(), ICheckOBDContrast.ICheck
 
         mBinding.checkVp.currentItem = 0
    //     CommonUtil.screenCapture(this,"1","2",bitmap)
-        mView!!.PDFSetStamp(0,bitmap,0f,0f)
-        mView!!.PDFSetStamp(1,bitmap,100f,200f)
 
     }
 

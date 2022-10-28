@@ -128,17 +128,17 @@ object ARouterPath {
 
     const val CHECK_RELATIVE_H_DIFF_EDIT_FRAGMENT = "/check/relativeHDiffedit/fragment"; //相对高差测量
 
-    const val CHECK_COMPONENT_DETECTION_ACTIVITY = "/check/componentdetection/activity"; //构建检测
+    const val CHECK_COMPONENT_DETECTION_ACTIVITY = "/check/componentdetection/activity"; //构件检测
 
-    const val CHECK_COMPONENT_DETECTION_FRAGMENT = "/check/componentdetection/fragment"; //构建检测-梁
+    const val CHECK_COMPONENT_DETECTION_FRAGMENT = "/check/componentdetection/fragment"; //构件检测-梁
 
-    const val CHECK_COMPONENT_DETECTION_BEAM_FRAGMENT = "/check/componentdetection/beam/fragment"; //构建检测-梁
+    const val CHECK_COMPONENT_DETECTION_BEAM_FRAGMENT = "/check/componentdetection/beam/fragment"; //构件检测-梁
 
-    const val CHECK_COMPONENT_DETECTION_COLUMN_FRAGMENT = "/check/componentdetection/column/fragment"; //构建检测-柱
+    const val CHECK_COMPONENT_DETECTION_COLUMN_FRAGMENT = "/check/componentdetection/column/fragment"; //构件检测-柱
 
-    const val CHECK_COMPONENT_DETECTION_WALL_FRAGMENT = "/check/componentdetection/wall/fragment"; //构建检测-墙
+    const val CHECK_COMPONENT_DETECTION_WALL_FRAGMENT = "/check/componentdetection/wall/fragment"; //构件检测-墙
 
-    const val CHECK_COMPONENT_DETECTION_PLATE_FRAGMENT = "/check/componentdetection/plate/fragment"; //构建检测-板
+    const val CHECK_COMPONENT_DETECTION_PLATE_FRAGMENT = "/check/componentdetection/plate/fragment"; //构件检测-板
 
     /**
      * 3.0模块配置

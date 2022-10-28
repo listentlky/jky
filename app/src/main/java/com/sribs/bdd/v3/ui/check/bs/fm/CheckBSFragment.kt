@@ -145,11 +145,13 @@ class CheckBSFragment : BaseFragment(R.layout.fragment_check_build_structure),
             .setCheckMenuCallback(object : CheckMenuView2.CheckMenuCallback {
                 override fun onClick(v: View?, damageType:String?) {
                     (activity as CheckBuildStructureActivity).setAddAnnotReF(-1L)
-                    (activity as CheckBuildStructureActivity).resetDamageInfo(null,damageType)
+                    (activity as CheckBuildStructureActivity).addPDFDamageMark = false
+                    (activity as CheckBuildStructureActivity).resetDamageInfo(null,damageType,false,false)
                 }
 
                 override fun onMarkClick(v: View?,damage: DamageV3Bean?,damageType:String?) {
-                    (activity as CheckBuildStructureActivity).resetDamageInfo(damage,damageType)
+                    (activity as CheckBuildStructureActivity).addPDFDamageMark = false
+                    (activity as CheckBuildStructureActivity).resetDamageInfo(damage,damageType,false,false)
                 }
 
                 override fun onMarkRemoveClick(v: View?, damage: DamageV3Bean?, damageType: String?) {

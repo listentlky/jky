@@ -49,6 +49,15 @@
             android:visibility="gone"
             />
 
+        <TextView
+            android:id="@+id/null_hint"
+            android:textSize="@dimen/_12sdp"
+            android:textColor="@color/gray_600"
+            android:text="无检测模块配置，请点击“+”号新增检测模块"
+            android:layout_centerInParent="true"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
     </RelativeLayout>
 

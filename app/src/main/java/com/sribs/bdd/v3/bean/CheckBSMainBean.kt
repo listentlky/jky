@@ -12,7 +12,7 @@ data class CheckBSMainBean (
     var projectId:Long?,
     var bldId:Long?,
     var moduleId:Long?,
-    var floorId:Long?,
+    var floorId:String?,
     var floorName:String?,
     var remoteId:String?=null,
     var inspectorName:String?="",

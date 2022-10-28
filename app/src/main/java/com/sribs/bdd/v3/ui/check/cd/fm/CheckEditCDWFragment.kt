@@ -299,7 +299,7 @@ class CheckEditCDWFragment : BaseFragment(R.layout.fragment_check_componentdetec
 
             var damage = DamageV3Bean(
                 -1,
-                (activity as CheckComponentDetectionActivity).mCurrentDrawing!!.drawingID,
+                (activity as CheckComponentDetectionActivity).mCurrentDrawing!!.drawingID!!,
                 "墙",
                 0,
                 mAddAnnotReF,

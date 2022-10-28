@@ -579,7 +579,7 @@ class BuildingStoreyFragment:BaseFragment(R.layout.fragment_project_storey), IBu
                 -1,
                 mBuildingId.toLong(),
                 mLocalProjectId.toLong(),
-                (i+1).toLong(),
+                "",
                 item.floorName,
                 0
             )

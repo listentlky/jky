@@ -54,17 +54,26 @@ class CheckBSFloorFragment : BaseFragment(R.layout.fragment_check_build_structur
         /**
          * 默认选中净高  装饰面板厚度不可输入
          */
+
+        mBinding.checkBsFloorSjbh.checkEdit.setText("")
+        mBinding.checkBsFloorSjbh.checkEdit.isEnabled = true
+
         mBinding.checkBsFloorMchd.checkEdit.setText("")
-        mBinding.checkBsFloorMchd.checkEdit.isEnabled = false
+        mBinding.checkBsFloorMchd.checkEdit.isEnabled = true
 
         mBinding.checkBsFloorSpinner.setSpinnerData(mJgZgList)
             .setSpinnerTextGravity(Gravity.CENTER_VERTICAL).setSpinnerCallback { position: Int ->
                 mSelectPosition = position
                 d("当前选择：$position")
-                if (position == 0) {
+                if (position == 1) {
+
+                    mBinding.checkBsFloorSjbh.checkEdit.setText("")
+                    mBinding.checkBsFloorSjbh.checkEdit.isEnabled = false
+
                     mBinding.checkBsFloorMchd.checkEdit.setText("")
                     mBinding.checkBsFloorMchd.checkEdit.isEnabled = false
                 } else {
+                    mBinding.checkBsFloorSjbh.checkEdit.isEnabled = true
                     mBinding.checkBsFloorMchd.checkEdit.isEnabled = true
                 }
             }.build()
@@ -96,7 +105,6 @@ class CheckBSFloorFragment : BaseFragment(R.layout.fragment_check_build_structur
 
         mBinding.checkBsFloorMchd.checkEditName.text = "装饰面层厚度(mm)"
         mBinding.checkBsFloorMchd.checkEdit.hint = "请输入装饰面层厚度"
-        mBinding.checkBsFloorMchd.checkEdit.isEnabled = false
 
         /**
          * menu关闭
@@ -135,19 +143,19 @@ class CheckBSFloorFragment : BaseFragment(R.layout.fragment_check_build_structur
                 }
                 mAxisNote = mBinding.checkBsFloorZxEdit.text.toString()
             }
-            if (mSelectPosition == -1) {
+          /*  if (mSelectPosition == -1) {
                 showToast("请选择净高/总高")
                 return@setOnClickListener
             }
             if (mBinding.checkBsFloorCgsj.checkEdit.text.isNullOrEmpty()) {
                 showToast("请输入层高设计值")
                 return@setOnClickListener
-            }
+            }*/
             if (mBinding.checkBsFloorCgsc.checkEdit.text.isNullOrEmpty()) {
                 showToast("请输入层高实测值")
                 return@setOnClickListener
             }
-            if (mBinding.checkBsFloorSjbh.checkEdit.text.isNullOrEmpty()) {
+           /* if (mBinding.checkBsFloorSjbh.checkEdit.text.isNullOrEmpty()) {
                 showToast("请输入设计板厚")
                 return@setOnClickListener
             }
@@ -158,7 +166,7 @@ class CheckBSFloorFragment : BaseFragment(R.layout.fragment_check_build_structur
             if (mBinding.checkBsFloorHintText.text.isNullOrEmpty()) {
                 showToast("请输入备注")
                 return@setOnClickListener
-            }
+            }*/
 
             mAddAnnotReF = (activity as CheckBuildStructureActivity).mCurrentAddAnnotReF
             mAddAnnotX =  (activity as CheckBuildStructureActivity).mCurrentAddAnnotX
@@ -166,7 +174,7 @@ class CheckBSFloorFragment : BaseFragment(R.layout.fragment_check_build_structur
 
             var damage = DamageV3Bean(
                 -1,
-                (activity as CheckBuildStructureActivity).mCurrentDrawing!!.drawingID,
+                (activity as CheckBuildStructureActivity).mCurrentDrawing!!.drawingID!!,
                 "层高",
                 0,
                 mAddAnnotReF,
@@ -213,7 +221,8 @@ class CheckBSFloorFragment : BaseFragment(R.layout.fragment_check_build_structur
             mBinding.checkBsFloorSjbh.checkEdit.setText("")
             mBinding.checkBsFloorMchd.checkEdit.setText("")
             mBinding.checkBsFloorHintText.setText("")
-            mBinding.checkBsFloorMchd.checkEdit.isEnabled = false
+            mBinding.checkBsFloorSjbh.checkEdit.isEnabled = true
+            mBinding.checkBsFloorMchd.checkEdit.isEnabled = true
             mDamageCreateTime = -1L
         } else {
             if (!damageV3Bean.axisNoteList.isNullOrEmpty() && damageV3Bean.axisNoteList!!.size > 0) {
@@ -245,21 +254,26 @@ class CheckBSFloorFragment : BaseFragment(R.layout.fragment_check_build_structur
                 mBinding.checkBsFloorZxEdit.setText(damageV3Bean.axisNote)
             }
             if (damageV3Bean.decorateDesign.isNullOrEmpty()) {
-                mBinding.checkBsFloorMchd.checkEdit.setText("")
+
                 mSelectPosition = 0
                 mBinding.checkBsFloorSpinner.setText(mJgZgList!!.get(mSelectPosition))
                 mBinding.checkBsFloorSpinner.setSelect(mSelectPosition)
-                mBinding.checkBsFloorMchd.checkEdit.isEnabled = false
-            } else {
                 mBinding.checkBsFloorMchd.checkEdit.setText(damageV3Bean.decorateDesign)
+                mBinding.checkBsFloorSjbh.checkEdit.setText(damageV3Bean.plateDesign)
+                mBinding.checkBsFloorMchd.checkEdit.isEnabled = true
+                mBinding.checkBsFloorSjbh.checkEdit.isEnabled = true
+            } else {
+
                 mSelectPosition = 1
                 mBinding.checkBsFloorSpinner.setText(mJgZgList!!.get(mSelectPosition))
                 mBinding.checkBsFloorSpinner.setSelect(mSelectPosition)
-                mBinding.checkBsFloorMchd.checkEdit.isEnabled = true
+                mBinding.checkBsFloorMchd.checkEdit.setText("")
+                mBinding.checkBsFloorSjbh.checkEdit.setText("")
+                mBinding.checkBsFloorMchd.checkEdit.isEnabled = false
+                mBinding.checkBsFloorSjbh.checkEdit.isEnabled = false
             }
             mBinding.checkBsFloorCgsj.checkEdit.setText(damageV3Bean.floorDesign)
             mBinding.checkBsFloorCgsc.checkEdit.setText(damageV3Bean.floorReal)
-            mBinding.checkBsFloorSjbh.checkEdit.setText(damageV3Bean.plateDesign)
             mBinding.checkBsFloorHintText.setText(damageV3Bean.note)
             mDamageCreateTime = damageV3Bean.createTime
         }

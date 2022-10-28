@@ -21,7 +21,9 @@ import com.sribs.bdd.module.project.IProjectContrast
 
 import com.sribs.bdd.v3.adapter.CreateModuleFloorAdapter
 import com.sribs.bdd.utils.ModuleHelper
+import com.sribs.bdd.utils.UUIDUtil
 import com.sribs.bdd.v3.util.LogUtils
+import com.sribs.common.bean.db.DamageV3Bean
 import com.sribs.common.bean.db.DrawingV3Bean
 import com.sribs.common.bean.v3.v3ModuleFloorDbBean
 import com.sribs.common.server.IDatabaseService
@@ -34,13 +36,11 @@ import java.io.File
 import java.util.*
 import kotlin.collections.ArrayList
 
-class ModuleCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCreateTypePresenter,
+class ModuleFloorConfigCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCreateTypePresenter,
     CreateModuleFloorAdapter.ICallback {
     private var mView: IProjectContrast.IModuleCreateTypeView? = null
 
     private var array: ArrayList<ModuleFloorBean>? = null
-
-    private var picList: ArrayList<ModuleFloorPictureBean>? = null
 
     private var above = ArrayList<ModuleFloorBean>()
     private var before = ArrayList<ModuleFloorBean>()
@@ -53,7 +53,6 @@ class ModuleCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCrea
 
     var beanList: ArrayList<ModuleFloorBean>? = ArrayList()
 
-    var beanFinalPicList: ArrayList<ModuleFloorPictureBean>? = null
 
     var isFirstCome :Boolean = true //首次进入设置楼层数量时 不该进行新建楼层操作
     var isFirstCome2 :Boolean = true //首次进入设置楼层数量时 不该进行新建楼层操作
@@ -87,7 +86,7 @@ class ModuleCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCrea
             if (mAboveOldIndex == 0 && above.size < 1) {
                 for (i in 0 until num) {
                     var name = NumberUtil.num2Chinese(i + 1)
-                    var buildingFloorBean = ModuleFloorBean(name + "层", arrayListOf(), "地上",1)
+                    var buildingFloorBean = ModuleFloorBean(UUIDUtil.getUUID(name + "层"),name + "层", arrayListOf(), "地上",1)
                     above.add(buildingFloorBean)
                 }
                 array?.addAll(above)
@@ -118,7 +117,7 @@ class ModuleCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCrea
             if (mAboveOldIndex > 0 && mAboveOldIndex < num) {
                 for (i in mAboveOldIndex until num) {
                     var name = NumberUtil.num2Chinese(1 + i)
-                    var buildingFloorBean = ModuleFloorBean(name + "层", arrayListOf(), "地上",1)
+                    var buildingFloorBean = ModuleFloorBean(UUIDUtil.getUUID(name + "层"),name + "层", arrayListOf(), "地上",1)
                     above.add(buildingFloorBean)
                 }
                 array?.addAll(above)
@@ -152,7 +151,7 @@ class ModuleCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCrea
             if (mBeforeOldIndex == 0 && before.size < 1) {
                 for (i in 0 until num) {
                     var name = NumberUtil.num2Chinese(i + 1)
-                    var buildingFloorBean = ModuleFloorBean("负"+name + "层", arrayListOf(), "地下",0)
+                    var buildingFloorBean = ModuleFloorBean(UUIDUtil.getUUID("负"+name + "层"),"负"+name + "层", arrayListOf(), "地下",0)
                     before.add(buildingFloorBean)
                 }
                 array?.addAll(before)
@@ -186,7 +185,7 @@ class ModuleCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCrea
             if (mBeforeOldIndex > 0 && mBeforeOldIndex < num) {
                 for (i in mBeforeOldIndex until num) {
                     var name = NumberUtil.num2Chinese(1 + i)
-                    var buildingFloorBean = ModuleFloorBean("负"+name + "层", arrayListOf(), "地下",0)
+                    var buildingFloorBean = ModuleFloorBean(UUIDUtil.getUUID("负"+name + "层"),"负"+name + "层", arrayListOf(), "地下",0)
                     before.add(buildingFloorBean)
                 }
                 array?.addAll(before)
@@ -221,6 +220,7 @@ class ModuleCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCrea
             it.drawingsList?.forEach { b ->
                 beanPicList!!.add(
                     ModuleFloorPictureBean(
+                        drawingId = b.drawingID,
                         name = b.fileName!!,
                         uri = "",
                         url = b.localAbsPath,
@@ -229,6 +229,7 @@ class ModuleCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCrea
             }
             beanList!!.add(
                 ModuleFloorBean(
+                    floorId = it.floorId!!,
                     name = it.floorName!!,
                     pictureList = beanPicList,
                     floor = "",
@@ -295,103 +296,76 @@ class ModuleCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCrea
         //赋值模块名作为图纸上级目录
         mCurDrawingsDir = "/" + ModuleHelper.DRAWING_CACHE_FOLDER + "/" + mProName + "/" + moduleName + "/"
 
-
-      /*  var bean = v3BuildingModuleDbBean(
-            id = mModuleId,
-            buildingId = mBuildingId,
-            projectId = mLocalProjectId.toLong(),
-            moduleName = moduleName,
-            updateTime = TimeUtil.YMD_HMS.format(Date()),
-            drawings = ArrayList(),
-            aboveGroundNumber = above.size,
-            underGroundNumber = after.size,
-            )*/
-
-
-        addDisposable(mDb.deletev3ModuleFloor(mLocalProjectId.toLong(), mBuildingId, mModuleId)
+        addDisposable(mDb.getModuleFloorByModule(mModuleId)
             .subscribeOn(Schedulers.computation())
             .observeOn(Schedulers.computation())
-       /*     .flatMap {
-
-                mDb.updatev3BuildingModule(bean)
-            }
-            .observeOn(AndroidSchedulers.mainThread())*/
-            .subscribe({
-                LogUtils.d("llf createLocalModule new building id=${mModuleId}")
-                createLocalFloorsInTheModule(
+            .subscribe({ moduleFloorList->
+                dispose()
+                getFloorList(
                     activity,
                     mLocalProjectId,
                     mBuildingId,
                     mModuleId,
                     above.size,
-                    before.size
+                    before.size,
+                    moduleFloorList
                 )
-            }, {
-                mView?.onMsg("gg")
-                it.printStackTrace()
+                mDb.deletev3ModuleFloor(mLocalProjectId.toLong(), mBuildingId, mModuleId)
+                    .subscribeOn(Schedulers.computation())
+                    .observeOn(Schedulers.computation())
+                    .subscribe({
+                        dispose()
+                        LogUtils.d("createLocalModule new building id=${mModuleId}")
+                        createLocalFloorsInTheModule(
+                            mBuildingId,
+                            mModuleId,
+                        )
+                    },{
+
+                    })
+            },{
+
             })
         )
     }
 
     private fun createLocalFloorsInTheModule(
-        activity: Activity,
-        mLocalProjectId: Int,
         mBuildingId: Long,
         moduleId: Long,
-        aboveGroundNumber: Int,
-        underGroundNumber: Int
     ) {
-        println("leon createLocalFloorsInTheBuilding mBldId=${mBuildingId}")
-        getFloorList(
-            activity,
-            mLocalProjectId,
-            mBuildingId,
-            moduleId,
-            aboveGroundNumber,
-            underGroundNumber
-        )
-        var curTime: Long = System.currentTimeMillis()
-        if (floorList != null) {
-            var floorId: Long = -1
-            var floorName: String? = null
-            addDisposable(Observable.fromIterable(floorList)
+        println("createLocalFloorsInTheBuilding mBldId=${mBuildingId}")
+
+        var index = 0
+        floorList.forEach {
+            var bean = v3ModuleFloorDbBean(
+                projectId = it.projectId,
+                bldId = it.bldId,
+                moduleId = it.moduleId,
+                floorId = it.floorId,
+                floorName = it.floorName,
+                floorType = it.floorType,
+                drawingsList = it.floorList,
+                deleteTime = "",
+                aboveNumber = it.aboveNumber,
+                afterNumber = it.afterNumber,
+                createTime = TimeUtil.YMD_HMS.format(Date()),
+                updateTime = TimeUtil.YMD_HMS.format(Date()),
+                status = 0,
+            )
+            mDb.updatev3ModuleFloor(bean)
                 .subscribeOn(Schedulers.computation())
                 .observeOn(Schedulers.computation())
-                .flatMap {
-
-                    floorId = it.floorId?.toLong() ?: 0
-                    floorName = it.floorName
-                    println("leon 00 floorid=${floorId}, floorName=${floorName}")
-
-
-                    var bean = v3ModuleFloorDbBean(
-
-                        projectId = it.projectId,
-                        bldId = it.bldId,
-                        moduleId = it.moduleId,
-                        floorId = it.floorId,
-                        floorName = it.floorName,
-                        floorType = it.floorType,
-                        drawingsList = it.floorList,
-                        deleteTime = "",
-                        aboveNumber = it.aboveNumber,
-                        afterNumber = it.afterNumber,
-                        createTime = TimeUtil.YMD_HMS.format(Date()),
-                        updateTime = TimeUtil.YMD_HMS.format(Date()),
-                        status = 0,
-                    )
-                    mDb.updatev3ModuleFloor(bean)
-                }
-                .observeOn(Schedulers.computation())
                 .subscribe({
-                    mDb.updateBuildingModule(moduleId,1)
-                    dispose()
-                    mView?.createModuleConfigSuccess()
-                }, {
-                    mView?.onMsg("保存到本地楼层表失败")
+                    LogUtils.d("配置模块层成功: ${it}")
+                    index++
+                    if(index == floorList.size){
+                        mDb.updateBuildingModule(moduleId,1)
+                        mView?.createModuleConfigSuccess()
+                    }
+                },{
+                    mView?.onMsg("保存到本地楼层表失败: "+it)
                     it.printStackTrace()
                 })
-            )
         }
     }
 
@@ -403,26 +377,31 @@ class ModuleCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCrea
         mBuildingId: Long,
         moduleId: Long,
         aboveGroundNumber: Int,
-        underGroundNumber: Int
+        underGroundNumber: Int,
+        v3ModuleFloorDbBean:List<v3ModuleFloorDbBean>
     ) {
+
+        LogUtils.d("获取当前模块下所有层数据: "+v3ModuleFloorDbBean)
+
+        LogUtils.d("当前配置层信息: "+array)
+
         if (array != null && array!!.size > 0) {
             for (i in array!!.indices) {
                 var item = array!![i]
-
 
                 var moduleFloor = ModuleFloor(
                     id = -1,
                     projectId = mLocalProjectId.toLong(),
                     bldId = mBuildingId,
                     moduleId = moduleId,
-                    floorId = (i + 1).toLong(),
+                    floorId = item.floorId,
                     floorName = item.name,
                     floorType = item.floorType,
                     aboveNumber = aboveGroundNumber,
                     afterNumber = underGroundNumber,
                 )
 
-                moduleFloor.floorList = getDrawingList(activity, item, mLocalProjectId, mBuildingId)
+                moduleFloor.floorList = getDrawingList(activity, item,v3ModuleFloorDbBean)
                 floorList.add(moduleFloor)
             }
         }
@@ -431,8 +410,7 @@ class ModuleCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCrea
     fun getDrawingList(
         activity: Activity,
         floorBean: ModuleFloorBean,
-        mLocalProjectId: Int,
-        mBuildingId: Long,
+        v3ModuleFloorDbBean:List<v3ModuleFloorDbBean>
     ): ArrayList<DrawingV3Bean>? {
         if (floorBean.pictureList != null && floorBean.pictureList!!.size > 0) {
             var cachePath: String
@@ -445,7 +423,6 @@ class ModuleCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCrea
             copyDrawingsToLocalCache(activity, originList!!,floorBean.name, cacheRootDir)
 
             originList.forEachIndexed { index, item ->
-
                 var name =""
                 if(!item.name.endsWith("pdf")){
                     name = item.name.replace(".","")+".pdf"
@@ -456,21 +433,38 @@ class ModuleCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCrea
                 var cacheFilePath = File(cacheRootDir + mCurDrawingsDir+floorBean.name+"/"+index,name)
                 LogUtils.d("楼层图纸缓存目录：" + cacheFilePath)
 
+                var damageList = ArrayList<DamageV3Bean>()
+
+                LogUtils.d("当前层xinxi : "+item)
+
+                v3ModuleFloorDbBean.forEach { moduleFloor->
+                    if(floorBean.floorId == moduleFloor.floorId){
+                        LogUtils.d("存在同一层: "+floorBean.floorId)
+                        moduleFloor.drawingsList?.forEach { drawing->
+                            if(item.drawingId == drawing.drawingID){
+                                LogUtils.d("存在同一张图纸: "+item.drawingId)
+                                damageList = drawing.damage?:ArrayList()
+                                LogUtils.d("损伤为: "+damageList)
+                            }
+                        }
+                    }
+                }
+
                 drawingItem = DrawingV3Bean(
-                    -1,
+                    item.drawingId!!,
                     name,
                     FileUtil.getFileExtension(name),
                     "floor",
                     cacheFilePath.absolutePath,
                     "",
-                    ArrayList()
+                    damageList
                 )
                 floorDrawingsList.add(drawingItem)
             }
             return floorDrawingsList
         }
 
-        return null
+        return ArrayList()
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -486,75 +480,54 @@ class ModuleCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCrea
         }
         LogUtils.d("过滤uri不等于null后: " + filters)*/
 
-        var index = -1
         var name= ""
         var needToPDF = false
         var cacheFileParent =File("")
         var cacheFile = File("")
 
-        addDisposable(Observable.fromIterable(pictureBean)
-            .subscribeOn(Schedulers.io())
-            .observeOn(Schedulers.io())
-            .flatMap {
-                ++index
-                var cacheFileParent = File(cacheRootDir + mCurDrawingsDir)
-                if(!floorName.isNullOrEmpty()) { // 为空认为是楼图纸   不为空认为是楼层图纸
-                    cacheFileParent = File(cacheRootDir + mCurDrawingsDir + floorName+"/"+index)
-                }
-                cacheFileParent.mkdirs()
-                /*var cacheFile = File(cacheFileParent,it.name)
-                LogUtils.d("图纸缓存目录： "+cacheFile.toString())
-                if (cacheFile != null) {
+        pictureBean.forEachIndexed { index, it ->
+
+            var cacheFileParent = File(cacheRootDir + mCurDrawingsDir)
+            if(!floorName.isNullOrEmpty()) { // 为空认为是楼图纸   不为空认为是楼层图纸
+                cacheFileParent = File(cacheRootDir + mCurDrawingsDir + floorName+"/"+index)
+            }
+            cacheFileParent.mkdirs()
+
+            if(!it.name.endsWith("pdf")){
+                name = it.name.replace(".","")+".pdf"
+                needToPDF =true
+
+            }else{
+                name = it.name
+                needToPDF =false
+            }
+            cacheFile = File(cacheFileParent,name)
+            if (cacheFile != null) {
+                if (needToPDF){
+                    if (it.uri==null){
+                        //  FileUtil.copyTo(File(it.url),File(cacheFileParent,it.name))
+                        CommonUtil.imageToPDF(it.url,cacheFile.absolutePath)
+
+                        LogUtils.d("url: "+cacheFile.absolutePath)
+                    }else{
+                        //   CommonUtil.imageToPDF(,cacheFile.absolutePath)
+                        FileUtil.copyFileTo(activity, Uri.parse(it.uri),File(cacheFileParent,it.name).absolutePath)
+                        CommonUtil.imageToPDF(File(cacheFileParent,it.name).absolutePath,cacheFile.absolutePath)
+                    }
+                    //       CommonUtil.imageToPDF(File(defaultName).absolutePath,cacheFile.absolutePath)
+
+                }else{
                     if(!it.uri.isNullOrEmpty()) {
                         FileUtil.copyFileTo(activity, Uri.parse(it.uri), cacheFile.absolutePath)
                     }else{
                         FileUtil.copyTo(File(it.url),cacheFile)
                     }
-                }*/
-
-                if(!it.name.endsWith("pdf")){
-                    name = it.name.replace(".","")+".pdf"
-                    needToPDF =true
-
-                }else{
-                    name = it.name
-                    needToPDF =false
-                }
-                cacheFile = File(cacheFileParent,name)
-                if (cacheFile != null) {
-                    if (needToPDF){
-                        if (it.uri==null){
-                            //  FileUtil.copyTo(File(it.url),File(cacheFileParent,it.name))
-                            CommonUtil.imageToPDF(it.url,cacheFile.absolutePath)
-
-                            LogUtils.d("url: "+cacheFile.absolutePath)
-                        }else{
-                            //   CommonUtil.imageToPDF(,cacheFile.absolutePath)
-                            FileUtil.copyFileTo(activity, Uri.parse(it.uri),File(cacheFileParent,it.name).absolutePath)
-                            CommonUtil.imageToPDF(File(cacheFileParent,it.name).absolutePath,cacheFile.absolutePath)
-                        }
-                        //       CommonUtil.imageToPDF(File(defaultName).absolutePath,cacheFile.absolutePath)
-
-                    }else{
-                        if(!it.uri.isNullOrEmpty()) {
-                            FileUtil.copyFileTo(activity, Uri.parse(it.uri), cacheFile.absolutePath)
-                        }else{
-                            FileUtil.copyTo(File(it.url),cacheFile)
-                        }
-                    }
-
                 }
 
-                Observable.just("Done")
             }
-            .subscribeOn(Schedulers.io())
-            .observeOn(Schedulers.io())
-            .subscribe({
-                LogUtils.d("复制图纸到缓存目录: ${it}")
-            }, {
-                it.printStackTrace()
-            })
-        )
+            LogUtils.d("复制图纸到缓存目录: ${cacheFile}")
+        }
+
     }
 
   /*  private fun getPicList(activity: Activity, mLocalProjectId: Int, mBuildingId: Long) {

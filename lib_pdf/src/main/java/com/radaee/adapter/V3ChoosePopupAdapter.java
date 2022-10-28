@@ -58,7 +58,7 @@ public class V3ChoosePopupAdapter  extends RecyclerView.Adapter<V3ChoosePopupAda
             holder.text.setText(s);
             if (select != -1 && select == position) {
                 holder.text.setSelected(true);
-                switch (s){
+               /* switch (s){
                     case "层高":
                         holder.choose.setBackgroundResource(R.drawable.circle_green);
                         break;
@@ -80,12 +80,13 @@ public class V3ChoosePopupAdapter  extends RecyclerView.Adapter<V3ChoosePopupAda
                     case "板":
                         holder.choose.setBackgroundResource(R.drawable.circle_indigo);
                         break;
-                }
+                }*/
+                holder.choose.setBackgroundResource(R.drawable.circle_blue800);
             } else {
                 holder.choose.setBackgroundResource(R.drawable.circle_gray);
                 holder.text.setSelected(false);
             }
-            switch (s){
+            /*switch (s){
                 case "层高":
                     color = 65408;
                     break;
@@ -107,7 +108,7 @@ public class V3ChoosePopupAdapter  extends RecyclerView.Adapter<V3ChoosePopupAda
                 case "板":
                     color = 16751359;
                     break;
-            }
+            }*/
             if (mItemClickCallback != null) {
                 int finalColor = color;
                 holder.layout.setOnClickListener(new View.OnClickListener() {

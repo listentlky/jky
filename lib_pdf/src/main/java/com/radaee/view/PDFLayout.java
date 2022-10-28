@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.util.Log;
 import android.widget.Scroller;
 
 import com.radaee.pdf.BMP;
@@ -295,6 +296,7 @@ abstract public class PDFLayout {
      * @param zooming zooming status.
      */
     public void vDraw(Canvas canvas, boolean zooming) {
+        Log.d("bruce","zooming: "+zooming);
         if(m_doc == null) return;
         vFlushRange();
         int pageno0 = m_disp_page1;
@@ -305,6 +307,7 @@ abstract public class PDFLayout {
 
         if (zooming) vDrawZoom(canvas, x, y);
         else vDrawNormal(canvas, x, y);
+
         pageno0 = m_finder.find_get_page();
         if (pageno0 >= m_disp_page1 && pageno0 < m_disp_page2)
             m_finder.find_draw(canvas, m_pages[pageno0], x, y);

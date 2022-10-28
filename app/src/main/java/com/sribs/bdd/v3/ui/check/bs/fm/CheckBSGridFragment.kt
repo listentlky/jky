@@ -103,18 +103,18 @@ class CheckBSGridFragment : BaseFragment(R.layout.fragment_check_build_structure
                 mAxisNote = mBinding.checkBsFloorZxEdit.text.toString()
             }
 
-            if (mBinding.checkBsFloorZwsjz.checkEdit.text.isNullOrEmpty()) {
+           /* if (mBinding.checkBsFloorZwsjz.checkEdit.text.isNullOrEmpty()) {
                 showToast("请输入轴网设计值")
                 return@setOnClickListener
-            }
+            }*/
             if (mBinding.checkBsFloorZwscz.checkEdit.text.isNullOrEmpty()) {
                 showToast("请输入轴网实测值")
                 return@setOnClickListener
             }
-            if (mBinding.checkBsFloorHintText.text.isNullOrEmpty()) {
+           /* if (mBinding.checkBsFloorHintText.text.isNullOrEmpty()) {
                 showToast("请输入备注")
                 return@setOnClickListener
-            }
+            }*/
 
             mAddAnnotReF =  (activity as CheckBuildStructureActivity).mCurrentAddAnnotReF
             mAddAnnotX =  (activity as CheckBuildStructureActivity).mCurrentAddAnnotX
@@ -122,7 +122,7 @@ class CheckBSGridFragment : BaseFragment(R.layout.fragment_check_build_structure
 
             var damage = DamageV3Bean(
                 -1,
-                (activity as CheckBuildStructureActivity).mCurrentDrawing!!.drawingID,
+                (activity as CheckBuildStructureActivity).mCurrentDrawing!!.drawingID!!,
                 "轴网",
                 0,
                 mAddAnnotReF,

@@ -330,6 +330,87 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
 
                     LogUtils.d("获取项目下需要上传的图纸: " + drawingList)
 
+                    if (bean.moduleName.equals("构件检测")) {
+                        buildingModuleFloorList?.forEach { buildingModuleFloor ->
+                            if (buildingModuleFloor.moduleId!!.equals(bean.moduleid)) {
+                                buildingModuleFloor.drawingsList?.forEach { drawing ->
+                                    drawing?.damage?.forEach { damage ->
+                                        when (damage.type) {
+                                            "梁" -> {
+                                                if (damage.beamLeftRealPicList?.size!! > 0) {
+                                                    drawingList.add(
+                                                        damage.beamLeftRealPicList!!.get(
+                                                            1
+                                                        )
+                                                    )
+                                                }
+                                                if (damage.beamLeftDesignPicList?.size!! > 0) {
+                                                    drawingList.add(
+                                                        damage.beamLeftDesignPicList!!.get(
+                                                            1
+                                                        )
+                                                    )
+                                                }
+                                                if (damage.beamRightRealPic?.size!! > 0) {
+                                                    drawingList.add(
+                                                        damage.beamRightRealPic!!.get(
+                                                            1
+                                                        )
+                                                    )
+                                                }
+                                                if (damage.beamRightDesignPic?.size!! > 0) {
+                                                    drawingList.add(
+                                                        damage.beamRightDesignPic!!.get(
+                                                            1
+                                                        )
+                                                    )
+                                                }
+                                            }
+                                            "柱" -> {
+                                                if (damage.columnLeftRealPicList?.size!! > 0) {
+                                                    drawingList.add(
+                                                        damage.columnLeftRealPicList!!.get(
+                                                            1
+                                                        )
+                                                    )
+                                                }
+                                                if (damage.columnLeftDesignPicList?.size!! > 0) {
+                                                    drawingList.add(
+                                                        damage.columnLeftDesignPicList!!.get(
+                                                            1
+                                                        )
+                                                    )
+                                                }
+                                                if (damage.columnRightRealPic?.size!! > 0) {
+                                                    drawingList.add(
+                                                        damage.columnRightRealPic!!.get(
+                                                            1
+                                                        )
+                                                    )
+                                                }
+                                                if (damage.columnRightDesignPic?.size!! > 0) {
+                                                    drawingList.add(
+                                                        damage.columnRightDesignPic!!.get(
+                                                            1
+                                                        )
+                                                    )
+                                                }
+                                            }
+                                            "墙", "板" -> {
+                                                if (damage.realPicture?.size!! > 0) {
+                                                    drawingList.add(damage.realPicture!!.get(1))
+                                                }
+                                                if (damage.designPicture?.size!! > 0) {
+                                                    drawingList.add(damage.designPicture!!.get(1))
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
                     var parts = ArrayList<MultipartBody.Part>()
 
                     drawingList.forEach { path ->
@@ -395,7 +476,7 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
                             d.type ?: "",
                             Gson().toJson(d),
                             resId?.get(0)?.resId ?: "",
-                            "drawing:" + resId?.get(0)?.resId,
+                            b.drawingID!!,
                             b.fileName ?: "",
                             b.floorName ?: "",
                             inspectorList,
@@ -409,9 +490,10 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
                 V3UploadDrawingReq.add(
                     V3UploadDrawingReq(
                         if (bean.buildingRemoteId.isNullOrEmpty()) bean.buildingUUID!! else bean.buildingRemoteId!!,
-                        "drawing:" + resId?.get(0)?.resId,
+                        b.drawingID!!,
                         b.fileName!!,
                         b.fileType!!,
+                        "",
                         "",
                         1,
                         index,
@@ -539,7 +621,7 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
                                 ddd.type ?: "",
                                 Gson().toJson(ddd),
                                 resId?.get(0)?.resId ?: "",
-                                "drawing:" + resId?.get(0)?.resId,
+                                bbb.drawingID!!,
                                 bbb.fileName ?: "",
                                 bbb.floorName ?: "",
                                 inspectorList,
@@ -553,9 +635,10 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
                     V3UploadDrawingReq.add(
                         V3UploadDrawingReq(
                             if (bean.buildingRemoteId.isNullOrEmpty()) bean.buildingUUID!! else bean.buildingRemoteId!!,
-                            "drawing:" + resId?.get(0)?.resId,
+                            bbb.drawingID!!,
                             bbb.fileName!!,
                             bbb.fileType!!,
+                            cc.floorId!!,
                             cc.floorName ?: "",
                             cc.floorType,
                             index,
@@ -710,7 +793,7 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
                             )
                         )
 
-                        if (a?.moduleName.equals("构建检测")) {
+                        if (a?.moduleName.equals("构件检测")) {
                             dd.damageMixes.forEach { damage ->
                                 var damageV3Bean =
                                     Gson().fromJson(damage.desc, DamageV3Bean::class.java)
@@ -962,7 +1045,7 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
                     dd.damageMixes?.forEach {damage->
                         var damageV3Bean =
                             Gson().fromJson(damage.desc, DamageV3Bean::class.java)
-                        if(a?.moduleName == "构建检测"){
+                        if(a?.moduleName == "构件检测"){
                             when(damageV3Bean.type){
                                 "梁"->{
                                     if (damageV3Bean?.beamLeftRealPicList?.size!! > 1) {
@@ -1046,7 +1129,7 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
                     }
 
                     var DrawingV3Bean = DrawingV3Bean(
-                        -1,
+                        dd.drawingId,
                         dd.drawingName,
                         dd.fileType,
                         "overall",
@@ -1061,6 +1144,7 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
                     } else {
                         moduleFloorSortBean.add(
                             FloorSortBean(
+                                dd.floorId,
                                 dd.floorNo,
                                 dd.direction,
                                 DrawingV3Bean.sort!!
@@ -1129,7 +1213,7 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
                                     projectId = beanMain.projectId,
                                     bldId = beanMain.buildingId,
                                     moduleId = MODULEID,
-                                    floorId = -1,
+                                    floorId = ff.floorId,
                                     floorName = ff.floorNo,
                                     floorType = ff.direction,
                                     drawingsList = drawingV3Bean,
@@ -1248,7 +1332,7 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
             .subscribeOn(Schedulers.computation())
             .observeOn(Schedulers.computation())
             .subscribe({
-                LogUtils.d("本地楼层model创建成功 " + it)
+                LogUtils.d("本地model创建成功 " + it)
                 if (isCopyFloorDrawing(moduleName)) {
                     createModuleFloor(
                         it,
@@ -1272,7 +1356,7 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
 
     fun isCopyFloorDrawing(moduleName: String?): Boolean {
         if (moduleName == "建筑结构复核" ||
-            moduleName == "构建检测"
+            moduleName == "构件检测"
         ) {
             return true
         }
@@ -1299,7 +1383,8 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
             .subscribeOn(Schedulers.computation())
             .observeOn(Schedulers.computation())
             .subscribe({
-                var floorList = ArrayList(it.map { b ->
+                var arrayListFloorBeanList = ArrayList(it.sortedBy { b-> b.id})
+                var floorList = ArrayList(arrayListFloorBeanList.map { b ->
                     b.drawing?.forEachIndexed { index, item ->
                         var cacheFileParent =
                             File(cacheRootDir + mCurDrawingsDir + b.floorName + "/" + index)

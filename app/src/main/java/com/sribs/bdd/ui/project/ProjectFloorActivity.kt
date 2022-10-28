@@ -323,6 +323,7 @@ class ProjectFloorActivity : BaseActivity(), IBuildingContrast.IBuildingListView
         dataList.addAll(remoteDateList)
         LogUtils.d("楼栋数据为: " + dataList.toString())
         buildingAdapter?.setData(ArrayList(dataList.sortedByDescending { b -> b.createTime }))
+        setNullHint()
      //   mBinding.baseListSrl.isRefreshing = false
     }
 
@@ -332,6 +333,15 @@ class ProjectFloorActivity : BaseActivity(), IBuildingContrast.IBuildingListView
         remoteDateList.addAll(l)
         dataList.addAll(remoteDateList)
         buildingAdapter?.setData(ArrayList(dataList.sortedByDescending { b -> b.createTime }))
+        setNullHint()
+    }
+
+    fun setNullHint(){
+        if(dataList.size<=0){
+            mBinding.nullHint.visibility = View.VISIBLE
+        }else{
+            mBinding.nullHint.visibility = View.GONE
+        }
     }
 
     override fun getContext(): Context = this

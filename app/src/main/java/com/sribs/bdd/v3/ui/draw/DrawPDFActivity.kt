@@ -157,6 +157,8 @@ class DrawPDFActivity : BaseActivity() {
         openPdf(mLocalPDF)
     }
 
+
+
     private fun browseDocuments(requestCode:Int) {
         val supportedMimeTypes = arrayOf("application/pdf", "image/*")
         var intent:Intent = Intent()

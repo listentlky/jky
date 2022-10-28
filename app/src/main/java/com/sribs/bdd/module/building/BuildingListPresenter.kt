@@ -301,6 +301,7 @@ class BuildingListPresenter : BasePresenter(), IBuildingContrast.IBuildingListPr
             .subscribeOn(Schedulers.computation())
             .observeOn(Schedulers.computation())
             .subscribe({
+                LogUtils.d("查询楼下模块数据: "+it)
                 it.forEach {
                     it.drawingsList?.forEach {
                         drawingList.add(it.localAbsPath!!)
@@ -333,22 +334,13 @@ class BuildingListPresenter : BasePresenter(), IBuildingContrast.IBuildingListPr
 
                 LogUtils.d("获取项目下所有模块: " + buildingModuleList)
 
-                LogUtils.d("获取项目下所有模块层: " + buildingModuleFloorList)
+                LogUtils.d("获取项目下所有模块层: " + Gson().toJson(buildingModuleFloorList))
 
-                LogUtils.d("获取项目下需要上传的图纸: " + drawingList)
-
-
-                var parts = ArrayList<MultipartBody.Part>()
-
-                drawingList.forEach { path ->
-                    var fileBody = RequestBody.create(MediaType.parse("image/*"), File(path))
-                    var filePart = MultipartBody.Part.createFormData("files", path, fileBody)
-                    parts.add(filePart)
-                }
+                LogUtils.d("获取项目下需要上传的图纸: " + Gson().toJson(drawingList))
 
                 buildingModuleList?.forEach { buildingModule ->
 
-                    if (buildingModule.moduleName.equals("构建检测")) {
+                    if (buildingModule.moduleName.equals("构件检测")) {
                         buildingModuleFloorList?.forEach { buildingModuleFloor ->
                             if (buildingModuleFloor.moduleId!!.equals(buildingModule.moduleid)) {
                                 buildingModuleFloor.drawingsList?.forEach { drawing ->
@@ -430,6 +422,16 @@ class BuildingListPresenter : BasePresenter(), IBuildingContrast.IBuildingListPr
                     }
                 }
 
+                var parts = ArrayList<MultipartBody.Part>()
+
+                LogUtils.d("添加模块下图纸后: "+drawingList.size+" ; "+drawingList)
+
+                drawingList.forEach { path ->
+                    var fileBody = RequestBody.create(MediaType.parse("image/*"), File(path))
+                    var filePart = MultipartBody.Part.createFormData("files", path, fileBody)
+                    parts.add(filePart)
+                }
+
                 if (parts.size > 0) {
                     HttpManager.instance.getHttpService<HttpApi>()
                         .uploadFile(parts)
@@ -500,7 +502,7 @@ class BuildingListPresenter : BasePresenter(), IBuildingContrast.IBuildingListPr
                                 d.type ?: "",
                                 Gson().toJson(d),
                                 resId?.get(0)?.resId ?: "",
-                                "drawing:" + resId?.get(0)?.resId,
+                                b.drawingID!!,
                                 b.fileName ?: "",
                                 b.floorName ?: "",
                                 inspectorList,
@@ -514,9 +516,10 @@ class BuildingListPresenter : BasePresenter(), IBuildingContrast.IBuildingListPr
                     V3UploadDrawingReq.add(
                         V3UploadDrawingReq(
                             if (it.buildingRemoteId.isNullOrEmpty()) it.buildingUUID!! else it.buildingRemoteId!!,
-                            "drawing:" + resId?.get(0)?.resId,
+                            b.drawingID!!,
                             b.fileName!!,
                             b.fileType!!,
+                            "",
                             "",
                             1,
                             index,
@@ -644,7 +647,7 @@ class BuildingListPresenter : BasePresenter(), IBuildingContrast.IBuildingListPr
                                     ddd.type ?: "",
                                     Gson().toJson(ddd),
                                     resId?.get(0)?.resId ?: "",
-                                    "drawing:" + resId?.get(0)?.resId,
+                                    bbb.drawingID!!,
                                     bbb.fileName ?: "",
                                     bbb.floorName ?: "",
                                     inspectorList,
@@ -658,9 +661,10 @@ class BuildingListPresenter : BasePresenter(), IBuildingContrast.IBuildingListPr
                         V3UploadDrawingReq.add(
                             V3UploadDrawingReq(
                                 if (it.buildingRemoteId.isNullOrEmpty()) it.buildingUUID!! else it.buildingRemoteId!!,
-                                "drawing:" + resId?.get(0)?.resId,
+                                bbb.drawingID!!,
                                 bbb.fileName!!,
                                 bbb.fileType!!,
+                                cc.floorId!!,
                                 cc.floorName ?: "",
                                 cc.floorType,
                                 index,
@@ -706,9 +710,10 @@ class BuildingListPresenter : BasePresenter(), IBuildingContrast.IBuildingListPr
             V3UploadDrawingReq.add(
                 V3UploadDrawingReq(
                     if (bean.remoteId.isNullOrEmpty()) bean.bldUUID!! else bean.remoteId!!,
-                    "drawing:" + resId?.get(0)?.resId,
+                    drawingV3Bean.drawingID!!,
                     drawingV3Bean.fileName!!,
                     drawingV3Bean.fileType!!,
+                    "",
                     "",
                     1,
                     index,
@@ -735,9 +740,10 @@ class BuildingListPresenter : BasePresenter(), IBuildingContrast.IBuildingListPr
                 V3UploadDrawingReq.add(
                     V3UploadDrawingReq(
                         if (bean.remoteId.isNullOrEmpty()) bean.bldUUID!! else bean.remoteId!!,
-                        "drawing:" + resId?.get(0)?.resId,
+                        dd.drawingID!!,
                         dd.fileName!!,
                         dd.fileType!!,
+                        floorBean.floorId!!,
                         floorBean.floorName ?: "",
                         floorBean.floorType ?: 0,
                         index,
@@ -827,7 +833,7 @@ class BuildingListPresenter : BasePresenter(), IBuildingContrast.IBuildingListPr
 
     fun isCopyFloorDrawing(moduleName: String?): Boolean {
         if (moduleName == "建筑结构复核" ||
-            moduleName == "构建检测"
+            moduleName == "构件检测"
         ) {
             return true
         }
@@ -980,7 +986,7 @@ class BuildingListPresenter : BasePresenter(), IBuildingContrast.IBuildingListPr
                                 )
                             )
 
-                            if (mm.moduleName.equals("构建检测")) {
+                            if (mm.moduleName.equals("构件检测")) {
                                 dd.damageMixes.forEach { damage ->
                                     var damageV3Bean =
                                         Gson().fromJson(damage.desc, DamageV3Bean::class.java)
@@ -1243,7 +1249,7 @@ class BuildingListPresenter : BasePresenter(), IBuildingContrast.IBuildingListPr
                         ).absolutePath
                     }
                     var DrawingV3Bean = DrawingV3Bean(
-                        -1,
+                        dd.drawingId,
                         dd.drawingName,
                         dd.fileType,
                         "overall",
@@ -1258,6 +1264,7 @@ class BuildingListPresenter : BasePresenter(), IBuildingContrast.IBuildingListPr
                     } else {
                         floorSortBean.add(
                             FloorSortBean(
+                                dd.floorId,
                                 dd.floorNo,
                                 dd.direction,
                                 DrawingV3Bean.sort!!
@@ -1322,7 +1329,7 @@ class BuildingListPresenter : BasePresenter(), IBuildingContrast.IBuildingListPr
                                 beanMain.projectId,
                                 BUIDINGID,
                                 -1,
-                                -1,
+                                ff.floorId,
                                 ff.floorNo,
                                 ff.direction,
                                 TimeUtil.stampToDate("" + System.currentTimeMillis()),
@@ -1387,7 +1394,7 @@ class BuildingListPresenter : BasePresenter(), IBuildingContrast.IBuildingListPr
                                 dd.damageMixes?.forEach { damage ->
                                     var damageV3Bean =
                                         Gson().fromJson(damage.desc, DamageV3Bean::class.java)
-                                    if (mm.moduleName == "构建检测") {
+                                    if (mm.moduleName == "构件检测") {
                                         when (damageV3Bean.type) {
                                             "梁" -> {
                                                 if (damageV3Bean?.beamLeftRealPicList?.size!! > 1) {
@@ -1499,7 +1506,7 @@ class BuildingListPresenter : BasePresenter(), IBuildingContrast.IBuildingListPr
                                 }
 
                                 var DrawingV3Bean = DrawingV3Bean(
-                                    -1,
+                                    dd.drawingId,
                                     dd.drawingName,
                                     dd.fileType,
                                     "overall",
@@ -1514,6 +1521,7 @@ class BuildingListPresenter : BasePresenter(), IBuildingContrast.IBuildingListPr
                                 } else {
                                     moduleFloorSortBean.add(
                                         FloorSortBean(
+                                            dd.floorId,
                                             dd.floorNo,
                                             dd.direction,
                                             DrawingV3Bean.sort!!
@@ -1582,7 +1590,7 @@ class BuildingListPresenter : BasePresenter(), IBuildingContrast.IBuildingListPr
                                                 projectId = beanMain.projectId,
                                                 bldId = BUIDINGID,
                                                 moduleId = MODULEID,
-                                                floorId = -1,
+                                                floorId = ff.floorId,
                                                 floorName = ff.floorNo,
                                                 floorType = ff.direction,
                                                 drawingsList = drawingV3Bean,

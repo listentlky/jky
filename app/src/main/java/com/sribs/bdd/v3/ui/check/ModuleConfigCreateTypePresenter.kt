@@ -20,6 +20,7 @@ import com.sribs.bdd.module.project.IProjectContrast
 import com.sribs.bdd.v3.adapter.CreateModuleFloorPictureAdapter
 import com.sribs.bdd.utils.ModuleHelper
 import com.sribs.bdd.v3.util.LogUtils
+import com.sribs.common.bean.db.DamageV3Bean
 import com.sribs.common.bean.db.DrawingV3Bean
 import com.sribs.common.bean.db.v3.project.v3BuildingModuleDbBean
 import com.sribs.common.server.IDatabaseService
@@ -32,7 +33,7 @@ import java.io.File
 import java.util.*
 import kotlin.collections.ArrayList
 
-class ModuleFloorCreateTypeBuildingPresenter : BasePresenter(), IBasePresenter {
+class ModuleConfigCreateTypePresenter : BasePresenter(), IBasePresenter {
 
     private var mView: IProjectContrast.IModuleCreateTypeBuildingView? = null
 
@@ -92,35 +93,29 @@ class ModuleFloorCreateTypeBuildingPresenter : BasePresenter(), IBasePresenter {
             return
         }
 
-        createLocalFacadesDrawingInTheBuilding(activity, mLocalProjectId, mBuildingId, moduleName)
+        addDisposable(mDb.getv3BuildingModule(mModuleId)
+            .subscribeOn(Schedulers.computation())
+            .observeOn(Schedulers.computation())
+            .subscribe({ module->
+                LogUtils.d("查询该模块下: "+module)
+                var moduleDrawable = ArrayList<DrawingV3Bean>()
+                if(module != null){
+                    moduleDrawable.addAll(module.drawings?:ArrayList())
+                }
+                createLocalFacadesDrawingInTheBuilding(activity,moduleName,moduleDrawable)
+                mDb.updateBuildingModule(mModuleId,mAppFacadeDrawingList?:ArrayList(),1)
+                    .subscribeOn(Schedulers.computation())
+                    .observeOn(Schedulers.computation())
+                    .subscribe({
+                        mView?.onMsg("success")
+                        mView?.createModuleConfigSuccess()
+                    },{
+                        mView?.onMsg("gg")
+                        it.printStackTrace()
+                    })
+            },{
 
-/*
-        var bean = v3BuildingModuleDbBean()
-
-        bean.id = mModuleId
-
-        bean.drawings = mAppFacadeDrawingList
-        bean.buildingId = mBuildingId
-        bean.projectId = mLocalProjectId.toLong()
-        bean.moduleName = moduleName
-
-        bean.updateTime = TimeUtil.YMD_HMS.format(Date())
-        bean.remoteId = remoteId
-        bean.isChanged = 1
-*/
-
-        addDisposable(
-            mDb.updateBuildingModule(mModuleId,mAppFacadeDrawingList?:ArrayList(),1)
-                .subscribeOn(Schedulers.computation())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    mView?.onMsg("success")
-                    mView?.createModuleConfigSuccess()
-
-                }, {
-                    mView?.onMsg("gg")
-                    it.printStackTrace()
-                })
+            })
         )
     }
 
@@ -212,9 +207,8 @@ class ModuleFloorCreateTypeBuildingPresenter : BasePresenter(), IBasePresenter {
 
     private fun createLocalFacadesDrawingInTheBuilding(
         activity: Activity,
-        mLocalProjectId: Int,
-        mBuildingId: Long,
-        moduleName: String
+        moduleName: String,
+        moduleDrawingList:ArrayList<DrawingV3Bean>
     ) {
         println("leon createLocalFloorsInTheBuilding mBldId=${mBldId}")
         mAppFacadeDrawingList!!.clear()
@@ -239,18 +233,26 @@ class ModuleFloorCreateTypeBuildingPresenter : BasePresenter(), IBasePresenter {
                     name = it.name
                 }
 
-
                 var cacheFilePath = File(cacheRootDir + mCurDrawingsDir+index, name)
 
                 LogUtils.d("absolutePath "+ cacheFilePath.absolutePath)
+
+                var damageList = ArrayList<DamageV3Bean>()
+
+                moduleDrawingList.forEach { drawing->
+                    if(drawing.drawingID.equals(it.drawingId)){
+                        damageList = drawing.damage?: ArrayList()
+                    }
+                }
+
                 var drawingV3ToBuild = DrawingV3Bean(
-                    -1,
-                   name,
+                    it.drawingId!!,
+                    name,
                     FileUtil.getFileExtension(name),
                     "overall",
                     cacheFilePath.absolutePath,
                     "",
-                    ArrayList()
+                    damageList
                 )
                 mAppFacadeDrawingList!!.add(drawingV3ToBuild)
 
@@ -269,6 +271,7 @@ class ModuleFloorCreateTypeBuildingPresenter : BasePresenter(), IBasePresenter {
                 .subscribe({
                     it.drawings?.forEach { b ->
                         var bean = ModuleFloorPictureBean(
+                            drawingId = b.drawingID,
                             name = b.fileName!!,
                             uri = "",
                             url = b.localAbsPath,

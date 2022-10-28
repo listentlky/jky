@@ -20,9 +20,12 @@ import com.sribs.bdd.bean.data.ModuleFloorPictureBean
 import com.sribs.bdd.databinding.ActivityCreateModuleTypeBuildingBinding
 import com.sribs.bdd.module.project.IProjectContrast
 import com.sribs.bdd.utils.ChoseModulePicDialog
+import com.sribs.bdd.utils.UUIDUtil
 import com.sribs.bdd.v3.util.LogUtils
 
 import com.sribs.common.utils.FileUtil
+import java.util.*
+import kotlin.collections.ArrayList
 
 /**
  *
@@ -70,7 +73,7 @@ class ModuleCreateByTypeBuildingActivity : BaseActivity(),
 
     private val mBinding: ActivityCreateModuleTypeBuildingBinding by inflate()
 
-    private val moduleCreateTypeBuildingPresenter by lazy { ModuleFloorCreateTypeBuildingPresenter() }
+    private val moduleCreateTypeBuildingPresenter by lazy { ModuleConfigCreateTypePresenter() }
 
     private var selected = ArrayList<String>()
     private var selectedPic = ArrayList<ModuleFloorPictureBean>()
@@ -113,7 +116,7 @@ class ModuleCreateByTypeBuildingActivity : BaseActivity(),
             selected.forEach {
                 var name = FileUtil.uriToFileName(Uri.parse(it), this)
                 name = name ?: it
-                selectedPic.add(ModuleFloorPictureBean(name, it, null))
+                selectedPic.add(ModuleFloorPictureBean(UUIDUtil.getUUID(name),name, it, null))
             }
 
             var dialog = ChoseModulePicDialog(this, selectedPic) {
@@ -184,7 +187,7 @@ class ModuleCreateByTypeBuildingActivity : BaseActivity(),
                     LogUtils.d("基于楼拍照返回: " + images[0])
                     moduleCreateTypeBuildingPresenter.refreshPicList(
                         arrayListOf(
-                            ModuleFloorPictureBean(name!!, null, images[0])
+                            ModuleFloorPictureBean(UUIDUtil.getUUID(name!!),name!!, null, images[0])
                         )
                     )
                 }
@@ -198,6 +201,7 @@ class ModuleCreateByTypeBuildingActivity : BaseActivity(),
                 moduleCreateTypeBuildingPresenter.refreshPicList(
                     arrayListOf(
                         ModuleFloorPictureBean(
+                            UUIDUtil.getUUID(name),
                             name,
                             null,
                             file

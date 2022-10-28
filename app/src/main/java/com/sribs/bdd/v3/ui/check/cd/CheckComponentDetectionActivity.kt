@@ -3,10 +3,12 @@ package com.sribs.bdd.v3.ui.check.cd
 import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.Canvas
+import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.RelativeLayout
+import android.widget.TextView
 import com.alibaba.android.arouter.facade.annotation.Autowired
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
@@ -74,8 +76,8 @@ class CheckComponentDetectionActivity : BaseActivity(), ICheckCDContrast.ICheckC
     private val REQUEST_CODE_BEAN_DESIGN_WHITE_FLLOR = 15 //基于梁-草图
     private val REQUEST_CODE_COLUMN_REAL_WHITE_FLLOR = 16 //基于柱-草图
     private val REQUEST_CODE_COLUMN_DESIGN_WHITE_FLLOR = 17 //基于柱-草图
-    private val REQUEST_CODE_COLUMN_RIGHT_REAL_WHITE_FLLOR = 20 //基于柱-右侧草图
-    private val REQUEST_CODE_COLUMN_RIGHT_DESIGN_WHITE_FLLOR = 21 //基于柱-右侧草图
+    private val REQUEST_CODE_COLUMN_RIGHT_REAL_WHITE_FLLOR = 30 //基于柱-右侧草图
+    private val REQUEST_CODE_COLUMN_RIGHT_DESIGN_WHITE_FLLOR = 31 //基于柱-右侧草图
 
 
     @JvmField
@@ -167,6 +169,7 @@ class CheckComponentDetectionActivity : BaseActivity(), ICheckCDContrast.ICheckC
         }
         mBinding.checkMenuLayout.checkObdMenuClose.setOnClickListener {
             mBinding.checkMenuLayout.root.visibility = View.GONE
+            cancelDamageMark()
         }
 
         Global.Init(this)
@@ -192,6 +195,7 @@ class CheckComponentDetectionActivity : BaseActivity(), ICheckCDContrast.ICheckC
         mBinding.toolbar.setNavigationOnClickListener {
             if (mBinding.checkVp.currentItem != 0) {
                 mBinding.checkVp.currentItem = 0
+                cancelDamageMark()
             } else {
                 ExitToSave()
             }
@@ -272,63 +276,116 @@ class CheckComponentDetectionActivity : BaseActivity(), ICheckCDContrast.ICheckC
         mBinding.checkVp.currentItem = 0
     }
 
+    /**
+     * 添加mark标记
+     */
+    fun addDamageMark(damageInfo: DamageV3Bean){
+        val view: View =
+            LayoutInflater.from(this).inflate(com.radaee.viewlib.R.layout.damage_checkbuildstructure_mark_layout, null)
+        val damageType = view.findViewById<TextView>(com.radaee.viewlib.R.id.damage_type)
+        val damageText = view.findViewById<TextView>(com.radaee.viewlib.R.id.damage_text)
+        damageType.text = ""+damageInfo.type
+        when(damageInfo.type){
+            "梁"->{
+                damageText.text = damageInfo.beamName
+            }
+            "柱"->{
+                damageText.text = damageInfo.columnName
+            }
+            "板","墙"->{
+                damageText.text = damageInfo.plateName
+            }
+        }
+        mView!!.layoutView(view, 400, 200)
+        var bitmap = PDFLayoutView.getViewBitmap(view)
+        mView!!.PDFSetStamp(1,bitmap,80f,40f,damageInfo.type+damageInfo.createTime)
+    }
+
+    /**
+     * 取消mark状态
+     */
+    fun cancelDamageMark(){
+        mView?.PDFCancelAnnot()
+    }
+
+    var addPDFDamageMark = false
+
+    var isEditDamage = false
 
     /**
      * 设置损伤页面详情，并展示
      */
-    fun resetDamageInfo(damageV3Bean: DamageV3Bean?, type: String?) {
-        if (mBinding.checkMenuLayout.root.visibility == View.VISIBLE) {
+    fun resetDamageInfo(damageV3Bean: DamageV3Bean?, type: String?,isAddDamageMark:Boolean,isEditDamageMark:Boolean) {
+       /* if (mBinding.checkMenuLayout.root.visibility == View.VISIBLE) {
             AlertDialog.Builder(this).setTitle("提示")
                 .setMessage("当前有缩小详情页，是否移除？")
                 .setPositiveButton(R.string.dialog_ok) { dialog, which ->
                     mBinding.checkMenuLayout.root.visibility = View.GONE
                     when (type) {
-
                         mCurrentDamageType[0] -> { //梁
                             (mFragments[1] as CheckEditCDBFragment).resetView(damageV3Bean)
                             mBinding.checkVp.currentItem = 1
+                            addPDFDamageMark = isAddDamageMark
+                            isEditDamage = isEditDamageMark
                         }
 
                         mCurrentDamageType[1] -> { //柱
                             (mFragments[2] as CheckEditCDCFragment).resetView(damageV3Bean)
                             mBinding.checkVp.currentItem = 2
+                            addPDFDamageMark = isAddDamageMark
+                            isEditDamage = isEditDamageMark
                         }
                         mCurrentDamageType[2] -> { //墙
                             (mFragments[3] as CheckEditCDWFragment).resetView(damageV3Bean)
                             mBinding.checkVp.currentItem = 3
+                            addPDFDamageMark = isAddDamageMark
+                            isEditDamage = isEditDamageMark
                         }
                         mCurrentDamageType[3] -> { //板
                             (mFragments[4] as CheckEditCDPFragment).resetView(damageV3Bean)
                             mBinding.checkVp.currentItem = 4
+                            addPDFDamageMark = isAddDamageMark
+                            isEditDamage = isEditDamageMark
                         }
 
                     }
                 }.setNegativeButton(
                     R.string.dialog_cancel
                 ) { dialog, which ->
-
+                    cancelDamageMark()
                 }
                 .show()
-        } else {
+        } else {*/
+        if (mBinding.checkMenuLayout.root.visibility == View.VISIBLE) {
+            mBinding.checkMenuLayout.root.visibility = View.GONE
+        }
             when (type) {
                 mCurrentDamageType[0] -> { //梁
                     (mFragments[1] as CheckEditCDBFragment).resetView(damageV3Bean)
                     mBinding.checkVp.currentItem = 1
+                    addPDFDamageMark = isAddDamageMark
+                    isEditDamage = isEditDamageMark
                 }
                 mCurrentDamageType[1] -> { //柱
                     (mFragments[2] as CheckEditCDCFragment).resetView(damageV3Bean)
                     mBinding.checkVp.currentItem = 2
+                    addPDFDamageMark = isAddDamageMark
+                    isEditDamage = isEditDamageMark
                 }
                 mCurrentDamageType[2] -> { //墙
                     (mFragments[3] as CheckEditCDWFragment).resetView(damageV3Bean)
                     mBinding.checkVp.currentItem = 3
+                    addPDFDamageMark = isAddDamageMark
+                    isEditDamage = isEditDamageMark
                 }
                 mCurrentDamageType[3] -> { //板
                     (mFragments[4] as CheckEditCDPFragment).resetView(damageV3Bean)
                     mBinding.checkVp.currentItem = 4
+                    addPDFDamageMark = isAddDamageMark
+                    isEditDamage = isEditDamageMark
                 }
             }
-        }
+       // }
     }
 
     /**
@@ -381,6 +438,12 @@ class CheckComponentDetectionActivity : BaseActivity(), ICheckCDContrast.ICheckC
         resetDamageList()
         mBinding.checkVp.currentItem = 0
 
+        if(addPDFDamageMark) {
+            if(isEditDamage) {
+                mView?.PDFRemoveAnnot()
+            }
+            addDamageMark(damageInfo)
+        }
     }
 
     /**
@@ -500,6 +563,7 @@ class CheckComponentDetectionActivity : BaseActivity(), ICheckCDContrast.ICheckC
         mScaleDamageIndex = index
         mBinding.checkMenuLayout.root.visibility = View.VISIBLE
         mBinding.checkVp.currentItem = 0
+        mView?.PDFCancelStamp()
     }
 
     /**
@@ -526,19 +590,20 @@ class CheckComponentDetectionActivity : BaseActivity(), ICheckCDContrast.ICheckC
         return true
     }
 
-    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
-        super.onPrepareOptionsMenu(menu)
-        var item = menu?.findItem(R.id.menu_check_pop)
-
-        item?.icon?.setBounds(20, 50, 0, 0)
-        return true
-    }
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
         when (item?.itemId) {
-            R.id.menu_check_pop -> { // 菜单111
-                setVpCurrentItem(0)
+            R.id.menu_damage_save -> { // 保存
+                AlertDialog.Builder(this).setTitle("提示")
+                    .setMessage(R.string.is_save_hint)
+                    .setPositiveButton(R.string.dialog_ok) { dialog, which ->
+                        mController?.savePDF()
+                        saveDamageDrawingToDb();
+                    }.setNegativeButton(
+                        R.string.dialog_cancel
+                    ) { dialog, which ->
+                    }
+                    .show()
             }
 
         }
@@ -547,6 +612,9 @@ class CheckComponentDetectionActivity : BaseActivity(), ICheckCDContrast.ICheckC
 
     fun setVpCurrentItem(item: Int) {
         mBinding.checkVp.currentItem = item
+        if(item == 0){
+            cancelDamageMark()
+        }
     }
 
     override fun onModuleInfo(checkMainBean: List<CheckCDMainBean>) {
@@ -600,7 +668,7 @@ class CheckComponentDetectionActivity : BaseActivity(), ICheckCDContrast.ICheckC
     }
 
     override fun onSelect(type: String?) {
-
+        resetDamageInfo(null,type,true,false)
     }
 
     /**
@@ -732,9 +800,9 @@ class CheckComponentDetectionActivity : BaseActivity(), ICheckCDContrast.ICheckC
 
     override fun onPDFNoteAdded(annotPoint: String?) {
         LogUtils.d("onPDFNoteAdded " + annotPoint)
-        var damageBean = Gson().fromJson(annotPoint, DamageV3Bean::class.java)
-        mCurrentAddAnnotReF = damageBean.annotRef
-        resetDamageInfo(null, damageBean.type)
+      //  var damageBean = Gson().fromJson(annotPoint, DamageV3Bean::class.java)
+     //   mCurrentAddAnnotReF = damageBean.annotRef
+     //   resetDamageInfo(null, damageBean.type)
         /* when (damageBean.type) {
              mCurrentDamageType[0] -> {
                  mBinding.checkVp.currentItem = 1
@@ -762,40 +830,12 @@ class CheckComponentDetectionActivity : BaseActivity(), ICheckCDContrast.ICheckC
                  */
                 var isMatch = false
                 mDamageBeanList!!.get(mCurrentLocalPDF)!!.forEach {
-                    if (damageBean.annotRef == it.annotRef) {
+                    if (damageBean.annotName == (it.type+it.createTime)) {
                         isMatch = true
-                        resetDamageInfo(it, it.type)
-                        /*  when (it.type) {
-                              mCurrentDamageType[0] -> {
-                                  mBinding.checkVp.currentItem = 1
-                              }
-                              mCurrentDamageType[1] -> {
-                                  mBinding.checkVp.currentItem = 2
-                              }
-                              mCurrentDamageType[2] -> {
-                                  mBinding.checkVp.currentItem = 3
-                              }
-                              mCurrentDamageType[3] -> {
-                                  mBinding.checkVp.currentItem = 4
-                              }
-                          }*/
+                        resetDamageInfo(it, it.type,true,true)
                     }
                 }
                 if (!isMatch) {
-                    /*  when (damageBean.type) {
-                          mCurrentDamageType[0] -> {
-                              mBinding.checkVp.currentItem = 1
-                          }
-                          mCurrentDamageType[1] -> {
-                              mBinding.checkVp.currentItem = 2
-                          }
-                          mCurrentDamageType[2] -> {
-                              mBinding.checkVp.currentItem = 3
-                          }
-                          mCurrentDamageType[3] -> {
-                              mBinding.checkVp.currentItem = 4
-                          }
-                      }*/
                     AlertDialog.Builder(this).setTitle("提示")
                         .setMessage("当前损伤信息已被删除，移除标记点")
                         .setPositiveButton(R.string.dialog_ok) { dialog, which ->
@@ -815,7 +855,7 @@ class CheckComponentDetectionActivity : BaseActivity(), ICheckCDContrast.ICheckC
                 LogUtils.d("删除前损伤数据: " + exitDamageBeanList)
 
                 var mTotalDamageBeanList = exitDamageBeanList!!.filter {
-                    damageBean.annotRef != it.annotRef
+                    damageBean.annotName != (it.type+it.createTime)
                 }
                 exitDamageBeanList.clear()
                 exitDamageBeanList.addAll(mTotalDamageBeanList)
@@ -1066,8 +1106,5 @@ class CheckComponentDetectionActivity : BaseActivity(), ICheckCDContrast.ICheckC
             }
         }
     }
-
-
-
 
 }

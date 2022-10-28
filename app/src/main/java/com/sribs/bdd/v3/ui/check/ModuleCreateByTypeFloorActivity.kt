@@ -22,6 +22,7 @@ import com.sribs.bdd.bean.data.ModuleFloorPictureBean
 import com.sribs.bdd.databinding.ActivityCreateModuleTypeFloorBinding
 import com.sribs.bdd.module.project.IProjectContrast
 import com.sribs.bdd.utils.ChoseModulePicDialog
+import com.sribs.bdd.utils.UUIDUtil
 import com.sribs.bdd.v3.util.LogUtils
 import com.sribs.common.bean.v3.v3ModuleFloorDbBean
 import com.sribs.common.ui.widget.TagEditView
@@ -72,7 +73,7 @@ class ModuleCreateByTypeFloorActivity : BaseActivity(), IProjectContrast.IModule
 
     private val mBinding: ActivityCreateModuleTypeFloorBinding by inflate()
 
-    private val moduleCreateTypePresenter by lazy { ModuleCreateTypePresenter() }
+    private val moduleFloorConfigCreateTypePresenter by lazy { ModuleFloorConfigCreateTypePresenter() }
 
     private var selected = ArrayList<String>()
 
@@ -104,7 +105,7 @@ class ModuleCreateByTypeFloorActivity : BaseActivity(), IProjectContrast.IModule
         if (mLocalProjectId == -1L) {
             ToastUtil.getInstance()._short(this, "网络请求module图纸")
         } else {
-            moduleCreateTypePresenter.initLocalData(mLocalProjectId, mBuildingId, mModuleId)
+            moduleFloorConfigCreateTypePresenter.initLocalData(mLocalProjectId, mBuildingId, mModuleId)
         }
         mBinding.aboveNumber.setTextCallback(object : TagEditView.ITextChanged {
             override fun onTextChange(s: Editable?) {
@@ -112,21 +113,21 @@ class ModuleCreateByTypeFloorActivity : BaseActivity(), IProjectContrast.IModule
                 if (isDeleteModuleFloor){
                     isDeleteModuleFloor = false
                     if ((s == null) || (s.toString() == "")){
-                        moduleCreateTypePresenter.addAboveFlourList(0)
+                        moduleFloorConfigCreateTypePresenter.addAboveFlourList(0)
                     }else{
-                        moduleCreateTypePresenter.mAboveOldIndex = s.toString().toInt()
+                        moduleFloorConfigCreateTypePresenter.mAboveOldIndex = s.toString().toInt()
 
                     }
                     return
                 }
 
                 if ((s == null) || (s.toString() == "")) {
-                    moduleCreateTypePresenter.addAboveFlourList(0)
+                    moduleFloorConfigCreateTypePresenter.addAboveFlourList(0)
                     return
                 }
                 val num: Int = s.toString().toInt()
                 if (num >= 0) {//执行
-                    moduleCreateTypePresenter.addAboveFlourList(num)
+                    moduleFloorConfigCreateTypePresenter.addAboveFlourList(num)
                 }
                 aboveNumber = num
             }
@@ -139,9 +140,9 @@ class ModuleCreateByTypeFloorActivity : BaseActivity(), IProjectContrast.IModule
                 if (isDeleteModuleFloor){
                     isDeleteModuleFloor = false
                     if ((s == null) || (s.toString() == "")){
-                        moduleCreateTypePresenter.addAfterFlourList(0)
+                        moduleFloorConfigCreateTypePresenter.addAfterFlourList(0)
                     }else{
-                        moduleCreateTypePresenter.mBeforeOldIndex = s.toString().toInt()
+                        moduleFloorConfigCreateTypePresenter.mBeforeOldIndex = s.toString().toInt()
 
                     }
                     return
@@ -149,12 +150,12 @@ class ModuleCreateByTypeFloorActivity : BaseActivity(), IProjectContrast.IModule
 
 
                 if ((s == null) || (s.toString() == "")) {
-                    moduleCreateTypePresenter.addAfterFlourList(0)
+                    moduleFloorConfigCreateTypePresenter.addAfterFlourList(0)
                     return
                 }
                 val num: Int = s.toString().toInt()
                 if (num >= 0) {//执行
-                    moduleCreateTypePresenter.addAfterFlourList(num)
+                    moduleFloorConfigCreateTypePresenter.addAfterFlourList(num)
                 }
                 afterNumber = num
             }
@@ -168,7 +169,7 @@ class ModuleCreateByTypeFloorActivity : BaseActivity(), IProjectContrast.IModule
 
         mBinding.createComplete.setOnClickListener {
 
-            moduleCreateTypePresenter.createLocalModule(
+            moduleFloorConfigCreateTypePresenter.createLocalModule(
                 this,
                 mLocalProjectId.toInt(),
                 mBuildingId,
@@ -211,12 +212,13 @@ class ModuleCreateByTypeFloorActivity : BaseActivity(), IProjectContrast.IModule
                     LogUtils.d("基于楼层选择图片返回: " + images[0])
                     currentBean?.pictureList?.add(
                         ModuleFloorPictureBean(
+                            UUIDUtil.getUUID(),
                             name!!,
                             null,
                             images[0]
                         ).also {
                         })
-                    moduleCreateTypePresenter.refeshData()
+                    moduleFloorConfigCreateTypePresenter.refeshData()
                 }
             }
         } else if (requestCode == REQUEST_CODE_BEAN_WHITE_FLLOR && data != null) {
@@ -225,8 +227,8 @@ class ModuleCreateByTypeFloorActivity : BaseActivity(), IProjectContrast.IModule
             if (file != null) {
                 var name = FileUtil.getFileName(file)
                 name = name ?: file
-                currentBean?.pictureList?.add(ModuleFloorPictureBean(name!!, null, file))
-                moduleCreateTypePresenter.refeshData()
+                currentBean?.pictureList?.add(ModuleFloorPictureBean(UUIDUtil.getUUID(),name!!, null, file))
+                moduleFloorConfigCreateTypePresenter.refeshData()
             }
         }
     }
@@ -258,20 +260,10 @@ class ModuleCreateByTypeFloorActivity : BaseActivity(), IProjectContrast.IModule
         startActivityForResult(intent, REQUEST_CODE)
     }
 
-
-    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
-        super.onPrepareOptionsMenu(menu)
-        var item = menu?.findItem(R.id.menu_check_pop)
-
-        item?.icon?.setBounds(20, 50, 0, 0)
-        return true
-    }
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
         when (item?.itemId) {
-            R.id.menu_check_pop -> { // 菜单111
-            }
+
 
         }
         return super.onOptionsItemSelected(item)
@@ -280,12 +272,11 @@ class ModuleCreateByTypeFloorActivity : BaseActivity(), IProjectContrast.IModule
     override fun initLocalData(beanList: List<v3ModuleFloorDbBean>) {
         mBinding.aboveNumber.setEditText(""+beanList.get(0).aboveNumber)
         mBinding.afterNumber.setEditText(""+beanList.get(0).afterNumber)
-        moduleCreateTypePresenter.setData(beanList)
-        moduleCreateTypePresenter.mBeforeOldIndex = afterNumber
-        moduleCreateTypePresenter.mAboveOldIndex = aboveNumber
+        moduleFloorConfigCreateTypePresenter.setData(beanList)
+        moduleFloorConfigCreateTypePresenter.mBeforeOldIndex = afterNumber
+        moduleFloorConfigCreateTypePresenter.mAboveOldIndex = aboveNumber
 
     }
-
 
     override fun getFloorRecycleView(): RecyclerView = mBinding.flourRecycleview
 
@@ -299,7 +290,7 @@ class ModuleCreateByTypeFloorActivity : BaseActivity(), IProjectContrast.IModule
         selected.forEach {
             var name = FileUtil.uriToFileName(Uri.parse(it), this)
             name = name ?: it
-            selectedPic.add(ModuleFloorPictureBean(name, it, null))
+            selectedPic.add(ModuleFloorPictureBean(UUIDUtil.getUUID(name),name, it, null))
         }
 
         var dialog = ChoseModulePicDialog(this, selectedPic) {
@@ -347,7 +338,7 @@ class ModuleCreateByTypeFloorActivity : BaseActivity(), IProjectContrast.IModule
     override fun getContext(): Context = this
 
     override fun bindPresenter() {
-        moduleCreateTypePresenter.bindView(this)
+        moduleFloorConfigCreateTypePresenter.bindView(this)
     }
 
     override fun onMsg(msg: String) {
@@ -355,7 +346,7 @@ class ModuleCreateByTypeFloorActivity : BaseActivity(), IProjectContrast.IModule
     }
 
     override fun unbindPresenter() {
-        moduleCreateTypePresenter.bindView(this)
+        moduleFloorConfigCreateTypePresenter.bindView(this)
     }
 
 

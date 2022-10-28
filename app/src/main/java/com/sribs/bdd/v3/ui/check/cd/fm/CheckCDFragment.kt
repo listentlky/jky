@@ -96,7 +96,7 @@ class CheckCDFragment : BaseFragment(R.layout.fragment_check_componentdetection)
         LogUtils.d("设置损伤列表： " + damageBean)
         mMenuList.clear()
         mMenuList.add(CheckMenuModule().also {
-            it.name = "构建检测列表"
+            it.name = "构件检测列表"
             it.menu.add(CheckMenuModule.Item().also {
                 it.name = "梁"
             })
@@ -146,11 +146,11 @@ class CheckCDFragment : BaseFragment(R.layout.fragment_check_componentdetection)
             .setCheckMenuCallback(object : CheckMenuView2.CheckMenuCallback {
                 override fun onClick(v: View?, damageType: String?) {
                     (activity as CheckComponentDetectionActivity).setAddAnnotReF(-1L)
-                    (activity as CheckComponentDetectionActivity).resetDamageInfo(null, damageType)
+                    (activity as CheckComponentDetectionActivity).resetDamageInfo(null, damageType,false,false)
                 }
 
                 override fun onMarkClick(v: View?, damage: DamageV3Bean?, damageType: String?) {
-                    (activity as CheckComponentDetectionActivity).resetDamageInfo(damage, damageType)
+                    (activity as CheckComponentDetectionActivity).resetDamageInfo(damage, damageType,false,false)
                 }
 
                 override fun onMarkRemoveClick(

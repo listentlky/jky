@@ -13,7 +13,7 @@ import kotlin.collections.ArrayList
 class DamageV3Bean(){
 
     var id:Long = -1 //本地ID，楼层损伤就是模块楼层表的id，楼损伤就是模块楼表的id
-    var drawingId:Long = -1 // 图纸ID
+    var drawingId:String = "" // 图纸ID
     var type:String?="" //损伤类型
     var action:Int?=0//pdf标记动作 1 编辑  2 删除
     var annotRef:Long = -1 //annotRef
@@ -21,6 +21,7 @@ class DamageV3Bean(){
     var createTime:Long = -1 // 生成时间戳
     var annotX:Int=0 //标记X坐标 注意需要使用PDF坐标转换
     var annotY:Int=0 //标记Y坐标
+    var annotName:String="" //标记名
 
 
     //梁
@@ -55,7 +56,7 @@ class DamageV3Bean(){
 
     constructor(
         id: Long,
-        drawingId: Long,
+        drawingId: String,
         type: String?,
         action: Int?,
         annotRef: Long,
@@ -158,7 +159,7 @@ class DamageV3Bean(){
 
     constructor(
         id: Long,
-        drawingId: Long,
+        drawingId: String,
         type: String?,
         action: Int?,
         annotRef: Long,
@@ -230,10 +231,10 @@ class DamageV3Bean(){
 
 
 
-    //构建检测-板 墙 通用
+    //构件检测-板 墙 通用
     var realPlateThickness: String? = "" //实测 板厚度
     var designPlateThickness: String? = "" //设计 板厚度
-    var plateName: String = "" //板名称
+    var plateName: String = "" //板墙名称
     var axisSingleNote: String? = ""//轴线
     var axisPlateNoteList: ArrayList<String>? = ArrayList()//多个轴线
     var realEastWestRebarList: ArrayList<String>? = ArrayList() // 0 实测-东西向钢筋-类型 // 1 实测-东西向钢筋-长度 // 2 实测-东西向钢筋-档数
@@ -246,10 +247,10 @@ class DamageV3Bean(){
     var designNote: String? = "" //设计-备注
     var designPicture:  ArrayList<String>? = ArrayList() //设计-照片 0名称 1路径 2远端resID
 
-    //构建检测-板/墙
+    //构件检测-板/墙
     constructor(
         id: Long,
-        drawingId: Long,
+        drawingId: String,
         type: String?,
         action: Int?,
         annotRef: Long,
@@ -307,7 +308,7 @@ class DamageV3Bean(){
     var gridReal:String?="" //轴网实测值
 
     // 层高构造
-    constructor(id:Long,drawingId:Long,type:String?,action:Int?,annotRef:Long,note:String?,createTime:Long,annotX:Int,annotY:Int,
+    constructor(id:Long,drawingId:String,type:String?,action:Int?,annotRef:Long,note:String?,createTime:Long,annotX:Int,annotY:Int,
                 axisNote:String?,axisNoteList:ArrayList<String>?,heightType:String?,floorName:String?
     ,floorDesign:String?,floorReal:String?,plateDesign:String,decorateDesign:String?):this(){
         this.id = id
@@ -330,7 +331,7 @@ class DamageV3Bean(){
     }
 
     // 轴网构造
-    constructor(id:Long,drawingId:Long,type:String?,action:Int?,annotRef:Long,note:String?,createTime:Long,annotX:Int,annotY:Int,
+    constructor(id:Long,drawingId:String,type:String?,action:Int?,annotRef:Long,note:String?,createTime:Long,annotX:Int,annotY:Int,
                 axisNote:String?,axisNoteList:ArrayList<String>?,floorName:String?
                 , gridDesign:String?,gridReal:String?):this(){
         this.id = id
@@ -360,7 +361,7 @@ class DamageV3Bean(){
     var tilt1:String?="" //倾斜量1
     var tilt2:String?="" //倾斜量2
     //倾斜测量点位
-    constructor(id:Long,drawingId:Long,type:String?,action:Int?,annotRef:Long,note:String?,createTime:Long,
+    constructor(id:Long,drawingId:String,type:String?,action:Int?,annotRef:Long,note:String?,createTime:Long,
                 guide:String?,guideRotate:Int?,pointName:String?,measure1Height:String?,measure2Height:String?,
                 tilt1:String?,tilt2:String?):this(){
         this.id = id
@@ -385,7 +386,7 @@ class DamageV3Bean(){
     var rhdiffInfo:ArrayList<RelativeHDiffInfoBean>?=ArrayList() //顺序测量转点闭合数据
     var pointList:List<RelativeHDiffPointBean>?=ArrayList() //添加的测点数据
 
-    constructor(id:Long,drawingId:Long,type:String?,action:Int?,annotRef:Long,note:String?,createTime:Long, closeDiff:String,
+    constructor(id:Long,drawingId:String,type:String?,action:Int?,annotRef:Long,note:String?,createTime:Long, closeDiff:String,
                 rhdiffInfo:ArrayList<RelativeHDiffInfoBean>,pointList:List<RelativeHDiffPointBean>):this(){
         this.id = id
         this.drawingId = drawingId

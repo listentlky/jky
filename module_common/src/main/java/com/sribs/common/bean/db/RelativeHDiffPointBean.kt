@@ -9,19 +9,22 @@ package com.sribs.common.bean.db
 class RelativeHDiffPointBean(){
 
     var name: String? = null
+    var colorBg:String=""
     var menu: ArrayList<RelativeHDiffPointBean.Item> = ArrayList()
 
     class Item(){
         var name: String? = null
-        var annotRef:Long = -1
+        var annotName:String = ""
 
         override fun toString(): String {
-            return "Item(name=$name, annotRef=$annotRef)"
+            return "Item(name=$name, annotName=$annotName)"
         }
 
     }
 
     override fun toString(): String {
-        return "CheckRHDChoosePointBean(name=$name, menu=$menu)"
+        return "RelativeHDiffPointBean(name=$name, colorBg=$colorBg, menu=$menu)"
     }
+
+
 }

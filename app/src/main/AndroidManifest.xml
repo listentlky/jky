@@ -64,158 +64,180 @@
             android:name=".ui.main.MainActivity"
             android:exported="true"
             android:launchMode="singleTask"
+            android:configChanges="density|fontScale|keyboard|keyboardHidden|layoutDirection|locale|mcc|mnc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|touchscreen|uiMode"
             android:screenOrientation="landscape"
             android:theme="@style/AppTheme.Main" />
         <activity
             android:name=".ui.project.ProjectCreateActivity"
             android:exported="true"
             android:launchMode="singleTask"
+            android:configChanges="density|fontScale|keyboard|keyboardHidden|layoutDirection|locale|mcc|mnc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|touchscreen|uiMode"
             android:screenOrientation="landscape"
             android:theme="@style/AppTheme.ProjectCreate" />
         <activity
             android:name=".ui.project.ProjectCreateByTypeActivity"
             android:exported="true"
             android:launchMode="singleTask"
+            android:configChanges="density|fontScale|keyboard|keyboardHidden|layoutDirection|locale|mcc|mnc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|touchscreen|uiMode"
             android:screenOrientation="landscape"
             android:theme="@style/AppTheme.ProjectCreate" />
         <activity
             android:name=".ui.project.ProjectConfigActivity"
             android:exported="true"
             android:launchMode="singleTask"
+            android:configChanges="density|fontScale|keyboard|keyboardHidden|layoutDirection|locale|mcc|mnc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|touchscreen|uiMode"
             android:screenOrientation="landscape"
             android:theme="@style/AppTheme.ProjectCreate" />
         <activity
             android:name=".ui.project.ProjectCopyActivity"
             android:exported="true"
             android:launchMode="singleTask"
+            android:configChanges="density|fontScale|keyboard|keyboardHidden|layoutDirection|locale|mcc|mnc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|touchscreen|uiMode"
             android:screenOrientation="landscape"
             android:theme="@style/AppTheme.ProjectCreate" />
         <activity
             android:name=".ui.house.HouseListActivity"
             android:exported="true"
             android:launchMode="singleTask"
+            android:configChanges="density|fontScale|keyboard|keyboardHidden|layoutDirection|locale|mcc|mnc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|touchscreen|uiMode"
             android:screenOrientation="landscape"
             android:theme="@style/AppTheme.Main" />
         <activity
             android:name=".ui.house.HouseDamageListActivity"
             android:exported="true"
             android:launchMode="singleTask"
+            android:configChanges="density|fontScale|keyboard|keyboardHidden|layoutDirection|locale|mcc|mnc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|touchscreen|uiMode"
             android:screenOrientation="landscape"
             android:theme="@style/AppTheme.Main" />
         <activity
             android:name=".ui.house.HouseStatusActivity"
             android:exported="true"
             android:launchMode="singleTask"
+            android:configChanges="density|fontScale|keyboard|keyboardHidden|layoutDirection|locale|mcc|mnc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|touchscreen|uiMode"
             android:screenOrientation="landscape"
             android:theme="@style/AppTheme.Main" />
         <activity
             android:name=".ui.house.HouseDamageDescriptionActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"
             android:exported="true"
             android:launchMode="singleTask"
+            android:configChanges="density|fontScale|keyboard|keyboardHidden|layoutDirection|locale|mcc|mnc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|touchscreen|uiMode"
             android:screenOrientation="landscape"
             android:theme="@style/AppTheme.Main" /> <!-- android:screenOrientation="landscape" -->
         <activity
             android:name=".ui.house.UnitListActivity"
             android:exported="true"
             android:launchMode="singleTask"
+            android:configChanges="density|fontScale|keyboard|keyboardHidden|layoutDirection|locale|mcc|mnc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|touchscreen|uiMode"
             android:screenOrientation="landscape"
             android:theme="@style/AppTheme.Main" />
         <activity
             android:name=".ui.house.ReportActivity"
             android:exported="true"
             android:launchMode="singleTask"
+            android:configChanges="density|fontScale|keyboard|keyboardHidden|layoutDirection|locale|mcc|mnc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|touchscreen|uiMode"
             android:screenOrientation="landscape"
             android:theme="@style/AppTheme.Main" />
         <activity
             android:name=".ui.main.SettingActivity"
             android:exported="true"
             android:launchMode="singleTask"
+            android:configChanges="density|fontScale|keyboard|keyboardHidden|layoutDirection|locale|mcc|mnc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|touchscreen|uiMode"
             android:screenOrientation="landscape"
             android:theme="@style/AppTheme.Main" />
         <activity
             android:name=".ui.main.DamageMainActivity"
             android:exported="true"
             android:launchMode="singleTask"
+            android:configChanges="density|fontScale|keyboard|keyboardHidden|layoutDirection|locale|mcc|mnc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|touchscreen|uiMode"
             android:screenOrientation="landscape"
             android:theme="@style/AppTheme.Main" />
         <activity
             android:name=".ui.building.BuildingFloorCopyActivity"
             android:exported="true"
             android:launchMode="singleTask"
+            android:configChanges="density|fontScale|keyboard|keyboardHidden|layoutDirection|locale|mcc|mnc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|touchscreen|uiMode"
             android:screenOrientation="landscape"
             android:theme="@style/AppTheme.Main" />
         <activity
             android:name=".ui.building.BuildingDamageActivity"
             android:exported="true"
             android:launchMode="singleTask"
+            android:configChanges="density|fontScale|keyboard|keyboardHidden|layoutDirection|locale|mcc|mnc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|touchscreen|uiMode"
             android:screenOrientation="landscape"
             android:theme="@style/AppTheme.Main" />
         <activity
             android:name=".ui.building.DrawWhiteActivity"
             android:exported="true"
             android:launchMode="singleTask"
+            android:configChanges="density|fontScale|keyboard|keyboardHidden|layoutDirection|locale|mcc|mnc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|touchscreen|uiMode"
             android:screenOrientation="landscape"
             android:theme="@style/AppTheme.Main" />
         <activity
             android:name=".ui.project.ProjectFloorActivity"
             android:exported="true"
             android:launchMode="singleTask"
+            android:configChanges="density|fontScale|keyboard|keyboardHidden|layoutDirection|locale|mcc|mnc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|touchscreen|uiMode"
             android:screenOrientation="landscape"
             android:theme="@style/AppTheme.Main" />
         <activity
             android:name=".ui.project.ProjectFloorItemActivity"
             android:exported="true"
             android:launchMode="singleTask"
+            android:configChanges="density|fontScale|keyboard|keyboardHidden|layoutDirection|locale|mcc|mnc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|touchscreen|uiMode"
             android:screenOrientation="landscape"
             android:theme="@style/AppTheme.Main" />
         <activity
             android:name="com.donkingliang.imageselector.ImageSelectorActivity"
+            android:configChanges="density|fontScale|keyboard|keyboardHidden|layoutDirection|locale|mcc|mnc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|touchscreen|uiMode"
             android:screenOrientation="landscape" />
         <activity
             android:name="com.donkingliang.imageselector.PreviewActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:configChanges="density|fontScale|keyboard|keyboardHidden|layoutDirection|locale|mcc|mnc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|touchscreen|uiMode"
             android:screenOrientation="landscape"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name="com.donkingliang.imageselector.ClipImageActivity"
+            android:configChanges="density|fontScale|keyboard|keyboardHidden|layoutDirection|locale|mcc|mnc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|touchscreen|uiMode"
             android:screenOrientation="landscape"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".v3.ui.check.obd.CheckObliqueDeformationActivity"
+            android:configChanges="density|fontScale|keyboard|keyboardHidden|layoutDirection|locale|mcc|mnc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|touchscreen|uiMode"
             android:screenOrientation="landscape"
             android:theme="@style/AppTheme.Main" />
 
         <activity
             android:name=".v3.ui.check.ModuleCreateByTypeFloorActivity"
+            android:configChanges="density|fontScale|keyboard|keyboardHidden|layoutDirection|locale|mcc|mnc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|touchscreen|uiMode"
             android:screenOrientation="landscape"
             android:theme="@style/AppTheme.Main" />
 
         <activity
             android:name=".v3.ui.check.ModuleCreateByTypeBuildingActivity"
+            android:configChanges="density|fontScale|keyboard|keyboardHidden|layoutDirection|locale|mcc|mnc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|touchscreen|uiMode"
             android:screenOrientation="landscape"
             android:theme="@style/AppTheme.Main" />
-
 
         <activity
             android:name=".v3.ui.check.bs.CheckBuildStructureActivity"
             android:screenOrientation="landscape"
+            android:configChanges="density|fontScale|keyboard|keyboardHidden|layoutDirection|locale|mcc|mnc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|touchscreen|uiMode"
             android:theme="@style/AppTheme.Main" />
-        <activity
-            android:name=".v3.ui.floor.FloorActivity"
-            android:screenOrientation="landscape"
-            android:theme="@style/AppTheme.Main" />
+
         <activity
             android:name=".v3.ui.check.rhd.RelativeHDiffActivity"
             android:screenOrientation="landscape"
+            android:configChanges="density|fontScale|keyboard|keyboardHidden|layoutDirection|locale|mcc|mnc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|touchscreen|uiMode"
             android:theme="@style/AppTheme.Main"  />
         <activity
             android:name=".v3.ui.check.cd.CheckComponentDetectionActivity"
             android:screenOrientation="landscape"
+            android:configChanges="density|fontScale|keyboard|keyboardHidden|layoutDirection|locale|mcc|mnc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|touchscreen|uiMode"
             android:theme="@style/AppTheme.Main"  />
         <activity
             android:name=".v3.ui.draw.DrawPDFActivity"
             android:screenOrientation="landscape"
+            android:configChanges="density|fontScale|keyboard|keyboardHidden|layoutDirection|locale|mcc|mnc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|touchscreen|uiMode"
             android:theme="@style/AppTheme.Main" />
         <receiver
             android:name=".receiver.NetworkReceiver"

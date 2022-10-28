@@ -60,17 +60,20 @@ public class CheckHTableView extends LinearLayout {
     }
 
     public CheckHTableView setDatas(List<DamageV3Bean> datas) {
+        mChoosePointList = new ArrayList<>();
+        LogUtils.INSTANCE.d("mChoosePointList111: "+mChoosePointList);
         //设置测点数据
         if(datas != null && datas.size()>0){
             this.datas = datas;
             DamageV3Bean damageV3Bean = datas.get(0);
             if(damageV3Bean != null){
                 List<RelativeHDiffPointBean> pointList = damageV3Bean.getPointList();
+                LogUtils.INSTANCE.d("pointList: "+pointList);
                 if(pointList != null && pointList.size()>0){
-                    mChoosePointList.clear();
                     mChoosePointList.addAll(pointList);
                 }
             }
+            LogUtils.INSTANCE.d("mChoosePointList2222: "+mChoosePointList);
         }
         return this;
     }
@@ -114,15 +117,15 @@ public class CheckHTableView extends LinearLayout {
     /**
      * 删除对应添加的测点
      */
-    public void remove(String group, String pointName, Long annotRef) {
-        LogUtils.INSTANCE.d("remove  group: " + group + " ; pointName: " + pointName + " ; annotRef:" + annotRef);
+    public void remove(String annotName) {
+        LogUtils.INSTANCE.d("remove  annotName:" + annotName);
         Iterator<RelativeHDiffPointBean> pointBeanIterator = mChoosePointList.iterator();
         while (pointBeanIterator.hasNext()) {
             RelativeHDiffPointBean next = pointBeanIterator.next();
             Iterator<RelativeHDiffPointBean.Item> iterator = next.getMenu().iterator();
             while (iterator.hasNext()) {
                 RelativeHDiffPointBean.Item next2 = iterator.next();
-                if (next2.getAnnotRef() == annotRef) {
+                if (next2.getAnnotName().equals(annotName)) {
                     iterator.remove();
                 }
             }
@@ -152,6 +155,11 @@ public class CheckHTableView extends LinearLayout {
     public void build() {
         removeAllViews();
         mViewHolderList.clear();
+        if (mChoosePointList.size() <= 0) {
+            RelativeHDiffPointBean pointBean = new RelativeHDiffPointBean();
+            pointBean.setName("闭合点");
+            mChoosePointList.add(pointBean);
+        }
         initTitleTable();
     }
 

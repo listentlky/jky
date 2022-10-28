@@ -12,6 +12,7 @@ import com.sribs.bdd.bean.Floor
 import com.sribs.bdd.bean.ProjectBean
 import com.sribs.bdd.module.project.IProjectContrast
 import com.sribs.bdd.utils.DescriptionPositionHelper.floor
+import com.sribs.bdd.utils.UUIDUtil
 import com.sribs.common.bean.db.DamageBean
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -68,7 +69,7 @@ class BuildingDamagePresenter :BasePresenter(), IBuildingContrast.IBuildingPrese
                             item.id,
                             item.bldId,
                             item.projectId,
-                            item.floorId,
+                            "",
                             item.floorName,
                             item.floorType
                         )

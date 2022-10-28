@@ -210,6 +210,7 @@ public class GLView extends GLSurfaceView implements GLCanvas.CanvasListener {
                 PDFEndAnnot();
                 m_status = STA_NONE;
             } else {
+                Log.d("bruce","m_annot.GetType(): "+m_annot.GetType());
                 m_annot_rect = m_annot.GetRect();
                 float tmp = m_annot_rect[1];
                 m_annot_rect[0] = m_annot_page.GetVX(m_annot_rect[0]) - m_layout.vGetX();
@@ -362,7 +363,7 @@ public class GLView extends GLSurfaceView implements GLCanvas.CanvasListener {
                             }
 
                             @Override
-                            public void onMenuClicked(int whichBtn, long ref) {
+                            public void onMenuClicked(int whichBtn, Page.Annotation annot) {
 
                             }
                         });
@@ -398,7 +399,7 @@ public class GLView extends GLSurfaceView implements GLCanvas.CanvasListener {
                     public void onCancel() {
                     }
                     @Override
-                    public void onMenuClicked(int whichBtn, long ref) {
+                    public void onMenuClicked(int whichBtn, Page.Annotation annot) {
 
                     }
 
@@ -428,7 +429,7 @@ public class GLView extends GLSurfaceView implements GLCanvas.CanvasListener {
                         PDFEndAnnot();
                     }
                     @Override
-                    public void onMenuClicked(int whichBtn, long ref) {
+                    public void onMenuClicked(int whichBtn, Page.Annotation annot) {
 
                     }
                 });

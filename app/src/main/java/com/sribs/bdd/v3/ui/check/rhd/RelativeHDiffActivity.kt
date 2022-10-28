@@ -3,12 +3,14 @@ package com.sribs.bdd.v3.ui.check.rhd
 import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.Canvas
-import android.view.Gravity
+import android.graphics.Color
+import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.PopupWindow
 import android.widget.RelativeLayout
+import android.widget.TextView
+import androidx.cardview.widget.CardView
 import com.alibaba.android.arouter.facade.annotation.Autowired
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
@@ -46,13 +48,15 @@ import com.sribs.common.bean.db.DrawingV3Bean
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import kotlin.random.Random
+import kotlin.random.nextLong
 
 /**
  * 相对高差
  */
 @Route(path = com.sribs.common.ARouterPath.CHECK_RELATIVE_H_DIFF_ACTIVITY)
 class RelativeHDiffActivity : BaseActivity() ,ICheckRHDiffContrast.ICheckRHDiffView,
-    ILayoutView.PDFLayoutListener {
+    ILayoutView.PDFLayoutListener, PDFLayoutView.V3AddGroupPointCallback {
 
     @JvmField
     @Autowired(name= com.sribs.common.ARouterPath.VAL_COMMON_TITLE)
@@ -177,20 +181,20 @@ class RelativeHDiffActivity : BaseActivity() ,ICheckRHDiffContrast.ICheckRHDiffV
         return true
     }
 
-    var mMenuMapView: View? = null
-    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
-        super.onPrepareOptionsMenu(menu)
-        var item = menu?.findItem(R.id.menu_check_pop)
-
-        item?.icon?.setBounds(20, 50, 0, 0)
-        return true
-    }
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
         when (item?.itemId) {
-            R.id.menu_check_pop -> { // 菜单111
-
+            R.id.menu_damage_save -> { // 保存
+                AlertDialog.Builder(this).setTitle("提示")
+                    .setMessage(R.string.is_save_hint)
+                    .setPositiveButton(R.string.dialog_ok) { dialog, which ->
+                        mController?.savePDF()
+                        saveDamageDrawingToDb();
+                    }.setNegativeButton(
+                        R.string.dialog_cancel
+                    ) { dialog, which ->
+                    }
+                    .show()
             }
 
         }
@@ -265,7 +269,7 @@ class RelativeHDiffActivity : BaseActivity() ,ICheckRHDiffContrast.ICheckRHDiffV
     fun saveDamage(){
         var damage = DamageV3Bean(
             -1,
-            mCurrentDrawing!!.drawingID,
+            mCurrentDrawing!!.drawingID!!,
             "相对高差测量",
             0,
             -1,
@@ -276,15 +280,18 @@ class RelativeHDiffActivity : BaseActivity() ,ICheckRHDiffContrast.ICheckRHDiffV
             (mFragments[0] as RelativeHDiffFragment).mBinding.checkTableInfo.pointBean
         )
 
-        var exitDamageBeanList = mDamageBeanList!!.get(mCurrentLocalPDF)
-        if(exitDamageBeanList == null){
-            exitDamageBeanList = ArrayList()
-        }else{
-            exitDamageBeanList.clear()
-        }
-        exitDamageBeanList.add(damage)
-        mDamageBeanList!!.put(mCurrentLocalPDF, exitDamageBeanList)
+        LogUtils.d("saveDamage: "+damage)
 
+        mDamageBeanList?.forEach {
+            var exitDamageBeanList = mDamageBeanList!!.get(it.key)
+            if(exitDamageBeanList == null){
+                exitDamageBeanList = ArrayList()
+            }else{
+                exitDamageBeanList.clear()
+            }
+            exitDamageBeanList.add(damage)
+            mDamageBeanList!!.put(it.key, exitDamageBeanList)
+        }
         LogUtils.d("saveDamage： "+mDamageBeanList)
     }
 
@@ -399,7 +406,8 @@ class RelativeHDiffActivity : BaseActivity() ,ICheckRHDiffContrast.ICheckRHDiffV
             .subscribe({
                 mView?.PDFOpen(mDoc, this)
                 mView?.setReadOnly(false)
-     /*           mView?.setAnnotMenu(UIAnnotMenu(mViewParent))*/
+                mView?.setV3AddGroupPointCallback(this)
+                mView?.setAnnotMenu(UIAnnotMenu(mViewParent))
                 if(mController == null) {
                     mController = PDFViewController(
                         mViewParent,
@@ -462,7 +470,7 @@ class RelativeHDiffActivity : BaseActivity() ,ICheckRHDiffContrast.ICheckRHDiffV
 
     override fun OnPDFAnnotTapped(pno: Int, annot: Page.Annotation?) {
         LogUtils.d("OnPDFAnnotTapped")
-        if (annot != null) {
+/*        if (annot != null) {
             LogUtils.d("OnPDFAnnotTapped annot: "+annot!!.GetRef()+" ; "+annot.GetRect()[0]+" "+annot.GetRect()[1]+" "+annot.GetRect()[2]+" "+annot.GetRect()[3])
 
             LogUtils.d("getCurrentRect: "+mView!!.currentRect[0]+" ; "+mView!!.currentRect[1]+" ; "+mView!!.currentRect[2]+" ; "+mView!!.currentRect[3])
@@ -508,7 +516,7 @@ class RelativeHDiffActivity : BaseActivity() ,ICheckRHDiffContrast.ICheckRHDiffV
             rHDiffAddPointPopupWindow!!.showAtLocation(mViewParent,Gravity.NO_GRAVITY,calculateX(mView!!.currentRect).toInt(),calculateY(mView!!.currentRect).toInt())
             RadaeePluginCallback.getInstance().onAnnotTapped(annot)
             if (!mView!!.PDFCanSave() && annot.GetType() != 2) return
-        }
+        }*/
         if (mController != null) mController!!.OnAnnotTapped(pno, annot)
     }
 
@@ -640,42 +648,33 @@ class RelativeHDiffActivity : BaseActivity() ,ICheckRHDiffContrast.ICheckRHDiffV
         // 添加mark返回的信息，需保存 annotRef
         var damageBean: DamageV3Bean = Gson().fromJson(annotPoint!!, DamageV3Bean::class.java)
         when (damageBean.action) {
-            Constant.BUTTON_POPMENU_EDIT -> {
-                /**
+        /*    Constant.BUTTON_POPMENU_EDIT -> {
+                *//**
                  * 查询标记对应的损伤信息,查询到就设置上 进入编辑页面
-                 */
+                 *//*
                 var isMatch = false
                 mDamageBeanList!!.get(mCurrentLocalPDF)!!.forEach {
-                    if (damageBean.annotRef == it.annotRef) {
+                    if(damageBean.annotName == it.annotName){
                         isMatch = true
-                       /* resetDamageInfo(it, it.type)
+                        (mFragments[0] as RelativeHDiffFragment).editPointBean(group,point,annotRef)
+                    }
+
+                       *//* resetDamageInfo(it, it.type)
                         when (it.type) {
                             mCurrentDamageType[0] -> {
                                 mBinding.checkVp.currentItem = 1
                             }
-                        }*/
-                    }
+                        }*//*
                 }
                 if(!isMatch){
-                 //   resetDamageInfo(null, mCurrentDamageType[0])
-                    mBinding.checkVp.currentItem = 1
+                    (mFragments[0] as RelativeHDiffFragment).addPointBean(group,point,annotRef)
                 }
-            }
+            }*/
             Constant.BUTTON_POPMENU_DEL -> {
                 /**
-                 * 删除标记对应的损伤信息
+                 * 删除标记对应的组名
                  */
-                var exitDamageBeanList = mDamageBeanList!!.get(mCurrentLocalPDF)
-                LogUtils.d("删除前损伤数据: " + exitDamageBeanList)
-
-                var mTotalDamageBeanList = exitDamageBeanList!!.filter {
-                    damageBean.annotRef != it.annotRef
-                }
-                exitDamageBeanList.clear()
-                exitDamageBeanList.addAll(mTotalDamageBeanList)
-
-                mDamageBeanList!!.put(mCurrentLocalPDF, exitDamageBeanList)
-                resetDamageList()
+                (mFragments[0] as RelativeHDiffFragment).removePointBean(damageBean.annotName)
             }
         }
     }
@@ -690,5 +689,57 @@ class RelativeHDiffActivity : BaseActivity() ,ICheckRHDiffContrast.ICheckRHDiffV
 
     override fun onButtonNextPressed() {
         LogUtils.d("onButtonNextPressed")
+    }
+
+    /**
+     * 添加组名
+     */
+    override fun onAddPoint(group: String?, point: String?,annotName:String,colorBg:String?) {
+        var randomColor = "#"+Integer.toHexString(-(0..16777216).random())
+        var pair = (mFragments[0] as RelativeHDiffFragment).addOrEditPointBean(group!!,point!!,randomColor,annotName)
+        LogUtils.d("onAddPoint： "+pair)
+        if(pair.first){
+            mView?.PDFRemoveAnnot()
+        }
+        addDamageMark(group,point,pair.second,annotName)
+    }
+
+    override fun onShowPoint(annot: Page.Annotation?, isShowDelete:Boolean) {
+        LogUtils.d("onShowPoint"+ annot?.GetName())
+        var group:String ?= null
+        var point:String? = null
+        var color:String?=""
+        (mFragments[0] as RelativeHDiffFragment).mBinding.checkTableInfo.pointBean.forEach { g->
+                LogUtils.d("g   "+ g?.name)
+                g.menu?.forEach { p->
+                    LogUtils.d("p    "+ p.name+" ; "+ p?.annotName)
+                    if(annot?.GetName() == p.annotName){
+                        group = g.name
+                        point = p.name
+                        color = g.colorBg
+                    }
+                }
+        }
+        mView?.showV3RHDiffAddPointPopupWindow(group,point,annot?.GetName(),color,isShowDelete)
+    }
+
+    override fun onDeletePoint(annotName: String) {
+        LogUtils.d("onDeletePoint： "+annotName)
+        (mFragments[0] as RelativeHDiffFragment).removePointBean(annotName)
+    }
+
+    /**
+     * 添加mark标记
+     */
+    fun addDamageMark(group: String?, point: String?,color:String?,name:String){
+        val view: View =
+            LayoutInflater.from(this).inflate(com.radaee.viewlib.R.layout.damage_checkbuildstructure_mark_layout, null)
+        val damageText = view.findViewById<TextView>(com.radaee.viewlib.R.id.damage_text)
+        var cardView =view.findViewById<CardView>(com.radaee.viewlib.R.id.damage_type_cardView)
+        cardView.setCardBackgroundColor(Color.parseColor(color))
+        damageText.text = group+"-"+point
+        mView!!.layoutView(view, 400, 200)
+        var bitmap = PDFLayoutView.getViewBitmap(view)
+        mView!!.PDFSetStamp(1,bitmap,80f,40f,name)
     }
 }

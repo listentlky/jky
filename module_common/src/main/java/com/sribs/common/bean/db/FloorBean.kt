@@ -10,7 +10,7 @@ data class FloorBean(
     var projectId:Long?=null,
     var bldId:Long?=null,
     var unitId:Long?=null,
-    var floorId:Long?=null,
+    var floorId:String?=null,
     var floorName:String?=null,
     var floorType:Int?=0, // 0地下 1地上
 
@@ -26,7 +26,7 @@ data class FloorBean(
     var underGroundNumber:Int?=0, //地下层数
 
 ){
-    fun isSame(projectId:Long?,bldId: Long?,unitId: Long?,floorId: Long?):Boolean =
+    fun isSame(projectId:Long?,bldId: Long?,unitId: Long?,floorId: String?):Boolean =
         this.projectId == projectId && this.bldId == bldId && this.unitId == unitId && this.floorId == floorId
 
 

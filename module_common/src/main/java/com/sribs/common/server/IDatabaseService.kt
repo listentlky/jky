@@ -309,4 +309,6 @@ interface IDatabaseService:IProvider {
 
     fun updateBuildingModuleVersion(id:Long, version:Long):Observable<Long>
 
+    fun getModuleFloor(id: Long):Flowable<List<v3ModuleFloorDbBean>>
+
 }

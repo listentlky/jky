@@ -59,9 +59,6 @@ class CheckCDPresenter : BasePresenter(),ICheckCDContrast.ICheckCDPresenter{
                 LogUtils.d("获取到该楼下所有楼层失败 ${it}")
             }))
 
-
-
-
     }
 
     /**

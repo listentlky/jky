@@ -307,7 +307,7 @@ return*/
 
                 buildingModuleList?.forEach { buildingModule ->
 
-                    if (buildingModule.moduleName.equals("构建检测")) {
+                    if (buildingModule.moduleName.equals("构件检测")) {
                         buildingModuleFloorList?.forEach { buildingModuleFloor ->
                             if (buildingModuleFloor.moduleId!!.equals(buildingModule.moduleid)) {
                                 buildingModuleFloor.drawingsList?.forEach { drawing ->
@@ -438,7 +438,7 @@ return*/
 
     fun isCopyFloorDrawing(moduleName: String?): Boolean {
         if (moduleName == "建筑结构复核" ||
-            moduleName == "构建检测"
+            moduleName == "构件检测"
         ) {
             return true
         }
@@ -498,7 +498,7 @@ return*/
                                 d.type ?: "",
                                 Gson().toJson(d),
                                 resId?.get(0)?.resId ?: "",
-                                "drawing:" + resId?.get(0)?.resId,
+                                b.drawingID!!,
                                 b.fileName ?: "",
                                 b.floorName ?: "",
                                 inspectorList,
@@ -512,9 +512,10 @@ return*/
                     V3UploadDrawingReq.add(
                         V3UploadDrawingReq(
                             if (it.buildingRemoteId.isNullOrEmpty()) it.buildingUUID!! else it.buildingRemoteId!!,
-                            "drawing:" + resId?.get(0)?.resId,
+                            b.drawingID!!,
                             b.fileName!!,
                             b.fileType!!,
+                            "",
                             "",
                             1,
                             index,
@@ -642,7 +643,7 @@ return*/
                                     ddd.type ?: "",
                                     Gson().toJson(ddd),
                                     resId?.get(0)?.resId ?: "",
-                                    "drawing:" + resId?.get(0)?.resId,
+                                    bbb.drawingID!!,
                                     bbb.fileName ?: "",
                                     bbb.floorName ?: "",
                                     inspectorList,
@@ -656,9 +657,10 @@ return*/
                         V3UploadDrawingReq.add(
                             V3UploadDrawingReq(
                                 if (it.buildingRemoteId.isNullOrEmpty()) it.buildingUUID!! else it.buildingRemoteId!!,
-                                "drawing:" + resId?.get(0)?.resId,
+                                bbb.drawingID!!,
                                 bbb.fileName!!,
                                 bbb.fileType!!,
+                                cc.floorId!!,
                                 cc.floorName ?: "",
                                 cc.floorType,
                                 index,
@@ -705,9 +707,10 @@ return*/
                 V3UploadDrawingReq.add(
                     V3UploadDrawingReq(
                         if (it.remoteId.isNullOrEmpty()) it.UUID!! else it.remoteId!!,
-                        "drawing:" + resId?.get(0)?.resId,
+                        drawingV3Bean.drawingID!!,
                         drawingV3Bean.fileName!!,
                         drawingV3Bean.fileType!!,
+                        "",
                         "",
                         1,
                         index,
@@ -734,9 +737,10 @@ return*/
                     V3UploadDrawingReq.add(
                         V3UploadDrawingReq(
                             if (it.remoteId.isNullOrEmpty()) it.UUID!! else it.remoteId!!,
-                            "drawing:" + resId?.get(0)?.resId,
+                            dd.drawingID!!,
                             dd.fileName!!,
                             dd.fileType!!,
+                            floorBean.floorId!!,
                             floorBean.floorName ?: "",
                             floorBean.floorType ?: 0,
                             index,
@@ -947,7 +951,7 @@ return*/
                             ).absolutePath
                         }
                         var DrawingV3Bean = DrawingV3Bean(
-                            -1,
+                            dd.drawingId,
                             dd.drawingName,
                             dd.fileType,
                             "overall",
@@ -962,6 +966,7 @@ return*/
                         } else {
                             floorSortBean.add(
                                 FloorSortBean(
+                                    dd.floorId,
                                     dd.floorNo,
                                     dd.direction,
                                     DrawingV3Bean.sort!!
@@ -1029,7 +1034,7 @@ return*/
                                     projectLocalId,
                                     BUIDINGID,
                                     -1,
-                                    -1,
+                                    ff.floorId,
                                     ff.floorNo,
                                     ff.direction,
                                     TimeUtil.stampToDate("" + System.currentTimeMillis()),
@@ -1094,7 +1099,7 @@ return*/
                                     dd.damageMixes?.forEach {damage->
                                         var damageV3Bean =
                                             Gson().fromJson(damage.desc, DamageV3Bean::class.java)
-                                        if(mm.moduleName == "构建检测"){
+                                        if(mm.moduleName == "构件检测"){
                                             when(damageV3Bean.type){
                                                 "梁"->{
                                                     if (damageV3Bean?.beamLeftRealPicList?.size!! > 1) {
@@ -1179,7 +1184,7 @@ return*/
 
 
                                     var DrawingV3Bean = DrawingV3Bean(
-                                        -1,
+                                        dd.drawingId,
                                         dd.drawingName,
                                         dd.fileType,
                                         "overall",
@@ -1194,6 +1199,7 @@ return*/
                                     } else {
                                         moduleFloorSortBean.add(
                                             FloorSortBean(
+                                                dd.floorId,
                                                 dd.floorNo,
                                                 dd.direction,
                                                 DrawingV3Bean.sort!!
@@ -1265,7 +1271,7 @@ return*/
                                                     projectId = projectLocalId,
                                                     bldId = BUIDINGID,
                                                     moduleId = MODULEID,
-                                                    floorId = -1,
+                                                    floorId = ff.floorId,
                                                     floorName = ff.floorNo,
                                                     floorType = ff.direction,
                                                     drawingsList = drawingV3Bean,
@@ -1421,7 +1427,7 @@ return*/
                                     )
                                 )
 
-                                if (mm.moduleName.equals("构建检测")) {
+                                if (mm.moduleName.equals("构件检测")) {
                                     dd.damageMixes.forEach { damage ->
                                         var damageV3Bean =
                                             Gson().fromJson(damage.desc, DamageV3Bean::class.java)

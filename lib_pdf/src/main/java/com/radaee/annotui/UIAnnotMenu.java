@@ -30,7 +30,7 @@ public class UIAnnotMenu {
 
         void onCancel();
 
-        void onMenuClicked(int whichBtn, long ref);
+        void onMenuClicked(int whichBtn, Page.Annotation annot);
     }
 
     private IMemnuCallback m_callback;
@@ -61,7 +61,7 @@ public class UIAnnotMenu {
             public void onClick(View v) {
                 //
                 Log.i("leon","UIAnnotMenu onClick BUTTON_POPMENU_EDIT");
-                m_callback.onMenuClicked(Constant.BUTTON_POPMENU_EDIT, m_annot.GetRef());
+                m_callback.onMenuClicked(Constant.BUTTON_POPMENU_EDIT, m_annot);
                 //
 
                 hide();
@@ -109,7 +109,7 @@ public class UIAnnotMenu {
             public void onClick(View v) {
                 if (m_callback != null)
                     Log.i("leon","UIAnnotMenu onClick BUTTON_POPMENU_DEL ref=" + m_annot.GetRef());
-                    m_callback.onMenuClicked(Constant.BUTTON_POPMENU_DEL, m_annot.GetRef());
+                    m_callback.onMenuClicked(Constant.BUTTON_POPMENU_DEL, m_annot);
                     m_callback.onRemove();
                 hide();
             }
@@ -130,12 +130,13 @@ public class UIAnnotMenu {
         m_annot = annot;
         m_callback = callback;
         int atype = annot.GetType();
-        boolean is_show = (atype != 20 && atype != 3);
+        Log.i("bruce","UIAnnotMenu show atype=" + atype);
+        boolean is_show = (atype != 20);
         m_has_perform = (atype == 2 || atype == 17 || atype == 18 || atype == 19 || atype == 21 || atype == 25 || atype == 26);
        /* m_has_edit = (atype == 1 || atype == 4 || atype == 5 || atype == 6 ||
                 atype == 7 || atype == 8 || atype == 9 || atype == 10 ||
                 atype == 11 || atype == 12 || atype == 13 || atype == 15);*/
-        m_has_edit = (atype == 1);
+        m_has_edit = (atype == 1 || atype == 13);
         m_has_remove = (atype != 0);
         m_has_property = (atype != 0 && atype != 2 && atype != 13);
 

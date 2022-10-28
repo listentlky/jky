@@ -35,7 +35,7 @@ class DrawingV3Bean():BaseDbBean(){
 
     override fun getThis(): BaseDbBean = this
 
-    var drawingID:Long=-1
+    var drawingID:String?=""
     var fileName: String?=""
     var fileType: String?=""//pdf,jpg,png,jpeg
     var drawingType: String?=""//east,west,south,north,overall,floor
@@ -44,7 +44,7 @@ class DrawingV3Bean():BaseDbBean(){
     var sort:Int?=0
     var damage:ArrayList<DamageV3Bean>?=ArrayList() //损伤
 
-    constructor(drawingID:Long,fileName: String?,fileType: String?,drawingType: String?,localAbsPath: String?,
+    constructor(drawingID:String,fileName: String?,fileType: String?,drawingType: String?,localAbsPath: String?,
                 remoteAbsPath: String?,damage:ArrayList<DamageV3Bean>):this(){
         this.drawingID = drawingID
         this.fileName = fileName
@@ -55,7 +55,7 @@ class DrawingV3Bean():BaseDbBean(){
         this.damage = damage
     }
 
-    constructor(drawingID:Long,fileName: String?,fileType: String?,drawingType: String?,localAbsPath: String?,
+    constructor(drawingID:String,fileName: String?,fileType: String?,drawingType: String?,localAbsPath: String?,
                 remoteAbsPath: String?,sort:Int,damage:ArrayList<DamageV3Bean>):this(){
         this.drawingID = drawingID
         this.fileName = fileName
@@ -70,7 +70,7 @@ class DrawingV3Bean():BaseDbBean(){
 
     var direction:String?="" //方向
     var rotate:Int?=0//角度
-    constructor(drawingID:Long,fileName: String?,fileType: String?,drawingType: String?,localAbsPath: String?,
+    constructor(drawingID:String,fileName: String?,fileType: String?,drawingType: String?,localAbsPath: String?,
                 remoteAbsPath: String?,damage:ArrayList<DamageV3Bean>,direction:String?,rotate:Int?):this(){
         this.drawingID = drawingID
         this.fileName = fileName

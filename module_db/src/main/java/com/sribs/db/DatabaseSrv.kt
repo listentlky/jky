@@ -884,6 +884,11 @@ class DatabaseSrv : IDatabaseService {
         it.onNext(dao.updateBuildingModuleVersion(id,version).toLong())
     }
 
+    override fun getModuleFloor(id: Long): Flowable<List<v3ModuleFloorDbBean>> {
+        var dao = mDb!!.v3ModuleFloorDao()
+        return dao.getModuleFloor(id).run { ConverterHelper.convertv3ModuleFloorBean(this) }
+    }
+
     override fun getBuildingIdByProjectId(proId: Long): Observable<Long> = Observable.create {
         var dao = mDb!!.buildingDao()
         var bldId: Long = dao.getBuildingIdByProjectId(proId)

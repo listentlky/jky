@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item android:id="@+id/menu_main_info"
+
+    <item android:id="@+id/menu_damage_save"
+        android:title=""
+        android:orderInCategory="100"
+        app:showAsAction="always"
+        android:icon="@mipmap/icon_unit_fun"/>
+
+
+   <!-- <item android:id="@+id/menu_damage_info"
         android:title=""
         android:orderInCategory="100"
         app:showAsAction="always"
         android:icon="@mipmap/icon_info"
         >
-        <menu>
-            <group>
-                <item
-                    android:id="@+id/menu_check_pop"
-                    android:title="文件上传测试"
-                    android:icon="@drawable/ic_main_local"
-                    />
-            </group>
-        </menu>
-    </item>
+    </item>-->
 </menu>

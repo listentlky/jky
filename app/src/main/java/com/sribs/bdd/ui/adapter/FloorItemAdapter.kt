@@ -41,8 +41,8 @@ class FloorItemAdapter : BaseListAdapter<BuildingModule, ItemFloorDetailBinding>
                 text = "相对高差测量"
                 routing = com.sribs.common.ARouterPath.CHECK_RELATIVE_H_DIFF_ACTIVITY
             }
-            "构建检测" -> {
-                text = "构建检测"
+            "构件检测" -> {
+                text = "构件检测"
                 routing = com.sribs.common.ARouterPath.CHECK_COMPONENT_DETECTION_ACTIVITY
                 configRouting = com.sribs.common.ARouterPath.CHECK_MODULE_CONFIG_TYPE_FLOOR_ACTIVITY
             }

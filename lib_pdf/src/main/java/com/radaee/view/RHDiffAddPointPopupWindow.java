@@ -6,16 +6,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.radaee.viewlib.R;
-
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * create time: 2022/9/27
@@ -26,7 +22,10 @@ public class RHDiffAddPointPopupWindow extends PopupWindow {
 
     private String group;
     private String pointName;
-    private Long mAnnotRef= -1L;
+
+    private String mAnnotName;
+
+    private String mColorBg;
 
     private EditText mGroupEdit;
 
@@ -36,9 +35,8 @@ public class RHDiffAddPointPopupWindow extends PopupWindow {
 
     private boolean isClickDismiss;
 
-    public RHDiffAddPointPopupWindow(Context context,int width,Long annotRef,RHDiffAddPointCallback rhDiffAddPointCallback) {
+    public RHDiffAddPointPopupWindow(Context context,int width,RHDiffAddPointCallback rhDiffAddPointCallback) {
         super(context);
-        this.mAnnotRef = annotRef;
         View view = LayoutInflater.from(context).inflate(R.layout.rhd_add_point_layout,null);
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(width,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -59,6 +57,9 @@ public class RHDiffAddPointPopupWindow extends PopupWindow {
             public void onClick(View v) {
                 isClickDismiss = true;
                 dismiss();
+                if(rhDiffAddPointCallback != null){
+                    rhDiffAddPointCallback.onCancel();
+                }
             }
         });
 
@@ -74,7 +75,7 @@ public class RHDiffAddPointPopupWindow extends PopupWindow {
                     return;
                 }
                 if(rhDiffAddPointCallback != null){
-                    rhDiffAddPointCallback.onAddPoint(mGroupEdit.getText().toString(),mPointEdit.getText().toString(),mAnnotRef);
+                    rhDiffAddPointCallback.onAddPoint(mGroupEdit.getText().toString(),mPointEdit.getText().toString(),mAnnotName,mColorBg);
                 }
                 isClickDismiss = true;
                 dismiss();
@@ -85,7 +86,7 @@ public class RHDiffAddPointPopupWindow extends PopupWindow {
             @Override
             public void onClick(View v) {
                 if(rhDiffAddPointCallback != null){
-                    rhDiffAddPointCallback.onDeletePoint(mGroupEdit.getText().toString(),mPointEdit.getText().toString(),mAnnotRef);
+                    rhDiffAddPointCallback.onDeletePoint(mGroupEdit.getText().toString(),mPointEdit.getText().toString(),mAnnotName);
                 }
                 isClickDismiss = true;
                 dismiss();
@@ -101,23 +102,36 @@ public class RHDiffAddPointPopupWindow extends PopupWindow {
         }
     }
 
-    public void setInfo(String group, String pointName, Long annotRef){
-        Log.d("bruce","setInfo: "+group+" "+pointName+" "+annotRef);
+    public void setInfo(String group, String pointName,String annotName,String colorBg,boolean isDelete){
+        Log.d("bruce","setInfo: "+group+" "+pointName+" ");
         this.group = group;
         this.pointName = pointName;
-        this.mAnnotRef = annotRef;
+        this.mAnnotName = annotName;
+        this.mColorBg = colorBg;
         if(mGroupEdit != null){
             mGroupEdit.setText(group);
         }
         if(mPointEdit!= null){
             mPointEdit.setText(pointName);
         }
+        if(isDelete){
+            if(mDelete != null){
+                mDelete.setVisibility(View.VISIBLE);
+            }
+        }else {
+            if(mDelete != null) {
+                mDelete.setVisibility(View.GONE);
+            }
+        }
     }
 
     public interface RHDiffAddPointCallback{
 
-        void onAddPoint(String group,String point,Long annotRef);
+        void onCancel();
 
-        void onDeletePoint(String group,String point,Long annotRef);
+        void onAddPoint(String group,String point,String annotName,String colorBg);
+
+        void onDeletePoint(String group,String point,String annotName);
     }
+
 }

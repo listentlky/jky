@@ -60,8 +60,8 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
     private var mRightDesignPicSrc: String = ""
     private val REQUEST_CODE_COLUMN_REAL_WHITE_FLLOR = 16 //
     private val REQUEST_CODE_COLUMN_DESIGN_WHITE_FLLOR = 17 //
-    private val REQUEST_CODE_COLUMN_RIGHT_REAL_WHITE_FLLOR = 20 //
-    private val REQUEST_CODE_COLUMN_RIGHT_DESIGN_WHITE_FLLOR = 21 //
+    private val REQUEST_CODE_COLUMN_RIGHT_REAL_WHITE_FLLOR = 30 //
+    private val REQUEST_CODE_COLUMN_RIGHT_DESIGN_WHITE_FLLOR = 31 //
     private val REQUEST_COLUMN_REAL_TAKE_PHOTO = 18 //选择图片
     private val REQUEST_COLUMN_DESIGN_TAKE_PHOTO = 19 //选择图片
 
@@ -907,7 +907,7 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
 
             var damage = DamageV3Bean(
                 -1,
-                (activity as CheckComponentDetectionActivity).mCurrentDrawing!!.drawingID,
+                (activity as CheckComponentDetectionActivity).mCurrentDrawing!!.drawingID!!,
                 "柱",
                 0,
                 mAddAnnotReF,

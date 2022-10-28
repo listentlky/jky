@@ -19,7 +19,7 @@ data class FloorBean(
     @ColumnInfo(name="project_id")          var projectId:Long?,//project 表主键
     @ColumnInfo(name="bld_id")              var bldId:Long?,//building 表主键
     @ColumnInfo(name="unit_id")              var unitId:Long?,//unit 表主键
-    @ColumnInfo(name="floor_id")              var floorId:Long?,//本楼楼层id
+    @ColumnInfo(name="floor_id")              var floorId:String?,//本楼楼层id
     @ColumnInfo(name="floor_name")           var floorName:String?,//楼层名称
     @ColumnInfo(name="floor_type")           var floorType:Int?,//0地下  1 地上
     @ColumnInfo(name="create_time")         var createTime:String?=TimeUtil.stampToDate(""+System.currentTimeMillis()),
@@ -41,7 +41,7 @@ data class FloorBean(
                 projectId: Long?,
                 bldId: Long?,
                 unitId: Long?,
-                floorId: Long?,
+                floorId: String?,
                 floorName:String?,
                 floorType:Int,
                 createTime: String?,
@@ -50,7 +50,7 @@ data class FloorBean(
                 inspectorName: String,
                 remoteId: String?,
                 version: Long?,
-                status: Int?) : this(0L,0L,0L,0L,"",0,"","","","","",0, 0) {
+                status: Int?) : this(0L,0L,0L,"","",0,"","","","","",0, 0) {
         this.id = id
         this.projectId = projectId
         this.bldId = bldId

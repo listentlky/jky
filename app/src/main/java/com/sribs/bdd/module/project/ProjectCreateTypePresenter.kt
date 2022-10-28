@@ -30,9 +30,11 @@ import com.sribs.common.net.HttpApi
 import com.sribs.common.server.IDatabaseService
 import com.sribs.common.utils.FileUtil
 import com.sribs.common.utils.TimeUtil
+import com.sribs.common.utils.Util
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import org.apache.commons.lang3.RandomUtils
 import java.io.File
 import java.util.*
 import kotlin.collections.ArrayList
@@ -248,8 +250,6 @@ class ProjectCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCre
 
         mCurDrawingsDir = "/" + ModuleHelper.DRAWING_CACHE_FOLDER + "/" + mProName + "/" + name + "/"
 
-        LogUtils.d("创建本地楼: mBldId=${mBuildingId}")
-
         createLocalFacadesDrawingInTheBuilding(activity,mLocalProjectId, mBldId!!)
 
         LogUtils.d("楼图纸："+mAppFacadeDrawingList.toString())
@@ -290,6 +290,7 @@ class ProjectCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCre
             .observeOn(Schedulers.computation())
             .subscribe({
                 mBldId = it.toLong()
+                LogUtils.d("创建楼: id=${mBldId}")
                 LogUtils.d("leon createLocalBuilding new building id=${mBldId}")
                 //cache floors info to sqlite
                 createLocalFloorsInTheBuilding(activity,mLocalProjectId, mBldId!!)
@@ -421,22 +422,17 @@ class ProjectCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCre
         println("leon createLocalFloorsInTheBuilding mBldId=${mBuildingId}")
         getFloorList(activity,mLocalProjectId,mBuildingId)
         if(floorList != null){
-            var floorId:Long = -1
-            var floorName:String? = null
             addDisposable(Observable.fromIterable(floorList)
                 .subscribeOn(Schedulers.computation())
                 .observeOn(Schedulers.computation())
                 .flatMap{
                     LogUtils.d("楼层图纸："+ it.drawingsV3List.toString())
-                    floorId = it.floorId?.toLong() ?: 0
-                    floorName = it.floorName
-                    println("leon 00 floorid=${floorId}, floorName=${floorName}")
                     var appFloor:FloorBean = FloorBean(
                         -1,
                         mLocalProjectId.toLong(),
                         mBuildingId.toLong(),
                         -1,
-                        it.floorId?.toLong(),
+                        it.floorId,
                         it.floorName,
                         it.floorType,
                         TimeUtil.stampToDate(""+it.createTime),
@@ -455,8 +451,9 @@ class ProjectCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCre
                 .subscribeOn(Schedulers.computation())
                 .observeOn(Schedulers.computation())
                 .subscribe({
-                    print("leon createLocalFloorsInTheBuilding ret floor id=$it")
+                    LogUtils.d("创建楼层: id=$it")
                 },{
+                    LogUtils.d("创建楼层失败: $it")
                     it.printStackTrace()
                 }))
         }
@@ -482,7 +479,7 @@ class ProjectCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCre
                 var cacheFilePath = File(cacheRootDir + mCurDrawingsDir,name)
 
                 var drawingV3ToBuild = DrawingV3Bean(
-                    -1,
+                    UUIDUtil.getUUID(name),
                     name,
                     FileUtil.getFileExtension(name),
                     "overall",
@@ -506,7 +503,7 @@ class ProjectCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCre
                     -1,
                     mBuildingId.toLong(),
                     mLocalProjectId.toLong(),
-                    (i+1).toLong(),
+                    UUIDUtil.getUUID(item.name),
                     item.name,
                     item.floorType
                 )
@@ -537,7 +534,7 @@ class ProjectCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCre
 
                 var cacheFilePath = File(cacheRootDir + mCurDrawingsDir+floorBean.name,name)
                 var drawingV3ToBuild = DrawingV3Bean(
-                    -1,
+                    UUIDUtil.getUUID(name),
                     name,
                     FileUtil.getFileExtension(name),
                     "floor",

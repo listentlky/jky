@@ -109,7 +109,7 @@ public class DrawWhiteFragment extends Fragment implements SketchView.OnDrawChan
     ImageView btn_send;//推送
     ImageView btn_send_space;//推送按钮间隔
 
-    TextView tv_line, tv_rect,tv_circle,tv_text,tv_manual;
+    TextView tv_line, tv_rect,tv_circle,tv_text,tv_manual,tv_chexiao,tv_huifu,tv_xiangpica;
 
 
     RadioGroup strokeTypeRG, strokeColorRG;
@@ -597,6 +597,12 @@ public class DrawWhiteFragment extends Fragment implements SketchView.OnDrawChan
         tv_text.setOnClickListener(this);
         tv_manual = view.findViewById(R.id.tv_manual);
         tv_manual.setOnClickListener(this);
+        tv_chexiao = view.findViewById(R.id.tv_chexiao);
+        tv_chexiao.setOnClickListener(this);
+        tv_huifu = view.findViewById(R.id.tv_huifu);
+        tv_huifu.setOnClickListener(this);
+        tv_xiangpica = view.findViewById(R.id.tv_xiangpica);
+        tv_xiangpica.setOnClickListener(this);
 
 
     }
@@ -762,6 +768,18 @@ public class DrawWhiteFragment extends Fragment implements SketchView.OnDrawChan
         } else if(id==R.id.tv_manual){
             strokeType = STROKE_TYPE_DRAW;
             mSketchView.setStrokeType(strokeType);
+        }else if(id == R.id.tv_chexiao){
+            mSketchView.undo();
+        }else if(id == R.id.tv_huifu){
+            mSketchView.redo();
+        }else if(id == R.id.tv_xiangpica){
+            if (mSketchView.getEditMode() == SketchView.EDIT_STROKE && mSketchView.getStrokeType() == STROKE_TYPE_ERASER) {
+                showParamsPopupWindow(v, STROKE_TYPE_ERASER);
+            } else {
+                mSketchView.setStrokeType(STROKE_TYPE_ERASER);
+            }
+            mSketchView.setEditMode(SketchView.EDIT_STROKE);
+            showBtn(btn_eraser);
         }
 
     }
@@ -844,7 +862,8 @@ public class DrawWhiteFragment extends Fragment implements SketchView.OnDrawChan
 
     private void showTextPopupWindow(View anchor, final StrokeRecord record) {
         strokeET.requestFocus();
-        textPopupWindow.showAsDropDown(anchor, record.textOffX, record.textOffY - mSketchView.getHeight());
+        strokeET.setText("");
+        textPopupWindow.showAsDropDown(anchor, record.textOffX, record.textOffY+strokeET.getHeight());
 
         textPopupWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_UNCHANGED);
 
@@ -856,8 +875,8 @@ public class DrawWhiteFragment extends Fragment implements SketchView.OnDrawChan
             public void onDismiss() {
                 if (!strokeET.getText().toString().equals("")) {
                     record.text = strokeET.getText().toString();
-                    record.textPaint.setTextSize(strokeET.getTextSize());
-                    record.textWidth = strokeET.getMaxWidth();
+                    record.textPaint.setTextSize(strokeET.getTextSize()/2);
+                    record.textWidth = strokeET.getWidth();
                     mSketchView.addStrokeRecord(record);
                 }
             }

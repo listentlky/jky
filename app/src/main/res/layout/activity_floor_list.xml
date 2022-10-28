@@ -84,6 +84,16 @@
             android:visibility="gone"
             />
 
+        <TextView
+            android:id="@+id/null_hint"
+            android:textSize="@dimen/_12sdp"
+            android:textColor="@color/gray_600"
+            android:text="无楼栋配置，请点击“+”号新增楼栋"
+            android:layout_centerInParent="true"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
     </RelativeLayout>
 
 

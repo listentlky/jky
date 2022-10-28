@@ -96,11 +96,11 @@ class RelativeHDiffFragment : BaseFragment(R.layout.fragment_relative_h_diff) {
     /**
      * 添加组和测点名
      */
-    fun addPointBean(group:String,point:String,annotRef: Long){
+    fun addPointBean(group:String,point:String,annotName: String){
         var itemList = ArrayList<RelativeHDiffPointBean.Item>()
         var item = RelativeHDiffPointBean.Item()
         item.name =point
-        item.annotRef = annotRef
+        item.annotName = annotName
         itemList.add(item)
         var relativeHDiffPointBean = RelativeHDiffPointBean().also {
             it.name = group
@@ -110,10 +110,61 @@ class RelativeHDiffFragment : BaseFragment(R.layout.fragment_relative_h_diff) {
     }
 
     /**
+     * 编辑组和测点名
+     * return  true 编辑  false 添加
+     */
+    fun addOrEditPointBean(group:String,point:String,randomColor:String,annotName: String):Pair<Boolean,String>{
+        LogUtils.d("addOrEditPointBean： ${group}   ${point}   ${annotName}")
+        var currentColor:String=""
+        var isMatch = false
+        mBinding.checkTableInfo.pointBean.forEach { g->
+            LogUtils.d("g: "+g.name)
+            g.menu.forEach { p->
+                LogUtils.d("p: "+p.name)
+                if(annotName == p.annotName){
+                    if(p.name != point ||g.name!=group){
+                        isMatch = true
+                        if(g.name != group){
+                            g.colorBg = randomColor
+                            currentColor = randomColor
+                        }else{
+                            currentColor = g.colorBg
+                        }
+                    }
+                    p.name = point
+                    g.name = group
+                }
+            }
+        }
+        LogUtils.d("isMatch: "+isMatch)
+        if(!isMatch){
+            var itemList = ArrayList<RelativeHDiffPointBean.Item>()
+            var item = RelativeHDiffPointBean.Item()
+            item.name =point
+            item.annotName = annotName
+            itemList.add(item)
+            var addPointColor = randomColor
+            mBinding.checkTableInfo.pointBean.forEach { g->
+                if(group == g.name){
+                    addPointColor = g.colorBg
+                }
+            }
+            currentColor = addPointColor
+            var relativeHDiffPointBean = RelativeHDiffPointBean().also {
+                it.name = group
+                it.colorBg = addPointColor
+                it.menu = itemList
+            }
+            mBinding.checkTableInfo.addPointBean(relativeHDiffPointBean)
+        }
+        return Pair(isMatch,currentColor)
+    }
+
+    /**
      * 删除mark 和添加的组和名
      */
-    fun removePointBean(group:String,point:String,annotRef: Long){
-        mBinding.checkTableInfo.remove(group,point,annotRef)
+    fun removePointBean(annotName: String){
+        mBinding.checkTableInfo.remove(annotName)
     }
 
     fun getPointBean():List<RelativeHDiffPointBean>{

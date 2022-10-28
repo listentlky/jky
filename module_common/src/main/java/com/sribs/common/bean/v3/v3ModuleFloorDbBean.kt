@@ -12,7 +12,7 @@ data class v3ModuleFloorDbBean(
     var projectId:Long?=null,
     var bldId:Long?=null,
     var moduleId:Long?=null,
-    var floorId:Long?=null,
+    var floorId:String?=null,
     var floorName:String?=null,
     var floorType:Int,
     var drawingsList: List<DrawingV3Bean>? = null,
@@ -25,7 +25,7 @@ data class v3ModuleFloorDbBean(
     var remoteId:String?=null,
     var status:Int?=0,
 ){
-    fun isSame(projectId:Long?,bldId: Long?,moduleId: Long?,floorId: Long?):Boolean =
+    fun isSame(projectId:Long?,bldId: Long?,moduleId: Long?,floorId: String?):Boolean =
         this.projectId == projectId && this.bldId == bldId && this.moduleId == moduleId && this.floorId == floorId
 
 

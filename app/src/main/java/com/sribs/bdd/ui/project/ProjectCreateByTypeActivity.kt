@@ -91,7 +91,7 @@ class ProjectCreateByTypeActivity : BaseActivity(), IProjectContrast.IProjectCre
             projectCreateTypePresenter.mBeforeOldIndex = 0
             finish()
         }
-        mBinding.toolbar.tbTitle.text = "新建项目"
+        mBinding.toolbar.tbTitle.text = "新建楼栋"
         mBinding.aboveNumber.setTextCallback(object : TagEditView.ITextChanged {
             override fun onTextChange(s: Editable?) {
 
