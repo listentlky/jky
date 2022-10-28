@@ -1,11 +1,12 @@
 package com.sribs.bdd.v3.view;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Gravity;
@@ -14,9 +15,7 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.facebook.stetho.common.LogUtil;
 import com.sribs.bdd.R;
-import com.sribs.bdd.v3.util.LogUtils;
 
 
 public class DrawAndTextView extends RelativeLayout {
@@ -46,6 +45,9 @@ public class DrawAndTextView extends RelativeLayout {
     private int lastY;
     private int oriLeft, oriRight, oriTop, oriBottom;
     private Context mContext;
+    private String mTopText;
+    private float currentRotation;
+    private Canvas mCanvas;
 
 
     //初始的旋转角度
@@ -53,103 +55,247 @@ public class DrawAndTextView extends RelativeLayout {
 
     private int mRotate = 0;
 
-    private Paint paint = new Paint() {
+    @SuppressLint("ResourceAsColor")
+    private Paint bgPaint = new Paint() {
         {
-            setColor(Color.RED);
+            setColor(R.color.blue_800);
             setAntiAlias(true);
             setStrokeWidth(4.0f);
+            setStyle(Style.FILL);
         }
     };
     private Activity mActivity;
     private String mContent;
-    private TextView mTextView;
-    private DrawView2 drawView2;
-    private int mType= -1;
-    private int mViewHeight= -1;
+    private TextView mMarkView;
+    private TextView mDefaultMarkView;
+    private int mType = -1;
+    private int mTextViewHeight = 0;
+    private int mDrawViewHeight = 0;
+    private int mDrawViewWidth = 0;
+    private int mTextSize = -1;
+    private boolean mIsShowTopText = false;
+    private boolean isFirstDraw;
+    private TextView mTopTextView;
+    private float defaultRotation = 0;
+    private float mAngle = 0;
 
 
     public DrawAndTextView(Context context) {
         super(context);
         this.mContext = context;
-     //   init();
+        //   init();
     }
-    public DrawAndTextView(Context context,  AttributeSet attrs) {
+
+    public DrawAndTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.mContext = context;
-     //   init();
+        //   init();
     }
 
-    public DrawAndTextView(Context context,  AttributeSet attrs, int defStyleAttr) {
+    public DrawAndTextView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         this.mContext = context;
-    //    init();
+        //    init();
     }
 
+    public float getOriRotation() {
+        return oriRotation;
+    }
+
+    public void setIsShowTopText(boolean mIsShowTopText) {
+        this.mIsShowTopText = mIsShowTopText;
+    }
 
     public void setContent(String content) {
         this.mContent = content;
     }
-    public void setDrawViewType(int type){
-        this.mType =type;
-    }
-    public void setViewHeight(int viewHeight){
-        this.mViewHeight =viewHeight;
+
+    public void setDrawViewType(int type) {
+        this.mType = type;
     }
 
+    public void setTextViewHeight(int viewHeight) {
+        this.mTextViewHeight = viewHeight;
+    }
+
+    public void setDrawViewHeight(int mDrawViewHeight) {
+        this.mDrawViewHeight = mDrawViewHeight;
+    }
 
     public void setOriRotation(float oriRotation) {
         this.oriRotation = oriRotation;
     }
 
-    public void init() {
+    public void setDrawViewWidth(int mDrawViewWidth) {
+        this.mDrawViewWidth = mDrawViewWidth;
+    }
+
+    public void setTextSize(int mTextSize) {
+        this.mTextSize = mTextSize;
+    }
+
+
+    public DrawView getDrawView() {
+        return mDrawView;
+    }
+
+
+    public DrawView2 getDrawView2() {
+        return mDrawView2;
+    }
+
+    public TextView getMarkTextView() {
+        return mMarkView;
+    }
+    public void resetView(float angle){
+        removeAllViews();
         if (mType==-1){
-            mDrawView = new DrawView(mContext);
-            LayoutParams drawParams = new LayoutParams(30, ViewGroup.LayoutParams.WRAP_CONTENT);
-            drawParams.addRule(RelativeLayout.CENTER_IN_PARENT);
-        
-            addView(mDrawView,drawParams);
+            setOriRotation(angle);
+            init();
+
         }else {
+            setOriRotation(angle);
+            setRotation(angle);
+            init();
+        }
+        invalidate();
+    }
+    public void init() {
+        if (mType == -1) {
+            mDrawView = new DrawView(mContext);
+            mDrawView.setTopText(mTopText);
+            LayoutParams drawParams = new LayoutParams(mDrawViewWidth == 0 ? 30 : mDrawViewWidth, mDrawViewHeight == 0 ? ViewGroup.LayoutParams.WRAP_CONTENT : mDrawViewHeight);
+            drawParams.addRule(RelativeLayout.CENTER_IN_PARENT);
+            addView(mDrawView, drawParams);
+        } else {
             mDrawView2 = new DrawView2(mContext);
-            LayoutParams drawParams = new LayoutParams(30, ViewGroup.LayoutParams.WRAP_CONTENT);
+            mDrawView2.setTopText(mTopText);
+            LayoutParams drawParams = new LayoutParams(mDrawViewWidth == 0 ? 30 : mDrawViewWidth, mDrawViewHeight == 0 ? ViewGroup.LayoutParams.WRAP_CONTENT : mDrawViewHeight);
             drawParams.addRule(RelativeLayout.CENTER_IN_PARENT);
 
-            addView(mDrawView2,drawParams);
+            addView(mDrawView2, drawParams);
         }
 
 
-        mTextView = new TextView(mContext);
-        mTextView.setText(mContent);
-        mTextView.setTextSize(10);
-        mTextView.setBackgroundResource(R.drawable.retancgle_drawable);
-        mTextView.setGravity(Gravity.CENTER);
+        mMarkView = new TextView(mContext);
+        mMarkView.setText(mContent);
+        mMarkView.setTextSize(mTextSize == -1 ? 10 : mTextSize);
+        mMarkView.setBackgroundResource(R.drawable.retancgle_drawable);
+        mMarkView.setGravity(Gravity.CENTER);
         LayoutParams textParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         textParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
-        textParams.topMargin = mViewHeight/4;
-        addView(mTextView,textParams);
+        textParams.topMargin = mTextViewHeight / 4;
+        addView(mMarkView, textParams);
 
     }
 
 
+    public void addMarkView(float angle) {
+        angle -= 90;
+        float radian = (float) Math.toRadians(angle);
+
+        float x = (float) (250 + Math.cos(radian) * 250);
+
+        float y = (float) (250 + Math.sin(radian) * 250);
+
+        removeView(mMarkView);
+
+        mMarkView = new TextView(mContext);
+        mMarkView.setText(mContent);
+        mMarkView.setTextSize(mTextSize == -1 ? 10 : mTextSize);
+        mMarkView.setBackgroundResource(R.drawable.retancgle_blue_drawable);
+        mMarkView.setGravity(Gravity.CENTER);
+        LayoutParams textParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        textParams.addRule(RelativeLayout.CENTER_IN_PARENT);
+        addView(mMarkView, textParams);
+        if (x >= 250) {
+            mMarkView.setTranslationX((x - 250) / 3);
+        } else {
+            mMarkView.setTranslationX(-(250 - x) / 3);
+        }
+
+        if (y >= 250) {
+            mMarkView.setTranslationY((y - 250) / 3);
+
+        } else {
+            mMarkView.setTranslationY(-(250 - y) / 3);
+
+        }
+
+        mMarkView.setRotation(angle + 90);
+
+    }
+
+    public void setTopText(String text) {
+        this.mTopText = text;
+    }
+
+
     private void move(MotionEvent event) {
-        Point center = new Point(oriLeft/2 + (oriRight - oriLeft) / 2, oriTop/2 + (oriBottom - oriTop) / 2);
+        Point center = new Point(oriLeft / 2 + (oriRight - oriLeft) / 2, oriTop / 2 + (oriBottom - oriTop) / 2);
         Point first = new Point(lastX, lastY);
         Point second = new Point((int) event.getRawX(), (int) event.getRawY());
 
-        oriRotation +=angle(center,first,second);
+        oriRotation += angle(center, first, second);
 
-        Float rotate =  (oriRotation % 360);
+        Float rotate = (oriRotation % 360);
         if (oriRotation > 0) {
-        //    mRotate = rotate;
+            //    mRotate = rotate;
         } else {
-          //  mRotate = Math.abs(rotate - 360);
+            //  mRotate = Math.abs(rotate - 360);
         }
-        Log.d("bruce", "oriRotation-----------"+oriRotation);
-     //   Log.d("bruce", "rotate"+rotate);
+        Log.d("bruce", "oriRotation-----------" + oriRotation);
+        //   Log.d("bruce", "rotate"+rotate);
+
+
         setRotation(oriRotation);
 
 
         lastX = (int) event.getRawX();
         lastY = (int) event.getRawY();
+    }
+
+    public Canvas getCanvas() {
+        return mCanvas;
+    }
+
+    public void addTopView(float angle,boolean isNeedRotation) {
+        if (isNeedRotation){
+            angle -= 90;
+        }else {
+            angle -= 90;
+        }
+
+
+        float radian = (float) Math.toRadians(angle);
+
+        float x = (float) (250 + Math.cos(radian) * 250);
+
+        float y = (float) (250 + Math.sin(radian) * 250);
+        LayoutParams textParams2 = new LayoutParams(150, ViewGroup.LayoutParams.WRAP_CONTENT);
+        textParams2.addRule(ALIGN_PARENT_LEFT);
+        mTopTextView = new TextView(mContext);
+        mTopTextView.setText(mTopText);
+        mTopTextView.setTextSize(6);
+        mTopTextView.setBackgroundResource(R.drawable.retancgle_blue_drawable);
+        mTopTextView.setGravity(Gravity.CENTER);
+
+        if (x>425){
+            mTopTextView.setTranslationX(x-150);
+        }else if (x>150){
+            mTopTextView.setTranslationX(x-75);
+        }   else{
+            mTopTextView.setTranslationX(x);
+        }
+        if (y>425){
+            mTopTextView.setTranslationY(y-30);
+
+        }else{
+            mTopTextView.setTranslationY(y);
+
+        }
+
+            addView(mTopTextView, textParams2);
     }
 
     /**
@@ -160,6 +306,9 @@ public class DrawAndTextView extends RelativeLayout {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+ /*       canvas.drawRect(0,0,getWidth(),getHeight(), bgPaint);
+        canvas.drawCircle(getWidth()/2-rect.width(),1,getWidth()/2+rect.width(),rect.height()*2+5,rectPaint);
+        canvas.drawText(mTopText, getWidth()/2,rect.height()*2, textPaint);*/
     }
 
     public float angle(Point cen, Point first, Point second) {
@@ -194,8 +343,6 @@ public class DrawAndTextView extends RelativeLayout {
         return (float) (isClockwise ? Math.toDegrees(radian) : -Math.toDegrees(radian));
 
     }
-
-
 
 
     public void setActivity(Activity activity) {
@@ -249,4 +396,8 @@ public class DrawAndTextView extends RelativeLayout {
 
 
 }
+
+
+
+
 

@@ -143,6 +143,19 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
 
     public PDFPos mMarkPDFPos;
     private boolean mIsIntercept;
+    private int layoutWidth,layoutHieght;
+
+    public int getLayoutWidth() {
+        return layoutWidth;
+    }
+
+    public int getLayoutHieght() {
+        return layoutHieght;
+    }
+
+    public float[] getM_rects() {
+        return m_rects;
+    }
 
     public PDFPos getMarkPDFPos() {
         return mMarkPDFPos;
@@ -1523,6 +1536,8 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
                 rects[cur + 2] = event.getX();
                 rects[cur + 3] = event.getY();
                 m_rects = rects;
+                layoutWidth = m_layout.vGetWidth();
+                layoutHieght = m_layout.vGetHeight();
                 for (float f:m_rects){
                     Log.d("bruce","onTouchStamp ACTION_DOWN: "+f);
             }
@@ -1655,6 +1670,33 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
         }
     }
 
+
+    public static Bitmap getViewBitmap(View view,float roationAngle) {
+        view.setDrawingCacheEnabled(true);
+        view.buildDrawingCache();
+        Bitmap drawingCache = view.getDrawingCache();
+
+        android.graphics.Matrix matrix=new android.graphics.Matrix();
+        matrix.postRotate(roationAngle);
+        if (drawingCache == null) {
+            Bitmap bitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
+            Bitmap bitmap1 = Bitmap.createBitmap(bitmap,0,0,bitmap.getWidth(),bitmap.getHeight(),matrix,true);
+            Canvas canvas = new Canvas(bitmap1);
+            view.draw(canvas);
+            return bitmap1;
+        } else {
+            Bitmap bitmap = Bitmap.createBitmap(drawingCache, 0, 0, drawingCache.getWidth(), drawingCache.getHeight(), matrix, false); // 创建一个DrawingCache的拷贝，因为DrawingCache得到的位图在禁用后会被回收
+            if (bitmap == null) {
+                return null;
+            }
+            view.setDrawingCacheEnabled(false);
+            bitmap.setHasAlpha(false);
+            bitmap.prepareToDraw();
+            return bitmap;
+        }
+    }
+
+
     public void layoutView(View v, int width, int height) {
         v.layout(0, 0, width, height);
         int measuredWidth = View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.EXACTLY);
@@ -1735,6 +1777,7 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (mIsIntercept) {
+            Log.e("bruce","事件被拦截");
             return true;
         }
         if (m_layout == null) return false;
@@ -1829,6 +1872,8 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
                 m_layout.vMoveEnd();
             }
         }
+        layoutWidth = m_layout.vGetWidth();
+        layoutHieght = m_layout.vGetHeight();
         invalidate();
     }
 
@@ -2476,7 +2521,7 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
                         page.AddAnnotBitmap(m_dicon, rect);
                         mat.Destroy();
                         Annotation annotation = page.GetAnnot(page.GetAnnotCount() - 1);
-                        if(!annotationName.isEmpty()){
+                        if(!TextUtils.isEmpty(annotationName)){
                             annotation.SetName(annotationName);
                         }
                         onAnnotCreated(annotation);
@@ -2509,6 +2554,8 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
             m_icon = null;
         }
     }
+
+    public int testX,testY;
 
     public void PDFSetStamp(int code) {
         if (code == 0)//start
@@ -2554,6 +2601,10 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
                         onAnnotCreated(page.GetAnnot(page.GetAnnotCount() - 1));
                         //add to redo/undo stack.
                         m_opstack.push(new OPAdd(pos.pageno, page, page.GetAnnotCount() - 1));
+                        Log.e("bruce", "PDFSetStamp: "+ rect[0]+"//"+rect[1]+"//"+rect[2]+"//"+rect[3]);
+                        Log.e("bruce", "PDFSetStamp22: "+ m_rects[0]+"//"+ m_rects[1]+"//"+m_rects[2]+"//"+m_rects[3]);
+                        testX = (int) m_rects[0];
+                        testY = (int) m_rects[1];
                         page.Close();
                         pset.Insert(vpage);
                     }
@@ -3021,6 +3072,7 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
     }
 
     public final PDFPos PDFGetPos(int x, int y) {
+        Log.d("bruce","w: "+m_layout.vGetWidth()+" ; h: "+m_layout.vGetHeight());
         if (m_layout != null)
             return m_layout.vGetPos(x, y);
         else return null;

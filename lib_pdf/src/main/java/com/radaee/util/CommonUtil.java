@@ -666,5 +666,24 @@ public class CommonUtil {
         }
     }
 
-
+    public static Bitmap getViewBitmap(View view) {
+        view.setDrawingCacheEnabled(true);
+        view.buildDrawingCache();
+        Bitmap drawingCache = view.getDrawingCache();
+        if (drawingCache == null) {
+            Bitmap bitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(bitmap);
+            view.draw(canvas);
+            return bitmap;
+        } else {
+            Bitmap bitmap = Bitmap.createBitmap(drawingCache); // 创建一个DrawingCache的拷贝，因为DrawingCache得到的位图在禁用后会被回收
+            if (bitmap == null) {
+                return null;
+            }
+            view.setDrawingCacheEnabled(false);
+            bitmap.setHasAlpha(false);
+            bitmap.prepareToDraw();
+            return bitmap;
+        }
+    }
 }

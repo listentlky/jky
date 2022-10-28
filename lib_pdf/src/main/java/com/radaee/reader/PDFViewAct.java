@@ -124,6 +124,7 @@ public class PDFViewAct extends Activity implements ILayoutView.PDFLayoutListene
                     startActivityForResult(intent, 10000);
                 }
             });
+
             if (dlg != null) dlg.dismiss();
             else handler.removeCallbacks(runnable);
 

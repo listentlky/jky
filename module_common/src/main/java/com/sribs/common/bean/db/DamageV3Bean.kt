@@ -360,10 +360,12 @@ class DamageV3Bean(){
     var guideRotate:Int?=0//角度
     var tilt1:String?="" //倾斜量1
     var tilt2:String?="" //倾斜量2
+    var tiltRotate1:Int?=0 //倾斜角度1
+    var tiltRotate2:Int?=0 //倾斜角度2
     //倾斜测量点位
     constructor(id:Long,drawingId:String,type:String?,action:Int?,annotRef:Long,note:String?,createTime:Long,
                 guide:String?,guideRotate:Int?,pointName:String?,measure1Height:String?,measure2Height:String?,
-                tilt1:String?,tilt2:String?):this(){
+                tilt1:String?,tilt2:String?,tiltRotate1:Int?,tiltRotate2:Int?):this(){
         this.id = id
         this.drawingId = drawingId
         this.type = type
@@ -378,6 +380,8 @@ class DamageV3Bean(){
         this.measure2Height = measure2Height
         this.tilt1 = tilt1
         this.tilt2 = tilt2
+        this.tiltRotate1 = tiltRotate1
+        this.tiltRotate2 = tiltRotate2
 
     }
 

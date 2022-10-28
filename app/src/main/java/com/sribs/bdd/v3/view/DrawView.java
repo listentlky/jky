@@ -1,41 +1,80 @@
 package com.sribs.bdd.v3.view;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
+import android.graphics.Rect;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
+
+import com.sribs.bdd.R;
+import com.sribs.bdd.v3.util.LogUtils;
 
 public class DrawView extends View {
 
-    private static int height = 30;
-    private static int bottom = 10;
+    private static int mTrangleheight = 30;
+    private static int mTranglebottom = 10;
 
     private final int NONE = -1;
     private final int SCALE = 1;
 
-    private int lastX;
-    private int lastY;
+    private float lastX;
+    private float lastY;
     private int oriLeft, oriRight, oriTop, oriBottom;
+    private String mTopText;
+    private boolean isFirstDraw =true;
 
 
     //初始的旋转角度
-    private float oriRotation = 0;
+    private float currentOriRotation = 0;
 
     private int mRotate = 0;
     private Context mContext;
 
+    @SuppressLint("ResourceAsColor")
     private Paint paint = new Paint(){
         {
-            setColor(Color.BLUE);
+            setColor(Color.parseColor("#FF005B82"));
             setAntiAlias(true);
             setStrokeWidth(4.0f);
         }
     };
-    private boolean mIsClick;
+
+    private Paint textPaint = new Paint(){
+        {
+            setAntiAlias(true);
+            setTextSize(20);
+            setStrokeWidth(20);
+            setTextAlign(Align.CENTER);
+        }
+    };
+
+    private Paint rectPaint = new Paint(){
+        {
+            setStyle(Style.STROKE);
+            setColor(Color.parseColor("#FF005B82"));
+            setStrokeJoin(Paint.Join.ROUND);
+        }
+    };
+
+    private Paint rectPaint2 = new Paint(){
+        {
+            setStyle(Paint.Style.FILL);
+            setColor(Color.WHITE);
+            setStrokeJoin(Paint.Join.ROUND);
+        }
+    };
+
+    private boolean mIsShowTopText=false;
+    private boolean mIsResetTopTextLocation=false;
+
+
+
 
     public DrawView(Context context) {
         super(context);
@@ -51,11 +90,96 @@ public class DrawView extends View {
     }
 
 
+
+    public void setTopText(String topText){
+        this.mTopText =topText;
+}
+
+    private float mLineEndX,mLineEndY,mLineTrangleEndX,mLineTrangleEndY;
+    private float mLineDefaultX,mLineDefault2;
+
+    private float mAngle=0;
+
+    public void setAngle(float mAngle) {
+        this.mAngle = mAngle;
+    }
+
     @Override
     protected void onDraw(Canvas canvas) {
-        canvas.drawLine(getWidth()/2, getHeight()/2, getWidth()/2, 0, paint);
-        drawTrangle(canvas, paint, getWidth()/2, getHeight()/2, getWidth()/2, 0, height, bottom);
+
+        Log.e("bruce", "开始绘制view " );
+
+        if(mAngle==0 ){
+            mLineEndX = getWidth()/2;
+            mLineEndY = 0;
+
+            mLineTrangleEndX =  getWidth()/2 ;
+            mLineTrangleEndY = 0;
+        }else {
+
+            mAngle-=90;
+
+            float radian = (float) Math.toRadians(mAngle);
+
+            float linexr = getWidth()/2;
+
+            float lineyr = getHeight()/2;
+
+            float tranglexr = getWidth()/2;
+
+            float trangleyr = getHeight()/2;
+
+            LogUtils.INSTANCE.d("linexr： "+linexr);
+            LogUtils.INSTANCE.d("lineyr： "+lineyr);
+            LogUtils.INSTANCE.d("tranglexr： "+tranglexr);
+            LogUtils.INSTANCE.d("trangleyr： "+trangleyr);
+
+            mLineEndX = (float) (linexr + Math.cos(radian)* linexr);
+
+            mLineEndY = (float)(lineyr + Math.sin(radian)* lineyr);
+
+            LogUtils.INSTANCE.d("mLineEndX： "+mLineEndX);
+            LogUtils.INSTANCE.d("mLineEndY： "+mLineEndY);
+
+            mLineTrangleEndX = (float) (tranglexr+ Math.cos(radian)*tranglexr);
+
+            mLineTrangleEndY = (float)(trangleyr + Math.sin(radian)*trangleyr);
+            LogUtils.INSTANCE.d("mLineTrangleEndX： "+mLineTrangleEndX);
+            LogUtils.INSTANCE.d("mLineTrangleEndY： "+mLineTrangleEndY);
+
+
+            Log.e("bruce", "onDraw:角度 "+mAngle );
+            Log.e("bruce", "onDraw:宽高 "+getWidth()+"//"+getHeight() );
+
+
         }
+
+        canvas.drawLine(getWidth()/2, getHeight()/2, mLineEndX, mLineEndY, paint);
+        drawTrangle(canvas, paint, getWidth()/2, getHeight()/2, mLineTrangleEndX, mLineTrangleEndY, mTrangleheight, mTranglebottom);
+        //   drawTrangle(canvas, paint, getWidth()/2, getHeight()/2,  mLineTrangleEndX, mLineTrangleEndY, mTrangleheight, mTranglebottom);
+    //    canvas.drawLine(getWidth()/2, getHeight()/2, getWidth()/2, 0, paint);
+
+    }
+
+
+
+    public float[] getDefaultLocation(){
+        return new float[]{getWidth()/2,0};
+    }
+
+    public void setIsShowTopText(boolean mIsShowTopText) {
+        this.mIsShowTopText = mIsShowTopText;
+    }
+
+    public void resetView(float x, float y){
+        Log.e("bruce", "重绘制view " );
+        mIsShowTopText = true;
+        this.lastX = x;
+        this.lastY = y;
+    //    invalidate();
+    }
+
+
 
     /**
      * 绘制三角

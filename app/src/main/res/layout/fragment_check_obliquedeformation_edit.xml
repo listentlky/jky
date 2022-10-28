@@ -35,8 +35,6 @@
 
 
 
-
-
         <com.radaee.reader.PDFLayoutView
             android:id="@+id/check_obd_ui"
             app:layout_constraintLeft_toLeftOf="parent"

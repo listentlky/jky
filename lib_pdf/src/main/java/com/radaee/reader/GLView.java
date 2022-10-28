@@ -2328,6 +2328,8 @@ public class GLView extends GLSurfaceView implements GLCanvas.CanvasListener {
         }
     }
 
+
+
     public void PDFSetStamp(int code) {
         if (code == 0)//start
         {
@@ -2400,6 +2402,9 @@ public class GLView extends GLSurfaceView implements GLCanvas.CanvasListener {
             m_icon = null;
         }
     }
+
+
+
 
     public void PDFSetEditbox(int code) {
         if (code == 0)//start

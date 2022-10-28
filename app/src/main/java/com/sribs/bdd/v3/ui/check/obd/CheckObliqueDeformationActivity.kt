@@ -4,10 +4,13 @@ import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.Color
+import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.RelativeLayout
+import android.widget.TextView
 import com.alibaba.android.arouter.facade.annotation.Autowired
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
@@ -54,7 +57,7 @@ import kotlin.collections.HashMap
  */
 @Route(path = com.sribs.common.ARouterPath.CHECK_OBLIQUE_DEFORMATION_ACTIVITY)
 class CheckObliqueDeformationActivity : BaseActivity(), ICheckOBDContrast.ICheckOBDView,
-    ILayoutView.PDFLayoutListener {
+    ILayoutView.PDFLayoutListener, PDFLayoutView.V3SelectDamageTypeCallback {
 
     @JvmField
     @Autowired(name = com.sribs.common.ARouterPath.VAL_COMMON_TITLE)
@@ -117,6 +120,7 @@ class CheckObliqueDeformationActivity : BaseActivity(), ICheckOBDContrast.ICheck
         }
         mBinding.checkMenuLayout.checkObdMenuClose.setOnClickListener {
             mBinding.checkMenuLayout.root.visibility = View.GONE
+            cancelDamageMark()
         }
         Global.Init(this)
         mPresenter.getModuleInfo(mLocalProjectId, mBuildingId, mModuleId)
@@ -140,6 +144,7 @@ class CheckObliqueDeformationActivity : BaseActivity(), ICheckOBDContrast.ICheck
         mBinding.toolbar.setNavigationOnClickListener {
             if (mBinding.checkVp.currentItem != 0) {
                 mBinding.checkVp.currentItem = 0
+                cancelDamageMark()
             } else {
                 ExitToSave()
             }
@@ -217,6 +222,9 @@ class CheckObliqueDeformationActivity : BaseActivity(), ICheckOBDContrast.ICheck
 
     fun setVpCurrentItem(item: Int) {
         mBinding.checkVp.currentItem = item
+        if(item == 0){
+            cancelDamageMark()
+        }
     }
 
     var mCheckOBDMainBean: ArrayList<CheckOBDMainBean>? = ArrayList()
@@ -401,13 +409,38 @@ class CheckObliqueDeformationActivity : BaseActivity(), ICheckOBDContrast.ICheck
 
         mBinding.checkVp.currentItem = 0
 
+    //    addDamageMark(exitDamageBeanList.size)
+    }
 
+
+    fun saveViewAsBitmap(view: View): Bitmap? {
+        var width = view.width
+        var height = view.height
+        if (width <= 0 || height <= 0) {
+            val specSize = View.MeasureSpec.makeMeasureSpec(0 /* any */, View.MeasureSpec.UNSPECIFIED)
+            view.measure(specSize, specSize)
+            width = view.measuredWidth
+            height = view.measuredHeight
+        }
+        if (width <= 0 || height <= 0) {
+            return null
+        }
+        val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        if (view.right <= 0 || view.bottom <= 0) {
+            view.layout(0, 0, width, height)
+            view.draw(canvas)
+        } else {
+            view.layout(view.left, view.top, view.right, view.bottom)
+            view.draw(canvas)
+        }
+        return bitmap
     }
 
     /**
      * 保存损伤
      */
-    fun saveDamage(damageInfo: DamageV3Bean,bitmap: Bitmap) {
+    fun saveDamage(damageInfo: DamageV3Bean, view: View) {
 
         var exitDamageBeanList = mDamageBeanList!!.get(mCurrentLocalPDF)
 
@@ -439,10 +472,27 @@ class CheckObliqueDeformationActivity : BaseActivity(), ICheckOBDContrast.ICheck
         resetDamageList()
 
         mBinding.checkVp.currentItem = 0
-   //     CommonUtil.screenCapture(this,"1","2",bitmap)
+        addDamageMark(damageInfo,view)
 
     }
 
+    /**
+     * 取消mark状态
+     */
+    fun cancelDamageMark(){
+        mView?.PDFCancelStamp()
+    }
+
+    /**
+     * 添加mark标记
+     */
+    fun addDamageMark(damageInfo: DamageV3Bean,view:View){
+
+        mView!!.layoutView(view, 500, 500)
+        //  var bitmap = CommonUtil.GetRoundedCornerBitmap(PDFLayoutView.getViewBitmap(view))
+            //   var bitmap = PDFLayoutView.getViewBitmap(view,roationAngle)
+        mView!!.PDFSetStamp(1,saveViewAsBitmap(view), 400f, 400f,damageInfo.type+System.currentTimeMillis())
+    }
 
     /**
      * 更新损伤数据
@@ -513,6 +563,7 @@ class CheckObliqueDeformationActivity : BaseActivity(), ICheckOBDContrast.ICheck
         mScaleDamageIndex = index
         mBinding.checkMenuLayout.root.visibility = View.VISIBLE
         mBinding.checkVp.currentItem = 0
+        cancelDamageMark()
     }
 
     /**
@@ -595,6 +646,7 @@ class CheckObliqueDeformationActivity : BaseActivity(), ICheckOBDContrast.ICheck
                 mView?.PDFOpen(mDoc, this)
                 mView?.setReadOnly(false)
                 mView?.setAnnotMenu(UIAnnotMenu(mViewParent))
+                mView?.setV3SelectDamageCallback(this)
                 if (mController == null) {
                     mController = PDFViewController(
                         mViewParent,
@@ -831,5 +883,18 @@ class CheckObliqueDeformationActivity : BaseActivity(), ICheckOBDContrast.ICheck
         LogUtils.d("onButtonNextPressed")
     }
 
+    /**
+     * 当前选择新建损伤类型
+     */
+    override fun onSelect(type: String?) {
+        LogUtils.d("onSelect："+type)
+        when (type) {
+            mCurrentDamageType[0] -> {
+                (mFragments[1] as CheckEditOBDFragment).resetView(null)
+                (mFragments[1] as CheckEditOBDFragment).openPDF(mCurrentLocalPDF)
+                mBinding.checkVp.currentItem = 1
+            }
 
+        }
+    }
 }

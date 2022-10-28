@@ -43,7 +43,7 @@
                     android:layout_height="@dimen/login_input_height"
                     android:layout_marginTop="@dimen/_10sdp"
                     app:backgroundTint="@color/blue_800"
-                    android:text="上传图片"
+                    android:text="上传图纸"
                     android:textColor="@color/white"
                     android:textSize="@dimen/common_text_title"
                     app:cornerRadius="@dimen/_2sdp"
