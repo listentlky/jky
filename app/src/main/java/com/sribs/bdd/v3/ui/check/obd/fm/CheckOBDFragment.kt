@@ -114,11 +114,11 @@ class CheckOBDFragment : BaseFragment(R.layout.fragment_check_obliquedeformation
             .setCheckMenuCallback(object : CheckMenuView2.CheckMenuCallback {
                 override fun onClick(v: View?, damageType:String?) {
                     (activity as CheckObliqueDeformationActivity).setAddAnnotReF(-1L)
-                    (activity as CheckObliqueDeformationActivity).resetDamageInfo(null,damageType)
+                    (activity as CheckObliqueDeformationActivity).resetDamageInfo(null,damageType,false,false)
                 }
 
                 override fun onMarkClick(v: View?,damage: DamageV3Bean?,damageType:String?) {
-                    (activity as CheckObliqueDeformationActivity).resetDamageInfo(damage,damageType)
+                    (activity as CheckObliqueDeformationActivity).resetDamageInfo(damage,damageType,false,false)
                 }
 
                 override fun onMarkRemoveClick(v: View?, damage: DamageV3Bean?, damageType: String?) {

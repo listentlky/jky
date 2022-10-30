@@ -154,6 +154,12 @@ class ProjectFloorItemActivity : BaseActivity(), IProjectContrast.IProjectFloorD
                     ).withString(
                         com.sribs.common.ARouterPath.VAL_COMMON_LEADER,
                         mLeaderName
+                    ).withString(
+                        com.sribs.common.ARouterPath.VAL_PROJECT_NAME,
+                        mProjectName
+                    ).withString(
+                        com.sribs.common.ARouterPath.VAL_BUILDING_NAME,
+                        mBldName
                     )
                     .navigation()
             }
@@ -560,9 +566,23 @@ class ProjectFloorItemActivity : BaseActivity(), IProjectContrast.IProjectFloorD
     )
 
 
+
     fun showMutilAlertDialog(view: View?) {
-        var choseType = 0
+
         var checkedList = ArrayList<String>()
+
+        var checkBooleanList = booleanArrayOf(
+            false, false, false, false, false
+        )
+        localList.forEach {
+            items.forEachIndexed { index, s ->
+                if(it.moduleName == s){
+                    checkedList.add(s)
+                    checkBooleanList.set(index,true)
+                }
+            }
+        }
+
         var alertList: ListView? = null
         val alertBuilder = AlertDialog.Builder(this)
         alertBuilder.setTitle("添加检测模块")
@@ -572,7 +592,7 @@ class ProjectFloorItemActivity : BaseActivity(), IProjectContrast.IProjectFloorD
          * 第三个参数：勾选事件监听
          */
 
-        alertBuilder.setMultiChoiceItems(items, null) { dialog, which, isChecked ->
+        alertBuilder.setMultiChoiceItems(items, checkBooleanList) { dialog, which, isChecked ->
             if (which == 0) {
                 if (isChecked) {
                     alertList?.forEachIndexed { index, view ->
@@ -600,7 +620,7 @@ class ProjectFloorItemActivity : BaseActivity(), IProjectContrast.IProjectFloorD
             "确定"
         ) { _, i ->
             var isSame = false
-            var moduleName = ""
+          /*  var moduleName = ""
             checkedList.forEach {
                 isSame = mAdapter.hasSameName(it)
                 if(isSame) {
@@ -614,13 +634,17 @@ class ProjectFloorItemActivity : BaseActivity(), IProjectContrast.IProjectFloorD
             if (!moduleName.isNullOrEmpty()) {
                 showToast(moduleName + "已存在，请勿重复创建")
                 return@setPositiveButton
-            }
+            }*/
 
             checkedList.forEach {
                 LogUtils.d("创建的模块为: "+it)
             }
 
             checkedList.forEach {
+                isSame = mAdapter.hasSameName(it)
+                if(isSame) {
+                    return@forEach
+                }
                 mPresenter.createOrSaveModule(
                     mLocalProjectId,
                     mLocalProjectUUID,

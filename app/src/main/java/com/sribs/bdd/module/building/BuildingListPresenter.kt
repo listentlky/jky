@@ -108,7 +108,7 @@ class BuildingListPresenter : BasePresenter(), IBuildingContrast.IBuildingListPr
         version: Long,
         localList: ArrayList<BuildingMainBean>
     ) {
-        LogUtils.d("getBuildingRemote: "+localList)
+        LogUtils.d("getBuildingRemote: " + localList)
 
         LogUtils.d("请求云端楼数据项目ID: ${projectRemoteId} ${version}")
         addDisposable(
@@ -125,43 +125,43 @@ class BuildingListPresenter : BasePresenter(), IBuildingContrast.IBuildingListPr
                         return@subscribe
                     }
 
-                   /* it.data!!.forEach { remoteBean ->
-                        var i = localList.indexOfFirst { localBean ->
-                            !localBean.remoteId.isNullOrEmpty() && localBean.remoteId == remoteBean.buildingId
-                        }
+                    /* it.data!!.forEach { remoteBean ->
+                         var i = localList.indexOfFirst { localBean ->
+                             !localBean.remoteId.isNullOrEmpty() && localBean.remoteId == remoteBean.buildingId
+                         }
 
-                        if (i >= 0) {
-                            var localBean = localList[i]
-                            //判断时间
-                            if (TimeUtil.isBefore(
-                                    localBean.createTime,
-                                    TimeUtil.stampToDate("" + remoteBean.createTime)
-                                )
-                            ) {
-                                localList[i].hasNewer = true
-                            }
-                            localBean.bldUUID = remoteBean.buildingId
-                        }
-                    }*/
+                         if (i >= 0) {
+                             var localBean = localList[i]
+                             //判断时间
+                             if (TimeUtil.isBefore(
+                                     localBean.createTime,
+                                     TimeUtil.stampToDate("" + remoteBean.createTime)
+                                 )
+                             ) {
+                                 localList[i].hasNewer = true
+                             }
+                             localBean.bldUUID = remoteBean.buildingId
+                         }
+                     }*/
 
-                   /* it.data!!.forEach { remoteBean ->
-                        var i = localList.indexOfFirst { localBean ->
-                            localBean.remoteId.isNullOrEmpty() &&
-                                    localBean.bldUUID == remoteBean.buildingId
-                        }
-                        if (i >= 0) {
-                            var localBean = localList[i]
-                            //判断时间
-                            if (TimeUtil.isBefore(
-                                    localBean.createTime,
-                                    TimeUtil.stampToDate("" + remoteBean.createTime)
-                                )
-                            ) {
-                                localList[i].hasNewer = true
-                            }
-                            localBean.remoteId = remoteBean.buildingId
-                        }
-                    }*/
+                    /* it.data!!.forEach { remoteBean ->
+                         var i = localList.indexOfFirst { localBean ->
+                             localBean.remoteId.isNullOrEmpty() &&
+                                     localBean.bldUUID == remoteBean.buildingId
+                         }
+                         if (i >= 0) {
+                             var localBean = localList[i]
+                             //判断时间
+                             if (TimeUtil.isBefore(
+                                     localBean.createTime,
+                                     TimeUtil.stampToDate("" + remoteBean.createTime)
+                                 )
+                             ) {
+                                 localList[i].hasNewer = true
+                             }
+                             localBean.remoteId = remoteBean.buildingId
+                         }
+                     }*/
 
                     var buildingMainBeanList = ArrayList<BuildingMainBean>()
 
@@ -204,16 +204,19 @@ class BuildingListPresenter : BasePresenter(), IBuildingContrast.IBuildingListPr
                     var filterBuildingList = ArrayList<BuildingMainBean>()
                     var buildingList = onlyRemoteList
 
-                    while (iterator.hasNext()){
+                    while (iterator.hasNext()) {
                         var next = iterator.next()
                         var isSmallTime = false
-                        buildingList.forEach { filter->
-                            if(filter.bldName == next.bldName
-                                && TimeUtil.dateToStamp(next.createTime!!) < TimeUtil.dateToStamp(filter.createTime!!)){
+                        buildingList.forEach { filter ->
+                            if (filter.bldName == next.bldName
+                                && TimeUtil.dateToStamp(next.createTime!!) < TimeUtil.dateToStamp(
+                                    filter.createTime!!
+                                )
+                            ) {
                                 isSmallTime = true
                             }
                         }
-                        if(!isSmallTime){
+                        if (!isSmallTime) {
                             filterBuildingList.add(next)
                         }
                     }
@@ -301,7 +304,7 @@ class BuildingListPresenter : BasePresenter(), IBuildingContrast.IBuildingListPr
             .subscribeOn(Schedulers.computation())
             .observeOn(Schedulers.computation())
             .subscribe({
-                LogUtils.d("查询楼下模块数据: "+it)
+                LogUtils.d("查询楼下模块数据: " + it)
                 it.forEach {
                     it.drawingsList?.forEach {
                         drawingList.add(it.localAbsPath!!)
@@ -419,12 +422,24 @@ class BuildingListPresenter : BasePresenter(), IBuildingContrast.IBuildingListPr
                                 }
                             }
                         }
+                    } else if (buildingModule.moduleName == "倾斜测量") {
+                        buildingModule.drawings?.forEach { drawing ->
+                            drawing.damage?.forEach { damage ->
+                                when (damage.type) {
+                                    "点位" -> {
+                                        if (damage.scalePath?.size!! > 0) {
+                                            drawingList.add(damage.scalePath!!.get(1))
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
 
                 var parts = ArrayList<MultipartBody.Part>()
 
-                LogUtils.d("添加模块下图纸后: "+drawingList.size+" ; "+drawingList)
+                LogUtils.d("添加模块下图纸后: " + drawingList.size + " ; " + drawingList)
 
                 drawingList.forEach { path ->
                     var fileBody = RequestBody.create(MediaType.parse("image/*"), File(path))
@@ -496,6 +511,19 @@ class BuildingListPresenter : BasePresenter(), IBuildingContrast.IBuildingListPr
                     }
 
                     b.damage?.forEach { d ->
+
+                        when (d.type) {
+                            "点位" -> {
+                                if (d.scalePath?.size!! > 0) {
+                                    //点位放大图
+                                    var resId1 = res?.filter {
+                                        it.fileName.equals(d.scalePath?.get(1))
+                                    }
+                                    d.scalePath?.add(resId1?.get(0)?.resId ?: "")
+                                }
+                            }
+                        }
+
                         V3UploadDamageReq.add(
                             V3UploadDamageReq(
                                 d.annotRef,
@@ -680,7 +708,7 @@ class BuildingListPresenter : BasePresenter(), IBuildingContrast.IBuildingListPr
             }
 
             var version = System.currentTimeMillis()
-            UpdateModuleVersionBeanList.add(UpdateModuleVersionBean(it.moduleid!!,version))
+            UpdateModuleVersionBeanList.add(UpdateModuleVersionBean(it.moduleid!!, version))
 
             V3UploadModuleReq.add(
                 com.sribs.common.bean.net.v3.V3UploadModuleReq(
@@ -798,25 +826,25 @@ class BuildingListPresenter : BasePresenter(), IBuildingContrast.IBuildingListPr
             .subscribe({
                 dispose()
                 var updateModuleVersionCount = 0
-                if(UpdateModuleVersionBeanList.size>0){
+                if (UpdateModuleVersionBeanList.size > 0) {
 
                     UpdateModuleVersionBeanList.forEach {
-                        mDb.updateBuildingModuleVersion(it.moduleId,it.version)
+                        mDb.updateBuildingModuleVersion(it.moduleId, it.version)
                             .subscribeOn(Schedulers.computation())
                             .observeOn(Schedulers.computation())
                             .subscribe({
-                                LogUtils.d("更新模块版本成功 "+it)
+                                LogUtils.d("更新模块版本成功 " + it)
                                 updateModuleVersionCount++
-                                if(updateModuleVersionCount == UpdateModuleVersionBeanList.size){
+                                if (updateModuleVersionCount == UpdateModuleVersionBeanList.size) {
                                     LogUtils.d("楼上传成功")
                                     mView?.onMsg("楼上传成功")
                                     //   RxBus.getDefault().post(RefreshProjectListEvent(true))
                                     cb(true)
                                 }
-                            },{
+                            }, {
                             })
                     }
-                }else{
+                } else {
                     LogUtils.d("楼上传成功")
                     mView?.onMsg("楼上传成功")
                     //   RxBus.getDefault().post(RefreshProjectListEvent(true))
@@ -856,7 +884,7 @@ class BuildingListPresenter : BasePresenter(), IBuildingContrast.IBuildingListPr
                 .subscribe({
                     checkResult(it)
                     LogUtils.d("查询楼版本列表：" + it)
-                    var versionList =ArrayList(it.data!!.map {
+                    var versionList = ArrayList(it.data!!.map {
                         V3VersionBean(
                             it.projectId,
                             it.projectName,
@@ -865,7 +893,8 @@ class BuildingListPresenter : BasePresenter(), IBuildingContrast.IBuildingListPr
                             it.inspectors,
                             it.parentVersion,
                             it.version,
-                            TimeUtil.stampToDate(it.createTime))
+                            TimeUtil.stampToDate(it.createTime)
+                        )
                     })
                     cb(ArrayList(versionList.sortedByDescending { b -> b.createTime }))
                 }, {
@@ -1136,6 +1165,29 @@ class BuildingListPresenter : BasePresenter(), IBuildingContrast.IBuildingListPr
                                         }
                                     }
                                 }
+                            } else if (mm.moduleName == "倾斜测量") {
+                                dd.damageMixes?.forEach { damage ->
+                                    var damageV3Bean =
+                                        Gson().fromJson(damage.desc, DamageV3Bean::class.java)
+                                    when (damageV3Bean.type) {
+                                        "点位" -> {
+                                            if (damageV3Bean.scalePath?.size!! > 0) {
+
+                                                drawingLocalPath = File(
+                                                    cacheRootDir + mCurDrawingsDir + "/damage/" + damageV3Bean?.type,
+                                                    damageV3Bean?.scalePath?.get(0)
+                                                ).absolutePath
+
+                                                needDownloadDrawingList.add(
+                                                    V3UploadDrawingRes(
+                                                        damageV3Bean?.scalePath?.get(2)!!,
+                                                        drawingLocalPath
+                                                    )
+                                                )
+                                            }
+                                        }
+                                    }
+                                }
                             }
                         }
 
@@ -1146,7 +1198,7 @@ class BuildingListPresenter : BasePresenter(), IBuildingContrast.IBuildingListPr
                     var uploadDrawingIndex = 0
 
                     needDownloadDrawingList?.forEach { res ->
-                        LogUtils.d("下载的图纸: "+res)
+                        LogUtils.d("下载的图纸: " + res)
                         HttpManager.instance.getHttpService<HttpApi>()
                             .downloadFile(res.resId)
                             .subscribeOn(Schedulers.computation())
@@ -1500,6 +1552,15 @@ class BuildingListPresenter : BasePresenter(), IBuildingContrast.IBuildingListPr
                                                     )
                                                 }
                                             }
+                                        }
+                                    } else if (mm.moduleName == "倾斜测量") {
+                                        if (damageV3Bean?.scalePath?.size!! > 1) {
+                                            damageV3Bean?.scalePath?.set(
+                                                1, File(
+                                                    cacheRootDir + mCurDrawingsDir + "/damage/" + damageV3Bean?.type,
+                                                    damageV3Bean?.scalePath?.get(0)
+                                                ).absolutePath
+                                            )
                                         }
                                     }
                                     damageV3List?.add(damageV3Bean)

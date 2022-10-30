@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <com.sribs.bdd.v3.view.DrawAndTextView
         android:id="@+id/content_1"
@@ -20,10 +21,27 @@
 
     </com.sribs.bdd.v3.view.DrawAndTextView>
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/damage_type_cardView"
+        android:layout_width="@dimen/_20sdp"
+        app:cardCornerRadius="200dp"
         android:layout_centerInParent="true"
-        android:src="@mipmap/icon_circle" />
+        app:cardBackgroundColor="@color/blue_800"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_height="@dimen/_20sdp">
+
+        <TextView
+            android:id="@+id/point_text"
+            android:layout_width="match_parent"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_8sdp"
+            android:lines="1"
+            android:ellipsize="end"
+            android:layout_height="match_parent"/>
+
+    </androidx.cardview.widget.CardView>
+
 
 </RelativeLayout>

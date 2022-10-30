@@ -1,38 +1,30 @@
 package com.sribs.bdd.v3.ui.check.obd.fm
 
-import android.graphics.Canvas
-import android.graphics.Rect
+import android.net.Uri
 import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.TextView
 import androidx.core.widget.addTextChangedListener
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.cbj.sdk.libui.mvp.BaseFragment
 import com.cbj.sdk.libui.mvp.bindView
-import com.hjq.permissions.Permission
-import com.hjq.permissions.XXPermissions
-import com.radaee.pdf.Document
-import com.radaee.pdf.Page
-import com.radaee.reader.PDFLayoutView
-import com.radaee.util.PDFThumbGrid.mDoc
-import com.radaee.view.ILayoutView
 import com.sribs.bdd.R
 import com.sribs.bdd.databinding.FragmentCheckObliquedeformationEditBinding
+import com.sribs.bdd.utils.ModuleHelper
 import com.sribs.bdd.v3.ui.check.obd.CheckObliqueDeformationActivity
 import com.sribs.bdd.v3.util.LogUtils
 import com.sribs.bdd.v3.view.DrawAndTextView
 import com.sribs.common.ARouterPath
 import com.sribs.common.bean.db.DamageV3Bean
-import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
+import com.sribs.common.utils.FileUtil
+import java.io.File
 import java.math.RoundingMode
 import java.text.DecimalFormat
 
 
 @Route(path = ARouterPath.CHECK_OBLIQUE_DEFORMATION_Edit_FRAGMENT)
-class CheckEditOBDFragment : BaseFragment(R.layout.fragment_check_obliquedeformation_edit),
-    ILayoutView.PDFLayoutListener {
+class CheckEditOBDFragment : BaseFragment(R.layout.fragment_check_obliquedeformation_edit){
 
     private val mBinding: FragmentCheckObliquedeformationEditBinding by bindView()
 
@@ -46,12 +38,13 @@ class CheckEditOBDFragment : BaseFragment(R.layout.fragment_check_obliquedeforma
      */
     var mAddAnnotReF: Long = -1L
 
+    var pointScalePath:String?= ""
+
     override fun deinitView() {
 
     }
 
     override fun initView() {
-        mView?.setIntercept(false)
         mBinding.checkEditH1.checkEditName.text = "测量高度1(m)"
         mBinding.checkEditH1.checkEdit.hint = "请输入测量高度"
         mBinding.checkEditH2.checkEditName.text = "测量高度2(m)"
@@ -85,6 +78,7 @@ class CheckEditOBDFragment : BaseFragment(R.layout.fragment_check_obliquedeforma
         mBinding.checkObdUiCaptureView.content1.setTextViewHeight(500)
         mBinding.checkObdUiCaptureView.content1.init()
         mBinding.checkObdUiCaptureView.content1.requestFocus()
+
         mBinding.checkObdUiCaptureView.content2.setContent("方向2")
         mBinding.checkObdUiCaptureView.content2.setTextViewHeight(500)
         mBinding.checkObdUiCaptureView.content2.setDrawViewType(0)
@@ -228,11 +222,28 @@ class CheckEditOBDFragment : BaseFragment(R.layout.fragment_check_obliquedeforma
                 showToast("请输入点位名称")
                 return@setOnClickListener
             }
-            if (mBinding.checkObdHintText.text.isNullOrEmpty()) {
+          /*  if (mBinding.checkObdHintText.text.isNullOrEmpty()) {
                 showToast("请添加房屋倾斜点备注")
                 return@setOnClickListener
-            }
+            }*/
             mAddAnnotReF = (activity as CheckObliqueDeformationActivity).mCurrentAddAnnotReF
+
+            if((activity as CheckObliqueDeformationActivity).addPDFDamageMark &&
+                !(activity as CheckObliqueDeformationActivity).isEditDamage &&
+                (activity as CheckObliqueDeformationActivity).scaleBitmap != null
+                    ){
+                var cacheRootDir: String = FileUtil.getDrawingCacheRootDir(context!!)
+
+                var mCurDrawingsDir =
+                    "/" + ModuleHelper.DRAWING_CACHE_FOLDER + "/" + (activity as CheckObliqueDeformationActivity).mProjectName +
+                 "/" + (activity as CheckObliqueDeformationActivity).mBldName + "倾斜测量/damage/点位"
+
+                var name =  mBinding.checkEditPoint.checkEdit.text.toString()+System.currentTimeMillis()+".jpg";
+                pointScalePath = File(cacheRootDir+mCurDrawingsDir,name).absolutePath
+                FileUtil.saveBitmap((activity as CheckObliqueDeformationActivity).scaleBitmap!!,File(cacheRootDir+mCurDrawingsDir),name)
+                (activity as CheckObliqueDeformationActivity).scaleBitmap?.recycle()
+            }
+
             var damage = DamageV3Bean(
                 -1,
                 (activity as CheckObliqueDeformationActivity).mCurrentDrawing!!.drawingID!!,
@@ -243,13 +254,15 @@ class CheckEditOBDFragment : BaseFragment(R.layout.fragment_check_obliquedeforma
                 if (mDamageCreateTime < 0) System.currentTimeMillis() else mDamageCreateTime,
                 ((activity as CheckObliqueDeformationActivity)).mGuideText,
                 ((activity as CheckObliqueDeformationActivity)).mGuideRotate,
+                if(pointScalePath.isNullOrEmpty()) ArrayList() else arrayListOf(FileUtil.getFileName(pointScalePath!!)?:"",pointScalePath!!),
+                if(mBinding.checkObdOnlyRadio.isSelected) 1 else 2,
                 mBinding.checkEditPoint.checkEdit.text.toString(),
                 mBinding.checkEditH1.checkEdit.text.toString(),
                 mBinding.checkEditH2.checkEdit.text.toString(),
                 mBinding.checkEditQx1.checkEdit.text.toString(),
                 mBinding.checkEditQx2.checkEdit.text.toString(),
-                mBinding.checkObdUiCaptureView.content1.oriRotation.toInt(),
-                mBinding.checkObdUiCaptureView.content2.oriRotation.toInt(),
+                mBinding.checkObdUiCaptureView.content1.oriRotation,
+                mBinding.checkObdUiCaptureView.content2.oriRotation,
             )
             var layout:View
             if (mBinding.checkObdOnlyRadio.isSelected) {
@@ -257,8 +270,12 @@ class CheckEditOBDFragment : BaseFragment(R.layout.fragment_check_obliquedeforma
                 layout= LayoutInflater.from(activity).inflate(R.layout.damage_mark_index_layout_2, null)
                 val drawAndTextView = layout.findViewById< (DrawAndTextView)>(R.id.content_1)
 
+                val content = layout.findViewById<TextView>(R.id.point_text)
+
+                content.text = mBinding.checkEditPoint.checkEdit.text
+
                 drawAndTextView .setContent("倾斜1")
-                drawAndTextView.setTextSize(6)
+                drawAndTextView.setTextSize(resources.getDimensionPixelSize(R.dimen._6sdp))
                 drawAndTextView.setDrawViewWidth(-1)
                 drawAndTextView.setDrawViewHeight(-1)
                 drawAndTextView.setTextViewHeight(500)
@@ -273,21 +290,21 @@ class CheckEditOBDFragment : BaseFragment(R.layout.fragment_check_obliquedeforma
                 drawAndTextView.addTopView(mBinding.checkObdUiCaptureView.content1.oriRotation,false)
                 drawAndTextView.requestFocus()
 
-
-
-
             }else{
                 layout= LayoutInflater.from(activity).inflate(R.layout.damage_mark_index_layout_3, null)
                 val drawAndTextView = layout.findViewById< (DrawAndTextView)>(R.id.content_1)
                 val drawAndTextView2 = layout.findViewById< (DrawAndTextView)>(R.id.content_2)
+                val content = layout.findViewById<TextView>(R.id.point_text)
 
-                drawAndTextView .setContent("倾斜1")
-                drawAndTextView.setTextSize(6)
+                content.text = mBinding.checkEditPoint.checkEdit.text
+
+                drawAndTextView.setContent("倾斜1")
+                drawAndTextView.setTextSize(resources.getDimensionPixelSize(R.dimen._6sdp))
                 drawAndTextView.setDrawViewWidth(-1)
                 drawAndTextView.setDrawViewHeight(-1)
                 drawAndTextView.setTextViewHeight(500)
 
-                drawAndTextView.setTopText(mBinding.checkObdQx1Hint.text.toString())
+                drawAndTextView.setTopText(mBinding.checkObdQx1Hint.text.toString().split("=")[1])
 
                 drawAndTextView.init()
 
@@ -300,12 +317,12 @@ class CheckEditOBDFragment : BaseFragment(R.layout.fragment_check_obliquedeforma
 
 
                 drawAndTextView2 .setContent("倾斜2")
-                drawAndTextView2.setTextSize(6)
+                drawAndTextView2.setTextSize(resources.getDimensionPixelSize(R.dimen._6sdp))
                 drawAndTextView2.setDrawViewWidth(-1)
                 drawAndTextView2.setDrawViewHeight(-1)
                 drawAndTextView2.setTextViewHeight(500)
 
-                drawAndTextView2.setTopText(mBinding.checkObdQx2Hint.text.toString())
+                drawAndTextView2.setTopText(mBinding.checkObdQx2Hint.text.toString().split("=")[1])
 
                 drawAndTextView2.init()
 
@@ -316,6 +333,7 @@ class CheckEditOBDFragment : BaseFragment(R.layout.fragment_check_obliquedeforma
 
                 LogUtils.d("角度"+mBinding.checkObdUiCaptureView.content1.oriRotation+"//"+mBinding.checkObdUiCaptureView.content2.oriRotation)
                 drawAndTextView2.requestFocus()
+
             }
             (context as CheckObliqueDeformationActivity).saveDamage(damage,layout)
 
@@ -338,7 +356,8 @@ class CheckEditOBDFragment : BaseFragment(R.layout.fragment_check_obliquedeforma
      */
     fun resetView(damageV3Bean: DamageV3Bean?) {
         LogUtils.d("resetView " + damageV3Bean)
-        mView?.setIntercept(false)
+
+        mBinding.checkObdIndex.text="当前图纸: "+(context as CheckObliqueDeformationActivity).mCurrentPDFName
         if (damageV3Bean == null) {
             mBinding.checkObdOnlyRadio.isSelected = false
             mBinding.checkObdDoubleRadio.isSelected = true
@@ -350,13 +369,26 @@ class CheckEditOBDFragment : BaseFragment(R.layout.fragment_check_obliquedeforma
             mBinding.checkEditQx2.checkEdit.isEnabled = true
 
             mBinding.checkEditPoint.checkEdit.setText("")
-            mBinding.checkObdUiCaptureView.content2.visibility = View.VISIBLE
 
-            mBinding.checkObdUiCaptureView.content2.resetView(90f)
-            mBinding.checkObdUiCaptureView.content1.resetView(0f)
+            mBinding.checkObdUiCaptureView.content2.visibility = View.VISIBLE
 
             mBinding.checkObdHintText.setText("")
             mDamageCreateTime = -1L
+
+            LogUtils.d("111111"+(context as CheckObliqueDeformationActivity).scaleBitmap)
+
+            if((context as CheckObliqueDeformationActivity).scaleBitmap != null){
+                mBinding.checkObdPointMark.visibility = View.GONE
+                mBinding.checkObdUi.setImageBitmap((context as CheckObliqueDeformationActivity).scaleBitmap)
+            }else{
+                mBinding.checkObdPointMark.visibility = View.VISIBLE
+                mBinding.checkObdUi.setImageDrawable(null)
+            }
+
+            mBinding.checkObdUiCaptureView.content1.resetView(0f)
+
+            mBinding.checkObdUiCaptureView.content2.resetView(90f)
+
         } else {
 
             if (!damageV3Bean.measure2Height.isNullOrEmpty() && !damageV3Bean.tilt2.isNullOrEmpty()) {
@@ -369,8 +401,9 @@ class CheckEditOBDFragment : BaseFragment(R.layout.fragment_check_obliquedeforma
                 mBinding.checkEditH2.checkEdit.setText(damageV3Bean.measure2Height)
                 mBinding.checkEditQx2.checkEdit.setText(damageV3Bean.tilt2)
 
-                mBinding.checkObdUiCaptureView.content1.resetView((damageV3Bean.tiltRotate1)!!.toFloat())
-                mBinding.checkObdUiCaptureView.content2.resetView((damageV3Bean.tiltRotate2)!!.toFloat())
+                mBinding.checkObdUiCaptureView.content1.resetView(damageV3Bean.tiltRotate1!!)
+                mBinding.checkObdUiCaptureView.content2.visibility = View.VISIBLE
+                mBinding.checkObdUiCaptureView.content2.resetView(damageV3Bean.tiltRotate2!!)
 
             } else {
                 mBinding.checkObdOnlyRadio.isSelected = true
@@ -382,188 +415,23 @@ class CheckEditOBDFragment : BaseFragment(R.layout.fragment_check_obliquedeforma
                 mBinding.checkEditH2.checkEdit.setText("")
                 mBinding.checkEditQx2.checkEdit.setText("")
 
-                mBinding.checkObdUiCaptureView.content1.resetView((damageV3Bean.tiltRotate1)!!.toFloat())
+                mBinding.checkObdUiCaptureView.content1.resetView(damageV3Bean.tiltRotate1!!)
                 mBinding.checkObdUiCaptureView.content2.visibility = View.GONE
-                mBinding.checkObdUiCaptureView.content2.resetView(90f)
+
             }
             mBinding.checkEditPoint.checkEdit.setText(damageV3Bean.pointName)
             mBinding.checkObdHintText.setText(damageV3Bean.note)
             mDamageCreateTime = damageV3Bean.createTime
-        }
-    }
 
-    private var mView: PDFLayoutView? = null
-
-    fun openPDF(pdfPath: String) {
-        if (!pdfPath.endsWith("pdf") &&
-            !pdfPath.endsWith("PDF")
-        ) {
-            showToast("该图纸类型不是pdf，无法加载")
-            return
-        }
-        this.mView = mBinding.checkObdUi
-        mView!!.setShowDamage(false)
-        mView?.setIntercept(true)
-
-       // mView!!.PDFSetZoom(, mView!!.testY, mView?.PDFGetPos(mView!!.testX,mView!!.testY), 2f);
-
-        Observable.create<Boolean> { o ->
-            o.onNext(XXPermissions.isGranted(activity, Permission.MANAGE_EXTERNAL_STORAGE))
-        }
-            .subscribeOn(Schedulers.computation())
-            .observeOn(Schedulers.computation())
-            .flatMap {
-                var ret: Int? = -20
-                when (it) {
-                    true -> {
-                        mDoc = Document()
-                        ret = mDoc!!.Open(pdfPath, "")
-                    }
-                }
-                Observable.create<Int> { o ->
-                    o.onNext(ret ?: -10)
-                }
+            if(!damageV3Bean.scalePath.isNullOrEmpty()) {
+                mBinding.checkObdPointMark.visibility = View.GONE
+                pointScalePath = damageV3Bean.scalePath?.get(1)
+                mBinding.checkObdUi.setImageURI(Uri.fromFile(File(pointScalePath)))
+            }else{
+                mBinding.checkObdPointMark.visibility = View.VISIBLE
+                mBinding.checkObdUi.setImageDrawable(null)
             }
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-                mView?.PDFOpen(mDoc, this)
-                mView?.setReadOnly(false)
-            }, {
-                LogUtils.d(" not granted ${Permission.MANAGE_EXTERNAL_STORAGE}")
-            })
+        }
     }
 
-    override fun OnPDFPageModified(pageno: Int) {
-    }
-
-    override fun OnPDFPageChanged(pageno: Int) {
-    }
-
-    override fun OnPDFAnnotTapped(pno: Int, annot: Page.Annotation?) {
-    }
-
-    override fun OnPDFBlankTapped(pagebo: Int) {
-    }
-
-    override fun OnPDFSelectEnd(text: String?) {
-    }
-
-    override fun OnPDFOpenURI(uri: String?) {
-    }
-
-    override fun OnPDFOpenJS(js: String?) {
-    }
-
-    override fun OnPDFOpenMovie(path: String?) {
-    }
-
-    override fun OnPDFOpenSound(paras: IntArray?, path: String?) {
-    }
-
-    override fun OnPDFOpenAttachment(path: String?) {
-    }
-
-    override fun OnPDFOpenRendition(path: String?) {
-    }
-
-    override fun OnPDFOpen3D(path: String?) {
-    }
-
-    override fun OnPDFZoomStart() {
-    }
-
-    override fun OnPDFZoomEnd() {
-    }
-
-    override fun OnPDFDoubleTapped(pagebo: Int, x: Float, y: Float): Boolean {
-        return true
-    }
-
-    override fun OnPDFLongPressed(pagebo: Int, x: Float, y: Float) {
-    }
-
-    override fun OnPDFSearchFinished(found: Boolean) {
-    }
-
-    override fun OnPDFPageDisplayed(canvas: Canvas?, vpage: ILayoutView.IVPage?) {
-    }
-
-    override fun OnPDFPageRendered(vpage: ILayoutView.IVPage?) {
-
-        var rect= (activity as CheckObliqueDeformationActivity).mView?.m_rects
-
-        LogUtils.d("(rect?.get(0)!!+((rect?.get(2) - rect?.get(0))/2)) "+rect?.get(0))
-
-        LogUtils.d("(rect?.get(1)!!+((rect?.get(3) - rect?.get(1))/2)) "+rect?.get(1))
-
-        LogUtils.d("(rect?.get(1)!!+((rect?.get(3) - rect?.get(1))/2)) "+mView?.layoutWidth)
-
-        LogUtils.d("(rect?.get(1)!!+((rect?.get(3) - rect?.get(1))/2)) "+mView?.layoutHieght)
-
-
-        LogUtils.d("(rect?.get(1)!!+((rect?.get(3) - rect?.get(1))/2)) "+(activity as CheckObliqueDeformationActivity).mView?.layoutWidth)
-
-        LogUtils.d("(rect?.get(1)!!+((rect?.get(3) - rect?.get(1))/2)) "+(activity as CheckObliqueDeformationActivity).mView?.layoutHieght)
-
-
-        LogUtils.d("(rect?.get(1)!!+((rect?.get(3) - rect?.get(1))/2))3333 "+(mView?.layoutWidth!!.toDouble() / (activity as CheckObliqueDeformationActivity).mView?.layoutWidth!!.toDouble()))
-
-        var x =  rect?.get(0)!! * (mView?.layoutWidth!!.toDouble() / (activity as CheckObliqueDeformationActivity).mView?.layoutWidth!!.toDouble())
-
-        var y = rect?.get(1)!! * (mView?.layoutHieght!!.toDouble() / (activity as CheckObliqueDeformationActivity).mView?.layoutHieght!!.toDouble())
-
-        LogUtils.d("${x}   ${y}")
-        var page = mDoc.GetPage(vpage!!.GetPageNo())
-        LogUtils.d("page: ${page}")
-      /*  if(page != null){
-            var annot =  page.GetAnnot(page.GetAnnotCount()-1)
-            var rect = annot.GetRect()
-            LogUtils.d("${rect[0]}   ${rect[1]}  ${rect[2]}  ${rect[3]}")
-
-            mView!!.PDFSetZoom(rect[0].toInt(), rect[1].toInt(), mView?.PDFGetPos(rect[0].toInt(),rect[1].toInt()), )
-        }*/
-
-        LogUtils.d("9999999999 "+x+" ; "+y)
-
-        LogUtils.d("1111111111 "+(activity as CheckObliqueDeformationActivity).mView?.PDFGetPos(x.toInt(),y.toInt()))
-
-        LogUtils.d("2222222222 "+mView?.PDFGetPos(rect?.get(0).toInt(),rect?.get(1).toInt()))
-
-
-     //   LogUtils.d("2222222222 "+(((activity as CheckObliqueDeformationActivity).mView?.layoutWidth!!)/mView?.layoutWidth!!))
-
-        mView!!.PDFSetZoom(x.toInt(), y.toInt(), mView?.PDFGetPos(x.toInt(),y.toInt()), 2f);
-
-  /*      val mCurZoomLevel = mView!!.PDFGetZoom()
-        if (mView!!.PDFGetScale() <= mView!!.PDFGetMinScale()) Global.g_zoom_step = 1f
-        if (mCurZoomLevel > Global.g_layout_zoom_level && Global.g_zoom_step > 0 ||
-            mCurZoomLevel == 1f && Global.g_zoom_step < 0
-        ) //reverse zoom step
-            Global.g_zoom_step = 2f
-
-        LogUtils.d("OnPDFPageRendered： " + mCurZoomLevel + Global.g_zoom_step)*/
-
-        //    mView!!.PDFSetZoom(x, y, mView!!.PDFGetPos(x, y), 5f)
-        //   mView!!.PDFSetZoom(770,383, mView?.PDFGetPos(770,383), 5f)
-    //    var vx = (activity as CheckObliqueDeformationActivity).mView?.PDFGetX()
-    //    mView!!.PDFSetZoom(vpage!!.GetVX(x), vpage!!.GetVY(y), (activity as CheckObliqueDeformationActivity).mView?.markPDFPos, 1f)
-    }
-
-    override fun onPDFNoteTapped(jstring: String?) {
-    }
-
-    override fun onPDFNoteAdded(annotPoint: String?) {
-    }
-
-    override fun onPDFNoteEdited(annotPoint: String?) {
-    }
-
-    override fun onPDFNoteDeleted(annotPoint: String?) {
-    }
-
-    override fun onButtonPrevPressed() {
-    }
-
-    override fun onButtonNextPressed() {
-    }
 }

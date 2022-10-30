@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
@@ -16,6 +17,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sribs.bdd.R;
+import com.sribs.bdd.v3.util.LogUtils;
 
 
 public class DrawAndTextView extends RelativeLayout {
@@ -179,12 +181,13 @@ public class DrawAndTextView extends RelativeLayout {
 
         mMarkView = new TextView(mContext);
         mMarkView.setText(mContent);
+        mMarkView.setTextColor(Color.BLACK);
         mMarkView.setTextSize(mTextSize == -1 ? 10 : mTextSize);
         mMarkView.setBackgroundResource(R.drawable.retancgle_drawable);
         mMarkView.setGravity(Gravity.CENTER);
         LayoutParams textParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         textParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
-        textParams.topMargin = mTextViewHeight / 4;
+        textParams.topMargin = mTextViewHeight / 4- mMarkView.getHeight();
         addView(mMarkView, textParams);
 
     }
@@ -202,6 +205,7 @@ public class DrawAndTextView extends RelativeLayout {
 
         mMarkView = new TextView(mContext);
         mMarkView.setText(mContent);
+        mMarkView.setTextColor(Color.BLACK);
         mMarkView.setTextSize(mTextSize == -1 ? 10 : mTextSize);
         mMarkView.setBackgroundResource(R.drawable.retancgle_blue_drawable);
         mMarkView.setGravity(Gravity.CENTER);
@@ -209,9 +213,9 @@ public class DrawAndTextView extends RelativeLayout {
         textParams.addRule(RelativeLayout.CENTER_IN_PARENT);
         addView(mMarkView, textParams);
         if (x >= 250) {
-            mMarkView.setTranslationX((x - 250) / 3);
+            mMarkView.setTranslationX((x - 250) / 2);
         } else {
-            mMarkView.setTranslationX(-(250 - x) / 3);
+            mMarkView.setTranslationX(-(250 - x) / 2);
         }
 
         if (y >= 250) {
@@ -230,29 +234,44 @@ public class DrawAndTextView extends RelativeLayout {
         this.mTopText = text;
     }
 
+    private float getAngle(float xTouch, float yTouch) {
+        double x = xTouch - getWidth()/2;
+        double y = yTouch - getHeight()/2;
+        return (float) (Math.asin(y / Math.hypot(x, y)) * 180 / Math.PI);
+    }
 
     private void move(MotionEvent event) {
-        Point center = new Point(oriLeft / 2 + (oriRight - oriLeft) / 2, oriTop / 2 + (oriBottom - oriTop) / 2);
-        Point first = new Point(lastX, lastY);
-        Point second = new Point((int) event.getRawX(), (int) event.getRawY());
+    //    Point center = new Point(oriLeft / 2 + (oriRight - oriLeft) / 2, oriTop / 2 + (oriBottom - oriTop) / 2);
+        Point center = new Point(getWidth()/2, getHeight()/2);
+        Point first = new Point((int) startX, (int) startY);
+        Point second = new Point((int) event.getX(), (int) event.getY());
 
-        oriRotation += angle(center, first, second);
 
-        Float rotate = (oriRotation % 360);
+   //     float endAngle = getAngle(event.getX(),event.getY());
+
+
+   //     LogUtils.INSTANCE.d("angle： "+startAngle+" ; "+endAngle);
+
+        float startAngle = angle(center, first, second);
+        if(Math.abs(startAngle)>1) {
+            oriRotation +=startAngle;
+            setRotation(oriRotation);
+        }
+
+
+        LogUtils.INSTANCE.d("oriRotation1： "+angle(center, first, second));
+
+        LogUtils.INSTANCE.d("oriRotation2： "+oriRotation);
+
+     /*   Float rotate = (oriRotation % 360);
         if (oriRotation > 0) {
             //    mRotate = rotate;
         } else {
             //  mRotate = Math.abs(rotate - 360);
         }
         Log.d("bruce", "oriRotation-----------" + oriRotation);
-        //   Log.d("bruce", "rotate"+rotate);
+        //   Log.d("bruce", "rotate"+rotate);*/
 
-
-        setRotation(oriRotation);
-
-
-        lastX = (int) event.getRawX();
-        lastY = (int) event.getRawY();
     }
 
     public Canvas getCanvas() {
@@ -272,13 +291,15 @@ public class DrawAndTextView extends RelativeLayout {
         float x = (float) (250 + Math.cos(radian) * 250);
 
         float y = (float) (250 + Math.sin(radian) * 250);
-        LayoutParams textParams2 = new LayoutParams(150, ViewGroup.LayoutParams.WRAP_CONTENT);
+        LayoutParams textParams2 = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         textParams2.addRule(ALIGN_PARENT_LEFT);
         mTopTextView = new TextView(mContext);
+        mTopTextView.setTextColor(Color.BLACK);
         mTopTextView.setText(mTopText);
-        mTopTextView.setTextSize(6);
+        mTopTextView.setTextSize(getResources().getDimensionPixelSize(R.dimen._6sdp));
         mTopTextView.setBackgroundResource(R.drawable.retancgle_blue_drawable);
         mTopTextView.setGravity(Gravity.CENTER);
+
 
         if (x>425){
             mTopTextView.setTranslationX(x-150);
@@ -288,8 +309,7 @@ public class DrawAndTextView extends RelativeLayout {
             mTopTextView.setTranslationX(x);
         }
         if (y>425){
-            mTopTextView.setTranslationY(y-30);
-
+            mTopTextView.setTranslationY(y-50);
         }else{
             mTopTextView.setTranslationY(y);
 
@@ -323,8 +343,14 @@ public class DrawAndTextView extends RelativeLayout {
         float oa2 = dx1 * dx1 + dy1 * dy1;
         float ob2 = dx2 * dx2 + dy2 * dy2;
 
+        // - (double)((first.y - cen.y) * (second.x - cen.x)))
         // 根据两向量的叉乘来判断顺逆时针
-        boolean isClockwise = ((first.x - cen.x) * (second.y - cen.y) - (first.y - cen.y) * (second.x - cen.x)) > 0;
+        boolean isClockwise = ((first.x - cen.x) * (second.y - cen.y) -(first.y - cen.y) * (second.x - cen.x)  > 0);
+     //   boolean isClockwise = (first.x <second.x || first.y <second.y);
+
+
+        LogUtils.INSTANCE.d("isClockwise： "+isClockwise);
+
 
         // 根据余弦定理计算旋转角的余弦值
         double cosDegree = (oa2 + ob2 - ab2) / (2 * Math.sqrt(oa2) * Math.sqrt(ob2));
@@ -349,6 +375,8 @@ public class DrawAndTextView extends RelativeLayout {
         this.mActivity = activity;
     }
 
+    private float startX,startY,endX,endY;
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         int action = event.getAction();
@@ -365,6 +393,9 @@ public class DrawAndTextView extends RelativeLayout {
                 nOldBottom = getBottom();
                 break;
             case MotionEvent.ACTION_DOWN:
+                startX = event.getX();
+                startY = event.getY();
+
                 lastY = (int) event.getRawY();
                 lastX = (int) event.getRawX();
                 oriLeft = getLeft();
@@ -375,13 +406,14 @@ public class DrawAndTextView extends RelativeLayout {
                 lastX = (int) event.getRawX();
                 break;
             case MotionEvent.ACTION_UP:
+                endX = event.getX();
+                endY = event.getY();
                 mode = NONE;
                 break;
         }
         return true;
         //return super.onTouchEvent(event);
     }
-
 
     // 触碰两点间距离
     private float spacing(MotionEvent event) {

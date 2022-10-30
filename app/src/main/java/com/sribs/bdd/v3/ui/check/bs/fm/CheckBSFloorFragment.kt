@@ -253,7 +253,7 @@ class CheckBSFloorFragment : BaseFragment(R.layout.fragment_check_build_structur
                 mBinding.checkBsFloorZxEdit.visibility = View.VISIBLE
                 mBinding.checkBsFloorZxEdit.setText(damageV3Bean.axisNote)
             }
-            if (damageV3Bean.decorateDesign.isNullOrEmpty()) {
+            if (damageV3Bean.heightType == mJgZgList?.get(0)) {
 
                 mSelectPosition = 0
                 mBinding.checkBsFloorSpinner.setText(mJgZgList!!.get(mSelectPosition))

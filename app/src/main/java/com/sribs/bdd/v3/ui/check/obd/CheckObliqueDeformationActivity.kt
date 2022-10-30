@@ -75,6 +75,14 @@ class CheckObliqueDeformationActivity : BaseActivity(), ICheckOBDContrast.ICheck
     @Autowired(name = com.sribs.common.ARouterPath.VAL_BUILDING_ID)
     var mBuildingId = -1L
 
+    @JvmField
+    @Autowired(name = com.sribs.common.ARouterPath.VAL_PROJECT_NAME)
+    var mProjectName = ""
+
+    @JvmField
+    @Autowired(name = com.sribs.common.ARouterPath.VAL_BUILDING_NAME)
+    var mBldName = ""
+
     /**
      * 当前页损伤类型
      */
@@ -299,8 +307,8 @@ class CheckObliqueDeformationActivity : BaseActivity(), ICheckOBDContrast.ICheck
     /**
      * 设置损伤页面详情，并展示
      */
-    fun resetDamageInfo(damageV3Bean: DamageV3Bean?, type: String?) {
-        if (mBinding.checkMenuLayout.root.visibility == View.VISIBLE) {
+    fun resetDamageInfo(damageV3Bean: DamageV3Bean?, type: String?,isAddDamageMark:Boolean,isEditDamageMark:Boolean) {
+       /* if (mBinding.checkMenuLayout.root.visibility == View.VISIBLE) {
             AlertDialog.Builder(this).setTitle("提示")
                 .setMessage("当前有缩小详情页，是否移除？")
                 .setPositiveButton(R.string.dialog_ok) { dialog, which ->
@@ -317,14 +325,25 @@ class CheckObliqueDeformationActivity : BaseActivity(), ICheckOBDContrast.ICheck
 
                 }
                 .show()
-        } else {
+        } else {*/
+
+        if (mBinding.checkMenuLayout.root.visibility == View.VISIBLE) {
+            mBinding.checkMenuLayout.root.visibility = View.GONE
+        }
+
+        if(!isAddDamageMark){
+            scaleBitmap = null
+        }
+
             when (type) {
                 mCurrentDamageType[0] -> { // 点位
                     (mFragments[1] as CheckEditOBDFragment).resetView(damageV3Bean)
                     mBinding.checkVp.currentItem = 1
+                    addPDFDamageMark = isAddDamageMark
+                    isEditDamage = isEditDamageMark
                 }
             }
-        }
+     //   }
     }
 
     /**
@@ -372,46 +391,6 @@ class CheckObliqueDeformationActivity : BaseActivity(), ICheckOBDContrast.ICheck
         mDamageBeanList!!.put(mCurrentLocalPDF, exitDamageBeanList)
         resetDamageList()
     }
-
-    /**
-     * 保存损伤
-     */
-    fun saveDamage(damageInfo: DamageV3Bean) {
-
-        var exitDamageBeanList = mDamageBeanList!!.get(mCurrentLocalPDF)
-
-
-        LogUtils.d("当前数据：" + damageInfo)
-        if (exitDamageBeanList == null) {
-            exitDamageBeanList = ArrayList()
-        }
-        LogUtils.d("过滤前损伤数据：" + exitDamageBeanList)
-        /**
-         * 先过滤相同损伤
-         */
-        var totleDamageBranList = exitDamageBeanList!!.filter {
-            it.createTime != damageInfo.createTime
-        }
-
-        LogUtils.d("过滤后损伤数据：" + totleDamageBranList)
-
-        /***
-         * 再添加
-         */
-        exitDamageBeanList.clear()
-        exitDamageBeanList.addAll(totleDamageBranList)
-        exitDamageBeanList!!.add(damageInfo)
-
-        LogUtils.d("再添加损伤数据：" + totleDamageBranList)
-
-        mDamageBeanList!!.put(mCurrentLocalPDF, exitDamageBeanList)
-        resetDamageList()
-
-        mBinding.checkVp.currentItem = 0
-
-    //    addDamageMark(exitDamageBeanList.size)
-    }
-
 
     fun saveViewAsBitmap(view: View): Bitmap? {
         var width = view.width
@@ -472,9 +451,19 @@ class CheckObliqueDeformationActivity : BaseActivity(), ICheckOBDContrast.ICheck
         resetDamageList()
 
         mBinding.checkVp.currentItem = 0
-        addDamageMark(damageInfo,view)
+
+        if(addPDFDamageMark) {
+            if(isEditDamage) {
+                mView?.PDFRemoveAnnot()
+            }
+            addDamageMark(damageInfo,view)
+        }
 
     }
+
+    var addPDFDamageMark = false
+
+    var isEditDamage = false
 
     /**
      * 取消mark状态
@@ -491,7 +480,8 @@ class CheckObliqueDeformationActivity : BaseActivity(), ICheckOBDContrast.ICheck
         mView!!.layoutView(view, 500, 500)
         //  var bitmap = CommonUtil.GetRoundedCornerBitmap(PDFLayoutView.getViewBitmap(view))
             //   var bitmap = PDFLayoutView.getViewBitmap(view,roationAngle)
-        mView!!.PDFSetStamp(1,saveViewAsBitmap(view), 400f, 400f,damageInfo.type+System.currentTimeMillis())
+        mView!!.PDFSetStamp(1,saveViewAsBitmap(view), 180f, 180f,damageInfo.type+damageInfo.createTime)
+
     }
 
     /**
@@ -608,6 +598,8 @@ class CheckObliqueDeformationActivity : BaseActivity(), ICheckOBDContrast.ICheck
      */
     var mCurrentLocalPDF = ""
 
+    var mCurrentPDFName = ""
+
     fun openPDF(drawingV3Bean: DrawingV3Bean) {
         var pdfPath = drawingV3Bean.localAbsPath!!
         if (!pdfPath.endsWith("pdf") &&
@@ -623,6 +615,7 @@ class CheckObliqueDeformationActivity : BaseActivity(), ICheckOBDContrast.ICheck
         this.mViewParent = (mFragments[0] as CheckOBDFragment).getPDFParentView()
         this.mCurrentLocalPDF = pdfPath
         this.mCurrentDrawing = drawingV3Bean
+        this.mCurrentPDFName = drawingV3Bean.fileName!!
         setPDFGuide()
         Observable.create<Boolean> { o ->
             o.onNext(XXPermissions.isGranted(this, Permission.MANAGE_EXTERNAL_STORAGE))
@@ -803,12 +796,12 @@ class CheckObliqueDeformationActivity : BaseActivity(), ICheckOBDContrast.ICheck
 
     override fun onPDFNoteAdded(annotPoint: String?) {
         LogUtils.d("onPDFNoteAdded " + annotPoint)
-        var damageBean = Gson().fromJson(annotPoint, DamageV3Bean::class.java)
+     /*   var damageBean = Gson().fromJson(annotPoint, DamageV3Bean::class.java)
         mCurrentAddAnnotReF = damageBean.annotRef
         mController?.savePDF()
         resetDamageInfo(null, damageBean.type)
-        (mFragments[1] as CheckEditOBDFragment).openPDF(mCurrentLocalPDF)
-        /* when (damageBean.type) {
+      //  (mFragments[1] as CheckEditOBDFragment).openPDF(mCurrentLocalPDF)
+        *//* when (damageBean.type) {
              mCurrentDamageType[0] -> {
                  mController?.savePDF()
                  (mFragments[1] as CheckEditOBDFragment).openPDF(mCurrentLocalPDF)
@@ -821,6 +814,7 @@ class CheckObliqueDeformationActivity : BaseActivity(), ICheckOBDContrast.ICheck
         LogUtils.d("onPDFNoteEdited " + annotPoint)
         // 添加mark返回的信息，需保存 annotRef
         var damageBean: DamageV3Bean = Gson().fromJson(annotPoint!!, DamageV3Bean::class.java)
+
         when (damageBean.action) {
             Constant.BUTTON_POPMENU_EDIT -> {
                 /**
@@ -828,9 +822,9 @@ class CheckObliqueDeformationActivity : BaseActivity(), ICheckOBDContrast.ICheck
                  */
                 var isMatch = false
                 mDamageBeanList!!.get(mCurrentLocalPDF)!!.forEach {
-                    if (damageBean.annotRef == it.annotRef) {
+                    if (damageBean.annotName == it.type+it.createTime) {
                         isMatch = true
-                        resetDamageInfo(it, it.type)
+                        resetDamageInfo(it, it.type,true,true)
                         /* when (it.type) {
                              mCurrentDamageType[0] -> {
                                  mBinding.checkVp.currentItem = 1
@@ -860,7 +854,7 @@ class CheckObliqueDeformationActivity : BaseActivity(), ICheckOBDContrast.ICheck
                 LogUtils.d("删除前损伤数据: " + exitDamageBeanList)
 
                 var mTotalDamageBeanList = exitDamageBeanList!!.filter {
-                    damageBean.annotRef != it.annotRef
+                    damageBean.annotName != (it.type+it.createTime)
                 }
                 exitDamageBeanList.clear()
                 exitDamageBeanList.addAll(mTotalDamageBeanList)
@@ -883,18 +877,24 @@ class CheckObliqueDeformationActivity : BaseActivity(), ICheckOBDContrast.ICheck
         LogUtils.d("onButtonNextPressed")
     }
 
+    var scaleBitmap:Bitmap?=null
+
     /**
      * 当前选择新建损伤类型
      */
     override fun onSelect(type: String?) {
         LogUtils.d("onSelect："+type)
-        when (type) {
-            mCurrentDamageType[0] -> {
-                (mFragments[1] as CheckEditOBDFragment).resetView(null)
-                (mFragments[1] as CheckEditOBDFragment).openPDF(mCurrentLocalPDF)
-                mBinding.checkVp.currentItem = 1
-            }
 
-        }
+        var bitmap = PDFLayoutView.getViewBitmap(mView)
+
+        LogUtils.d("bitmap： "+bitmap+" ; "+bitmap.width+" ; "+bitmap.height)
+
+        scaleBitmap = Bitmap.createBitmap(bitmap,mView!!.m_rects[0].toInt()-100,mView!!.m_rects[1].toInt()-100,200,200)
+
+        bitmap.recycle()
+
+        LogUtils.d("scaleBitmap： "+scaleBitmap+" ; "+scaleBitmap!!.width+" ; "+scaleBitmap!!.height)
+
+        resetDamageInfo(null,type,true,false)
     }
 }

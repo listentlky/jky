@@ -343,4 +343,19 @@ object FileUtil {
         }
     }
 
+    fun saveBitmap(bitmap:Bitmap,path:File,name:String){
+
+        if(!path.exists()){
+            path.mkdirs()
+        }
+
+        val saveImgOut = FileOutputStream(File(path, name))
+
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100,saveImgOut)
+
+        saveImgOut.flush()
+
+        saveImgOut.close()
+    }
+
 }
