@@ -733,13 +733,14 @@ class RelativeHDiffActivity : BaseActivity() ,ICheckRHDiffContrast.ICheckRHDiffV
      */
     fun addDamageMark(group: String?, point: String?,color:String?,name:String){
         val view: View =
-            LayoutInflater.from(this).inflate(com.radaee.viewlib.R.layout.damage_checkbuildstructure_mark_layout, null)
-        val damageText = view.findViewById<TextView>(com.radaee.viewlib.R.id.damage_text)
-        var cardView =view.findViewById<CardView>(com.radaee.viewlib.R.id.damage_type_cardView)
+            LayoutInflater.from(this).inflate(R.layout.damage_checkbuildstructure_mark_layout, null)
+        val damageText = view.findViewById<TextView>(R.id.damage_text)
+        var cardView =view.findViewById<CardView>(R.id.damage_type_cardView)
         cardView.setCardBackgroundColor(Color.parseColor(color))
         damageText.text = group+"-"+point
-        mView!!.layoutView(view, 400, 200)
+        var size = resources.getDimensionPixelSize(R.dimen._30sdp)
+        mView!!.layoutView(view, size, size/2)
         var bitmap = PDFLayoutView.getViewBitmap(view)
-        mView!!.PDFSetStamp(1,bitmap,80f,40f,name)
+        mView!!.PDFSetStamp(1,bitmap,size.toFloat(),(size/2).toFloat(),name)
     }
 }

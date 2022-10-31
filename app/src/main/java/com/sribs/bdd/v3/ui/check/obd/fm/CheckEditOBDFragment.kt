@@ -75,15 +75,10 @@ class CheckEditOBDFragment : BaseFragment(R.layout.fragment_check_obliquedeforma
         }
 
         mBinding.checkObdUiCaptureView.content1.setContent("方向1")
-        mBinding.checkObdUiCaptureView.content1.setTextViewHeight(500)
-        mBinding.checkObdUiCaptureView.content1.init()
-        mBinding.checkObdUiCaptureView.content1.requestFocus()
+        mBinding.checkObdUiCaptureView.content1.resetView(0f)
 
         mBinding.checkObdUiCaptureView.content2.setContent("方向2")
-        mBinding.checkObdUiCaptureView.content2.setTextViewHeight(500)
-        mBinding.checkObdUiCaptureView.content2.setDrawViewType(0)
-        mBinding.checkObdUiCaptureView.content2.setOriRotation(90f)
-        mBinding.checkObdUiCaptureView.content2.init()
+        mBinding.checkObdUiCaptureView.content2.resetView(90f)
 
 
         mBinding.checkEditH2.checkEdit.addTextChangedListener {
@@ -172,6 +167,7 @@ class CheckEditOBDFragment : BaseFragment(R.layout.fragment_check_obliquedeforma
         mBinding.checkObdDoubleRadio.setOnClickListener {
             mBinding.checkObdOnlyRadio.isSelected = false
             mBinding.checkObdDoubleRadio.isSelected = true
+            mBinding.checkObdUiCaptureView.content2.resetView(90f)
             mBinding.checkObdUiCaptureView.content2.visibility = View.VISIBLE
             mBinding.checkEditH2.checkEdit.setText("")
             mBinding.checkEditH2.checkEdit.isEnabled = true
@@ -180,6 +176,7 @@ class CheckEditOBDFragment : BaseFragment(R.layout.fragment_check_obliquedeforma
         }
         mBinding.checkObdDoubleText.setOnClickListener {
             mBinding.checkObdOnlyRadio.isSelected = false
+            mBinding.checkObdUiCaptureView.content2.resetView(90f)
             mBinding.checkObdUiCaptureView.content2.visibility = View.VISIBLE
             mBinding.checkObdDoubleRadio.isSelected = true
             mBinding.checkEditH2.checkEdit.setText("")
@@ -191,6 +188,11 @@ class CheckEditOBDFragment : BaseFragment(R.layout.fragment_check_obliquedeforma
          * 生成损伤记录
          */
         mBinding.checkObdConfirm.setOnClickListener {
+
+            LogUtils.d("获取旋转角度"+ mBinding.checkObdUiCaptureView.content.rotation)
+
+            LogUtils.d("获取旋转角度22"+ mBinding.checkObdUiCaptureView.content2.rotation)
+
             if (mBinding.checkObdOnlyRadio.isSelected) {
                 if (mBinding.checkEditH1.checkEdit.text.isNullOrEmpty()) {
                     showToast("请输入测量高度")
@@ -261,9 +263,10 @@ class CheckEditOBDFragment : BaseFragment(R.layout.fragment_check_obliquedeforma
                 mBinding.checkEditH2.checkEdit.text.toString(),
                 mBinding.checkEditQx1.checkEdit.text.toString(),
                 mBinding.checkEditQx2.checkEdit.text.toString(),
-                mBinding.checkObdUiCaptureView.content1.oriRotation,
-                mBinding.checkObdUiCaptureView.content2.oriRotation,
+                mBinding.checkObdUiCaptureView.content1.oriRotation%360,
+                mBinding.checkObdUiCaptureView.content2.oriRotation%360,
             )
+
             var layout:View
             if (mBinding.checkObdOnlyRadio.isSelected) {
 
@@ -274,21 +277,10 @@ class CheckEditOBDFragment : BaseFragment(R.layout.fragment_check_obliquedeforma
 
                 content.text = mBinding.checkEditPoint.checkEdit.text
 
-                drawAndTextView .setContent("倾斜1")
-                drawAndTextView.setTextSize(resources.getDimensionPixelSize(R.dimen._6sdp))
-                drawAndTextView.setDrawViewWidth(-1)
-                drawAndTextView.setDrawViewHeight(-1)
-                drawAndTextView.setTextViewHeight(500)
-
-                drawAndTextView.setTopText(mBinding.checkObdQx1Hint.text.toString())
-
-                drawAndTextView.init()
-
-                drawAndTextView.drawView.setIsShowTopText(true)
-                drawAndTextView.drawView.setAngle(mBinding.checkObdUiCaptureView.content1.oriRotation%360)
-                drawAndTextView.addMarkView(mBinding.checkObdUiCaptureView.content1.oriRotation%360);
-                drawAndTextView.addTopView(mBinding.checkObdUiCaptureView.content1.oriRotation,false)
-                drawAndTextView.requestFocus()
+                drawAndTextView.setTextViewHeight(resources.getDimensionPixelSize(R.dimen._60sdp))
+                drawAndTextView.resetView(mBinding.checkObdUiCaptureView.content1.oriRotation)
+                drawAndTextView.setMarkView("倾斜1")
+                drawAndTextView.addTopView(mBinding.checkObdQx1Hint.text.toString().split("=")[1])
 
             }else{
                 layout= LayoutInflater.from(activity).inflate(R.layout.damage_mark_index_layout_3, null)
@@ -298,41 +290,16 @@ class CheckEditOBDFragment : BaseFragment(R.layout.fragment_check_obliquedeforma
 
                 content.text = mBinding.checkEditPoint.checkEdit.text
 
-                drawAndTextView.setContent("倾斜1")
-                drawAndTextView.setTextSize(resources.getDimensionPixelSize(R.dimen._6sdp))
-                drawAndTextView.setDrawViewWidth(-1)
-                drawAndTextView.setDrawViewHeight(-1)
-                drawAndTextView.setTextViewHeight(500)
-
-                drawAndTextView.setTopText(mBinding.checkObdQx1Hint.text.toString().split("=")[1])
-
-                drawAndTextView.init()
-
-                drawAndTextView.drawView.setIsShowTopText(true)
-                drawAndTextView.drawView.setAngle(mBinding.checkObdUiCaptureView.content1.oriRotation%360)
-                drawAndTextView.addMarkView(mBinding.checkObdUiCaptureView.content1.oriRotation%360);
-                drawAndTextView.addTopView(mBinding.checkObdUiCaptureView.content1.oriRotation,false)
-                drawAndTextView.requestFocus()
+                drawAndTextView.setTextViewHeight(resources.getDimensionPixelSize(R.dimen._60sdp))
+                drawAndTextView.resetView(mBinding.checkObdUiCaptureView.content1.oriRotation)
+                drawAndTextView.setMarkView("倾斜1")
+                drawAndTextView.addTopView(mBinding.checkObdQx1Hint.text.toString().split("=")[1])
 
 
-
-                drawAndTextView2 .setContent("倾斜2")
-                drawAndTextView2.setTextSize(resources.getDimensionPixelSize(R.dimen._6sdp))
-                drawAndTextView2.setDrawViewWidth(-1)
-                drawAndTextView2.setDrawViewHeight(-1)
-                drawAndTextView2.setTextViewHeight(500)
-
-                drawAndTextView2.setTopText(mBinding.checkObdQx2Hint.text.toString().split("=")[1])
-
-                drawAndTextView2.init()
-
-                drawAndTextView2.drawView.setIsShowTopText(true)
-                drawAndTextView2.drawView.setAngle(mBinding.checkObdUiCaptureView.content2.oriRotation%360)
-                drawAndTextView2.addMarkView(mBinding.checkObdUiCaptureView.content2.oriRotation%360);
-                drawAndTextView2.addTopView(mBinding.checkObdUiCaptureView.content2.oriRotation,false)
-
-                LogUtils.d("角度"+mBinding.checkObdUiCaptureView.content1.oriRotation+"//"+mBinding.checkObdUiCaptureView.content2.oriRotation)
-                drawAndTextView2.requestFocus()
+                drawAndTextView2.setTextViewHeight(resources.getDimensionPixelSize(R.dimen._50sdp))
+                drawAndTextView2.resetView(mBinding.checkObdUiCaptureView.content2.oriRotation)
+                drawAndTextView2.setMarkView("倾斜2")
+                drawAndTextView2.addTopView(mBinding.checkObdQx2Hint.text.toString().split("=")[1])
 
             }
             (context as CheckObliqueDeformationActivity).saveDamage(damage,layout)
@@ -402,6 +369,7 @@ class CheckEditOBDFragment : BaseFragment(R.layout.fragment_check_obliquedeforma
                 mBinding.checkEditQx2.checkEdit.setText(damageV3Bean.tilt2)
 
                 mBinding.checkObdUiCaptureView.content1.resetView(damageV3Bean.tiltRotate1!!)
+
                 mBinding.checkObdUiCaptureView.content2.visibility = View.VISIBLE
                 mBinding.checkObdUiCaptureView.content2.resetView(damageV3Bean.tiltRotate2!!)
 

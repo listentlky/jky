@@ -114,23 +114,18 @@ class RelativeHDiffFragment : BaseFragment(R.layout.fragment_relative_h_diff) {
      * return  true 编辑  false 添加
      */
     fun addOrEditPointBean(group:String,point:String,randomColor:String,annotName: String):Pair<Boolean,String>{
-        LogUtils.d("addOrEditPointBean： ${group}   ${point}   ${annotName}")
-        var currentColor:String=""
+        LogUtils.d("addOrEditPointBean： ${group}   ${point}  ${randomColor} ${annotName}")
+        var currentColor = randomColor
         var isMatch = false
         mBinding.checkTableInfo.pointBean.forEach { g->
-            LogUtils.d("g: "+g.name)
+            LogUtils.d("g: "+g.name+" ; "+g.colorBg)
+            if(group == g.name){
+                currentColor = g.colorBg
+            }
             g.menu.forEach { p->
                 LogUtils.d("p: "+p.name)
                 if(annotName == p.annotName){
-                    if(p.name != point ||g.name!=group){
-                        isMatch = true
-                        if(g.name != group){
-                            g.colorBg = randomColor
-                            currentColor = randomColor
-                        }else{
-                            currentColor = g.colorBg
-                        }
-                    }
+                    isMatch = true
                     p.name = point
                     g.name = group
                 }

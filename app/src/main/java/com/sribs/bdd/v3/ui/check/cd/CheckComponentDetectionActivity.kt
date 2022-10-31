@@ -281,9 +281,9 @@ class CheckComponentDetectionActivity : BaseActivity(), ICheckCDContrast.ICheckC
      */
     fun addDamageMark(damageInfo: DamageV3Bean){
         val view: View =
-            LayoutInflater.from(this).inflate(com.radaee.viewlib.R.layout.damage_checkbuildstructure_mark_layout, null)
-        val damageType = view.findViewById<TextView>(com.radaee.viewlib.R.id.damage_type)
-        val damageText = view.findViewById<TextView>(com.radaee.viewlib.R.id.damage_text)
+            LayoutInflater.from(this).inflate(R.layout.damage_checkbuildstructure_mark_layout, null)
+        val damageType = view.findViewById<TextView>(R.id.damage_type)
+        val damageText = view.findViewById<TextView>(R.id.damage_text)
         damageType.text = ""+damageInfo.type
         when(damageInfo.type){
             "梁"->{
@@ -296,9 +296,10 @@ class CheckComponentDetectionActivity : BaseActivity(), ICheckCDContrast.ICheckC
                 damageText.text = damageInfo.plateName
             }
         }
-        mView!!.layoutView(view, 400, 200)
+        var size = resources.getDimensionPixelSize(R.dimen._30sdp)
+        mView!!.layoutView(view, size, size/2)
         var bitmap = PDFLayoutView.getViewBitmap(view)
-        mView!!.PDFSetStamp(1,bitmap,80f,40f,damageInfo.type+damageInfo.createTime)
+        mView!!.PDFSetStamp(1,bitmap,size.toFloat(),(size/2).toFloat(),damageInfo.type+damageInfo.createTime)
     }
 
     /**

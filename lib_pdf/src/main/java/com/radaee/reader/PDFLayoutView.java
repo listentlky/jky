@@ -252,6 +252,9 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
             if (mIsV3) {
                 mCacheMotionEvent.setAction(0);
                 if (mCurrentModuleType.equals(mModuleType.get(2))) {
+                    PDFSetStamp(0);
+                    m_rects = null;
+                    onTouchStamp(mCacheMotionEvent);
                    showV3RHDiffAddPointPopupWindow(null,null,""+System.currentTimeMillis(),null,false);
                 } else {
                     showV3DamagePopupWindow();
@@ -2505,15 +2508,25 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
                             rect[1] = m_rects[cur + 1];
                             rect[3] = m_rects[cur + 3];
                         }
-                        
+
+                        for (float f:m_rects) {
+                            Log.d("bruce","-111--"+f);
+                        }
+
                         if(rect[0] == rect[2]){
-                            rect[0] = rect[0]-(width/2);
-                            rect[2] = rect[2]+(width/2);
+                            float w = (width/2);
+                            rect[0] = rect[0]-w;
+                            rect[2] = rect[2]+w;
                         }
 
                         if(rect[1] == rect[3]){
-                            rect[1] = rect[1]-(height/2);
-                            rect[3] = rect[3]+(height/2);
+                            float h = (height/2);
+                            rect[1] = rect[1]-h;
+                            rect[3] = rect[3]+h;
+                        }
+
+                        for (float f:rect) {
+                            Log.d("bruce","-222--"+f);
                         }
 
                         mat.TransformRect(rect);
@@ -2860,9 +2873,6 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
 
         @Override
         public void onAddPoint(String group, String point,String annotName,String colorBg) {
-            PDFSetStamp(0);
-            m_rects = null;
-            onTouchStamp(mCacheMotionEvent);
             if(mV3AddGroupPointCallback != null){
                 mV3AddGroupPointCallback.onAddPoint(group,point,annotName,colorBg);
             }

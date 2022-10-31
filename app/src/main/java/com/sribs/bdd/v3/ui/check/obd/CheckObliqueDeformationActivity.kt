@@ -477,10 +477,11 @@ class CheckObliqueDeformationActivity : BaseActivity(), ICheckOBDContrast.ICheck
      */
     fun addDamageMark(damageInfo: DamageV3Bean,view:View){
 
-        mView!!.layoutView(view, 500, 500)
-        //  var bitmap = CommonUtil.GetRoundedCornerBitmap(PDFLayoutView.getViewBitmap(view))
-            //   var bitmap = PDFLayoutView.getViewBitmap(view,roationAngle)
-        mView!!.PDFSetStamp(1,saveViewAsBitmap(view), 180f, 180f,damageInfo.type+damageInfo.createTime)
+        var size = resources.getDimensionPixelSize(R.dimen._80sdp)
+
+        mView!!.layoutView(view, size, size)
+
+        mView!!.PDFSetStamp(1,saveViewAsBitmap(view), size.toFloat(), size.toFloat(),damageInfo.type+damageInfo.createTime)
 
     }
 

@@ -164,14 +164,14 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
                     /**
                      * 过滤出最新模块记录
                      */
-                    var iterator = onlyRemoteList.iterator()
+                    var iterator = onlyRemoteList?.iterator()
                     var filterModuleList = ArrayList<BuildingModule>()
                     var ModuleList = onlyRemoteList
 
-                    while (iterator.hasNext()) {
+                    while (iterator!!.hasNext()) {
                         var next = iterator.next()
                         var isSmallTime = false
-                        ModuleList.forEach { filter ->
+                        ModuleList?.forEach { filter ->
                             if (filter.moduleName == next.moduleName
                                 && TimeUtil.dateToStamp(next.createTime!!) < TimeUtil.dateToStamp(
                                     filter.createTime!!
@@ -1400,6 +1400,7 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
             .observeOn(Schedulers.computation())
             .flatMap {
                 it[0].drawing?.forEachIndexed { index, item ->
+                    item.drawingID = UUIDUtil.getUUID(item.fileName!!)
                     var cacheFileParent = File(cacheRootDir + mCurDrawingsDir + index)
                     cacheFileParent.mkdirs()
                     var cacheFile = File(cacheFileParent, item.fileName)
@@ -1505,12 +1506,16 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
                         item.localAbsPath = cacheFile.absolutePath
                     }
 
+                    b.drawing?.forEach {
+                        it.drawingID = UUIDUtil.getUUID(it.fileName!!)
+                    }
+
                     v3ModuleFloorDbBean(
                         id = -1,
                         projectId = projectId,
                         bldId = buildingId,
                         moduleId = moduleId,
-                        floorId = b.floorId,
+                        floorId = UUIDUtil.getUUID(b.floorName!!),
                         floorName = b.floorName,
                         floorType = b.floorType ?: 0,
                         drawingsList = b.drawing,

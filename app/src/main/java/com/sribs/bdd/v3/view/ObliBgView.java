@@ -9,28 +9,32 @@ import android.graphics.PorterDuffXfermode;
 import android.util.AttributeSet;
 import android.view.View;
 
+import com.sribs.bdd.R;
+
 public class ObliBgView extends View {
 
     private Paint bgPaint;
 
     private Paint centerPaint;
 
+    private float centerSize;
+
     public ObliBgView(Context context) {
         super(context);
-        init();
+        init(context);
     }
 
     public ObliBgView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init();
+        init(context);
     }
 
     public ObliBgView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init();
+        init(context);
     }
 
-    private void init(){
+    private void init(Context context){
         bgPaint = new Paint();
         bgPaint.setAntiAlias(true);
         bgPaint.setStyle(Paint.Style.FILL_AND_STROKE);
@@ -40,6 +44,8 @@ public class ObliBgView extends View {
         centerPaint.setAntiAlias(true);
         centerPaint.setStyle(Paint.Style.FILL);
         centerPaint.setColor(Color.parseColor("#FF005B82"));
+
+        centerSize = context.getResources().getDimension(R.dimen._4sdp);
 
         setLayerType(LAYER_TYPE_HARDWARE, null);
     }
@@ -52,6 +58,6 @@ public class ObliBgView extends View {
 
         canvas.drawCircle(getWidth()/2,getHeight()/2,getWidth()/2,bgPaint);
 
-        canvas.drawCircle(getWidth()/2,getHeight()/2,15,centerPaint);
+        canvas.drawCircle(getWidth()/2,getHeight()/2,centerSize,centerPaint);
     }
 }
