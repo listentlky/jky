@@ -6,6 +6,7 @@ import android.view.Gravity
 import android.view.MotionEvent
 import android.view.View
 import android.view.View.OnTouchListener
+import android.view.ViewGroup
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.cbj.sdk.libui.mvp.BaseFragment
@@ -23,7 +24,6 @@ import com.sribs.common.utils.FileUtil
 import kotlinx.android.synthetic.main.fragment_check_componentdetection_column_right_design_edit.view.*
 import java.io.File
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 @Route(path = ARouterPath.CHECK_COMPONENT_DETECTION_COLUMN_FRAGMENT)
@@ -245,13 +245,11 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
         mBinding.checkCpdSubtitleChange.setOnClickListener {
             if (mBinding.checkCpdSubtitle2.content.visibility == View.VISIBLE) {
                 mBinding.checkCpdSubtitle2.content.visibility = View.INVISIBLE
-                mBinding.checkCpdSubtitle2.checkCpdBeamMenuAxis1.setText("")
-                mBinding.checkCpdSubtitle2.checkCpdBeamMenuAxis2.setText("")
+
                 mBinding.checkCpdSubtitle2Second.content.visibility = View.VISIBLE
             } else {
                 mBinding.checkCpdSubtitle2.content.visibility = View.VISIBLE
                 mBinding.checkCpdSubtitle2Second.content.visibility = View.INVISIBLE
-                mBinding.checkCpdSubtitle2Second.checkEdit.setText("")
             }
         }
 
@@ -295,7 +293,7 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
 
         leftRealView!!.checkCpdLeftRealSpinner1.setSpinnerData(mTypeList)
             .setSpinnerTextGravity(
-                Gravity.CENTER_VERTICAL
+               Gravity.CENTER
             ).setSpinnerCallback { position: Int ->
                 currentLeftRealType = position
                 LogUtils.d("实测截面类型" + mTypeList!!.get(currentLeftRealType))
@@ -312,13 +310,19 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
                         leftRealAnotherView!!.content.visibility =
                             View.INVISIBLE
 
-                        rightRealView!!.checkCpdColumnRightRealRowSteel.checkCpdLeftRealSpinner2.setSelect(0)
-                        rightRealView!!.checkCpdColumnRightRealRowSteel.checkCpdLeftRealSpinner2.setText(mTypeRightList!!.get(0))
-                        (rightRealRowSteelParamsView!! as ItemComponentDetectionColumnRightRealRowSteelParamsBinding).content.visibility =
+
+                        leftDesignView!!.checkCpdLeftRealSpinner1.setSelect(0)
+                        leftDesignView!!.checkCpdLeftRealSpinner1.setText(mTypeList!!.get(0))
+
+                        (leftDesignRectangleView!! as CheckComponentDetectionBeamLeftRectangleItemBinding).content.visibility =
                             View.VISIBLE
-                        (rightRealRowSteelCircleView!! as ItemComponentDetectionColumnRightRealRowSteelParams2Binding).content.visibility =
+                        (leftDesignHView!! as ItemComponentDetectionBeamLeftHItemBinding).content.visibility =
                             View.INVISIBLE
-                        (rightRealRowSteelAnotherView!! as ItemComponentDetectionColumnRightRealRowSteelParams3Binding).content.visibility =
+                        (leftDesignCirCleTubeView!! as CheckComponentDetectionBeamLeftRectangleItemBinding).content.visibility =
+                            View.INVISIBLE
+                        leftDesignCircleView!!.content.visibility =
+                            View.INVISIBLE
+                        leftDesignAnotherView!!.content.visibility =
                             View.INVISIBLE
 
                     }
@@ -333,14 +337,20 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
                             View.VISIBLE
                         leftRealAnotherView!!.content.visibility =
                             View.INVISIBLE
-                        rightRealView!!.checkCpdColumnRightRealRowSteel.checkCpdLeftRealSpinner2.setSelect(1)
-                        rightRealView!!.checkCpdColumnRightRealRowSteel.checkCpdLeftRealSpinner2.setText(mTypeRightList!!.get(1))
-                        (rightRealRowSteelParamsView!! as ItemComponentDetectionColumnRightRealRowSteelParamsBinding).content.visibility =
+
+                        leftDesignView!!.checkCpdLeftRealSpinner1.setSelect(1)
+                        leftDesignView!!.checkCpdLeftRealSpinner1.setText(mTypeList!!.get(1))
+                        leftDesignRectangleView!!.content.visibility =
                             View.INVISIBLE
-                        (rightRealRowSteelCircleView!! as ItemComponentDetectionColumnRightRealRowSteelParams2Binding).content.visibility =
+                        leftDesignHView!!.content.visibility =
+                            View.INVISIBLE
+                        leftDesignCirCleTubeView!!.content.visibility =
+                            View.INVISIBLE
+                        (leftDesignCircleView!! as ItemComponentDetectionColumnLeftItemBinding).content.visibility =
                             View.VISIBLE
-                        (rightRealRowSteelAnotherView!! as ItemComponentDetectionColumnRightRealRowSteelParams3Binding).content.visibility =
+                        (leftDesignAnotherView!! as ItemComponentDetectionBeamLeftAnotherItemBinding).content.visibility =
                             View.INVISIBLE
+
                     }
                     2 -> {
                         leftRealRectangleView!!.content.visibility =
@@ -353,6 +363,21 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
                             View.INVISIBLE
                         leftRealAnotherView!!.content.visibility =
                             View.INVISIBLE
+
+                        leftDesignView!!.checkCpdLeftRealSpinner1.setSelect(2)
+                        leftDesignView!!.checkCpdLeftRealSpinner1.setText(mTypeList!!.get(2))
+
+                        leftDesignRectangleView!!.content.visibility =
+                            View.INVISIBLE
+                        leftDesignHView!!.content.visibility =
+                            View.INVISIBLE
+                        leftDesignCirCleTubeView!!.content.visibility =
+                            View.VISIBLE
+                        leftDesignCircleView!!.content.visibility =
+                            View.INVISIBLE
+                        leftDesignAnotherView!!.content.visibility =
+                            View.INVISIBLE
+
                     }
                     3 -> {
                         leftRealRectangleView!!.content.visibility =
@@ -365,6 +390,21 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
                             View.INVISIBLE
                         leftRealAnotherView!!.content.visibility =
                             View.INVISIBLE
+
+                        leftDesignView!!.checkCpdLeftRealSpinner1.setSelect(3)
+                        leftDesignView!!.checkCpdLeftRealSpinner1.setText(mTypeList!!.get(3))
+
+                        leftDesignRectangleView!!.content.visibility =
+                            View.INVISIBLE
+                        leftDesignHView!!.content.visibility =
+                            View.VISIBLE
+                        leftDesignCirCleTubeView!!.content.visibility =
+                            View.INVISIBLE
+                        leftDesignCircleView!!.content.visibility =
+                            View.INVISIBLE
+                        leftDesignAnotherView!!.content.visibility =
+                            View.INVISIBLE
+
                     }
                     4 -> {
                         leftRealRectangleView!!.content.visibility =
@@ -377,14 +417,20 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
                             View.INVISIBLE
                         leftRealAnotherView!!.content.visibility =
                             View.VISIBLE
-                        rightRealView!!.checkCpdColumnRightRealRowSteel.checkCpdLeftRealSpinner2.setSelect(2)
-                        rightRealView!!.checkCpdColumnRightRealRowSteel.checkCpdLeftRealSpinner2.setText(mTypeRightList!!.get(2))
-                        (rightRealRowSteelParamsView!! as ItemComponentDetectionColumnRightRealRowSteelParamsBinding).content.visibility =
+                        leftDesignView!!.checkCpdLeftRealSpinner1.setSelect(4)
+                        leftDesignView!!.checkCpdLeftRealSpinner1.setText(mTypeList!!.get(4))
+
+                        leftDesignRectangleView!!.content.visibility =
                             View.INVISIBLE
-                        (rightRealRowSteelCircleView!! as ItemComponentDetectionColumnRightRealRowSteelParams2Binding).content.visibility =
+                        leftDesignHView!!.content.visibility =
                             View.INVISIBLE
-                        (rightRealRowSteelAnotherView!! as ItemComponentDetectionColumnRightRealRowSteelParams3Binding).content.visibility =
+                        leftDesignCirCleTubeView!!.content.visibility =
+                            View.INVISIBLE
+                        leftDesignCircleView!!.content.visibility =
+                            View.INVISIBLE
+                        leftDesignAnotherView!!.content.visibility =
                             View.VISIBLE
+
                     }
 
                 }
@@ -392,7 +438,7 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
 
         leftDesignView!!.checkCpdLeftRealSpinner1.setSpinnerData(mTypeList)
             .setSpinnerTextGravity(
-                Gravity.CENTER_VERTICAL
+               Gravity.CENTER
             ).setSpinnerCallback { position: Int ->
                 currentLeftDesignType = position
                 LogUtils.d("设计截面类型" + mTypeList!!.get(currentLeftDesignType))
@@ -409,14 +455,9 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
                         leftDesignAnotherView!!.content.visibility =
                             View.INVISIBLE
 
-                        rightDesignView!!.checkCpdColumnRightRealRowSteel.checkCpdLeftRealSpinner2.setSelect(0)
-                        rightDesignView!!.checkCpdColumnRightRealRowSteel.checkCpdLeftRealSpinner2.setText(mTypeRightList!!.get(0))
-                        (rightDesignRowSteelParamsView!! as ItemComponentDetectionColumnRightRealRowSteelParamsBinding).content.visibility =
-                            View.VISIBLE
-                        (rightDesignRowSteelCircleView!! as ItemComponentDetectionColumnRightRealRowSteelParams2Binding).content.visibility =
-                            View.INVISIBLE
-                        (rightDesignRowSteelAnotherView!! as ItemComponentDetectionColumnRightRealRowSteelParams3Binding).content.visibility =
-                            View.INVISIBLE
+
+
+
                     }
                     1 -> {
                         leftDesignRectangleView!!.content.visibility =
@@ -430,14 +471,6 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
                         (leftDesignAnotherView!! as ItemComponentDetectionBeamLeftAnotherItemBinding).content.visibility =
                             View.INVISIBLE
 
-                        rightDesignView!!.checkCpdColumnRightRealRowSteel.checkCpdLeftRealSpinner2.setSelect(1)
-                        rightDesignView!!.checkCpdColumnRightRealRowSteel.checkCpdLeftRealSpinner2.setText(mTypeRightList!!.get(1))
-                        (rightDesignRowSteelParamsView!! as ItemComponentDetectionColumnRightRealRowSteelParamsBinding).content.visibility =
-                            View.INVISIBLE
-                        (rightDesignRowSteelCircleView!! as ItemComponentDetectionColumnRightRealRowSteelParams2Binding).content.visibility =
-                            View.VISIBLE
-                        (rightDesignRowSteelAnotherView!! as ItemComponentDetectionColumnRightRealRowSteelParams3Binding).content.visibility =
-                            View.INVISIBLE
                     }
                     2 -> {
                         leftDesignRectangleView!!.content.visibility =
@@ -475,14 +508,6 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
                         leftDesignAnotherView!!.content.visibility =
                             View.VISIBLE
 
-                        rightDesignView!!.checkCpdColumnRightRealRowSteel.checkCpdLeftRealSpinner2.setSelect(2)
-                        rightDesignView!!.checkCpdColumnRightRealRowSteel.checkCpdLeftRealSpinner2.setText(mTypeRightList!!.get(2))
-                        (rightDesignRowSteelParamsView!! as ItemComponentDetectionColumnRightRealRowSteelParamsBinding).content.visibility =
-                            View.INVISIBLE
-                        (rightDesignRowSteelCircleView!! as ItemComponentDetectionColumnRightRealRowSteelParams2Binding).content.visibility =
-                            View.INVISIBLE
-                        (rightDesignRowSteelAnotherView!! as ItemComponentDetectionColumnRightRealRowSteelParams3Binding).content.visibility =
-                            View.VISIBLE
                     }
 
                 }
@@ -507,7 +532,7 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
             mTypeRightList
         )
             .setSpinnerTextGravity(
-                Gravity.CENTER_VERTICAL
+               Gravity.CENTER
             )
             .setSpinnerCallback { position: Int ->
                 currentRightRealType = position
@@ -521,6 +546,30 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
                             View.INVISIBLE
                         (rightRealRowSteelAnotherView!! as ItemComponentDetectionColumnRightRealRowSteelParams3Binding).content.visibility =
                             View.INVISIBLE
+
+
+                        rightDesignView!!.checkCpdColumnRightRealRowSteel.checkCpdLeftRealSpinner2.setSelect(0)
+                        rightDesignView!!.checkCpdColumnRightRealRowSteel.checkCpdLeftRealSpinner2.setText(mTypeRightList!!.get(0))
+
+                        (rightDesignRowSteelParamsView!! as ItemComponentDetectionColumnRightRealRowSteelParamsBinding).content.visibility =
+                            View.VISIBLE
+                        (rightDesignRowSteelCircleView!! as ItemComponentDetectionColumnRightRealRowSteelParams2Binding).content.visibility =
+                            View.INVISIBLE
+                        (rightDesignRowSteelAnotherView!! as ItemComponentDetectionColumnRightRealRowSteelParams3Binding).content.visibility =
+                            View.INVISIBLE
+
+                        val lp: ViewGroup.LayoutParams
+                        lp = rightRealRowSteelParamsView!!.content.getLayoutParams()
+                        lp.width = -1
+                        lp.height = getResources().getDimensionPixelSize(R.dimen._45sdp)
+                        rightRealRowSteelParamsView!!.content.setLayoutParams(lp)
+
+                        val lp2: ViewGroup.LayoutParams
+                        lp2 = rightDesignRowSteelParamsView!!.content.getLayoutParams()
+                        lp2.width = -1
+                        lp2.height = getResources().getDimensionPixelSize(R.dimen._45sdp)
+                        rightDesignRowSteelParamsView!!.content.setLayoutParams(lp2)
+
                     }
                     1 -> {
                         rightRealRowSteelParamsView!!.content.visibility =
@@ -529,6 +578,29 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
                             View.VISIBLE
                         rightRealRowSteelAnotherView!!.content.visibility =
                             View.INVISIBLE
+
+                        rightDesignView!!.checkCpdColumnRightRealRowSteel.checkCpdLeftRealSpinner2.setSelect(1)
+                        rightDesignView!!.checkCpdColumnRightRealRowSteel.checkCpdLeftRealSpinner2.setText(mTypeRightList!!.get(1))
+
+                        (rightDesignRowSteelParamsView!! as ItemComponentDetectionColumnRightRealRowSteelParamsBinding).content.visibility =
+                            View.INVISIBLE
+                        (rightDesignRowSteelCircleView!! as ItemComponentDetectionColumnRightRealRowSteelParams2Binding).content.visibility =
+                            View.VISIBLE
+                        (rightDesignRowSteelAnotherView!! as ItemComponentDetectionColumnRightRealRowSteelParams3Binding).content.visibility =
+                            View.INVISIBLE
+
+                        val lp: ViewGroup.LayoutParams
+                        lp = rightRealRowSteelParamsView!!.content.getLayoutParams()
+                        lp.width = -1
+                        lp.height = getResources().getDimensionPixelSize(R.dimen._20sdp)
+                        rightRealRowSteelParamsView!!.content.setLayoutParams(lp)
+
+                        val lp2: ViewGroup.LayoutParams
+                        lp2 = rightDesignRowSteelParamsView!!.content.getLayoutParams()
+                        lp2.width = -1
+                        lp2.height = getResources().getDimensionPixelSize(R.dimen._20sdp)
+                        rightDesignRowSteelParamsView!!.content.setLayoutParams(lp2)
+
                     }
                     2 -> {
                         rightRealRowSteelParamsView!!.content.visibility =
@@ -537,6 +609,30 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
                             View.INVISIBLE
                         rightRealRowSteelAnotherView!!.content.visibility =
                             View.VISIBLE
+
+                        rightDesignView!!.checkCpdColumnRightRealRowSteel.checkCpdLeftRealSpinner2.setSelect(2)
+                        rightDesignView!!.checkCpdColumnRightRealRowSteel.checkCpdLeftRealSpinner2.setText(mTypeRightList!!.get(2))
+
+                        (rightDesignRowSteelParamsView!! as ItemComponentDetectionColumnRightRealRowSteelParamsBinding).content.visibility =
+                            View.INVISIBLE
+                        (rightDesignRowSteelCircleView!! as ItemComponentDetectionColumnRightRealRowSteelParams2Binding).content.visibility =
+                            View.INVISIBLE
+                        (rightDesignRowSteelAnotherView!! as ItemComponentDetectionColumnRightRealRowSteelParams3Binding).content.visibility =
+                            View.VISIBLE
+
+                        val lp: ViewGroup.LayoutParams
+                        lp = rightRealRowSteelParamsView!!.content.getLayoutParams()
+                        lp.width = -1
+                        lp.height = getResources().getDimensionPixelSize(R.dimen._20sdp)
+                        rightRealRowSteelParamsView!!.content.setLayoutParams(lp)
+
+
+                        val lp2: ViewGroup.LayoutParams
+                        lp2 = rightDesignRowSteelParamsView!!.content.getLayoutParams()
+                        lp2.width = -1
+                        lp2.height = getResources().getDimensionPixelSize(R.dimen._20sdp)
+                        rightDesignRowSteelParamsView!!.content.setLayoutParams(lp2)
+
                     }
                 }
 
@@ -547,7 +643,7 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
             mPicList
         )
             .setSpinnerTextGravity(
-                Gravity.CENTER_VERTICAL
+               Gravity.CENTER
             ).setSpinnerCallback { position: Int ->
                 currentRightRealType2 = position
                 LogUtils.d("实测纵筋符号" + currentRightRealType2)
@@ -558,7 +654,7 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
             mPicList
         )
             .setSpinnerTextGravity(
-                Gravity.CENTER_VERTICAL
+               Gravity.CENTER
             ).setSpinnerCallback { position: Int ->
                 currentRightDesignType2 = position
                 LogUtils.d("设计纵筋符号" + currentRightDesignType2)
@@ -570,7 +666,7 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
         (rightRealMeasuredView!! as ItemComponentDetectionBeamRightRealMeasuredStirrupsEditBinding).checkCpdLeftRealSpinner2.setSpinnerData(
             mTypeRight2List
         )
-            .setSpinnerTextGravity(Gravity.CENTER_VERTICAL)
+            .setSpinnerTextGravity(Gravity.CENTER)
             .setSpinnerCallback { position: Int ->
                 currentRightRealType3 = position
                 LogUtils.d("实测箍筋类型" + mTypeRight2List!!.get(currentRightRealType3))
@@ -591,7 +687,7 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
         rightRealMeasuredView!!.checkCpdLeftRealSpinner3.setSpinnerData(
             mPicList
         )
-            .setSpinnerTextGravity(Gravity.CENTER_VERTICAL)
+            .setSpinnerTextGravity(Gravity.CENTER)
             .setSpinnerCallback { position: Int ->
                 currentRightRealType4 = position
                 LogUtils.d("实测箍筋符号：" + mPicList!!.get(currentRightRealType4))
@@ -603,7 +699,7 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
             mTypeRightList
         )
             .setSpinnerTextGravity(
-                Gravity.CENTER_VERTICAL
+               Gravity.CENTER
             )
             .setSpinnerCallback { position: Int ->
                 currentRightDesignType = position
@@ -617,6 +713,13 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
                             View.INVISIBLE
                         (rightDesignRowSteelAnotherView!! as ItemComponentDetectionColumnRightRealRowSteelParams3Binding).content.visibility =
                             View.INVISIBLE
+
+                        val lp: ViewGroup.LayoutParams
+                        lp = rightDesignRowSteelParamsView!!.content.getLayoutParams()
+                        lp.width = -1
+                        lp.height = getResources().getDimensionPixelSize(R.dimen._45sdp)
+                        rightDesignRowSteelParamsView!!.content.setLayoutParams(lp)
+
                     }
                     1 -> {
                         rightDesignRowSteelParamsView!!.content.visibility =
@@ -625,6 +728,12 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
                             View.VISIBLE
                         rightDesignRowSteelAnotherView!!.content.visibility =
                             View.INVISIBLE
+
+                        val lp: ViewGroup.LayoutParams
+                        lp = rightDesignRowSteelParamsView!!.content.getLayoutParams()
+                        lp.width = -1
+                        lp.height = getResources().getDimensionPixelSize(R.dimen._20sdp)
+                        rightDesignRowSteelParamsView!!.content.setLayoutParams(lp)
                     }
                     2 -> {
                         rightDesignRowSteelParamsView!!.content.visibility =
@@ -633,6 +742,12 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
                             View.INVISIBLE
                         rightDesignRowSteelAnotherView!!.content.visibility =
                             View.VISIBLE
+
+                        val lp: ViewGroup.LayoutParams
+                        lp = rightDesignRowSteelParamsView!!.content.getLayoutParams()
+                        lp.width = -1
+                        lp.height = getResources().getDimensionPixelSize(R.dimen._20sdp)
+                        rightDesignRowSteelParamsView!!.content.setLayoutParams(lp)
                     }
                 }
             }.build()
@@ -645,7 +760,7 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
         rightDesignMeasuredView!!.checkCpdLeftRealSpinner2.setSpinnerData(
             mTypeRight2List
         )
-            .setSpinnerTextGravity(Gravity.CENTER_VERTICAL)
+            .setSpinnerTextGravity(Gravity.CENTER)
             .setSpinnerCallback { position: Int ->
                 currentRightDesignType3 = position
                 if (currentRightDesignType3==1){
@@ -659,7 +774,7 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
         rightDesignMeasuredView!!.checkCpdLeftRealSpinner3.setSpinnerData(
             mPicList
         )
-            .setSpinnerTextGravity(Gravity.CENTER_VERTICAL)
+            .setSpinnerTextGravity(Gravity.CENTER)
             .setSpinnerCallback { position: Int ->
                 currentRightDesignType4 = position
                 LogUtils.d("设计箍筋符号：" + mPicList!!.get(currentRightDesignType4))
@@ -744,6 +859,19 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
 
             generateParamsList()
 
+            var axis:String
+            var axisList:ArrayList<String>
+            if (mBinding.checkCpdSubtitle2Second.content.visibility ==View.VISIBLE){
+                axis = mBinding.checkCpdSubtitle2Second.checkEdit.text.toString()
+                axisList = arrayListOf("","","")
+            }else{
+                axis = ""
+                axisList = arrayListOf(
+                    mBinding.checkCpdSubtitle2.checkCpdBeamMenuAxis1.text.toString(),
+                    mBinding.checkCpdSubtitle2.checkCpdBeamMenuAxis2.text.toString(),
+                )
+            }
+
 
             var damage = DamageV3Bean(
                 -1,
@@ -754,11 +882,8 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
                 "",
                 if (mDamageCreateTime < 0) System.currentTimeMillis() else mDamageCreateTime,
                 mBinding.checkCpdSubtitle1.checkEdit.text.toString(),
-                mBinding.checkCpdSubtitle2Second.checkEdit.text.toString(),
-                arrayListOf<String>(
-                    mBinding.checkCpdSubtitle2.checkCpdBeamMenuAxis1.text.toString(),
-                    mBinding.checkCpdSubtitle2.checkCpdBeamMenuAxis2.text.toString()
-                ),
+                axis,
+                axisList,
                 mTypeList!!.get(currentLeftRealType),
                 leftRealSectionTypeParamsList,
                 leftRealView!!.checkCpdLeftRealRemarkContent.text.toString(),
@@ -940,15 +1065,14 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
 
             mBinding.checkCpdSubtitle2.content.visibility = View.VISIBLE
             mBinding.checkCpdSubtitle2Second.content.visibility = View.INVISIBLE
-            mBinding.checkCpdSubtitle2Second.checkEdit.setText("")
-            mBinding.checkCpdSubtitle1.checkEdit.setText("")
+
 
             leftRealView!!.content.visibility = View.VISIBLE
             leftDesignView!!.content.visibility = View.INVISIBLE
 
             mBinding.checkCpdSubtitle2.checkCpdBeamMenuAxis1.setText("")
             mBinding.checkCpdSubtitle2.checkCpdBeamMenuAxis2.setText("")
-
+            mBinding.checkCpdSubtitle2Second.checkEdit.setText("")
 
             leftRealView!!.checkCpdLeftRealSpinner1.setSelect(0)
             leftRealView!!.checkCpdLeftRealSpinner1.setText(mTypeList!!.get(0))
@@ -1119,6 +1243,11 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
 
             mDamageCreateTime = -1L
         } else {
+
+
+            mBinding.checkCpdSubtitle2.checkCpdBeamMenuAxis1.setText("")
+            mBinding.checkCpdSubtitle2.checkCpdBeamMenuAxis2.setText("")
+            mBinding.checkCpdSubtitle2Second.checkEdit.setText("")
 
             currentLeftRealType =  mTypeList!!.indexOf(damageV3Bean.leftRealSectionType)
             currentLeftDesignType =  mTypeList!!.indexOf(damageV3Bean.leftDesignSectionType)
@@ -1721,7 +1850,7 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
         rightDesignView!!.checkEditEncrypt.isEnabled = isEnable
 
 
-        rightDesignView!!.checkEdit.isEnabled = isEnable
+        rightDesignView!!.ll1.check_edit.isEnabled = isEnable
 
         rightDesignView!!.checkCpdLeftRealRemarkContent.isEnabled = isEnable
 

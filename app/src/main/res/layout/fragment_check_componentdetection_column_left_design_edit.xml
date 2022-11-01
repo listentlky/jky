@@ -132,13 +132,13 @@
                         android:id="@+id/check_cpd_left_real_remark_content"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="@null"
+                        android:background="@drawable/check_gray_is_edit_selector"
                         android:paddingLeft="@dimen/_4sdp"
                         android:gravity="start"
                         android:inputType="text"
                         android:minHeight="@dimen/_50sdp"
                         android:hint="请输入内容"
-                        android:textSize="@dimen/_7ssp">
+                        android:textSize="@dimen/_6ssp">
 
                     </EditText>
 

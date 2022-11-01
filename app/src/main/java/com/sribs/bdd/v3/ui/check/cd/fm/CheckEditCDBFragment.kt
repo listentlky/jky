@@ -162,13 +162,13 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
         leftRealView.checkCpdLeftRealSpinner1.setSelect(0)
 
         leftRealView.checkCpdLeftRealSpinner1.setSpinnerData(mTypeLeftList)
-            .setSpinnerTextGravity(Gravity.CENTER_VERTICAL).setSpinnerCallback {
+            .setSpinnerTextGravity(Gravity.CENTER).setSpinnerCallback {
                 currentLeftRealType = it
 
             }.build()
 
         leftRealView.checkCpdLeftRealSpinner2.setSpinnerData(mTypeLeftList2)
-            .setSpinnerTextGravity(Gravity.CENTER_VERTICAL).setSpinnerCallback {
+            .setSpinnerTextGravity(Gravity.CENTER).setSpinnerCallback {
                 currentLeftRealType2 = it
                 when (currentLeftRealType2) {
                     0 -> {
@@ -199,12 +199,12 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
             }.build()
 
         leftDesignView.checkCpdLeftRealSpinner1.setSpinnerData(mTypeLeftList)
-            .setSpinnerTextGravity(Gravity.CENTER_VERTICAL).setSpinnerCallback {
+            .setSpinnerTextGravity(Gravity.CENTER).setSpinnerCallback {
                 currentLeftDesignType = it
             }.build()
 
         leftDesignView.checkCpdLeftRealSpinner2.setSpinnerData(mTypeLeftList2)
-            .setSpinnerTextGravity(Gravity.CENTER_VERTICAL).setSpinnerCallback {
+            .setSpinnerTextGravity(Gravity.CENTER).setSpinnerCallback {
                 currentLeftDesignType2 = it
                 when (currentLeftDesignType2) {
                     0 -> {
@@ -240,7 +240,7 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
 
         rightDesignView.checkCpdBeamRightRealMeasured.checkCpdLeftRealSpinner2.setSpinnerData(
             mTypeRightList2
-        ).setSpinnerTextGravity(Gravity.CENTER_VERTICAL).setSpinnerCallback {
+        ).setSpinnerTextGravity(Gravity.CENTER).setSpinnerCallback {
             currentRightDesignType3 = it
             if (it==1){
                 rightDesignView.ll11.visibility = View.VISIBLE
@@ -256,7 +256,7 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
 
         rightDesignView.checkCpdBeamRightRealMeasured.checkCpdLeftRealSpinner3.setSpinnerData(
             mPicList
-        ).setSpinnerTextGravity(Gravity.CENTER_VERTICAL).setSpinnerCallback {
+        ).setSpinnerTextGravity(Gravity.CENTER).setSpinnerCallback {
             currentRightDesignType4 = it
         }.setTypeface(Typeface.createFromAsset(activity?.assets, "fonts/SJQY.cb6e0829.TTF"))
             .build()
@@ -276,7 +276,7 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
 
         mBinding.checkCpdBeamRightRealUi.checkCpdLeftRealDesignTv.checkCpdLeftRealSpinner2.setSpinnerData(
             mTypeRightList
-        ).setSpinnerTextGravity(Gravity.CENTER_VERTICAL).setSpinnerCallback {
+        ).setSpinnerTextGravity(Gravity.CENTER).setSpinnerCallback {
             currentRightRealType = it
             when (currentRightRealType) {
                 0 -> {
@@ -292,7 +292,7 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
 
         mBinding.checkCpdBeamRightDesignUi.checkCpdLeftRealDesignTv.checkCpdLeftRealSpinner2.setSpinnerData(
             mTypeRightList
-        ).setSpinnerTextGravity(Gravity.CENTER_VERTICAL).setSpinnerCallback {
+        ).setSpinnerTextGravity(Gravity.CENTER).setSpinnerCallback {
             currentRightDesignType = it
             when (currentRightDesignType) {
                 0 -> {
@@ -316,7 +316,7 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
         rightRealSingleParamsView.checkCpdLeftRealSpinner.setText(mPicList!!.get(0))
         rightRealSingleParamsView.checkCpdLeftRealSpinner.setSelect(0)
         rightRealSingleParamsView.checkCpdLeftRealSpinner.setSpinnerData(mPicList)
-            .setSpinnerTextGravity(Gravity.CENTER_VERTICAL).setSpinnerCallback {
+            .setSpinnerTextGravity(Gravity.CENTER).setSpinnerCallback {
                 currentRightRealType2 = it
             }.setTypeface(Typeface.createFromAsset(activity?.assets, "fonts/SJQY.cb6e0829.TTF"))
             .build()
@@ -330,7 +330,7 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
         rightDesignSingleParamsView.checkCpdLeftRealSpinner.setText(mPicList!!.get(0))
         rightDesignSingleParamsView.checkCpdLeftRealSpinner.setSelect(0)
         rightDesignSingleParamsView.checkCpdLeftRealSpinner.setSpinnerData(mPicList)
-            .setSpinnerTextGravity(Gravity.CENTER_VERTICAL).setSpinnerCallback {
+            .setSpinnerTextGravity(Gravity.CENTER).setSpinnerCallback {
                 currentRightDesignType2 = it
             }.setTypeface(Typeface.createFromAsset(activity?.assets, "fonts/SJQY.cb6e0829.TTF"))
             .build()
@@ -343,7 +343,7 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
         rightRealView.checkCpdBeamRightRealMeasured.checkCpdLeftRealSpinner2.setSelect(0)
         rightRealView.checkCpdBeamRightRealMeasured.checkCpdLeftRealSpinner2.setSpinnerData(
             mTypeRightList2
-        ).setSpinnerTextGravity(Gravity.CENTER_VERTICAL).setSpinnerCallback {
+        ).setSpinnerTextGravity(Gravity.CENTER).setSpinnerCallback {
             currentRightRealType3 = it
             when (currentRightRealType3) {
                 0 -> {
@@ -370,7 +370,7 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
         )
         rightRealView.checkCpdBeamRightRealMeasured.checkCpdLeftRealSpinner3.setSpinnerData(
             mPicList
-        ).setSpinnerTextGravity(Gravity.CENTER_VERTICAL).setSpinnerCallback {
+        ).setSpinnerTextGravity(Gravity.CENTER).setSpinnerCallback {
             currentRightRealType4 = it
         }.setTypeface(Typeface.createFromAsset(activity?.assets, "fonts/SJQY.cb6e0829.TTF"))
             .build()
@@ -446,14 +446,10 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
         mBinding.checkCpdSubtitleChange.setOnClickListener {
             if (mBinding.checkCpdSubtitle2.content.visibility == View.VISIBLE) {
                 mBinding.checkCpdSubtitle2.content.visibility = View.INVISIBLE
-                mBinding.checkCpdSubtitle2.checkCdpPlateMenuAxis1.setText("")
-                mBinding.checkCpdSubtitle2.checkCdpPlateMenuAxis2.setText("")
-                mBinding.checkCpdSubtitle2.checkCdpPlateMenuAxis3.setText("")
                 mBinding.checkCpdSubtitle2Second.content.visibility = View.VISIBLE
             } else {
                 mBinding.checkCpdSubtitle2.content.visibility = View.VISIBLE
                 mBinding.checkCpdSubtitle2Second.content.visibility = View.INVISIBLE
-                mBinding.checkCpdSubtitle2Second.checkEdit.setText("")
             }
         }
 
@@ -601,6 +597,17 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
                 }
             }
 
+            var axis:String
+            var axisList:ArrayList<String> = ArrayList()
+            if (mBinding.checkCpdSubtitle2Second.content.visibility ==View.VISIBLE){
+                axis = mBinding.checkCpdSubtitle2Second.checkEdit.text.toString()
+                axisList = arrayListOf("","","")
+            }else{
+                axis = ""
+                axisList.addAll(arrayListOf( mBinding.checkCpdSubtitle2.checkCdpPlateMenuAxis1.text.toString(),
+                    mBinding.checkCpdSubtitle2.checkCdpPlateMenuAxis2.text.toString(),
+                    mBinding.checkCpdSubtitle2.checkCdpPlateMenuAxis3.text.toString()))
+            }
 
             var damage = DamageV3Bean(
                 -1,
@@ -611,12 +618,8 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
                 "",
                 if (mDamageCreateTime < 0) System.currentTimeMillis() else mDamageCreateTime,
                 mBinding.checkCpdSubtitle1.checkEdit.text.toString(),
-                mBinding.checkCpdSubtitle2Second.checkEdit.text.toString(),
-                arrayListOf(
-                    mBinding.checkCpdSubtitle2.checkCdpPlateMenuAxis1.text.toString(),
-                    mBinding.checkCpdSubtitle2.checkCdpPlateMenuAxis2.text.toString(),
-                    mBinding.checkCpdSubtitle2.checkCdpPlateMenuAxis3.text.toString()
-                ),
+                axis,
+                axisList,
                 arrayListOf(
                     mTypeLeftList!!.get(currentLeftRealType),
                     mTypeLeftList2!!.get(currentLeftRealType2)
@@ -705,6 +708,10 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
         leftDesignView.checkCpdLeftRealSpinner2.isEnabled = isEnable
         leftDesignView.checkCpdLeftRealSpinner2.isClickable = isEnable
 
+        leftDesignAnotherView.checkCpdSubtitleConfirm.isEnabled = isEnable
+        leftDesignAnotherView.checkCpdSubtitleConfirm.isClickable = isEnable
+
+
         leftDesignView.checkCpdLeftDesignRemarkContent.isEnabled = isEnable
     }
 
@@ -784,7 +791,7 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
     }
 
     fun resetView(damageV3Bean: DamageV3Bean?) {
-        LogUtils.d("resetView:///damageV3Bean" + (context as CheckComponentDetectionActivity).mCurrentDrawing!!.toString())
+        LogUtils.d("resetView:///damageV3Bean" +damageV3Bean.toString())
         mBinding.checkCpdSubtitle1.checkEdit.setText((context as CheckComponentDetectionActivity).mCurrentDrawing!!.floorName + "梁")
         if (damageV3Bean == null) {
 
@@ -814,7 +821,6 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
             mPicLeftRealList = ArrayList()
             mPicLeftDesignList= ArrayList()
 
-            mBinding.checkCpdSubtitle1.checkEdit.setText("")
             mBinding.checkCpdSubtitle2.content.visibility = View.VISIBLE
             mBinding.checkCpdSubtitle2.checkCdpPlateMenuAxis1.setText("")
             mBinding.checkCpdSubtitle2.checkCdpPlateMenuAxis2.setText("")
@@ -990,7 +996,10 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
             rightDesignView.checkEditEncrypt.setText("")
         } else {
 
-
+            mBinding.checkCpdSubtitle2.checkCdpPlateMenuAxis1.setText("")
+            mBinding.checkCpdSubtitle2.checkCdpPlateMenuAxis2.setText("")
+            mBinding.checkCpdSubtitle2.checkCdpPlateMenuAxis3.setText("")
+            mBinding.checkCpdSubtitle2Second.checkEdit.setText("")
             mPicLeftRealList = damageV3Bean.beamLeftRealPicList
 
             mPicLeftDesignList = damageV3Bean.beamLeftDesignPicList

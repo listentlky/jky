@@ -131,7 +131,7 @@
                 android:id="@+id/check_cpd_left_design_remark_content"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@null"
+                android:background="@drawable/check_gray_is_edit_selector"
                 android:paddingLeft="@dimen/_4sdp"
                 android:gravity="start"
                 android:minHeight="@dimen/_50sdp"

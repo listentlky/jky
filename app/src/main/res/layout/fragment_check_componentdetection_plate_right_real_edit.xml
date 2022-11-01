@@ -143,7 +143,7 @@
             android:layout_marginLeft="@dimen/_10sdp"
             android:layout_marginTop="@dimen/_2sdp"
             android:layout_marginBottom="@dimen/_15sdp"
-            android:background="@drawable/check_gray_stroke_bg"
+            android:background="@drawable/check_gray_is_edit_selector"
             android:gravity="start"
             android:hint="请输入内容"
             android:inputType="textMultiLine"

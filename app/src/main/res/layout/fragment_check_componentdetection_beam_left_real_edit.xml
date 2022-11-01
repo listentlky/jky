@@ -96,6 +96,7 @@
             android:layout_height="@dimen/_20sdp"
             android:layout_marginTop="@dimen/_5sdp"
             android:visibility="invisible"
+
             app:layout_constraintHeight_percent="0.06"
             app:layout_constraintLeft_toLeftOf="@id/check_cpd_left_real_design_tv"
             app:layout_constraintRight_toRightOf="parent"
@@ -131,7 +132,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:minHeight="@dimen/_50sdp"
-                android:background="@null"
+                android:background="@drawable/check_gray_is_edit_selector"
                 android:inputType="text"
                 android:paddingLeft="@dimen/_4sdp"
                 android:gravity="start"

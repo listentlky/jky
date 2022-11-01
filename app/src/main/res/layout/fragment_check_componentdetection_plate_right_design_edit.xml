@@ -96,7 +96,7 @@
             android:layout_marginTop="@dimen/_2sdp"
             android:layout_marginRight="@dimen/_10sdp"
             android:layout_marginBottom="@dimen/_40sdp"
-            android:background="@drawable/check_gray_stroke_bg"
+            android:background="@drawable/check_gray_is_edit_selector"
             android:scrollbars="vertical"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"

@@ -99,7 +99,7 @@ class CheckEditCDWFragment : BaseFragment(R.layout.fragment_check_componentdetec
 
         mBinding.checkCdpPlateRightRealUi.checkCdpPlateRightRealSingle.checkCpdLeftRealSpinner2.setSpinnerData(
             mtypePicList
-        ).setSpinnerTextGravity(Gravity.CENTER_VERTICAL).setSpinnerCallback { position: Int ->
+        ).setSpinnerTextGravity(Gravity.CENTER).setSpinnerCallback { position: Int ->
             LogUtils.d("当前选择：$position")
             currentRealPicType = mtypePicList!!.get(position)
         }.setTypeface(Typeface.createFromAsset(context?.assets, "fonts/SJQY.cb6e0829.TTF"))
@@ -111,7 +111,7 @@ class CheckEditCDWFragment : BaseFragment(R.layout.fragment_check_componentdetec
 
         mBinding.checkCdpPlateRightRealUi.checkCdpPlateRightRealMeasured.checkCpdLeftRealSpinner2.setSpinnerData(
             mtypePicList
-        ).setSpinnerTextGravity(Gravity.CENTER_VERTICAL).setSpinnerCallback { position: Int ->
+        ).setSpinnerTextGravity(Gravity.CENTER).setSpinnerCallback { position: Int ->
             LogUtils.d("当前选择：$position")
             currentRealPicType2 = mtypePicList!!.get(position)
         }.setTypeface(Typeface.createFromAsset(activity?.assets, "fonts/SJQY.cb6e0829.TTF"))
@@ -121,7 +121,7 @@ class CheckEditCDWFragment : BaseFragment(R.layout.fragment_check_componentdetec
             "设计 竖向钢筋"
         mBinding.checkCdpPlateRightDesignUi.checkCdpBeamRightDesinSingle.checkCpdLeftRealSpinner2.setSpinnerData(
             mtypePicList
-        ).setSpinnerTextGravity(Gravity.CENTER_VERTICAL).setSpinnerCallback { position: Int ->
+        ).setSpinnerTextGravity(Gravity.CENTER).setSpinnerCallback { position: Int ->
             LogUtils.d("当前选择：$position")
             currentDesignPicType = mtypePicList!!.get(position)
         }.setTypeface(Typeface.createFromAsset(activity?.assets, "fonts/SJQY.cb6e0829.TTF"))
@@ -131,7 +131,7 @@ class CheckEditCDWFragment : BaseFragment(R.layout.fragment_check_componentdetec
             "设计 水平钢筋"
         mBinding.checkCdpPlateRightDesignUi.checkCdpBeamRightDesinMeasured.checkCpdLeftRealSpinner2.setSpinnerData(
             mtypePicList
-        ).setSpinnerTextGravity(Gravity.CENTER_VERTICAL).setSpinnerCallback { position: Int ->
+        ).setSpinnerTextGravity(Gravity.CENTER).setSpinnerCallback { position: Int ->
             LogUtils.d("当前选择：$position")
             currentDesignPicType2 = mtypePicList!!.get(position)
         }.setTypeface(Typeface.createFromAsset(activity?.assets, "fonts/SJQY.cb6e0829.TTF"))
@@ -191,14 +191,11 @@ class CheckEditCDWFragment : BaseFragment(R.layout.fragment_check_componentdetec
 
             if (mBinding.checkCdpSubtitle2.content.visibility == View.VISIBLE) {
                 mBinding.checkCdpSubtitle2.content.visibility = View.INVISIBLE
-                mBinding.checkCdpSubtitle2.checkCdpPlateMenuAxis1.setText("")
-                mBinding.checkCdpSubtitle2.checkCdpPlateMenuAxis2.setText("")
-                mBinding.checkCdpSubtitle2.checkCdpPlateMenuAxis3.setText("")
+
                 mBinding.checkCdpSubtitle2Second.content.visibility = View.VISIBLE
             } else {
                 mBinding.checkCdpSubtitle2.content.visibility = View.VISIBLE
                 mBinding.checkCdpSubtitle2Second.content.visibility = View.INVISIBLE
-                mBinding.checkCdpSubtitle2Second.checkEdit.setText("")
             }
         }
 
@@ -268,9 +265,7 @@ class CheckEditCDWFragment : BaseFragment(R.layout.fragment_check_componentdetec
                     showToast("请完善轴线")
                     return@setOnClickListener
                 }
-                mAxisNoteList!!.add(mBinding.checkCdpSubtitle2.checkCdpPlateMenuAxis1.text.toString())
-                mAxisNoteList.add(mBinding.checkCdpSubtitle2.checkCdpPlateMenuAxis2.text.toString())
-                mAxisNoteList.add(mBinding.checkCdpSubtitle2.checkCdpPlateMenuAxis3.text.toString())
+
 
             } else {
                 if (mBinding.checkCdpSubtitle2Second.checkEdit.text.isNullOrEmpty()) {
@@ -283,6 +278,20 @@ class CheckEditCDWFragment : BaseFragment(R.layout.fragment_check_componentdetec
             mAddAnnotReF = (activity as CheckComponentDetectionActivity).mCurrentAddAnnotReF
             //TODO 图片加载
 
+            var axis:String
+            var axisList: java.util.ArrayList<String>
+            if (mBinding.checkCdpSubtitle2Second.content.visibility ==View.VISIBLE){
+                axis = mBinding.checkCdpSubtitle2Second.checkEdit.text.toString()
+                axisList = arrayListOf("","","")
+            }else{
+                axis = ""
+                axisList = arrayListOf(
+                    mBinding.checkCdpSubtitle2.checkCdpPlateMenuAxis1.text.toString(),
+                    mBinding.checkCdpSubtitle2.checkCdpPlateMenuAxis2.text.toString(),
+                    mBinding.checkCdpSubtitle2.checkCdpPlateMenuAxis3.text.toString(),
+                )
+            }
+
             var damage = DamageV3Bean(
                 -1,
                 (activity as CheckComponentDetectionActivity).mCurrentDrawing!!.drawingID!!,
@@ -294,8 +303,8 @@ class CheckEditCDWFragment : BaseFragment(R.layout.fragment_check_componentdetec
                 mBinding.checkCdpPlateLeftRealUi.checkCdpPlateLeftRealContent.text.toString(),
                 mBinding.checkCdpPlateLeftDesignUi.checkCdpPlateLeftDesignContent.text.toString(),
                 mBinding.checkCdpSubtitle1.checkEdit.text.toString(),
-                mAxisNote,
-                mAxisNoteList!!,
+                axis,
+                axisList,
                 arrayListOf(
                     currentRealPicType,
                     mBinding.checkCdpPlateRightRealUi.checkCdpPlateRightRealSingle.checkEdit2.text.toString(),
@@ -353,7 +362,6 @@ class CheckEditCDWFragment : BaseFragment(R.layout.fragment_check_componentdetec
             currentRealPicType2 = mtypePicList!!.get(0)
             currentDesignPicType = mtypePicList!!.get(0)
             currentDesignPicType2 = mtypePicList!!.get(0)
-            mBinding.checkCdpSubtitle1.checkEdit.setText("")
             mBinding.checkCdpSubtitle2.content.visibility = View.VISIBLE
             mBinding.checkCdpSubtitle2Second.content.visibility = View.INVISIBLE
 
@@ -434,6 +442,10 @@ class CheckEditCDWFragment : BaseFragment(R.layout.fragment_check_componentdetec
             mDamageCreateTime = -1L
         } else {
 
+            mBinding.checkCdpSubtitle2.checkCdpPlateMenuAxis1.setText("")
+            mBinding.checkCdpSubtitle2.checkCdpPlateMenuAxis2.setText("")
+            mBinding.checkCdpSubtitle2.checkCdpPlateMenuAxis3.setText("")
+            mBinding.checkCdpSubtitle2Second.checkEdit.setText("")
 
             if ("true".equals(damageV3Bean.plateCheckStatus!!.get(0))){
                 mBinding.checkCdpPlateLeftRealUi.checkCdpLeftMenu.checkCpdLeftMenu4.isChecked = true
