@@ -108,6 +108,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_5sdp"
             android:text="备注"
+            android:inputType="text"
             android:textColor="@color/black"
             android:textSize="@dimen/_6ssp"
             app:layout_constraintLeft_toLeftOf="@id/check_cpd_left_design_rectangle_tv"

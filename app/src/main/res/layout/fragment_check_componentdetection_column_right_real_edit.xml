@@ -208,6 +208,7 @@
             app:layout_constraintDimensionRatio="4:1"
             app:layout_constraintLeft_toLeftOf="parent"
             android:gravity="start"
+            android:inputType="text"
             android:hint="请输入内容"
             android:textSize="@dimen/_6ssp"
             app:layout_constraintTop_toBottomOf="@id/check_cpd_beam_right_remark">
@@ -221,7 +222,7 @@
             android:layout_height="0dp"
             android:layout_marginLeft="@dimen/_5sdp"
             android:layout_marginRight="@dimen/_10sdp"
-            android:src="@color/gray"
+            android:src="@color/gray_400"
             android:scaleType="fitXY"
             app:layout_constraintBottom_toBottomOf="@id/check_cpd_left_real_remark_content"
             app:layout_constraintDimensionRatio="1:1"

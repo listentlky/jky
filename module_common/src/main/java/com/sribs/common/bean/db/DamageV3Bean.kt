@@ -52,6 +52,7 @@ class DamageV3Bean(){
     var beamRightDesignStirrupsTypeList: ArrayList<String>? = ArrayList() //设计箍筋
     var beamRightDesignNote: String? = ""//设计配筋-备注
     var beamRightDesignPic :ArrayList<String>?= ArrayList() //设计图
+    var beamCheckStatus :ArrayList<String>?= ArrayList() //展示状态
 
 
     constructor(
@@ -85,7 +86,8 @@ class DamageV3Bean(){
         beamRightDesignSectionTypeParamsList: ArrayList<String>,
         beamRightDesignStirrupsTypeList: ArrayList<String>,
         beamRightDesignNote: String,
-        beamRightDesignPic :ArrayList<String>
+        beamRightDesignPic :ArrayList<String>,
+        beamCheckStatus :ArrayList<String>
 
     ) : this() {
         this.id = id
@@ -119,6 +121,7 @@ class DamageV3Bean(){
         this.beamRightDesignStirrupsTypeList = beamRightDesignStirrupsTypeList
         this.beamRightDesignNote =beamRightDesignNote
         this.beamRightDesignPic = beamRightDesignPic
+        this.beamCheckStatus = beamCheckStatus
     }
 
 
@@ -156,6 +159,7 @@ class DamageV3Bean(){
     var rightDesignStirrupsTypeList: ArrayList<String>? = ArrayList() //设计箍筋
     var rightDesignNote: String? = ""//设计配筋-备注
     var columnRightDesignPic :ArrayList<String>?= ArrayList() //设计图(0 名称  1 路径  2 远端resId)
+    var columnCheckStatus :ArrayList<String>?= ArrayList() //勾选展示状态
 
     constructor(
         id: Long,
@@ -190,7 +194,8 @@ class DamageV3Bean(){
         rightDesignSectionTypeParamsPicList: ArrayList<String>,
         rightDesignStirrupsTypeList: ArrayList<String>,
         rightDesignNote: String,
-        columnRightDesignPic: ArrayList<String>
+        columnRightDesignPic: ArrayList<String>,
+        columnCheckStatus: ArrayList<String>
     ) : this() {
         this.id = id
         this.drawingId = drawingId
@@ -225,6 +230,7 @@ class DamageV3Bean(){
         this.rightDesignStirrupsTypeList = rightDesignStirrupsTypeList
         this.rightDesignNote = rightDesignNote
         this.columnRightDesignPic = columnRightDesignPic
+        this.columnCheckStatus = columnCheckStatus
 
     }
 
@@ -246,6 +252,8 @@ class DamageV3Bean(){
     var designNorthSouthRebarList: ArrayList<String>? = ArrayList() //0 设计-南北向钢筋-类型 // 1 设计-南北向钢筋-长度
     var designNote: String? = "" //设计-备注
     var designPicture:  ArrayList<String>? = ArrayList() //设计-照片 0名称 1路径 2远端resID
+    var plateCheckStatus :ArrayList<String>?= ArrayList() //展示状态
+
 
     //构件检测-板/墙
     constructor(
@@ -269,7 +277,8 @@ class DamageV3Bean(){
         designEastWestRebarList:ArrayList<String>,
         designNorthSouthRebarList:ArrayList<String>,
         designNote: String,
-        designPicture: ArrayList<String>
+        designPicture: ArrayList<String>,
+        plateCheckStatus: ArrayList<String>
     ) : this() {
         this.id = id
         this.drawingId = drawingId
@@ -292,6 +301,7 @@ class DamageV3Bean(){
         this.designNorthSouthRebarList = designNorthSouthRebarList
         this.designNote = designNote
         this.designPicture = designPicture
+        this.plateCheckStatus = plateCheckStatus
     }
 
 
@@ -410,7 +420,7 @@ class DamageV3Bean(){
     }
 
     override fun toString(): String {
-        return "DamageV3Bean(id=$id, drawingId='$drawingId', type=$type, action=$action, annotRef=$annotRef, note=$note, createTime=$createTime, annotX=$annotX, annotY=$annotY, annotName='$annotName', beamName=$beamName, beamAxisNote=$beamAxisNote, beamAxisNoteList=$beamAxisNoteList, beamLeftRealTypeList=$beamLeftRealTypeList, beamLeftRealParamsList=$beamLeftRealParamsList, beamLeftRealNote='$beamLeftRealNote', beamLeftRealPicList=$beamLeftRealPicList, beamLeftDesignTypeList=$beamLeftDesignTypeList, beamLeftDesignParamsList=$beamLeftDesignParamsList, beamLeftDesignNote='$beamLeftDesignNote', beamLeftDesignPicList=$beamLeftDesignPicList, beamRightRealSectionType=$beamRightRealSectionType, beamRightRealSectionParamsList=$beamRightRealSectionParamsList, beamRightRealStirrupsTypeList=$beamRightRealStirrupsTypeList, beamRightRealStirrupsTypeEncryptList=$beamRightRealStirrupsTypeEncryptList, beamRightRealStirrupsTypeNonEncryptList=$beamRightRealStirrupsTypeNonEncryptList, beamRightRealProtectList=$beamRightRealProtectList, beamRightRealNote=$beamRightRealNote, beamRightRealPic=$beamRightRealPic, beamRightDesignSectionType=$beamRightDesignSectionType, beamRightDesignSectionTypeParamsList=$beamRightDesignSectionTypeParamsList, beamRightDesignStirrupsTypeList=$beamRightDesignStirrupsTypeList, beamRightDesignNote=$beamRightDesignNote, beamRightDesignPic=$beamRightDesignPic, columnName=$columnName, columnAxisNote=$columnAxisNote, columnAxisNoteList=$columnAxisNoteList, leftRealSectionType=$leftRealSectionType, leftRealSectionTypeParamsList=$leftRealSectionTypeParamsList, leftRealNote=$leftRealNote, columnLeftRealPicList=$columnLeftRealPicList, leftDesignSectionType=$leftDesignSectionType, leftDesignSectionTypeParamsList=$leftDesignSectionTypeParamsList, leftDesignNote=$leftDesignNote, columnLeftDesignPicList=$columnLeftDesignPicList, rightRealSectionTypeList=$rightRealSectionTypeList, rightRealSectionTypeParamsList=$rightRealSectionTypeParamsList, rightRealSectionTypeParamsPicList=$rightRealSectionTypeParamsPicList, rightRealStirrupsTypeList=$rightRealStirrupsTypeList, rightRealStirrupsTypeEncryptList=$rightRealStirrupsTypeEncryptList, rightRealStirrupsTypeNonEncryptList=$rightRealStirrupsTypeNonEncryptList, rightRealProtectList=$rightRealProtectList, rightRealNote=$rightRealNote, columnRightRealPic=$columnRightRealPic, rightDesignSectionTypeList=$rightDesignSectionTypeList, rightDesignSectionTypeParamsList=$rightDesignSectionTypeParamsList, rightDesignSectionTypeParamsPicList=$rightDesignSectionTypeParamsPicList, rightDesignStirrupsTypeList=$rightDesignStirrupsTypeList, rightDesignNote=$rightDesignNote, columnRightDesignPic=$columnRightDesignPic, realPlateThickness=$realPlateThickness, designPlateThickness=$designPlateThickness, plateName='$plateName', axisSingleNote=$axisSingleNote, axisPlateNoteList=$axisPlateNoteList, realEastWestRebarList=$realEastWestRebarList, realNorthSouthRebarList=$realNorthSouthRebarList, realProtectThickness=$realProtectThickness, realNote=$realNote, realPicture=$realPicture, designEastWestRebarList=$designEastWestRebarList, designNorthSouthRebarList=$designNorthSouthRebarList, designNote=$designNote, designPicture=$designPicture, axisNote=$axisNote, axisNoteList=$axisNoteList, heightType=$heightType, floorName=$floorName, floorDesign=$floorDesign, floorReal=$floorReal, plateDesign=$plateDesign, decorateDesign=$decorateDesign, gridDesign=$gridDesign, gridReal=$gridReal, scalePath=$scalePath, pointName=$pointName, measure1Height=$measure1Height, measure2Height=$measure2Height, guide=$guide, guideRotate=$guideRotate, tilt1=$tilt1, tilt2=$tilt2, tiltRotate1=$tiltRotate1, tiltRotate2=$tiltRotate2, closeDiff=$closeDiff, rhdiffInfo=$rhdiffInfo, pointList=$pointList)"
+        return "DamageV3Bean(id=$id, drawingId='$drawingId', type=$type, action=$action, annotRef=$annotRef, note=$note, createTime=$createTime, annotX=$annotX, annotY=$annotY, annotName='$annotName', beamName=$beamName, beamAxisNote=$beamAxisNote, beamAxisNoteList=$beamAxisNoteList, beamLeftRealTypeList=$beamLeftRealTypeList, beamLeftRealParamsList=$beamLeftRealParamsList, beamLeftRealNote='$beamLeftRealNote', beamLeftRealPicList=$beamLeftRealPicList, beamLeftDesignTypeList=$beamLeftDesignTypeList, beamLeftDesignParamsList=$beamLeftDesignParamsList, beamLeftDesignNote='$beamLeftDesignNote', beamLeftDesignPicList=$beamLeftDesignPicList, beamRightRealSectionType=$beamRightRealSectionType, beamRightRealSectionParamsList=$beamRightRealSectionParamsList, beamRightRealStirrupsTypeList=$beamRightRealStirrupsTypeList, beamRightRealStirrupsTypeEncryptList=$beamRightRealStirrupsTypeEncryptList, beamRightRealStirrupsTypeNonEncryptList=$beamRightRealStirrupsTypeNonEncryptList, beamRightRealProtectList=$beamRightRealProtectList, beamRightRealNote=$beamRightRealNote, beamRightRealPic=$beamRightRealPic, beamRightDesignSectionType=$beamRightDesignSectionType, beamRightDesignSectionTypeParamsList=$beamRightDesignSectionTypeParamsList, beamRightDesignStirrupsTypeList=$beamRightDesignStirrupsTypeList, beamRightDesignNote=$beamRightDesignNote, beamRightDesignPic=$beamRightDesignPic, , beamCheckStatus=$beamCheckStatus,columnName=$columnName, columnAxisNote=$columnAxisNote, columnAxisNoteList=$columnAxisNoteList, leftRealSectionType=$leftRealSectionType, leftRealSectionTypeParamsList=$leftRealSectionTypeParamsList, leftRealNote=$leftRealNote, columnLeftRealPicList=$columnLeftRealPicList, leftDesignSectionType=$leftDesignSectionType, leftDesignSectionTypeParamsList=$leftDesignSectionTypeParamsList, leftDesignNote=$leftDesignNote, columnLeftDesignPicList=$columnLeftDesignPicList, rightRealSectionTypeList=$rightRealSectionTypeList, rightRealSectionTypeParamsList=$rightRealSectionTypeParamsList, rightRealSectionTypeParamsPicList=$rightRealSectionTypeParamsPicList, rightRealStirrupsTypeList=$rightRealStirrupsTypeList, rightRealStirrupsTypeEncryptList=$rightRealStirrupsTypeEncryptList, rightRealStirrupsTypeNonEncryptList=$rightRealStirrupsTypeNonEncryptList, rightRealProtectList=$rightRealProtectList, rightRealNote=$rightRealNote, columnRightRealPic=$columnRightRealPic, rightDesignSectionTypeList=$rightDesignSectionTypeList, rightDesignSectionTypeParamsList=$rightDesignSectionTypeParamsList, rightDesignSectionTypeParamsPicList=$rightDesignSectionTypeParamsPicList, rightDesignStirrupsTypeList=$rightDesignStirrupsTypeList, rightDesignNote=$rightDesignNote, columnRightDesignPic=$columnRightDesignPic,, columnCheckStatus=$columnCheckStatus,  realPlateThickness=$realPlateThickness, designPlateThickness=$designPlateThickness, plateName='$plateName', axisSingleNote=$axisSingleNote, axisPlateNoteList=$axisPlateNoteList, realEastWestRebarList=$realEastWestRebarList, realNorthSouthRebarList=$realNorthSouthRebarList, realProtectThickness=$realProtectThickness, realNote=$realNote, realPicture=$realPicture, designEastWestRebarList=$designEastWestRebarList, designNorthSouthRebarList=$designNorthSouthRebarList, designNote=$designNote, designPicture=$designPicture, plateCheckStatus=$plateCheckStatus, axisNote=$axisNote, axisNoteList=$axisNoteList, heightType=$heightType, floorName=$floorName, floorDesign=$floorDesign, floorReal=$floorReal, plateDesign=$plateDesign, decorateDesign=$decorateDesign, gridDesign=$gridDesign, gridReal=$gridReal, scalePath=$scalePath, pointName=$pointName, measure1Height=$measure1Height, measure2Height=$measure2Height, guide=$guide, guideRotate=$guideRotate, tilt1=$tilt1, tilt2=$tilt2, tiltRotate1=$tiltRotate1, tiltRotate2=$tiltRotate2, closeDiff=$closeDiff, rhdiffInfo=$rhdiffInfo, pointList=$pointList)"
     }
 
 

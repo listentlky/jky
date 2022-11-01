@@ -42,6 +42,12 @@ class CheckEditCDWFragment : BaseFragment(R.layout.fragment_check_componentdetec
 
     private var mRightRealPicSrc: String = ""
     private var mRightDesignPicSrc: String = ""
+
+    private  var mCheckLeftDesignStatus = false
+    private  var mCheckRightDesignStatus = false
+    private  var mCheckRightRealStatus = false
+
+
     /**
      * 创建损伤时间
      */
@@ -96,7 +102,7 @@ class CheckEditCDWFragment : BaseFragment(R.layout.fragment_check_componentdetec
         ).setSpinnerTextGravity(Gravity.CENTER_VERTICAL).setSpinnerCallback { position: Int ->
             LogUtils.d("当前选择：$position")
             currentRealPicType = mtypePicList!!.get(position)
-        }.setTypeface(Typeface.createFromAsset(context?.assets,"fonts/SJQY.cb6e0829.TTF"))
+        }.setTypeface(Typeface.createFromAsset(context?.assets, "fonts/SJQY.cb6e0829.TTF"))
             .build()
 
 
@@ -108,7 +114,7 @@ class CheckEditCDWFragment : BaseFragment(R.layout.fragment_check_componentdetec
         ).setSpinnerTextGravity(Gravity.CENTER_VERTICAL).setSpinnerCallback { position: Int ->
             LogUtils.d("当前选择：$position")
             currentRealPicType2 = mtypePicList!!.get(position)
-        }.setTypeface(Typeface.createFromAsset(activity?.assets,"fonts/SJQY.cb6e0829.TTF"))
+        }.setTypeface(Typeface.createFromAsset(activity?.assets, "fonts/SJQY.cb6e0829.TTF"))
             .build()
 
         mBinding.checkCdpPlateRightDesignUi.checkCdpBeamRightDesinSingle.checkEditName.text =
@@ -118,7 +124,7 @@ class CheckEditCDWFragment : BaseFragment(R.layout.fragment_check_componentdetec
         ).setSpinnerTextGravity(Gravity.CENTER_VERTICAL).setSpinnerCallback { position: Int ->
             LogUtils.d("当前选择：$position")
             currentDesignPicType = mtypePicList!!.get(position)
-        }.setTypeface(Typeface.createFromAsset(activity?.assets,"fonts/SJQY.cb6e0829.TTF"))
+        }.setTypeface(Typeface.createFromAsset(activity?.assets, "fonts/SJQY.cb6e0829.TTF"))
             .build()
 
         mBinding.checkCdpPlateRightDesignUi.checkCdpBeamRightDesinMeasured.checkEditName.text =
@@ -128,7 +134,7 @@ class CheckEditCDWFragment : BaseFragment(R.layout.fragment_check_componentdetec
         ).setSpinnerTextGravity(Gravity.CENTER_VERTICAL).setSpinnerCallback { position: Int ->
             LogUtils.d("当前选择：$position")
             currentDesignPicType2 = mtypePicList!!.get(position)
-        }.setTypeface(Typeface.createFromAsset(activity?.assets,"fonts/SJQY.cb6e0829.TTF"))
+        }.setTypeface(Typeface.createFromAsset(activity?.assets, "fonts/SJQY.cb6e0829.TTF"))
             .build()
 
 
@@ -150,9 +156,11 @@ class CheckEditCDWFragment : BaseFragment(R.layout.fragment_check_componentdetec
             openImgSelector(REQUEST_WALL_REAL_TAKE_PHOTO)
         }
 
-        mBinding.checkCdpPlateRightDesignUi.checkCdpPlatePic.setOnClickListener {
+        /*mBinding.checkCdpPlateRightDesignUi.checkCdpPlatePic.setOnClickListener {
             openImgSelector(REQUEST_WALL_DESIGN_TAKE_PHOTO)
-        }
+        }*/
+
+
 
         //左侧-实测界面
         mBinding.checkCdpPlateLeftRealUi.checkCdpLeftMenu.checkCpdLeftMenu2.setOnClickListener {
@@ -177,20 +185,70 @@ class CheckEditCDWFragment : BaseFragment(R.layout.fragment_check_componentdetec
         }
 
 
+
+
         mBinding.checkCdpSubtitleChange.setOnClickListener {
 
             if (mBinding.checkCdpSubtitle2.content.visibility == View.VISIBLE) {
                 mBinding.checkCdpSubtitle2.content.visibility = View.INVISIBLE
+                mBinding.checkCdpSubtitle2.checkCdpPlateMenuAxis1.setText("")
+                mBinding.checkCdpSubtitle2.checkCdpPlateMenuAxis2.setText("")
+                mBinding.checkCdpSubtitle2.checkCdpPlateMenuAxis3.setText("")
                 mBinding.checkCdpSubtitle2Second.content.visibility = View.VISIBLE
             } else {
                 mBinding.checkCdpSubtitle2.content.visibility = View.VISIBLE
                 mBinding.checkCdpSubtitle2Second.content.visibility = View.INVISIBLE
+                mBinding.checkCdpSubtitle2Second.checkEdit.setText("")
             }
         }
 
 
         var mAxisNote: String = "" // 轴线
         var mAxisNoteList: ArrayList<String>? = ArrayList() // 多轴线
+
+
+        mBinding.checkCdpPlateRightRealUi.checkCdpRightMenu.checkCpdLeftMenu3.visibility = View.VISIBLE
+        mBinding.checkCdpPlateRightDesignUi.checkCdpRightMenu.checkCpdLeftMenu3.visibility = View.VISIBLE
+
+
+
+        checkLeftDesignStatus(false)
+        checkRightDesignStatus(false)
+        checkRightRealStatus(true)
+
+        mBinding.checkCdpPlateLeftRealUi.checkCdpLeftMenu.checkCpdLeftMenu4.setOnCheckedChangeListener { buttonView, isChecked ->
+            mBinding.checkCdpPlateLeftDesignUi.checkCdpLeftMenu.checkCpdLeftMenu4.isChecked = isChecked
+            checkLeftDesignStatus(isChecked)
+        }
+
+        mBinding.checkCdpPlateLeftDesignUi.checkCdpLeftMenu.checkCpdLeftMenu4.setOnCheckedChangeListener { buttonView, isChecked ->
+            mBinding.checkCdpPlateLeftRealUi.checkCdpLeftMenu.checkCpdLeftMenu4.isChecked = isChecked
+            checkLeftDesignStatus(isChecked)
+        }
+
+        mBinding.checkCdpPlateRightDesignUi.checkCdpRightMenu.checkCpdLeftMenu4.setOnCheckedChangeListener { buttonView, isChecked ->
+            mBinding.checkCdpPlateRightRealUi.checkCdpRightMenu.checkCpdLeftMenu4.isChecked = isChecked
+            checkRightDesignStatus(isChecked)
+        }
+
+
+        mBinding.checkCdpPlateRightRealUi.checkCdpRightMenu.checkCpdLeftMenu4.setOnCheckedChangeListener { buttonView, isChecked ->
+            mBinding.checkCdpPlateRightDesignUi.checkCdpRightMenu.checkCpdLeftMenu4.isChecked = isChecked
+            checkRightDesignStatus(isChecked)
+        }
+
+
+        mBinding.checkCdpPlateRightRealUi.checkCdpRightMenu.checkCpdLeftMenu3.setOnCheckedChangeListener { buttonView, isChecked ->
+            mBinding.checkCdpPlateRightDesignUi.checkCdpRightMenu.checkCpdLeftMenu3.isChecked = isChecked
+            checkRightRealStatus(isChecked)
+        }
+
+        mBinding.checkCdpPlateRightDesignUi.checkCdpRightMenu.checkCpdLeftMenu3.setOnCheckedChangeListener { buttonView, isChecked ->
+            mBinding.checkCdpPlateRightRealUi.checkCdpRightMenu.checkCpdLeftMenu3.isChecked = isChecked
+            checkRightRealStatus(isChecked)
+        }
+
+
 
         //完成
         mBinding.checkCdpSubtitleConfirm.setOnClickListener {
@@ -222,78 +280,6 @@ class CheckEditCDWFragment : BaseFragment(R.layout.fragment_check_componentdetec
                 mAxisNote = mBinding.checkCdpSubtitle2Second.checkEdit.text.toString()
             }
 
-
-            if (mBinding.checkCdpPlateLeftRealUi.checkCdpPlateLeftRealContent.text.toString()
-                    .isNullOrEmpty()
-            ) {
-                showToast("请输入 实测 墙厚度")
-                return@setOnClickListener
-            }
-
-            if (mBinding.checkCdpPlateLeftDesignUi.checkCdpPlateLeftDesignContent.text.toString()
-                    .isNullOrEmpty()
-            ) {
-                showToast("请输入 设计 墙厚度")
-                return@setOnClickListener
-            }
-
-            if (mBinding.checkCdpPlateRightRealUi.checkCdpPlateRightRealSingle.checkEdit2.text.toString()
-                    .isNullOrEmpty() ||
-                mBinding.checkCdpPlateRightRealUi.checkCdpPlateRightRealSingle.checkEdit3.text.toString()
-                    .isNullOrEmpty()
-            ) {
-                showToast("请输入 实测 竖向钢筋")
-                return@setOnClickListener
-            }
-
-            if (mBinding.checkCdpPlateRightDesignUi.checkCdpBeamRightDesinSingle.checkEdit2.text.toString()
-                    .isNullOrEmpty()
-            ) {
-                showToast("请输入 设计 竖向钢筋")
-                return@setOnClickListener
-            }
-
-
-            if (mBinding.checkCdpPlateRightRealUi.checkCdpPlateRightRealMeasured.checkEdit2.text.toString()
-                    .isNullOrEmpty() ||
-                mBinding.checkCdpPlateRightRealUi.checkCdpPlateRightRealMeasured.checkEdit3.text.toString()
-                    .isNullOrEmpty()
-            ) {
-                showToast("请输入 实测 水平钢筋")
-                return@setOnClickListener
-            }
-
-
-            if (mBinding.checkCdpPlateRightDesignUi.checkCdpBeamRightDesinMeasured.checkEdit2.text.toString()
-                    .isNullOrEmpty()
-            ) {
-                showToast("请输入 设计 水平钢筋")
-                return@setOnClickListener
-            }
-
-
-            if (mBinding.checkCdpPlateRightRealUi.checkCdpPlateRightRealProtect.checkEditName.text.toString()
-                    .isNullOrEmpty()
-            ) {
-                showToast("请输入 实测 保护层厚度")
-                return@setOnClickListener
-            }
-
-            if (mBinding.checkCdpPlateRightRealUi.checkCdpLeftRealRemarkContent.text.toString()
-                    .isNullOrEmpty()
-            ) {
-                showToast("请输入 实测 备注")
-                return@setOnClickListener
-            }
-
-            if (mBinding.checkCdpPlateRightDesignUi.checkCdpLeftRealRemarkContent.text.toString()
-                    .isNullOrEmpty()
-            ) {
-                showToast("请输入 设计 备注")
-                return@setOnClickListener
-            }
-
-
             mAddAnnotReF = (activity as CheckComponentDetectionActivity).mCurrentAddAnnotReF
             //TODO 图片加载
 
@@ -313,26 +299,32 @@ class CheckEditCDWFragment : BaseFragment(R.layout.fragment_check_componentdetec
                 arrayListOf(
                     currentRealPicType,
                     mBinding.checkCdpPlateRightRealUi.checkCdpPlateRightRealSingle.checkEdit2.text.toString(),
-                    mBinding.checkCdpPlateRightRealUi.checkCdpPlateRightRealSingle.checkEdit3.text.toString()
+                    mBinding.checkCdpPlateRightRealUi.checkCdpPlateRightRealSingle.checkEdit3.text.toString(),
+                    mBinding.checkCdpPlateRightRealUi.checkCdpPlateRightRealSingle.checkEdit4.text.toString(),
                 ),
                 arrayListOf(
                     currentRealPicType2,
                     mBinding.checkCdpPlateRightRealUi.checkCdpPlateRightRealMeasured.checkEdit2.text.toString(),
-                    mBinding.checkCdpPlateRightRealUi.checkCdpPlateRightRealMeasured.checkEdit3.text.toString()
+                    mBinding.checkCdpPlateRightRealUi.checkCdpPlateRightRealMeasured.checkEdit3.text.toString(),
+                    mBinding.checkCdpPlateRightRealUi.checkCdpPlateRightRealMeasured.checkEdit4.text.toString(),
                 ),
                 mBinding.checkCdpPlateRightRealUi.checkCdpPlateRightRealProtect.checkEditProtect.text.toString(),
                 mBinding.checkCdpPlateRightRealUi.checkCdpLeftRealRemarkContent.text.toString(),
-                arrayListOf(FileUtil.getFileName(mRightRealPicSrc)?:"",mRightRealPicSrc),
+                arrayListOf(FileUtil.getFileName(mRightRealPicSrc) ?: "", mRightRealPicSrc),
                 arrayListOf(
                     currentDesignPicType,
-                    mBinding.checkCdpPlateRightDesignUi.checkCdpBeamRightDesinSingle.checkEdit2.text.toString()
+                    mBinding.checkCdpPlateRightDesignUi.checkCdpBeamRightDesinSingle.checkEdit2.text.toString(),
+                    mBinding.checkCdpPlateRightDesignUi.checkCdpBeamRightDesinSingle.checkEdit3.text.toString()
                 ),
                 arrayListOf(
                     currentDesignPicType2,
-                    mBinding.checkCdpPlateRightDesignUi.checkCdpBeamRightDesinMeasured.checkEdit2.text.toString()
+                    mBinding.checkCdpPlateRightDesignUi.checkCdpBeamRightDesinMeasured.checkEdit2.text.toString(),
+                    mBinding.checkCdpPlateRightDesignUi.checkCdpBeamRightDesinMeasured.checkEdit3.text.toString(),
                 ),
                 mBinding.checkCdpPlateRightDesignUi.checkCdpLeftRealRemarkContent.text.toString(),
-                arrayListOf(FileUtil.getFileName(mRightDesignPicSrc)?:"",mRightDesignPicSrc)
+                arrayListOf(FileUtil.getFileName(mRightDesignPicSrc) ?: "", mRightDesignPicSrc),
+                arrayListOf(mCheckLeftDesignStatus.toString(),mCheckRightRealStatus.toString(),mCheckRightDesignStatus.toString())
+
             )
 
             (context as CheckComponentDetectionActivity).saveDamage(damage)
@@ -347,7 +339,7 @@ class CheckEditCDWFragment : BaseFragment(R.layout.fragment_check_componentdetec
      * 根据是否为null来设置数据
      */
     fun resetView(damageV3Bean: DamageV3Bean?) {
-
+        mBinding.checkCdpSubtitle1.checkEdit.setText((context as CheckComponentDetectionActivity).mCurrentDrawing!!.floorName + "墙")
         LogUtils.d("重新resetView：" + damageV3Bean)
 
         mBinding.checkCdpPlateLeftRealUi.parent.visibility = View.VISIBLE
@@ -381,6 +373,7 @@ class CheckEditCDWFragment : BaseFragment(R.layout.fragment_check_componentdetec
             )
             mBinding.checkCdpPlateRightRealUi.checkCdpPlateRightRealSingle.checkEdit2.setText("")
             mBinding.checkCdpPlateRightRealUi.checkCdpPlateRightRealSingle.checkEdit3.setText("")
+            mBinding.checkCdpPlateRightRealUi.checkCdpPlateRightRealSingle.checkEdit4.setText("")
 
             mBinding.checkCdpPlateRightRealUi.checkCdpPlateRightRealMeasured.checkCpdLeftRealSpinner2.setSelect(
                 0
@@ -390,6 +383,7 @@ class CheckEditCDWFragment : BaseFragment(R.layout.fragment_check_componentdetec
             )
             mBinding.checkCdpPlateRightRealUi.checkCdpPlateRightRealMeasured.checkEdit2.setText("")
             mBinding.checkCdpPlateRightRealUi.checkCdpPlateRightRealMeasured.checkEdit3.setText("")
+            mBinding.checkCdpPlateRightRealUi.checkCdpPlateRightRealMeasured.checkEdit4.setText("")
 
             mBinding.checkCdpPlateRightRealUi.checkCdpPlateRightRealProtect.checkEditProtect.setText(
                 ""
@@ -397,7 +391,7 @@ class CheckEditCDWFragment : BaseFragment(R.layout.fragment_check_componentdetec
             mRightRealPicSrc = ""
             mRightDesignPicSrc = ""
             mBinding.checkCdpPlateRightRealUi.checkCdpPlatePic.setImageResource(R.color.gray)
-            mBinding.checkCdpPlateRightDesignUi.checkCdpPlatePic.setImageResource(R.color.gray)
+            //    mBinding.checkCdpPlateRightDesignUi.checkCdpPlatePic.setImageResource(R.color.gray)
             mBinding.checkCdpPlateRightRealUi.checkCdpLeftRealRemarkContent.setText("")
             mBinding.checkCdpPlateRightRealUi.checkCdpPlatePic.setBackgroundColor(Color.GRAY)
 
@@ -408,6 +402,7 @@ class CheckEditCDWFragment : BaseFragment(R.layout.fragment_check_componentdetec
                 mtypePicList!!.get(0)
             )
             mBinding.checkCdpPlateRightDesignUi.checkCdpBeamRightDesinSingle.checkEdit2.setText("")
+            mBinding.checkCdpPlateRightDesignUi.checkCdpBeamRightDesinSingle.checkEdit3.setText("")
 
             mBinding.checkCdpPlateRightDesignUi.checkCdpBeamRightDesinMeasured.checkCpdLeftRealSpinner2.setSelect(
                 0
@@ -416,12 +411,60 @@ class CheckEditCDWFragment : BaseFragment(R.layout.fragment_check_componentdetec
                 mtypePicList!!.get(0)
             )
             mBinding.checkCdpPlateRightDesignUi.checkCdpBeamRightDesinMeasured.checkEdit2.setText("")
+            mBinding.checkCdpPlateRightDesignUi.checkCdpBeamRightDesinMeasured.checkEdit3.setText("")
 
             mBinding.checkCdpPlateRightDesignUi.checkCdpLeftRealRemarkContent.setText("")
-            mBinding.checkCdpPlateRightDesignUi.checkCdpPlatePic.setBackgroundColor(Color.GRAY)
+            //      mBinding.checkCdpPlateRightDesignUi.checkCdpPlatePic.setBackgroundColor(Color.GRAY)
+
+            checkLeftDesignStatus(false)
+            checkRightDesignStatus(false)
+            checkRightRealStatus(true)
+
+            mBinding.checkCdpPlateRightRealUi.checkCdpRightMenu.checkCpdLeftMenu3.visibility = View.VISIBLE
+            mBinding.checkCdpPlateRightDesignUi.checkCdpRightMenu.checkCpdLeftMenu3.visibility = View.VISIBLE
+
+
+            mBinding.checkCdpPlateLeftRealUi.checkCdpLeftMenu.checkCpdLeftMenu4.isChecked = false
+            mBinding.checkCdpPlateLeftDesignUi.checkCdpLeftMenu.checkCpdLeftMenu4.isChecked = false
+
+            mBinding.checkCdpPlateRightRealUi.checkCdpRightMenu.checkCpdLeftMenu4.isChecked = false
+            mBinding.checkCdpPlateRightDesignUi.checkCdpRightMenu.checkCpdLeftMenu4.isChecked = false
+
 
             mDamageCreateTime = -1L
         } else {
+
+
+            if ("true".equals(damageV3Bean.plateCheckStatus!!.get(0))){
+                mBinding.checkCdpPlateLeftRealUi.checkCdpLeftMenu.checkCpdLeftMenu4.isChecked = true
+                mBinding.checkCdpPlateLeftDesignUi.checkCdpLeftMenu.checkCpdLeftMenu4.isChecked = true
+                checkLeftDesignStatus(true)
+            }else{
+                mBinding.checkCdpPlateLeftRealUi.checkCdpLeftMenu.checkCpdLeftMenu4.isChecked = false
+                mBinding.checkCdpPlateLeftDesignUi.checkCdpLeftMenu.checkCpdLeftMenu4.isChecked = false
+                checkLeftDesignStatus(false)
+            }
+
+            if ("true".equals(damageV3Bean.plateCheckStatus!!.get(1))){
+                mBinding.checkCdpPlateRightRealUi.checkCdpRightMenu.checkCpdLeftMenu3.isChecked = true
+                mBinding.checkCdpPlateRightDesignUi.checkCdpRightMenu.checkCpdLeftMenu3.isChecked = true
+                checkRightRealStatus(true)
+            }else{
+                checkRightRealStatus(false)
+                mBinding.checkCdpPlateRightRealUi.checkCdpRightMenu.checkCpdLeftMenu3.isChecked = false
+                mBinding.checkCdpPlateRightDesignUi.checkCdpRightMenu.checkCpdLeftMenu3.isChecked = false
+            }
+
+            if ("true".equals(damageV3Bean.plateCheckStatus!!.get(2))){
+                mBinding.checkCdpPlateRightRealUi.checkCdpRightMenu.checkCpdLeftMenu4.isChecked = true
+                mBinding.checkCdpPlateRightDesignUi.checkCdpRightMenu.checkCpdLeftMenu4.isChecked = true
+                checkRightDesignStatus(true)
+
+            }else{
+                checkRightDesignStatus(false)
+                mBinding.checkCdpPlateRightRealUi.checkCdpRightMenu.checkCpdLeftMenu4.isChecked = false
+                mBinding.checkCdpPlateRightDesignUi.checkCdpRightMenu.checkCpdLeftMenu4.isChecked = false
+            }
 
             mBinding.checkCdpPlateLeftRealUi.parent.visibility = View.VISIBLE
 
@@ -432,13 +475,28 @@ class CheckEditCDWFragment : BaseFragment(R.layout.fragment_check_componentdetec
             currentDesignPicType2 = damageV3Bean.designNorthSouthRebarList!!.get(0)
 
             mBinding.checkCdpSubtitle1.checkEdit.setText(damageV3Bean.plateName)
-            if (!damageV3Bean.axisPlateNoteList!!.isNullOrEmpty() && !damageV3Bean.axisPlateNoteList!!.get(0).isNullOrEmpty()){
+            if (!damageV3Bean.axisPlateNoteList!!.isNullOrEmpty() && !damageV3Bean.axisPlateNoteList!!.get(
+                    0
+                ).isNullOrEmpty()
+            ) {
                 mBinding.checkCdpSubtitle2.content.visibility = View.VISIBLE
                 mBinding.checkCdpSubtitle2Second.content.visibility = View.INVISIBLE
-                mBinding.checkCdpSubtitle2.checkCdpPlateMenuAxis1.setText(damageV3Bean.axisPlateNoteList!!.get(0))
-                mBinding.checkCdpSubtitle2.checkCdpPlateMenuAxis2.setText(damageV3Bean.axisPlateNoteList!!.get(1))
-                mBinding.checkCdpSubtitle2.checkCdpPlateMenuAxis3.setText(damageV3Bean.axisPlateNoteList!!.get(2))
-            }else{
+                mBinding.checkCdpSubtitle2.checkCdpPlateMenuAxis1.setText(
+                    damageV3Bean.axisPlateNoteList!!.get(
+                        0
+                    )
+                )
+                mBinding.checkCdpSubtitle2.checkCdpPlateMenuAxis2.setText(
+                    damageV3Bean.axisPlateNoteList!!.get(
+                        1
+                    )
+                )
+                mBinding.checkCdpSubtitle2.checkCdpPlateMenuAxis3.setText(
+                    damageV3Bean.axisPlateNoteList!!.get(
+                        2
+                    )
+                )
+            } else {
                 mBinding.checkCdpSubtitle2.content.visibility = View.INVISIBLE
                 mBinding.checkCdpSubtitle2Second.content.visibility = View.VISIBLE
                 mBinding.checkCdpSubtitle2Second.checkEdit.setText(damageV3Bean.axisSingleNote)
@@ -449,41 +507,133 @@ class CheckEditCDWFragment : BaseFragment(R.layout.fragment_check_componentdetec
             mBinding.checkCdpPlateLeftDesignUi.checkCdpPlateLeftDesignContent.setText(damageV3Bean.designPlateThickness)
 
 
-            mBinding.checkCdpPlateRightRealUi.checkCdpPlateRightRealSingle.checkCpdLeftRealSpinner2.setText(damageV3Bean.realEastWestRebarList!!.get(0))
-            mBinding.checkCdpPlateRightRealUi.checkCdpPlateRightRealSingle.checkCpdLeftRealSpinner2.setSelect(mtypePicList!!.indexOf(damageV3Bean.realEastWestRebarList!!.get(0)))
-            mBinding.checkCdpPlateRightRealUi.checkCdpPlateRightRealSingle.checkEdit2.setText(damageV3Bean.realEastWestRebarList!!.get(1))
-            mBinding.checkCdpPlateRightRealUi.checkCdpPlateRightRealSingle.checkEdit3.setText(damageV3Bean.realEastWestRebarList!!.get(2))
+            mBinding.checkCdpPlateRightRealUi.checkCdpPlateRightRealSingle.checkCpdLeftRealSpinner2.setText(
+                damageV3Bean.realEastWestRebarList!!.get(0)
+            )
+            mBinding.checkCdpPlateRightRealUi.checkCdpPlateRightRealSingle.checkCpdLeftRealSpinner2.setSelect(
+                mtypePicList!!.indexOf(damageV3Bean.realEastWestRebarList!!.get(0))
+            )
+            mBinding.checkCdpPlateRightRealUi.checkCdpPlateRightRealSingle.checkEdit2.setText(
+                damageV3Bean.realEastWestRebarList!!.get(1)
+            )
+            mBinding.checkCdpPlateRightRealUi.checkCdpPlateRightRealSingle.checkEdit3.setText(
+                damageV3Bean.realEastWestRebarList!!.get(2)
+            )
 
 
-            mBinding.checkCdpPlateRightDesignUi.checkCdpBeamRightDesinSingle.checkCpdLeftRealSpinner2.setText(damageV3Bean.designEastWestRebarList!!.get(0))
-            mBinding.checkCdpPlateRightDesignUi.checkCdpBeamRightDesinSingle.checkCpdLeftRealSpinner2.setSelect(mtypePicList!!.indexOf(damageV3Bean.designEastWestRebarList!!.get(0)))
-            mBinding.checkCdpPlateRightDesignUi.checkCdpBeamRightDesinSingle.checkEdit2.setText(damageV3Bean.designEastWestRebarList!!.get(1))
+            mBinding.checkCdpPlateRightDesignUi.checkCdpBeamRightDesinSingle.checkCpdLeftRealSpinner2.setText(
+                damageV3Bean.designEastWestRebarList!!.get(0)
+            )
+            mBinding.checkCdpPlateRightDesignUi.checkCdpBeamRightDesinSingle.checkCpdLeftRealSpinner2.setSelect(
+                mtypePicList!!.indexOf(damageV3Bean.designEastWestRebarList!!.get(0))
+            )
+            mBinding.checkCdpPlateRightDesignUi.checkCdpBeamRightDesinSingle.checkEdit2.setText(
+                damageV3Bean.designEastWestRebarList!!.get(1)
+            )
 
-            mBinding.checkCdpPlateRightRealUi.checkCdpPlateRightRealMeasured.checkCpdLeftRealSpinner2.setText(damageV3Bean.realNorthSouthRebarList!!.get(0))
-            mBinding.checkCdpPlateRightRealUi.checkCdpPlateRightRealMeasured.checkCpdLeftRealSpinner2.setSelect(mtypePicList!!.indexOf(damageV3Bean.realNorthSouthRebarList!!.get(0)))
-            mBinding.checkCdpPlateRightRealUi.checkCdpPlateRightRealMeasured.checkEdit2.setText(damageV3Bean.realNorthSouthRebarList!!.get(1))
-            mBinding.checkCdpPlateRightRealUi.checkCdpPlateRightRealMeasured.checkEdit3.setText(damageV3Bean.realNorthSouthRebarList!!.get(2))
+            mBinding.checkCdpPlateRightRealUi.checkCdpPlateRightRealMeasured.checkCpdLeftRealSpinner2.setText(
+                damageV3Bean.realNorthSouthRebarList!!.get(0)
+            )
+            mBinding.checkCdpPlateRightRealUi.checkCdpPlateRightRealMeasured.checkCpdLeftRealSpinner2.setSelect(
+                mtypePicList!!.indexOf(damageV3Bean.realNorthSouthRebarList!!.get(0))
+            )
+            mBinding.checkCdpPlateRightRealUi.checkCdpPlateRightRealMeasured.checkEdit2.setText(
+                damageV3Bean.realNorthSouthRebarList!!.get(1)
+            )
+            mBinding.checkCdpPlateRightRealUi.checkCdpPlateRightRealMeasured.checkEdit3.setText(
+                damageV3Bean.realNorthSouthRebarList!!.get(2)
+            )
+            mBinding.checkCdpPlateRightRealUi.checkCdpPlateRightRealMeasured.checkEdit4.setText(
+                damageV3Bean.realNorthSouthRebarList!!.get(3)
+            )
 
-            mBinding.checkCdpPlateRightDesignUi.checkCdpBeamRightDesinMeasured.checkCpdLeftRealSpinner2.setText(damageV3Bean.designNorthSouthRebarList!!.get(0))
-            mBinding.checkCdpPlateRightDesignUi.checkCdpBeamRightDesinMeasured.checkCpdLeftRealSpinner2.setSelect(mtypePicList!!.indexOf(damageV3Bean.designNorthSouthRebarList!!.get(0)))
-            mBinding.checkCdpPlateRightDesignUi.checkCdpBeamRightDesinMeasured.checkEdit2.setText(damageV3Bean.designNorthSouthRebarList!!.get(1))
+            mBinding.checkCdpPlateRightDesignUi.checkCdpBeamRightDesinMeasured.checkCpdLeftRealSpinner2.setText(
+                damageV3Bean.designNorthSouthRebarList!!.get(0)
+            )
+            mBinding.checkCdpPlateRightDesignUi.checkCdpBeamRightDesinMeasured.checkCpdLeftRealSpinner2.setSelect(
+                mtypePicList!!.indexOf(damageV3Bean.designNorthSouthRebarList!!.get(0))
+            )
+            mBinding.checkCdpPlateRightDesignUi.checkCdpBeamRightDesinMeasured.checkEdit2.setText(
+                damageV3Bean.designNorthSouthRebarList!!.get(1)
+            )
+            mBinding.checkCdpPlateRightDesignUi.checkCdpBeamRightDesinMeasured.checkEdit3.setText(
+                damageV3Bean.designNorthSouthRebarList!!.get(2)
+            )
 
-            mBinding.checkCdpPlateRightRealUi.checkCdpPlateRightRealProtect.checkEditProtect.setText(damageV3Bean.realProtectThickness)
+            mBinding.checkCdpPlateRightRealUi.checkCdpPlateRightRealProtect.checkEditProtect.setText(
+                damageV3Bean.realProtectThickness
+            )
 
             mBinding.checkCdpPlateRightRealUi.checkCdpLeftRealRemarkContent.setText(damageV3Bean.realNote)
             mBinding.checkCdpPlateRightDesignUi.checkCdpLeftRealRemarkContent.setText(damageV3Bean.designNote)
 
-            mRightRealPicSrc = damageV3Bean.realPicture?.get(1)?:""
-            mRightDesignPicSrc = damageV3Bean.designPicture?.get(1)?:""
+            mRightRealPicSrc = damageV3Bean.realPicture?.get(1) ?: ""
+            mRightDesignPicSrc = damageV3Bean.designPicture?.get(1) ?: ""
 
-            mBinding.checkCdpPlateRightRealUi.checkCdpPlatePic.setImageURI(Uri.fromFile(File(mRightRealPicSrc)))
-            mBinding.checkCdpPlateRightDesignUi.checkCdpPlatePic.setImageURI(Uri.fromFile(File(mRightDesignPicSrc)))
+            mBinding.checkCdpPlateRightRealUi.checkCdpPlatePic.setImageURI(
+                Uri.fromFile(
+                    File(
+                        mRightRealPicSrc
+                    )
+                )
+            )
+            //    mBinding.checkCdpPlateRightDesignUi.checkCdpPlatePic.setImageURI(Uri.fromFile(File(mRightDesignPicSrc)))
 
             mDamageCreateTime = damageV3Bean.createTime
         }
     }
 
-    fun openImgSelector(requestCode:Int) {
+
+
+
+    fun checkLeftDesignStatus(isEnable: Boolean) {
+
+        mCheckLeftDesignStatus = isEnable
+
+        mBinding.checkCdpPlateLeftDesignUi.checkCdpPlateLeftDesignContent.isEnabled = isEnable
+
+    }
+
+
+    fun checkRightRealStatus(isEnable: Boolean) {
+
+        mCheckRightRealStatus = isEnable
+
+        mBinding.checkCdpPlateRightRealUi.checkCdpLeftRealRemarkContent.isEnabled = isEnable
+
+        mBinding.checkCdpPlateRightRealUi.checkCdpPlatePic.isEnabled = isEnable
+        mBinding.checkCdpPlateRightRealUi.checkCdpPlatePic.isClickable = isEnable
+
+        mBinding.checkCdpPlateRightRealUi.checkCdpPlateRightRealSingle.checkCpdLeftRealSpinner2.isEnabled = isEnable
+        mBinding.checkCdpPlateRightRealUi.checkCdpPlateRightRealSingle.checkCpdLeftRealSpinner2.isClickable = isEnable
+        mBinding.checkCdpPlateRightRealUi.checkCdpPlateRightRealSingle.checkEdit2.isEnabled = isEnable
+        mBinding.checkCdpPlateRightRealUi.checkCdpPlateRightRealSingle.checkEdit3.isEnabled = isEnable
+        mBinding.checkCdpPlateRightRealUi.checkCdpPlateRightRealSingle.checkEdit4.isEnabled = isEnable
+
+
+        mBinding.checkCdpPlateRightRealUi.checkCdpPlateRightRealMeasured.checkCpdLeftRealSpinner2.isEnabled = isEnable
+        mBinding.checkCdpPlateRightRealUi.checkCdpPlateRightRealMeasured.checkCpdLeftRealSpinner2.isClickable = isEnable
+        mBinding.checkCdpPlateRightRealUi.checkCdpPlateRightRealMeasured.checkEdit2.isEnabled = isEnable
+        mBinding.checkCdpPlateRightRealUi.checkCdpPlateRightRealMeasured.checkEdit3.isEnabled = isEnable
+        mBinding.checkCdpPlateRightRealUi.checkCdpPlateRightRealMeasured.checkEdit4.isEnabled = isEnable
+
+        mBinding.checkCdpPlateRightRealUi.checkCdpPlateRightRealProtect.checkEditProtect.isEnabled = isEnable
+    }
+
+    fun checkRightDesignStatus(isEnable: Boolean) {
+
+        mCheckRightDesignStatus = isEnable
+
+        mBinding.checkCdpPlateRightDesignUi.checkCdpLeftRealRemarkContent.isEnabled =isEnable
+        mBinding.checkCdpPlateRightDesignUi.checkCdpBeamRightDesinSingle.checkEdit2.isEnabled = isEnable
+        mBinding.checkCdpPlateRightDesignUi.checkCdpBeamRightDesinSingle.checkEdit3.isEnabled = isEnable
+
+        mBinding.checkCdpPlateRightDesignUi.checkCdpBeamRightDesinMeasured.checkEdit2.isEnabled = isEnable
+        mBinding.checkCdpPlateRightDesignUi.checkCdpBeamRightDesinMeasured.checkEdit3.isEnabled = isEnable
+
+    }
+
+    fun openImgSelector(requestCode: Int) {
         ImageSelector
             .builder()
             .onlyTakePhoto(false)
@@ -492,19 +642,23 @@ class CheckEditCDWFragment : BaseFragment(R.layout.fragment_check_componentdetec
             .start(activity as CheckComponentDetectionActivity, requestCode)
     }
 
-    fun setImageBitmap(filePath: String, type:Int){
-        when(type){
-            REQUEST_WALL_REAL_TAKE_PHOTO->
-            {
-                mBinding.checkCdpPlateRightRealUi.checkCdpPlatePic.setImageURI(Uri.fromFile(File(filePath)))
+    fun setImageBitmap(filePath: String, type: Int) {
+        when (type) {
+            REQUEST_WALL_REAL_TAKE_PHOTO -> {
+                mBinding.checkCdpPlateRightRealUi.checkCdpPlatePic.setImageURI(
+                    Uri.fromFile(
+                        File(
+                            filePath
+                        )
+                    )
+                )
                 mRightRealPicSrc = filePath
             }
-            REQUEST_WALL_DESIGN_TAKE_PHOTO->
-            {
-                mBinding.checkCdpPlateRightDesignUi.checkCdpPlatePic.setImageURI(Uri.fromFile(File(filePath)))
+            REQUEST_WALL_DESIGN_TAKE_PHOTO -> {
+                //      mBinding.checkCdpPlateRightDesignUi.checkCdpPlatePic.setImageURI(Uri.fromFile(File(filePath)))
                 mRightDesignPicSrc = filePath
-                LogUtils.d(mRightDesignPicSrc+"gogogo")
-            //    CommonUtil.imageToPDF(mRightDesignPicSrc,"/storage/emulated/0/Android/data/com.sribs.bdd/files/图纸/1.jpg.pdf")
+                LogUtils.d(mRightDesignPicSrc + "gogogo")
+                //    CommonUtil.imageToPDF(mRightDesignPicSrc,"/storage/emulated/0/Android/data/com.sribs.bdd/files/图纸/1.jpg.pdf")
             }
         }
     }

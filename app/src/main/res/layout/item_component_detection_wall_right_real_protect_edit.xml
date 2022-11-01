@@ -34,6 +34,7 @@
             android:background="@drawable/check_gray_stroke_bg"
             android:gravity="center_vertical"
             android:minWidth="@dimen/_80sdp"
+            android:inputType="numberDecimal"
             android:paddingLeft="@dimen/_4sdp"
             android:paddingRight="@dimen/_4sdp"
             android:textColor="@color/black"

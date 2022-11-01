@@ -36,6 +36,7 @@
             android:minWidth="@dimen/_90sdp"
             android:paddingLeft="@dimen/_4sdp"
             android:paddingRight="@dimen/_4sdp"
+            android:inputType="numberDecimal"
             android:textColor="@color/black"
             android:textColorHint="@color/gray_600"
             android:textSize="@dimen/_6ssp" />

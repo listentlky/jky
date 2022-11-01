@@ -48,10 +48,9 @@
 
         <include
             android:id="@+id/check_cdp_subtitle2_second"
-            layout="@layout/check_edit_item"
+            layout="@layout/check_cdp_item"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/_10sdp"
             android:layout_marginTop="@dimen/_25sdp"
             android:layout_marginBottom="@dimen/_5sdp"
             android:visibility="invisible"

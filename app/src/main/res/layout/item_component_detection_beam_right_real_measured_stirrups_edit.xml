@@ -89,6 +89,7 @@
         android:textColorHint="@color/gray_600"
         android:textSize="@dimen/_6ssp"
         app:layout_constraintLeft_toRightOf="@id/tv_2"
+        android:inputType="numberDecimal"
         app:layout_constraintTop_toTopOf="@id/check_cpd_left_real_spinner_3" />
 
 

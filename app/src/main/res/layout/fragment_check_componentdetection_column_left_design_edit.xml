@@ -135,6 +135,7 @@
                         android:background="@null"
                         android:paddingLeft="@dimen/_4sdp"
                         android:gravity="start"
+                        android:inputType="text"
                         android:minHeight="@dimen/_50sdp"
                         android:hint="请输入内容"
                         android:textSize="@dimen/_7ssp">

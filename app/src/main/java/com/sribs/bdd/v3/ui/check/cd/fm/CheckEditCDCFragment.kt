@@ -70,6 +70,11 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
     private var mPicRightRealList: ArrayList<String>? = ArrayList()
     private var mPicRightDesignList: ArrayList<String>? = ArrayList()
 
+    private  var mCheckLeftDesignStatus = false
+    private  var mCheckRightDesignStatus = false
+    private  var mCheckRightRealStatus = false
+
+
     var leftRealView: FragmentCheckComponentdetectionColumnLeftRealEditBinding? = null
     var leftDesignView: FragmentCheckComponentdetectionColumnLeftDesignEditBinding? = null
     var rightRealView: FragmentCheckComponentdetectionColumnRightRealEditBinding? = null
@@ -138,6 +143,12 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
 
     override fun initView() {
 
+        mTypeList!!.addAll(Arrays.asList("矩形", "圆形", "圆管", "H型", "其他"))
+        mTypeRightList!!.addAll(Arrays.asList("矩形", "圆形", "其他"))
+        mPicList!!.addAll(Arrays.asList("A", "B"))
+        mTypeRight2List!!.addAll(Arrays.asList("无加密", "有加密"))
+
+
         /**
          * menu关闭
          */
@@ -160,6 +171,9 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
             mBinding.checkCpdColumnRightRealUi
         rightDesignView =
             mBinding.checkCpdColumnRightDesignUi
+
+
+
 
 
         rightRealView!!.checkCpdLeftRealRemarkContent.setOnTouchListener(OnTouchListener { v, event ->
@@ -211,10 +225,7 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
         rightRealProtectView = rightRealView!!.checkCpdBeamRightRealProtect
 
 
-        mTypeList!!.addAll(Arrays.asList("矩形", "圆形", "圆管", "H型", "其他"))
-        mTypeRightList!!.addAll(Arrays.asList("矩形", "圆形", "其他"))
-        mPicList!!.addAll(Arrays.asList("A", "B"))
-        mTypeRight2List!!.addAll(Arrays.asList("无加密", "有加密"))
+
 
         /**
          * 默认选中净高  装饰面板厚度不可输入
@@ -234,12 +245,14 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
         mBinding.checkCpdSubtitleChange.setOnClickListener {
             if (mBinding.checkCpdSubtitle2.content.visibility == View.VISIBLE) {
                 mBinding.checkCpdSubtitle2.content.visibility = View.INVISIBLE
+                mBinding.checkCpdSubtitle2.checkCpdBeamMenuAxis1.setText("")
+                mBinding.checkCpdSubtitle2.checkCpdBeamMenuAxis2.setText("")
                 mBinding.checkCpdSubtitle2Second.content.visibility = View.VISIBLE
             } else {
                 mBinding.checkCpdSubtitle2.content.visibility = View.VISIBLE
                 mBinding.checkCpdSubtitle2Second.content.visibility = View.INVISIBLE
+                mBinding.checkCpdSubtitle2Second.checkEdit.setText("")
             }
-
         }
 
         leftRealView!!.checkCpdLeftMenu.checkCpdLeftMenu2.setOnClickListener {
@@ -298,6 +311,16 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
                             View.INVISIBLE
                         leftRealAnotherView!!.content.visibility =
                             View.INVISIBLE
+
+                        rightRealView!!.checkCpdColumnRightRealRowSteel.checkCpdLeftRealSpinner2.setSelect(0)
+                        rightRealView!!.checkCpdColumnRightRealRowSteel.checkCpdLeftRealSpinner2.setText(mTypeRightList!!.get(0))
+                        (rightRealRowSteelParamsView!! as ItemComponentDetectionColumnRightRealRowSteelParamsBinding).content.visibility =
+                            View.VISIBLE
+                        (rightRealRowSteelCircleView!! as ItemComponentDetectionColumnRightRealRowSteelParams2Binding).content.visibility =
+                            View.INVISIBLE
+                        (rightRealRowSteelAnotherView!! as ItemComponentDetectionColumnRightRealRowSteelParams3Binding).content.visibility =
+                            View.INVISIBLE
+
                     }
                     1 -> {
                         leftRealRectangleView!!.content.visibility =
@@ -309,6 +332,14 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
                         leftRealCircleView!!.content.visibility =
                             View.VISIBLE
                         leftRealAnotherView!!.content.visibility =
+                            View.INVISIBLE
+                        rightRealView!!.checkCpdColumnRightRealRowSteel.checkCpdLeftRealSpinner2.setSelect(1)
+                        rightRealView!!.checkCpdColumnRightRealRowSteel.checkCpdLeftRealSpinner2.setText(mTypeRightList!!.get(1))
+                        (rightRealRowSteelParamsView!! as ItemComponentDetectionColumnRightRealRowSteelParamsBinding).content.visibility =
+                            View.INVISIBLE
+                        (rightRealRowSteelCircleView!! as ItemComponentDetectionColumnRightRealRowSteelParams2Binding).content.visibility =
+                            View.VISIBLE
+                        (rightRealRowSteelAnotherView!! as ItemComponentDetectionColumnRightRealRowSteelParams3Binding).content.visibility =
                             View.INVISIBLE
                     }
                     2 -> {
@@ -345,6 +376,14 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
                         leftRealCircleView!!.content.visibility =
                             View.INVISIBLE
                         leftRealAnotherView!!.content.visibility =
+                            View.VISIBLE
+                        rightRealView!!.checkCpdColumnRightRealRowSteel.checkCpdLeftRealSpinner2.setSelect(2)
+                        rightRealView!!.checkCpdColumnRightRealRowSteel.checkCpdLeftRealSpinner2.setText(mTypeRightList!!.get(2))
+                        (rightRealRowSteelParamsView!! as ItemComponentDetectionColumnRightRealRowSteelParamsBinding).content.visibility =
+                            View.INVISIBLE
+                        (rightRealRowSteelCircleView!! as ItemComponentDetectionColumnRightRealRowSteelParams2Binding).content.visibility =
+                            View.INVISIBLE
+                        (rightRealRowSteelAnotherView!! as ItemComponentDetectionColumnRightRealRowSteelParams3Binding).content.visibility =
                             View.VISIBLE
                     }
 
@@ -369,6 +408,15 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
                             View.INVISIBLE
                         leftDesignAnotherView!!.content.visibility =
                             View.INVISIBLE
+
+                        rightDesignView!!.checkCpdColumnRightRealRowSteel.checkCpdLeftRealSpinner2.setSelect(0)
+                        rightDesignView!!.checkCpdColumnRightRealRowSteel.checkCpdLeftRealSpinner2.setText(mTypeRightList!!.get(0))
+                        (rightDesignRowSteelParamsView!! as ItemComponentDetectionColumnRightRealRowSteelParamsBinding).content.visibility =
+                            View.VISIBLE
+                        (rightDesignRowSteelCircleView!! as ItemComponentDetectionColumnRightRealRowSteelParams2Binding).content.visibility =
+                            View.INVISIBLE
+                        (rightDesignRowSteelAnotherView!! as ItemComponentDetectionColumnRightRealRowSteelParams3Binding).content.visibility =
+                            View.INVISIBLE
                     }
                     1 -> {
                         leftDesignRectangleView!!.content.visibility =
@@ -380,6 +428,15 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
                         (leftDesignCircleView!! as ItemComponentDetectionColumnLeftItemBinding).content.visibility =
                             View.VISIBLE
                         (leftDesignAnotherView!! as ItemComponentDetectionBeamLeftAnotherItemBinding).content.visibility =
+                            View.INVISIBLE
+
+                        rightDesignView!!.checkCpdColumnRightRealRowSteel.checkCpdLeftRealSpinner2.setSelect(1)
+                        rightDesignView!!.checkCpdColumnRightRealRowSteel.checkCpdLeftRealSpinner2.setText(mTypeRightList!!.get(1))
+                        (rightDesignRowSteelParamsView!! as ItemComponentDetectionColumnRightRealRowSteelParamsBinding).content.visibility =
+                            View.INVISIBLE
+                        (rightDesignRowSteelCircleView!! as ItemComponentDetectionColumnRightRealRowSteelParams2Binding).content.visibility =
+                            View.VISIBLE
+                        (rightDesignRowSteelAnotherView!! as ItemComponentDetectionColumnRightRealRowSteelParams3Binding).content.visibility =
                             View.INVISIBLE
                     }
                     2 -> {
@@ -417,6 +474,15 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
                             View.INVISIBLE
                         leftDesignAnotherView!!.content.visibility =
                             View.VISIBLE
+
+                        rightDesignView!!.checkCpdColumnRightRealRowSteel.checkCpdLeftRealSpinner2.setSelect(2)
+                        rightDesignView!!.checkCpdColumnRightRealRowSteel.checkCpdLeftRealSpinner2.setText(mTypeRightList!!.get(2))
+                        (rightDesignRowSteelParamsView!! as ItemComponentDetectionColumnRightRealRowSteelParamsBinding).content.visibility =
+                            View.INVISIBLE
+                        (rightDesignRowSteelCircleView!! as ItemComponentDetectionColumnRightRealRowSteelParams2Binding).content.visibility =
+                            View.INVISIBLE
+                        (rightDesignRowSteelAnotherView!! as ItemComponentDetectionColumnRightRealRowSteelParams3Binding).content.visibility =
+                            View.VISIBLE
                     }
 
                 }
@@ -433,9 +499,9 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
             openImgSelector(REQUEST_COLUMN_REAL_TAKE_PHOTO)
         }
 
-        rightDesignView!!.checkCpdBeamPic.setOnClickListener {
+    /*    rightDesignView!!.checkCpdBeamPic.setOnClickListener {
             openImgSelector(REQUEST_COLUMN_DESIGN_TAKE_PHOTO)
-        }
+        }*/
 
         rightRealRowSteelView!!.checkCpdLeftRealSpinner2.setSpinnerData(
             mTypeRightList
@@ -582,6 +648,11 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
             .setSpinnerTextGravity(Gravity.CENTER_VERTICAL)
             .setSpinnerCallback { position: Int ->
                 currentRightDesignType3 = position
+                if (currentRightDesignType3==1){
+                    rightDesignView!!.ll11.visibility = View.VISIBLE
+                }else{
+                    rightDesignView!!.ll11.visibility = View.GONE
+                }
                 LogUtils.d("设计箍筋类型" + mTypeRight2List!!.get(currentRightDesignType3))
             }.build()
 
@@ -594,6 +665,55 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
                 LogUtils.d("设计箍筋符号：" + mPicList!!.get(currentRightDesignType4))
             }.setTypeface(Typeface.createFromAsset(activity?.assets,"fonts/SJQY.cb6e0829.TTF"))
             .build()
+
+        checkLeftDesignStatus(false)
+        checkRightDesignStatus(false)
+        checkRightRealStatus(true)
+
+        leftRealView!!.checkCpdLeftMenu.checkCpdLeftMenu4.animation = null
+        leftRealView!!.checkCpdLeftMenu.checkCpdLeftMenu4.setOnCheckedChangeListener { buttonView, isChecked ->
+            leftDesignView!!.checkCpdLeftMenu.checkCpdLeftMenu4.isChecked = isChecked
+            checkLeftDesignStatus(isChecked)
+        }
+
+        leftDesignView!!.checkCpdLeftMenu.checkCpdLeftMenu4.animation = null
+        leftDesignView!!.checkCpdLeftMenu.checkCpdLeftMenu4.setOnCheckedChangeListener { buttonView, isChecked ->
+            leftRealView!!.checkCpdLeftMenu.checkCpdLeftMenu4.isChecked = isChecked
+            checkLeftDesignStatus(isChecked)
+        }
+
+        rightDesignView!!.checkCpdLeftMenu.checkCpdLeftMenu4.animation = null
+        rightDesignView!!.checkCpdLeftMenu.checkCpdLeftMenu4.setOnCheckedChangeListener { buttonView, isChecked ->
+            rightRealView!!.checkCpdLeftMenu.checkCpdLeftMenu4.isChecked = isChecked
+            checkRightDesignStatus(isChecked)
+        }
+
+        rightDesignView!!.checkCpdLeftMenu.checkCpdLeftMenu4.animation = null
+        rightRealView!!.checkCpdLeftMenu.checkCpdLeftMenu4.setOnCheckedChangeListener { buttonView, isChecked ->
+            rightDesignView!!.checkCpdLeftMenu.checkCpdLeftMenu4.isChecked = isChecked
+            checkRightDesignStatus(isChecked)
+        }
+
+        rightRealView!!.checkCpdLeftMenu.checkCpdLeftMenu3.animation = null
+        rightRealView!!.checkCpdLeftMenu.checkCpdLeftMenu3.setOnCheckedChangeListener { buttonView, isChecked ->
+            rightDesignView!!.checkCpdLeftMenu.checkCpdLeftMenu3.isChecked = isChecked
+            checkRightRealStatus(isChecked)
+        }
+
+        rightDesignView!!.checkCpdLeftMenu.checkCpdLeftMenu3.animation = null
+        rightDesignView!!.checkCpdLeftMenu.checkCpdLeftMenu3.setOnCheckedChangeListener { buttonView, isChecked ->
+            rightRealView!!.checkCpdLeftMenu.checkCpdLeftMenu3.isChecked = isChecked
+            checkRightRealStatus(isChecked)
+        }
+
+        rightRealView!!.checkCpdColumnRightRealRowSteel.checkEdit.visibility = View.GONE
+        rightRealView!!.checkCpdColumnRightRealRowSteel.checkEditName2.visibility = View.GONE
+        rightRealView!!.checkCpdColumnRightRealRowSteel.tv2.visibility = View.GONE
+
+        rightDesignView!!.checkCpdColumnRightRealRowSteel.checkEdit.visibility = View.GONE
+        rightDesignView!!.checkCpdColumnRightRealRowSteel.checkEditName2.visibility = View.GONE
+        rightDesignView!!.checkCpdColumnRightRealRowSteel.tv2.visibility = View.GONE
+
 
         mBinding.checkCpdSubtitleConfirm.setOnClickListener {
             if (mBinding.checkCpdSubtitle1.checkEdit.text.toString().isNullOrEmpty()) {
@@ -614,291 +734,11 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
                     return@setOnClickListener
                 }
             }
-            when (currentLeftRealType) {
-                0 -> {
-                    if (leftRealRectangleView!!.checkCpdLeftRectangle1.text.toString()
-                            .isNullOrEmpty() ||
-                        leftRealRectangleView!!.checkCpdLeftRectangle2.text.toString()
-                            .isNullOrEmpty()
-                    ) {
-                        showToast("请输入 实测截面尺寸-矩形尺寸")
-                        return@setOnClickListener
-                    }
-                }
-                1 -> {
-                    if (leftRealCircleView!!.checkCpdLeftDesignAnotherName.text.toString()
-                            .isNullOrEmpty()
-                    ) {
-                        showToast("请输入 实测截面尺寸-圆形尺寸")
-                        return@setOnClickListener
-                    }
-                }
-                2 -> {
-                    if (leftRealCirCleTubeView!!.checkCpdLeftRectangle1.text.toString()
-                            .isNullOrEmpty() ||
-                        leftRealCirCleTubeView!!.checkCpdLeftRectangle2.text.toString()
-                            .isNullOrEmpty()
-                    ) {
-                        showToast("请输入 实测截面尺寸-圆管尺寸")
-                        return@setOnClickListener
-                    }
-                }
-                3 -> {
-                    if (leftRealHView!!.checkCpdLeftRectangle1.text.toString()
-                            .isNullOrEmpty() ||
-                        leftRealHView!!.checkCpdLeftRectangle2.text.toString()
-                            .isNullOrEmpty() ||
-                        leftRealHView!!.checkCpdLeftRectangle3.text.toString()
-                            .isNullOrEmpty() ||
-                        leftRealHView!!.checkCpdLeftRectangle4.text.toString()
-                            .isNullOrEmpty()
-                    ) {
-                        showToast("请输入 实测截面尺寸-H型尺寸")
-                        return@setOnClickListener
-                    }
-                }4->{
-                    if(leftRealAnotherView!!.checkCpdLeftDesignAnotherName.text.toString().isNullOrEmpty()||
-                            leftRealAnotherView!!.checkCpdLeftDesignAnotherDescribe.text.toString().isNullOrEmpty()||
-                            mPicLeftRealList.isNullOrEmpty()){
-                        showToast("请输入 实测截面尺寸-其他")
-                        return@setOnClickListener
-                    }
-                }
-            }
-
-            if (leftRealView!!.checkCpdLeftRealRemarkContent.text.toString()
-                    .isNullOrEmpty()
-            ) {
-                showToast("请输入 实测截面尺寸-备注")
-                return@setOnClickListener
-            }
-
-
-            //左侧设计界面判断
-            when (currentLeftDesignType) {
-                0 -> {
-                    if (leftDesignRectangleView!!.checkCpdLeftRectangle1.text.toString()
-                            .isNullOrEmpty() ||
-                        leftDesignRectangleView!!.checkCpdLeftRectangle2.text.toString()
-                            .isNullOrEmpty()
-                    ) {
-                        showToast("请输入 设计截面尺寸-矩形尺寸")
-                        return@setOnClickListener
-                    }
-                }
-                1 -> {
-                    if (leftDesignCircleView!!.checkCpdLeftDesignAnotherName.text.toString()
-                            .isNullOrEmpty()
-                    ) {
-                        showToast("请输入 设计截面尺寸-圆形尺寸")
-                        return@setOnClickListener
-                    }
-                }
-                2 -> {
-                    if (leftDesignCirCleTubeView!!.checkCpdLeftRectangle1.text.toString()
-                            .isNullOrEmpty() ||
-                        leftDesignCirCleTubeView!!.checkCpdLeftRectangle2.text.toString()
-                            .isNullOrEmpty()
-                    ) {
-                        showToast("请输入 设计截面尺寸-圆管尺寸")
-                        return@setOnClickListener
-                    }
-                }
-                3 -> {
-                    if (leftDesignHView!!.checkCpdLeftRectangle1.text.toString()
-                            .isNullOrEmpty() ||
-                        leftDesignHView!!.checkCpdLeftRectangle2.text.toString()
-                            .isNullOrEmpty() ||
-                        leftDesignHView!!.checkCpdLeftRectangle3.text.toString()
-                            .isNullOrEmpty() ||
-                        leftDesignHView!!.checkCpdLeftRectangle4.text.toString()
-                            .isNullOrEmpty()
-                    ) {
-                        showToast("请输入 设计截面尺寸-H型尺寸")
-                        return@setOnClickListener
-                    }
-                }4->{
-                if(leftDesignAnotherView!!.checkCpdLeftDesignAnotherName.text.toString().isNullOrEmpty()||
-                    leftDesignAnotherView!!.checkCpdLeftDesignAnotherDescribe.text.toString().isNullOrEmpty()||
-                    mPicLeftDesignList.isNullOrEmpty()){
-                    showToast("请输入 设计截面尺寸-其他")
-                    return@setOnClickListener
-                }
-            }
-            }
-
-            if (leftDesignView!!.checkCpdLeftRealRemarkContent.text.toString()
-                    .isNullOrEmpty()
-            ) {
-                showToast("请输入 设计截面尺寸-备注")
-                return@setOnClickListener
-            }
-
-            if (rightRealRowSteelView!!.checkEdit.text.toString()
-                    .isNullOrEmpty()
-            ) {
-                showToast("请输入 实测纵筋-钢筋规格")
-                return@setOnClickListener
-            }
-
-            when (currentRightRealType) {
-                0 -> {
-                    if (rightRealRowSteelParamsView!!.checkEdit1.text.toString()
-                            .isNullOrEmpty() ||
-                        rightRealRowSteelParamsView!!.checkEdit2.text.toString()
-                            .isNullOrEmpty() ||
-                        rightRealRowSteelParamsView!!.checkEdit3.text.toString()
-                            .isNullOrEmpty() ||
-                        rightRealRowSteelParamsView!!.checkEdit4.text.toString()
-                            .isNullOrEmpty() ||
-                        rightRealRowSteelParamsView!!.checkEdit5.text.toString()
-                            .isNullOrEmpty()
-                    ) {
-                        showToast("请输入 实测纵筋-矩形参数")
-                        return@setOnClickListener
-                    }
-                }
-                1 -> {
-                    if (rightRealRowSteelCircleView!!.checkEdit.text.toString()
-                            .isNullOrEmpty() ||
-                        rightRealRowSteelCircleView!!.checkEdit2.text.toString()
-                            .isNullOrEmpty()
-                    ) {
-                        showToast("请输入 实测纵筋-圆形参数")
-                        return@setOnClickListener
-                    }
-                }
-                2 -> {
-                    if (rightRealRowSteelAnotherView!!.checkEdit.text.toString()
-                            .isNullOrEmpty() || mPicRightRealList.isNullOrEmpty()
-                    ) {
-                        showToast("请输入 实测纵筋-其他参数")
-                        return@setOnClickListener
-                    }
-                }
-            }
-            if (rightRealMeasuredView!!.checkEdit2.text.toString()
-                    .isNullOrEmpty()
-            ) {
-                showToast("请输入 实测箍筋-钢筋规格")
-                return@setOnClickListener
-            }
-
-            when (currentRightRealType3) {
-                1 -> {
-                    if (rightRealEncryptedView!!.checkEdit.text.toString()
-                            .isNullOrEmpty() ||
-                        rightRealEncryptedView!!.checkEdit2.text.toString()
-                            .isNullOrEmpty() ||
-                        rightRealEncryptedView!!.checkEdit3.text.toString()
-                            .isNullOrEmpty()
-                    ) {
-                        showToast("请输入 实测箍筋-加密区参数")
-                        return@setOnClickListener
-                    }
-                }
-            }
-
-            if ((rightRealNonEncryptedView!! as ItemComponentDetectionBeamRightRealNonEncryptedEditBinding).checkEdit.text.toString()
-                    .isNullOrEmpty() ||
-                rightRealNonEncryptedView!!.checkEdit2.text.toString()
-                    .isNullOrEmpty()
-            ) {
-                showToast("请输入 实测箍筋-非加密区参数")
-                return@setOnClickListener
-            }
-
-            if (rightRealView!!.checkCpdBeamRightRealProtect.checkEditProtect.text.toString()
-                    .isNullOrEmpty() ||
-                rightRealProtectView!!.checkEditProtect2.text.toString()
-                    .isNullOrEmpty()
-            ) {
-                showToast("请输入 实测保护层厚度")
-                return@setOnClickListener
-            }
-
-
-            if (rightRealView!!.checkCpdLeftRealRemarkContent.text.toString()
-                    .isNullOrEmpty()
-            ) {
-                showToast("请输入实测配筋-备注")
-                return@setOnClickListener
-            }
-
-
-            //右侧设计页面判断
-            if (rightDesignRowSteelView!!.checkEdit.text.toString()
-                    .isNullOrEmpty()
-            ) {
-                showToast("请输入 设计纵筋-钢筋规格")
-                return@setOnClickListener
-            }
-
-            when (currentRightDesignType) {
-                0 -> {
-                    if (rightDesignRowSteelParamsView!!.checkEdit1.text.toString()
-                            .isNullOrEmpty() ||
-                        rightDesignRowSteelParamsView!!.checkEdit2.text.toString()
-                            .isNullOrEmpty() ||
-                        rightDesignRowSteelParamsView!!.checkEdit3.text.toString()
-                            .isNullOrEmpty() ||
-                        rightDesignRowSteelParamsView!!.checkEdit4.text.toString()
-                            .isNullOrEmpty() ||
-                        rightDesignRowSteelParamsView!!.checkEdit5.text.toString()
-                            .isNullOrEmpty()
-                    ) {
-                        showToast("请输入 设计纵筋-矩形参数")
-                        return@setOnClickListener
-                    }
-                }
-                1 -> {
-                    if (rightDesignRowSteelCircleView!!.checkEdit.text.toString()
-                            .isNullOrEmpty() ||
-                        rightDesignRowSteelCircleView!!.checkEdit2.text.toString()
-                            .isNullOrEmpty()
-                    ) {
-                        showToast("请输入 设计纵筋-圆形参数")
-                        return@setOnClickListener
-                    }
-                }
-                2 -> {
-                    if (rightDesignRowSteelAnotherView!!.checkEdit.text.toString()
-                            .isNullOrEmpty()||mPicRightDesignList.isNullOrEmpty()
-                    ) {
-                        showToast("请输入 设计纵筋-其他参数")
-                        return@setOnClickListener
-                    }
-                }
-            }
-            if (rightDesignView!!.checkCpdBeamRightRealMeasured.checkEdit2.text.toString()
-                    .isNullOrEmpty()
-            ) {
-                showToast("请输入 设计箍筋-钢筋规格")
-                return@setOnClickListener
-            }
-            if (rightDesignView!!.ll1.check_edit.text.toString().isNullOrEmpty()) {
-                showToast("请输入设计箍筋-间距")
-                return@setOnClickListener
-            }
-
-
-            if (rightDesignView!!.checkCpdLeftRealRemarkContent.text.toString()
-                    .isNullOrEmpty()
-            ) {
-                showToast("请输入设计配筋-备注")
-                return@setOnClickListener
-            }
-            if (mRightRealPicSrc.isNullOrEmpty()){
-                showToast("请上传实测配筋-图片")
-                return@setOnClickListener
-            }
-
-            if (mRightDesignPicSrc.isNullOrEmpty()){
-                showToast("请上传设计配筋-图片")
-                return@setOnClickListener
-            }
 
             mAddAnnotReF = (activity as CheckComponentDetectionActivity).mCurrentAddAnnotReF
+
+            rightRealView!!.checkCpdLeftMenu.checkCpdLeftMenu3.visibility = View.VISIBLE
+            rightDesignView!!.checkCpdLeftMenu.checkCpdLeftMenu3.visibility = View.VISIBLE
 
 
 
@@ -967,10 +807,12 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
                     mTypeRight2List!!.get(currentRightDesignType3),
                     mPicList!!.get(currentRightDesignType4),
                     rightDesignMeasuredView!!.checkEdit2.text.toString(),
-                    rightDesignView!!.ll1.check_edit.text.toString()
+                    rightDesignView!!.checkEdit.text.toString(),
+                    rightDesignView!!.checkEditEncrypt.text.toString()
                 ),
                 rightDesignView!!.checkCpdLeftRealRemarkContent.text.toString(),
-                arrayListOf(FileUtil.getFileName(mRightDesignPicSrc)?:"",mRightDesignPicSrc)
+                arrayListOf(FileUtil.getFileName(mRightDesignPicSrc)?:"",mRightDesignPicSrc),
+                arrayListOf(mCheckLeftDesignStatus.toString(),mCheckRightRealStatus.toString(),mCheckRightDesignStatus.toString())
             )
             (context as CheckComponentDetectionActivity).saveDamage(damage)
         }
@@ -1067,6 +909,8 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
     }
 
     fun resetView(damageV3Bean: DamageV3Bean?) {
+        mBinding.checkCpdSubtitle1.checkEdit.setText((context as CheckComponentDetectionActivity).mCurrentDrawing!!.floorName+"柱")
+
         if (damageV3Bean == null) {
 
             currentLeftRealType = 0
@@ -1090,6 +934,10 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
 
             mPicRightRealList = ArrayList()
             mPicRightDesignList = ArrayList()
+
+
+
+
             mBinding.checkCpdSubtitle2.content.visibility = View.VISIBLE
             mBinding.checkCpdSubtitle2Second.content.visibility = View.INVISIBLE
             mBinding.checkCpdSubtitle2Second.checkEdit.setText("")
@@ -1188,7 +1036,7 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
             rightRealRowSteelAnotherView!!.checkEdit.setText("")
 
             rightRealView!!.checkCpdBeamPic.setImageResource(R.color.gray)
-            rightDesignView!!.checkCpdBeamPic.setImageResource(R.color.gray)
+       //     rightDesignView!!.checkCpdBeamPic.setImageResource(R.color.gray)
 
             //右侧设计-纵筋类型
             rightDesignRowSteelView!!.checkCpdLeftRealSpinner2.setSelect(0)
@@ -1226,6 +1074,8 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
             rightDesignMeasuredView!!.checkCpdLeftRealSpinner2.setText(mTypeRight2List!!.get(0))
             rightDesignMeasuredView!!.checkEdit2.setText("")
             rightDesignView!!.ll1.check_edit.setText("")
+            rightDesignView!!.ll11.visibility = View.GONE
+            rightDesignView!!.checkEditEncrypt.setText("")
 
             //右侧实测-加密区
             rightRealEncryptedView!!.content.visibility = View.GONE
@@ -1247,6 +1097,26 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
 
             //右侧实测-备注
             rightDesignView!!.checkCpdLeftRealRemarkContent.setText("")
+
+            rightRealView!!.checkCpdLeftMenu.checkCpdLeftMenu3.visibility = View.VISIBLE
+            rightDesignView!!.checkCpdLeftMenu.checkCpdLeftMenu3.visibility = View.VISIBLE
+
+            leftRealView!!.checkCpdLeftMenu.checkCpdLeftMenu4.isChecked = false
+            leftDesignView!!.checkCpdLeftMenu.checkCpdLeftMenu4.isChecked = false
+
+            rightRealView!!.checkCpdLeftMenu.checkCpdLeftMenu4.isChecked = false
+            rightDesignView!!.checkCpdLeftMenu.checkCpdLeftMenu4.isChecked = false
+            rightRealView!!.checkCpdLeftMenu.checkCpdLeftMenu3.isChecked = true
+            rightDesignView!!.checkCpdLeftMenu.checkCpdLeftMenu3.isChecked = true
+
+            checkLeftDesignStatus(false)
+            checkRightDesignStatus(false)
+            checkRightRealStatus(true)
+
+
+
+
+
             mDamageCreateTime = -1L
         } else {
 
@@ -1262,10 +1132,52 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
             currentRightDesignType3 = mTypeRight2List!!.indexOf(damageV3Bean.rightDesignStirrupsTypeList!!.get(0))
             currentRightDesignType4 = mPicList!!.indexOf(damageV3Bean.rightDesignStirrupsTypeList!!.get(1))
 
-            //TODO 损伤有value
 
-       /*     mPicLeftRealList = null
-            mPicLeftRealList = ArrayList()
+
+
+            if ("true".equals(damageV3Bean.columnCheckStatus!!.get(0))){
+                leftRealView!!.checkCpdLeftMenu.checkCpdLeftMenu4.isChecked = true
+                leftDesignView!!.checkCpdLeftMenu.checkCpdLeftMenu4.isChecked = true
+                checkLeftDesignStatus(true)
+            }else{
+                leftRealView!!.checkCpdLeftMenu.checkCpdLeftMenu4.isChecked = false
+                leftDesignView!!.checkCpdLeftMenu.checkCpdLeftMenu4.isChecked = false
+                checkLeftDesignStatus(false)
+            }
+
+            if ("true".equals(damageV3Bean.columnCheckStatus!!.get(1))){
+                rightRealView!!.checkCpdLeftMenu.checkCpdLeftMenu3.isChecked = true
+                rightDesignView!!.checkCpdLeftMenu.checkCpdLeftMenu3.isChecked = true
+                checkRightRealStatus(true)
+            }else{
+                checkRightRealStatus(false)
+                rightRealView!!.checkCpdLeftMenu.checkCpdLeftMenu3.isChecked = false
+                rightDesignView!!.checkCpdLeftMenu.checkCpdLeftMenu3.isChecked = false
+            }
+
+            if ("true".equals(damageV3Bean.columnCheckStatus!!.get(2))){
+                rightRealView!!.checkCpdLeftMenu.checkCpdLeftMenu4.isChecked = true
+                rightDesignView!!.checkCpdLeftMenu.checkCpdLeftMenu4.isChecked = true
+                checkRightDesignStatus(true)
+
+            }else{
+                checkRightDesignStatus(false)
+                rightRealView!!.checkCpdLeftMenu.checkCpdLeftMenu4.isChecked = false
+                rightDesignView!!.checkCpdLeftMenu.checkCpdLeftMenu4.isChecked = false
+            }
+
+
+
+            if (currentRightDesignType3==1){
+                rightDesignView!!.ll11.visibility =View.VISIBLE
+                rightDesignView!!.checkEditEncrypt.setText(damageV3Bean.rightDesignStirrupsTypeList!!.get(4))
+            }else{
+                rightDesignView!!.ll11.visibility = View.GONE
+            }
+
+
+
+       /*
 
             mPicLeftDesignList = null
             mPicLeftDesignList = ArrayList()
@@ -1312,7 +1224,7 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
             mRightDesignPicSrc = damageV3Bean.columnRightDesignPic?.get(1)?:""
 
             rightRealView!!.checkCpdBeamPic.setImageURI(Uri.fromFile(File(mRightRealPicSrc)))
-            rightDesignView!!.checkCpdBeamPic.setImageURI(Uri.fromFile(File(mRightDesignPicSrc)))
+         //   rightDesignView!!.checkCpdBeamPic.setImageURI(Uri.fromFile(File(mRightDesignPicSrc)))
 
             when (damageV3Bean.leftRealSectionType) {
                 "矩形" -> {
@@ -1684,6 +1596,138 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
         }
     }
 
+
+
+    fun checkLeftDesignStatus(isEnable: Boolean) {
+
+        mCheckLeftDesignStatus = isEnable
+
+        leftDesignRectangleView!!.checkCpdLeftRectangle1.isEnabled = isEnable
+        leftDesignRectangleView!!.checkCpdLeftRectangle2.isEnabled = isEnable
+
+        leftDesignCircleView!!.checkCpdLeftDesignAnotherName.isEnabled =isEnable
+
+
+
+        leftDesignCirCleTubeView!!.checkCpdLeftRectangle1.isEnabled = isEnable
+        leftDesignCirCleTubeView!!.checkCpdLeftRectangle2.isEnabled = isEnable
+
+        leftDesignHView!!.checkCpdLeftRectangle1.isEnabled = isEnable
+        leftDesignHView!!.checkCpdLeftRectangle2.isEnabled = isEnable
+        leftDesignHView!!.checkCpdLeftRectangle3.isEnabled = isEnable
+        leftDesignHView!!.checkCpdLeftRectangle4.isEnabled = isEnable
+
+
+        leftDesignAnotherView!!.checkCpdLeftDesignAnotherDescribe.isEnabled = isEnable
+        leftDesignAnotherView!!.checkCpdLeftDesignAnotherName.isEnabled = isEnable
+        leftDesignAnotherView!!.checkCpdSubtitleConfirm.isEnabled = isEnable
+        leftDesignAnotherView!!.checkCpdSubtitleConfirm.isClickable = isEnable
+
+
+        leftDesignView!!.checkCpdLeftRealSpinner1.isEnabled = isEnable
+        leftDesignView!!.checkCpdLeftRealSpinner1.isClickable = isEnable
+
+        leftDesignView!!.checkCpdLeftRealRemarkContent.isEnabled = isEnable
+
+    }
+
+    fun checkRightRealStatus(isEnable: Boolean) {
+
+        mCheckRightRealStatus = isEnable
+
+        rightRealView!!.checkCpdColumnRightRealRowSteel.checkCpdLeftRealSpinner2.isClickable = isEnable
+        rightRealView!!.checkCpdColumnRightRealRowSteel.checkCpdLeftRealSpinner2.isEnabled = isEnable
+        rightRealView!!.checkCpdColumnRightRealRowSteel.checkCpdLeftRealSpinner3.isClickable = isEnable
+        rightRealView!!.checkCpdColumnRightRealRowSteel.checkCpdLeftRealSpinner3.isEnabled = isEnable
+
+
+        rightRealView!!.checkCpdBeamRightRealSingle.checkEdit1.isEnabled  = isEnable
+        rightRealView!!.checkCpdBeamRightRealSingle.checkEdit2.isEnabled  = isEnable
+        rightRealView!!.checkCpdBeamRightRealSingle.checkEdit3.isEnabled  = isEnable
+        rightRealView!!.checkCpdBeamRightRealSingle.checkEdit4.isEnabled  = isEnable
+        rightRealView!!.checkCpdBeamRightRealSingle.checkEdit5.isEnabled  = isEnable
+
+
+        rightRealView!!.checkCpdBeamRightRealCicrcle.checkEdit.isEnabled = isEnable
+        rightRealView!!.checkCpdBeamRightRealCicrcle.checkEdit2.isEnabled = isEnable
+
+        rightRealView!!.checkCpdBeamRightRealAnother.checkEdit.isEnabled = isEnable
+
+        rightRealView!!.checkCpdBeamRightRealAnother.checkCpdSubtitleConfirm.isEnabled =isEnable
+        rightRealView!!.checkCpdBeamRightRealAnother.checkCpdSubtitleConfirm.isClickable =isEnable
+
+
+
+
+        rightRealView!!.checkCpdBeamRightRealMeasured.checkCpdLeftRealSpinner2.isClickable = isEnable
+        rightRealView!!.checkCpdBeamRightRealMeasured.checkCpdLeftRealSpinner2.isEnabled = isEnable
+
+        rightRealView!!.checkCpdBeamRightRealMeasured.checkCpdLeftRealSpinner3.isClickable = isEnable
+        rightRealView!!.checkCpdBeamRightRealMeasured.checkCpdLeftRealSpinner3.isEnabled = isEnable
+
+        rightRealView!!.checkCpdBeamRightRealMeasured.checkEdit2.isEnabled = isEnable
+
+        rightRealView!!.checkCpdBeamRightRealNonEncrypted.checkEdit.isEnabled = isEnable
+        rightRealView!!.checkCpdBeamRightRealNonEncrypted.checkEdit2.isEnabled = isEnable
+
+        rightRealView!!.checkCpdBeamRightRealEncrypted.checkEdit.isEnabled = isEnable
+        rightRealView!!.checkCpdBeamRightRealEncrypted.checkEdit2.isEnabled = isEnable
+        rightRealView!!.checkCpdBeamRightRealEncrypted.checkEdit3.isEnabled = isEnable
+
+        rightRealView!!.checkCpdBeamRightRealProtect.checkEditProtect.isEnabled = isEnable
+        rightRealView!!.checkCpdBeamRightRealProtect.checkEditProtect2.isEnabled = isEnable
+
+        rightRealView!!.checkCpdLeftRealRemarkContent.isEnabled = isEnable
+
+    }
+
+    //TODO hhh
+    fun checkRightDesignStatus(isEnable: Boolean) {
+
+        mCheckRightDesignStatus = isEnable
+
+
+        rightDesignView!!.checkCpdColumnRightRealRowSteel.checkCpdLeftRealSpinner2.isClickable = isEnable
+        rightDesignView!!.checkCpdColumnRightRealRowSteel.checkCpdLeftRealSpinner2.isEnabled = isEnable
+        rightDesignView!!.checkCpdColumnRightRealRowSteel.checkCpdLeftRealSpinner3.isClickable = isEnable
+        rightDesignView!!.checkCpdColumnRightRealRowSteel.checkCpdLeftRealSpinner3.isEnabled = isEnable
+
+
+        rightDesignView!!.checkCpdBeamRightRealSingle.checkEdit1.isEnabled  = isEnable
+        rightDesignView!!.checkCpdBeamRightRealSingle.checkEdit2.isEnabled  = isEnable
+        rightDesignView!!.checkCpdBeamRightRealSingle.checkEdit3.isEnabled  = isEnable
+        rightDesignView!!.checkCpdBeamRightRealSingle.checkEdit4.isEnabled  = isEnable
+        rightDesignView!!.checkCpdBeamRightRealSingle.checkEdit5.isEnabled  = isEnable
+
+
+        rightDesignView!!.checkCpdBeamRightRealCicrcle.checkEdit.isEnabled = isEnable
+        rightDesignView!!.checkCpdBeamRightRealCicrcle.checkEdit2.isEnabled = isEnable
+
+        rightDesignView!!.checkCpdBeamRightRealAnother.checkEdit.isEnabled = isEnable
+
+        rightDesignView!!.checkCpdBeamRightRealAnother.checkCpdSubtitleConfirm.isEnabled =isEnable
+        rightDesignView!!.checkCpdBeamRightRealAnother.checkCpdSubtitleConfirm.isClickable =isEnable
+
+
+
+        rightDesignView!!.checkCpdBeamRightRealMeasured.checkCpdLeftRealSpinner2.isClickable = isEnable
+        rightDesignView!!.checkCpdBeamRightRealMeasured.checkCpdLeftRealSpinner2.isEnabled = isEnable
+        rightDesignView!!.checkCpdBeamRightRealMeasured.checkCpdLeftRealSpinner3.isClickable = isEnable
+        rightDesignView!!.checkCpdBeamRightRealMeasured.checkCpdLeftRealSpinner3.isEnabled = isEnable
+
+        rightDesignView!!.checkCpdBeamRightRealMeasured.checkEdit2.isEnabled = isEnable
+
+
+        rightDesignView!!.checkEditEncrypt.isEnabled = isEnable
+
+
+        rightDesignView!!.checkEdit.isEnabled = isEnable
+
+        rightDesignView!!.checkCpdLeftRealRemarkContent.isEnabled = isEnable
+
+    }
+
+
     override fun onClick(data: DrawingV3Bean?) {
         (activity as CheckComponentDetectionActivity).choosePDF(data!!)
     }
@@ -1753,7 +1797,7 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
             }
             REQUEST_COLUMN_DESIGN_TAKE_PHOTO->
             {
-                rightDesignView!!.checkCpdBeamPic.setImageURI(Uri.fromFile(File(filePath)))
+           //     rightDesignView!!.checkCpdBeamPic.setImageURI(Uri.fromFile(File(filePath)))
                 mRightDesignPicSrc = filePath
             }
         }

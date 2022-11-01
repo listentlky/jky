@@ -27,6 +27,7 @@
             android:gravity="center_vertical"
             android:minWidth="@dimen/_110sdp"
             android:paddingLeft="@dimen/_4sdp"
+            android:inputType="numberDecimal"
             android:paddingRight="@dimen/_4sdp"
             android:textColor="@color/black"
             android:textColorHint="@color/gray_600"

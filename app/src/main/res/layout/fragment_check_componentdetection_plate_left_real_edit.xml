@@ -45,6 +45,7 @@
             android:paddingLeft="@dimen/_4sdp"
             android:textSize="@dimen/_6ssp"
             android:background="@drawable/check_gray_stroke_bg"
+            android:inputType="numberDecimal"
             app:layout_constraintBottom_toBottomOf="@id/check_cdp_plate_left_real_tv"
             app:layout_constraintLeft_toRightOf="@id/check_cdp_plate_left_real_tv"
             app:layout_constraintTop_toTopOf="@id/check_cdp_plate_left_real_tv">

@@ -64,6 +64,9 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
     private var rightRealSectionTypeParamsList: ArrayList<String> = ArrayList()
     private var rightDesignSectionTypeParamsList: ArrayList<String> = ArrayList()
 
+    private  var mCheckLeftDesignStatus = false
+    private  var mCheckRightDesignStatus = false
+    private  var mCheckRightRealStatus = false
 
     private lateinit var leftRealView: FragmentCheckComponentdetectionBeamLeftRealEditBinding
     private lateinit var leftDesignView: FragmentCheckComponentdetectionBeamLeftDesignEditBinding
@@ -100,7 +103,6 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
 
 
     private val REQUEST_BEAM_REAL_TAKE_PHOTO = 12 //
-    private val REQUEST_BEAM_DESIGN_TAKE_PHOTO = 13 //
     private val REQUEST_CODE_BEAN_REAL_WHITE_FLLOR = 14 //实测梁-草图
     private val REQUEST_CODE_BEAN_DESIGN_WHITE_FLLOR = 15 //设计梁-草图
 
@@ -127,6 +129,9 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
         rightRealView = mBinding.checkCpdBeamRightRealUi
         rightDesignView = mBinding.checkCpdBeamRightDesignUi
 
+
+
+
         leftRealRectangleView = leftRealView.checkCpdLeftRealRectangleTv
         leftRealHView = leftRealView.checkCpdLeftRealHTv
         leftRealTView = leftRealView.checkCpdLeftRealTTv
@@ -149,6 +154,9 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
 
         rightDesignView.checkCpdLeftMenu.checkCpdLeftMenu1.setText("实测配筋")
         rightDesignView.checkCpdLeftMenu.checkCpdLeftMenu2.setText("设计配筋")
+
+        rightRealView.checkCpdLeftMenu.checkCpdLeftMenu4.visibility = View.VISIBLE
+        rightDesignView.checkCpdLeftMenu.checkCpdLeftMenu4.visibility = View.VISIBLE
 
         leftRealView.checkCpdLeftRealSpinner1.setText(mTypeLeftList!!.get(0))
         leftRealView.checkCpdLeftRealSpinner1.setSelect(0)
@@ -234,6 +242,11 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
             mTypeRightList2
         ).setSpinnerTextGravity(Gravity.CENTER_VERTICAL).setSpinnerCallback {
             currentRightDesignType3 = it
+            if (it==1){
+                rightDesignView.ll11.visibility = View.VISIBLE
+            }else{
+                rightDesignView.ll11.visibility = View.GONE
+            }
         }.build()
 
         rightDesignView.checkCpdBeamRightRealMeasured.checkCpdLeftRealSpinner2.setSelect(0)
@@ -245,11 +258,16 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
             mPicList
         ).setSpinnerTextGravity(Gravity.CENTER_VERTICAL).setSpinnerCallback {
             currentRightDesignType4 = it
-        }.setTypeface(Typeface.createFromAsset(activity?.assets,"fonts/SJQY.cb6e0829.TTF"))
+        }.setTypeface(Typeface.createFromAsset(activity?.assets, "fonts/SJQY.cb6e0829.TTF"))
             .build()
 
         rightDesignView.checkCpdBeamRightRealMeasured.checkCpdLeftRealSpinner3.setSelect(0)
-        rightDesignView.checkCpdBeamRightRealMeasured.checkCpdLeftRealSpinner3.setTypeface(Typeface.createFromAsset(activity?.assets,"fonts/SJQY.cb6e0829.TTF"))
+        rightDesignView.checkCpdBeamRightRealMeasured.checkCpdLeftRealSpinner3.setTypeface(
+            Typeface.createFromAsset(
+                activity?.assets,
+                "fonts/SJQY.cb6e0829.TTF"
+            )
+        )
         rightDesignView.checkCpdBeamRightRealMeasured.checkCpdLeftRealSpinner3.setText(
             mPicList!!.get(
                 0
@@ -289,22 +307,32 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
         }.build()
 
 
-        rightRealSingleParamsView.checkCpdLeftRealSpinner.setTypeface(Typeface.createFromAsset(activity?.assets,"fonts/SJQY.cb6e0829.TTF"))
+        rightRealSingleParamsView.checkCpdLeftRealSpinner.setTypeface(
+            Typeface.createFromAsset(
+                activity?.assets,
+                "fonts/SJQY.cb6e0829.TTF"
+            )
+        )
         rightRealSingleParamsView.checkCpdLeftRealSpinner.setText(mPicList!!.get(0))
         rightRealSingleParamsView.checkCpdLeftRealSpinner.setSelect(0)
         rightRealSingleParamsView.checkCpdLeftRealSpinner.setSpinnerData(mPicList)
             .setSpinnerTextGravity(Gravity.CENTER_VERTICAL).setSpinnerCallback {
                 currentRightRealType2 = it
-            }.setTypeface(Typeface.createFromAsset(activity?.assets,"fonts/SJQY.cb6e0829.TTF"))
+            }.setTypeface(Typeface.createFromAsset(activity?.assets, "fonts/SJQY.cb6e0829.TTF"))
             .build()
 
-        rightDesignSingleParamsView.checkCpdLeftRealSpinner.setTypeface(Typeface.createFromAsset(activity?.assets,"fonts/SJQY.cb6e0829.TTF"))
+        rightDesignSingleParamsView.checkCpdLeftRealSpinner.setTypeface(
+            Typeface.createFromAsset(
+                activity?.assets,
+                "fonts/SJQY.cb6e0829.TTF"
+            )
+        )
         rightDesignSingleParamsView.checkCpdLeftRealSpinner.setText(mPicList!!.get(0))
         rightDesignSingleParamsView.checkCpdLeftRealSpinner.setSelect(0)
         rightDesignSingleParamsView.checkCpdLeftRealSpinner.setSpinnerData(mPicList)
             .setSpinnerTextGravity(Gravity.CENTER_VERTICAL).setSpinnerCallback {
                 currentRightDesignType2 = it
-            }.setTypeface(Typeface.createFromAsset(activity?.assets,"fonts/SJQY.cb6e0829.TTF"))
+            }.setTypeface(Typeface.createFromAsset(activity?.assets, "fonts/SJQY.cb6e0829.TTF"))
             .build()
 
         rightRealView.checkCpdBeamRightRealMeasured.checkCpdLeftRealSpinner2.setText(
@@ -329,22 +357,33 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
             }
         }.build()
 
-        rightRealView.checkCpdBeamRightRealMeasured.checkCpdLeftRealSpinner3.setTypeface(Typeface.createFromAsset(activity?.assets,"fonts/SJQY.cb6e0829.TTF"))
-        rightRealView.checkCpdBeamRightRealMeasured.checkCpdLeftRealSpinner3.setText(mPicList!!.get(0))
+        rightRealView.checkCpdBeamRightRealMeasured.checkCpdLeftRealSpinner3.setTypeface(
+            Typeface.createFromAsset(
+                activity?.assets,
+                "fonts/SJQY.cb6e0829.TTF"
+            )
+        )
+        rightRealView.checkCpdBeamRightRealMeasured.checkCpdLeftRealSpinner3.setText(
+            mPicList!!.get(
+                0
+            )
+        )
         rightRealView.checkCpdBeamRightRealMeasured.checkCpdLeftRealSpinner3.setSpinnerData(
             mPicList
         ).setSpinnerTextGravity(Gravity.CENTER_VERTICAL).setSpinnerCallback {
             currentRightRealType4 = it
-        }.setTypeface(Typeface.createFromAsset(activity?.assets,"fonts/SJQY.cb6e0829.TTF"))
+        }.setTypeface(Typeface.createFromAsset(activity?.assets, "fonts/SJQY.cb6e0829.TTF"))
             .build()
 
 
         leftRealAnotherView.checkCpdSubtitleConfirm.setOnClickListener {
-            ARouter.getInstance().build(com.sribs.common.ARouterPath.DRAW_WHITE).navigation(activity,REQUEST_CODE_BEAN_REAL_WHITE_FLLOR)
+            ARouter.getInstance().build(com.sribs.common.ARouterPath.DRAW_WHITE)
+                .navigation(activity, REQUEST_CODE_BEAN_REAL_WHITE_FLLOR)
         }
 
         leftDesignAnotherView.checkCpdSubtitleConfirm.setOnClickListener {
-            ARouter.getInstance().build(com.sribs.common.ARouterPath.DRAW_WHITE).navigation(activity,REQUEST_CODE_BEAN_DESIGN_WHITE_FLLOR)
+            ARouter.getInstance().build(com.sribs.common.ARouterPath.DRAW_WHITE)
+                .navigation(activity, REQUEST_CODE_BEAN_DESIGN_WHITE_FLLOR)
         }
 
         leftRealView.checkCpdLeftMenu.checkCpdLeftMenu2.setOnClickListener {
@@ -367,6 +406,10 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
             rightDesignView.content.visibility = View.INVISIBLE
         }
 
+        checkLeftDesignStatus(false)
+        checkRightDesignStatus(false)
+        checkRightRealStatus(true)
+
 
         rightRealView!!.checkCpdLeftRealRemarkContent.setOnTouchListener(View.OnTouchListener { v, event ->
             v.parent.requestDisallowInterceptTouchEvent(true)
@@ -381,9 +424,6 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
             openImgSelector(REQUEST_BEAM_REAL_TAKE_PHOTO)
         }
 
-        rightDesignView.checkCpdBeamPic.setOnClickListener {
-            openImgSelector(REQUEST_BEAM_DESIGN_TAKE_PHOTO)
-        }
 
         mBinding.checkCpdSubtitle2Second.checkEdit.hint = "请输入轴线"
         mBinding.checkCpdSubtitle2Second.checkEditName.hint = "轴线"
@@ -406,12 +446,54 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
         mBinding.checkCpdSubtitleChange.setOnClickListener {
             if (mBinding.checkCpdSubtitle2.content.visibility == View.VISIBLE) {
                 mBinding.checkCpdSubtitle2.content.visibility = View.INVISIBLE
+                mBinding.checkCpdSubtitle2.checkCdpPlateMenuAxis1.setText("")
+                mBinding.checkCpdSubtitle2.checkCdpPlateMenuAxis2.setText("")
+                mBinding.checkCpdSubtitle2.checkCdpPlateMenuAxis3.setText("")
                 mBinding.checkCpdSubtitle2Second.content.visibility = View.VISIBLE
             } else {
                 mBinding.checkCpdSubtitle2.content.visibility = View.VISIBLE
                 mBinding.checkCpdSubtitle2Second.content.visibility = View.INVISIBLE
+                mBinding.checkCpdSubtitle2Second.checkEdit.setText("")
             }
         }
+
+        leftRealView.checkCpdLeftMenu.checkCpdLeftMenu4.animation = null
+        leftRealView.checkCpdLeftMenu.checkCpdLeftMenu4.setOnCheckedChangeListener { buttonView, isChecked ->
+            leftDesignView.checkCpdLeftMenu.checkCpdLeftMenu4.isChecked = isChecked
+            checkLeftDesignStatus(isChecked)
+        }
+
+        leftDesignView.checkCpdLeftMenu.checkCpdLeftMenu4.animation = null
+        leftDesignView.checkCpdLeftMenu.checkCpdLeftMenu4.setOnCheckedChangeListener { buttonView, isChecked ->
+            leftRealView.checkCpdLeftMenu.checkCpdLeftMenu4.isChecked = isChecked
+            checkLeftDesignStatus(isChecked)
+        }
+
+        rightDesignView.checkCpdLeftMenu.checkCpdLeftMenu4.animation = null
+        rightDesignView.checkCpdLeftMenu.checkCpdLeftMenu4.setOnCheckedChangeListener { buttonView, isChecked ->
+            rightRealView.checkCpdLeftMenu.checkCpdLeftMenu4.isChecked = isChecked
+            checkRightDesignStatus(isChecked)
+        }
+
+        rightDesignView.checkCpdLeftMenu.checkCpdLeftMenu4.animation = null
+        rightRealView.checkCpdLeftMenu.checkCpdLeftMenu4.setOnCheckedChangeListener { buttonView, isChecked ->
+            rightDesignView.checkCpdLeftMenu.checkCpdLeftMenu4.isChecked = isChecked
+            checkRightDesignStatus(isChecked)
+        }
+
+        rightRealView.checkCpdLeftMenu.checkCpdLeftMenu3.animation = null
+        rightRealView.checkCpdLeftMenu.checkCpdLeftMenu3.setOnCheckedChangeListener { buttonView, isChecked ->
+            rightDesignView.checkCpdLeftMenu.checkCpdLeftMenu3.isChecked = isChecked
+            checkRightRealStatus(isChecked)
+        }
+
+        rightDesignView.checkCpdLeftMenu.checkCpdLeftMenu3.animation = null
+        rightDesignView.checkCpdLeftMenu.checkCpdLeftMenu3.setOnCheckedChangeListener { buttonView, isChecked ->
+            rightRealView.checkCpdLeftMenu.checkCpdLeftMenu3.isChecked = isChecked
+            checkRightRealStatus(isChecked)
+        }
+
+
 
         mBinding.checkCpdSubtitleConfirm.setOnClickListener {
             if (mBinding.checkCpdSubtitle1.checkEdit.text.toString().isNullOrEmpty()) {
@@ -436,255 +518,87 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
                     return@setOnClickListener
                 }
             }
+
+
             leftRealSectionTypeParamsList.clear()
             when (currentLeftRealType2) {
                 0 -> {
-                    if (leftRealRectangleView.checkCpdLeftRectangle1.text.toString()
-                            .isNullOrEmpty() ||
-                        leftRealRectangleView.checkCpdLeftRectangle2.text.toString().isNullOrEmpty()
-                    ) {
-                        showToast("请输入 实测截面类型-矩形")
-                        return@setOnClickListener
-                    } else {
-                        leftRealSectionTypeParamsList.add(leftRealRectangleView.checkCpdLeftRectangle1.text.toString())
-                        leftRealSectionTypeParamsList.add(leftRealRectangleView.checkCpdLeftRectangle2.text.toString())
-                    }
+                    leftRealSectionTypeParamsList.add(leftRealRectangleView.checkCpdLeftRectangle1.text.toString())
+                    leftRealSectionTypeParamsList.add(leftRealRectangleView.checkCpdLeftRectangle2.text.toString())
                 }
                 1 -> {
-                    if (leftRealHView.checkCpdLeftRectangle1.text.toString().isNullOrEmpty() ||
-                        leftRealHView.checkCpdLeftRectangle2.text.toString().isNullOrEmpty() ||
-                        leftRealHView.checkCpdLeftRectangle3.text.toString().isNullOrEmpty() ||
-                        leftRealHView.checkCpdLeftRectangle4.text.toString().isNullOrEmpty()
-                    ) {
-                        showToast("请输入 实测截面类型-H型")
-                        return@setOnClickListener
-                    } else {
-                        leftRealSectionTypeParamsList.add(leftRealHView.checkCpdLeftRectangle1.text.toString())
-                        leftRealSectionTypeParamsList.add(leftRealHView.checkCpdLeftRectangle2.text.toString())
-                        leftRealSectionTypeParamsList.add(leftRealHView.checkCpdLeftRectangle3.text.toString())
-                        leftRealSectionTypeParamsList.add(leftRealHView.checkCpdLeftRectangle4.text.toString())
-                    }
+                    leftRealSectionTypeParamsList.add(leftRealHView.checkCpdLeftRectangle1.text.toString())
+                    leftRealSectionTypeParamsList.add(leftRealHView.checkCpdLeftRectangle2.text.toString())
+                    leftRealSectionTypeParamsList.add(leftRealHView.checkCpdLeftRectangle3.text.toString())
+                    leftRealSectionTypeParamsList.add(leftRealHView.checkCpdLeftRectangle4.text.toString())
                 }
                 2 -> {
-                    if (leftRealTView.checkCpdLeftRectangle1.text.toString().isNullOrEmpty() ||
-                        leftRealTView.checkCpdLeftRectangle2.text.toString().isNullOrEmpty() ||
-                        leftRealTView.checkCpdLeftRectangle3.text.toString().isNullOrEmpty() ||
-                        leftRealTView.checkCpdLeftRectangle4.text.toString().isNullOrEmpty()
-                    ) {
-                        showToast("请输入 实测截面类型-T型")
-                        return@setOnClickListener
-                    } else {
-                        leftRealSectionTypeParamsList.add(leftRealTView.checkCpdLeftRectangle1.text.toString())
-                        leftRealSectionTypeParamsList.add(leftRealTView.checkCpdLeftRectangle2.text.toString())
-                        leftRealSectionTypeParamsList.add(leftRealTView.checkCpdLeftRectangle3.text.toString())
-                        leftRealSectionTypeParamsList.add(leftRealTView.checkCpdLeftRectangle4.text.toString())
-                    }
+                    leftRealSectionTypeParamsList.add(leftRealTView.checkCpdLeftRectangle1.text.toString())
+                    leftRealSectionTypeParamsList.add(leftRealTView.checkCpdLeftRectangle2.text.toString())
+                    leftRealSectionTypeParamsList.add(leftRealTView.checkCpdLeftRectangle3.text.toString())
+                    leftRealSectionTypeParamsList.add(leftRealTView.checkCpdLeftRectangle4.text.toString())
                 }
                 3 -> {
-                    if (leftRealAnotherView.checkCpdLeftDesignAnotherName.text.toString()
-                            .isNullOrEmpty() ||
-                        leftRealAnotherView.checkCpdLeftDesignAnotherDescribe.text.toString()
-                            .isNullOrEmpty() || mPicLeftRealList.isNullOrEmpty()
-                    ) {
-                        showToast("请输入 实测截面类型-其他")
-                        return@setOnClickListener
-                    } else {
-                        leftRealSectionTypeParamsList.add(leftRealAnotherView.checkCpdLeftDesignAnotherName.text.toString())
-                        leftRealSectionTypeParamsList.add(leftRealAnotherView.checkCpdLeftDesignAnotherDescribe.text.toString())
-                    }
+                    leftRealSectionTypeParamsList.add(leftRealAnotherView.checkCpdLeftDesignAnotherName.text.toString())
+                    leftRealSectionTypeParamsList.add(leftRealAnotherView.checkCpdLeftDesignAnotherDescribe.text.toString())
                 }
             }
 
             leftDesignSectionTypeParamsList!!.clear()
             when (currentLeftDesignType2) {
                 0 -> {
-                    if (leftDesignRectangleView.checkCpdLeftRectangle1.text.toString()
-                            .isNullOrEmpty() ||
-                        leftDesignRectangleView.checkCpdLeftRectangle2.text.toString()
-                            .isNullOrEmpty()
-                    ) {
-                        showToast("请输入 设计面类型-矩形")
-                        return@setOnClickListener
-                    } else {
-                        leftDesignSectionTypeParamsList.add(leftDesignRectangleView.checkCpdLeftRectangle1.text.toString())
-                        leftDesignSectionTypeParamsList.add(leftDesignRectangleView.checkCpdLeftRectangle2.text.toString())
-                    }
+                    leftDesignSectionTypeParamsList.add(leftDesignRectangleView.checkCpdLeftRectangle1.text.toString())
+                    leftDesignSectionTypeParamsList.add(leftDesignRectangleView.checkCpdLeftRectangle2.text.toString())
                 }
                 1 -> {
-                    if (leftDesignHView.checkCpdLeftRectangle1.text.toString().isNullOrEmpty() ||
-                        leftDesignHView.checkCpdLeftRectangle2.text.toString().isNullOrEmpty() ||
-                        leftDesignHView.checkCpdLeftRectangle3.text.toString().isNullOrEmpty() ||
-                        leftDesignHView.checkCpdLeftRectangle4.text.toString().isNullOrEmpty()
-                    ) {
-                        showToast("请输入 设计截面类型-H型")
-                        return@setOnClickListener
-                    } else {
-                        leftDesignSectionTypeParamsList.add(leftDesignHView.checkCpdLeftRectangle1.text.toString())
-                        leftDesignSectionTypeParamsList.add(leftDesignHView.checkCpdLeftRectangle2.text.toString())
-                        leftDesignSectionTypeParamsList.add(leftDesignHView.checkCpdLeftRectangle3.text.toString())
-                        leftDesignSectionTypeParamsList.add(leftDesignHView.checkCpdLeftRectangle4.text.toString())
-                    }
+                    leftDesignSectionTypeParamsList.add(leftDesignHView.checkCpdLeftRectangle1.text.toString())
+                    leftDesignSectionTypeParamsList.add(leftDesignHView.checkCpdLeftRectangle2.text.toString())
+                    leftDesignSectionTypeParamsList.add(leftDesignHView.checkCpdLeftRectangle3.text.toString())
+                    leftDesignSectionTypeParamsList.add(leftDesignHView.checkCpdLeftRectangle4.text.toString())
                 }
                 2 -> {
-                    if (leftDesignTView.checkCpdLeftRectangle1.text.toString().isNullOrEmpty() ||
-                        leftDesignTView.checkCpdLeftRectangle2.text.toString().isNullOrEmpty() ||
-                        leftDesignTView.checkCpdLeftRectangle3.text.toString().isNullOrEmpty() ||
-                        leftDesignTView.checkCpdLeftRectangle4.text.toString().isNullOrEmpty()
-                    ) {
-                        showToast("请输入 设计截面类型-T型")
-                        return@setOnClickListener
-                    } else {
-                        leftDesignSectionTypeParamsList.add(leftDesignTView.checkCpdLeftRectangle1.text.toString())
-                        leftDesignSectionTypeParamsList.add(leftDesignTView.checkCpdLeftRectangle2.text.toString())
-                        leftDesignSectionTypeParamsList.add(leftDesignTView.checkCpdLeftRectangle3.text.toString())
-                        leftDesignSectionTypeParamsList.add(leftDesignTView.checkCpdLeftRectangle4.text.toString())
-                    }
+                    leftDesignSectionTypeParamsList.add(leftDesignTView.checkCpdLeftRectangle1.text.toString())
+                    leftDesignSectionTypeParamsList.add(leftDesignTView.checkCpdLeftRectangle2.text.toString())
+                    leftDesignSectionTypeParamsList.add(leftDesignTView.checkCpdLeftRectangle3.text.toString())
+                    leftDesignSectionTypeParamsList.add(leftDesignTView.checkCpdLeftRectangle4.text.toString())
                 }
                 3 -> {
-                    if (leftDesignAnotherView.checkCpdLeftDesignAnotherName.text.toString()
-                            .isNullOrEmpty() ||
-                        leftDesignAnotherView.checkCpdLeftDesignAnotherDescribe.text.toString()
-                            .isNullOrEmpty() || mPicLeftDesignList.isNullOrEmpty()
-                    ) {
-                        showToast("请输入 设计截面类型-其他")
-                        return@setOnClickListener
-                    } else {
-                        leftDesignSectionTypeParamsList.add(leftDesignAnotherView.checkCpdLeftDesignAnotherName.text.toString())
-                        leftDesignSectionTypeParamsList.add(leftDesignAnotherView.checkCpdLeftDesignAnotherDescribe.text.toString())
-                    }
+                    leftDesignSectionTypeParamsList.add(leftDesignAnotherView.checkCpdLeftDesignAnotherName.text.toString())
+                    leftDesignSectionTypeParamsList.add(leftDesignAnotherView.checkCpdLeftDesignAnotherDescribe.text.toString())
                 }
             }
 
-            if (leftRealView.checkCpdLeftRealRemarkContent.text.isNullOrEmpty()) {
-                showToast("请输入 实测截面尺寸-备注")
-                return@setOnClickListener
-            }
 
-            if (leftDesignView.checkCpdLeftDesignRemarkContent.text.isNullOrEmpty()) {
-                showToast("请输入 设计截面尺寸-备注")
-                return@setOnClickListener
-            }
             rightRealSectionTypeParamsList!!.clear()
             when (currentRightRealType) {
                 0 -> {
-                    if (rightRealSingleParamsView.checkEdit1.text.toString().isNullOrEmpty() ||
-                        rightRealSingleParamsView.checkEdit3.text.toString().isNullOrEmpty() ||
-                        rightRealSingleParamsView.checkEdit4.text.toString().isNullOrEmpty()
-                    ) {
-                        showToast("请输入 实测纵筋-单排钢筋")
-                        return@setOnClickListener
-                    } else {
-                        rightRealSectionTypeParamsList.add(rightRealSingleParamsView.checkEdit1.text.toString())
-                        rightRealSectionTypeParamsList.add(mPicList!!.get(currentRightRealType2))
-                        rightRealSectionTypeParamsList.add(rightRealSingleParamsView.checkEdit3.text.toString())
-                        rightRealSectionTypeParamsList.add(rightRealSingleParamsView.checkEdit4.text.toString())
-                    }
+                    rightRealSectionTypeParamsList.add(rightRealSingleParamsView.checkEdit1.text.toString())
+                    rightRealSectionTypeParamsList.add(mPicList!!.get(currentRightRealType2))
+                    rightRealSectionTypeParamsList.add(rightRealSingleParamsView.checkEdit3.text.toString())
+                    rightRealSectionTypeParamsList.add(rightRealSingleParamsView.checkEdit4.text.toString())
                 }
                 1 -> {
-                    if (rightRealDoubleParamsView.checkEdit1.text.toString().isNullOrEmpty() ||
-                        rightRealDoubleParamsView.checkEdit2.text.toString().isNullOrEmpty() ||
-                        rightRealDoubleParamsView.checkEdit3.text.toString().isNullOrEmpty() ||
-                        rightRealDoubleParamsView.checkEdit4.text.toString().isNullOrEmpty()
-                    ) {
-                        showToast("请输入 实测纵筋-双排钢筋")
-                        return@setOnClickListener
-                    } else {
-                        rightRealSectionTypeParamsList.add(rightRealDoubleParamsView.checkEdit1.text.toString())
-                        rightRealSectionTypeParamsList.add(rightRealDoubleParamsView.checkEdit2.text.toString())
-                        rightRealSectionTypeParamsList.add(rightRealDoubleParamsView.checkEdit3.text.toString())
-                        rightRealSectionTypeParamsList.add(rightRealDoubleParamsView.checkEdit4.text.toString())
-                    }
+                    rightRealSectionTypeParamsList.add(rightRealDoubleParamsView.checkEdit1.text.toString())
+                    rightRealSectionTypeParamsList.add(rightRealDoubleParamsView.checkEdit2.text.toString())
+                    rightRealSectionTypeParamsList.add(rightRealDoubleParamsView.checkEdit3.text.toString())
+                    rightRealSectionTypeParamsList.add(rightRealDoubleParamsView.checkEdit4.text.toString())
                 }
             }
+
             rightDesignSectionTypeParamsList!!.clear()
             when (currentRightDesignType) {
                 0 -> {
-                    if (rightDesignSingleParamsView.checkEdit1.text.toString().isNullOrEmpty() ||
-                        rightDesignSingleParamsView.checkEdit3.text.toString().isNullOrEmpty() ||
-                        rightDesignSingleParamsView.checkEdit4.text.toString().isNullOrEmpty()
-                    ) {
-                        showToast("请输入 设计纵筋-单排钢筋")
-                        return@setOnClickListener
-                    } else {
-                        rightDesignSectionTypeParamsList.add(rightDesignSingleParamsView.checkEdit1.text.toString())
-                        rightDesignSectionTypeParamsList.add(mPicList!!.get(currentRightDesignType2))
-                        rightDesignSectionTypeParamsList.add(rightDesignSingleParamsView.checkEdit3.text.toString())
-                        rightDesignSectionTypeParamsList.add(rightDesignSingleParamsView.checkEdit4.text.toString())
-                    }
+                    rightDesignSectionTypeParamsList.add(rightDesignSingleParamsView.checkEdit1.text.toString())
+                    rightDesignSectionTypeParamsList.add(mPicList!!.get(currentRightDesignType2))
+                    rightDesignSectionTypeParamsList.add(rightDesignSingleParamsView.checkEdit3.text.toString())
+                    rightDesignSectionTypeParamsList.add(rightDesignSingleParamsView.checkEdit4.text.toString())
                 }
                 1 -> {
-                    if (rightDesignDoubleParamsView.checkEdit1.text.toString().isNullOrEmpty() ||
-                        rightDesignDoubleParamsView.checkEdit2.text.toString().isNullOrEmpty() ||
-                        rightDesignDoubleParamsView.checkEdit3.text.toString().isNullOrEmpty() ||
-                        rightDesignDoubleParamsView.checkEdit4.text.toString().isNullOrEmpty()
-                    ) {
-                        showToast("请输入 设计纵筋-双排钢筋")
-                        return@setOnClickListener
-                    } else {
-                        rightDesignSectionTypeParamsList.add(rightDesignDoubleParamsView.checkEdit1.text.toString())
-                        rightDesignSectionTypeParamsList.add(rightDesignDoubleParamsView.checkEdit2.text.toString())
-                        rightDesignSectionTypeParamsList.add(rightDesignDoubleParamsView.checkEdit3.text.toString())
-                        rightDesignSectionTypeParamsList.add(rightDesignDoubleParamsView.checkEdit4.text.toString())
-                    }
+                    rightDesignSectionTypeParamsList.add(rightDesignDoubleParamsView.checkEdit1.text.toString())
+                    rightDesignSectionTypeParamsList.add(rightDesignDoubleParamsView.checkEdit2.text.toString())
+                    rightDesignSectionTypeParamsList.add(rightDesignDoubleParamsView.checkEdit3.text.toString())
+                    rightDesignSectionTypeParamsList.add(rightDesignDoubleParamsView.checkEdit4.text.toString())
                 }
-            }
-
-            when (currentRightRealType3) {
-                1 -> {
-                    if (rightRealView.checkCpdBeamRightRealEncrypted.checkEdit.text.toString()
-                            .isNullOrEmpty() ||
-                        rightRealView.checkCpdBeamRightRealEncrypted.checkEdit2.text.toString()
-                            .isNullOrEmpty() ||
-                        rightRealView.checkCpdBeamRightRealEncrypted.checkEdit3.text.toString()
-                            .isNullOrEmpty()
-                    ) {
-                        showToast("请输入 实测箍筋-加密区")
-                        return@setOnClickListener
-                    }
-                }
-            }
-            if (rightRealView.checkCpdBeamRightRealNonEncrypted.checkEdit.text.toString()
-                    .isNullOrEmpty() ||
-                rightRealView.checkCpdBeamRightRealNonEncrypted.checkEdit2.text.toString()
-                    .isNullOrEmpty()
-            ) {
-                showToast("请输入 实测箍筋-非加密区")
-                return@setOnClickListener
-            }
-            if (rightRealView.checkCpdBeamRightRealProtect.checkEditProtect.text.toString()
-                    .isNullOrEmpty() ||
-                rightRealView.checkCpdBeamRightRealProtect.checkEditProtect2.text.toString()
-                    .isNullOrEmpty()
-            ) {
-                showToast("请输入 实测保护层厚度")
-                return@setOnClickListener
-            }
-            if (rightRealView.checkCpdLeftRealRemarkContent.text.toString().isNullOrEmpty()) {
-                showToast("请输入 实测配筋-备注")
-                return@setOnClickListener
-            }
-
-            if(mRightRealPicSrc.isNullOrEmpty()){
-                showToast("请上传 实测配筋-图片")
-                return@setOnClickListener
-            }
-
-            if (rightDesignView.checkCpdBeamRightRealMeasured.checkEdit2.text.toString()
-                    .isNullOrEmpty() ||
-                rightDesignView.checkEdit.text.toString().isNullOrEmpty()
-            ) {
-                showToast("请输入 设计箍筋")
-                return@setOnClickListener
-            }
-
-            if (rightDesignView.checkCpdLeftRealRemarkContent.text.toString().isNullOrEmpty()) {
-                showToast("请输入 设计配筋-备注")
-                return@setOnClickListener
-            }
-
-            if(mRightDesignPicSrc.isNullOrEmpty()){
-                showToast("请上传 设计配筋-图片")
-                return@setOnClickListener
             }
 
 
@@ -739,7 +653,7 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
                 ),
                 rightRealView.checkCpdLeftRealRemarkContent.text.toString(),
                 arrayListOf(
-                    FileUtil.getFileName(mRightRealPicSrc)?:"",
+                    FileUtil.getFileName(mRightRealPicSrc) ?: "",
                     mRightRealPicSrc
                 ),
                 mTypeRightList!!.get(currentRightDesignType),
@@ -748,21 +662,130 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
                     mTypeRightList2!!.get(currentRightDesignType3),
                     mPicList!!.get(currentRightDesignType4),
                     rightDesignView.checkCpdBeamRightRealMeasured.checkEdit2.text.toString(),
-                    rightDesignView.checkEdit.text.toString()
+                    rightDesignView.checkEdit.text.toString(),
+                    rightDesignView.checkEditEncrypt.text.toString()
                 ),
                 rightDesignView.checkCpdLeftRealRemarkContent.text.toString(),
                 arrayListOf(
-                    FileUtil.getFileName(mRightDesignPicSrc)?:"",
+                    FileUtil.getFileName(mRightDesignPicSrc) ?: "",
                     mRightDesignPicSrc
-                )
+                ),
+                arrayListOf(mCheckLeftDesignStatus.toString(),mCheckRightRealStatus.toString(),mCheckRightDesignStatus.toString())
+
             )
+            LogUtils.d("保存梁损伤" + damage.toString())
             (context as CheckComponentDetectionActivity).saveDamage(damage)
         }
 
     }
 
-    fun resetView(damageV3Bean: DamageV3Bean?) {
+    fun checkLeftDesignStatus(isEnable: Boolean) {
 
+        mCheckLeftDesignStatus = isEnable
+
+        leftDesignRectangleView.checkCpdLeftRectangle1.isEnabled = isEnable
+        leftDesignRectangleView.checkCpdLeftRectangle2.isEnabled = isEnable
+
+
+        leftDesignHView.checkCpdLeftRectangle1.isEnabled = isEnable
+        leftDesignHView.checkCpdLeftRectangle2.isEnabled = isEnable
+        leftDesignHView.checkCpdLeftRectangle3.isEnabled = isEnable
+        leftDesignHView.checkCpdLeftRectangle4.isEnabled = isEnable
+
+        leftDesignTView.checkCpdLeftRectangle1.isEnabled = isEnable
+        leftDesignTView.checkCpdLeftRectangle2.isEnabled = isEnable
+        leftDesignTView.checkCpdLeftRectangle3.isEnabled = isEnable
+        leftDesignTView.checkCpdLeftRectangle4.isEnabled = isEnable
+
+        leftDesignAnotherView.checkCpdLeftDesignAnotherDescribe.isEnabled = isEnable
+        leftDesignAnotherView.checkCpdLeftDesignAnotherName.isEnabled = isEnable
+
+        leftDesignView.checkCpdLeftRealSpinner1.isEnabled = isEnable
+        leftDesignView.checkCpdLeftRealSpinner1.isClickable = isEnable
+        leftDesignView.checkCpdLeftRealSpinner2.isEnabled = isEnable
+        leftDesignView.checkCpdLeftRealSpinner2.isClickable = isEnable
+
+        leftDesignView.checkCpdLeftDesignRemarkContent.isEnabled = isEnable
+    }
+
+
+    fun checkRightRealStatus(isEnable: Boolean) {
+
+        mCheckRightRealStatus = isEnable
+
+        rightRealSingleParamsView.checkEdit1.isEnabled = isEnable
+        rightRealSingleParamsView.checkEdit3.isEnabled = isEnable
+        rightRealSingleParamsView.checkEdit4.isEnabled = isEnable
+
+        rightRealSingleParamsView.checkCpdLeftRealSpinner.isClickable = isEnable
+        rightRealSingleParamsView.checkCpdLeftRealSpinner.isEnabled = isEnable
+
+
+        rightRealDoubleParamsView.checkEdit1.isEnabled = isEnable
+        rightRealDoubleParamsView.checkEdit2.isEnabled = isEnable
+        rightRealDoubleParamsView.checkEdit3.isEnabled = isEnable
+        rightRealDoubleParamsView.checkEdit4.isEnabled = isEnable
+
+        rightRealView.checkCpdBeamRightRealMeasured.checkCpdLeftRealSpinner2.isClickable = isEnable
+        rightRealView.checkCpdBeamRightRealMeasured.checkCpdLeftRealSpinner2.isEnabled = isEnable
+
+        rightRealView.checkCpdBeamRightRealMeasured.checkCpdLeftRealSpinner3.isClickable = isEnable
+        rightRealView.checkCpdBeamRightRealMeasured.checkCpdLeftRealSpinner3.isEnabled = isEnable
+
+        rightRealView.checkCpdBeamRightRealMeasured.checkEdit2.isEnabled = isEnable
+
+        rightRealView.checkCpdBeamRightRealNonEncrypted.checkEdit.isEnabled = isEnable
+        rightRealView.checkCpdBeamRightRealNonEncrypted.checkEdit2.isEnabled = isEnable
+
+        rightRealView.checkCpdBeamRightRealEncrypted.checkEdit.isEnabled = isEnable
+        rightRealView.checkCpdBeamRightRealEncrypted.checkEdit2.isEnabled = isEnable
+        rightRealView.checkCpdBeamRightRealEncrypted.checkEdit3.isEnabled = isEnable
+
+        rightRealView.checkCpdBeamRightRealProtect.checkEditProtect.isEnabled = isEnable
+        rightRealView.checkCpdBeamRightRealProtect.checkEditProtect2.isEnabled = isEnable
+
+        rightRealView.checkCpdLeftRealRemarkContent.isEnabled = isEnable
+
+    }
+
+    //TODO hhh
+    fun checkRightDesignStatus(isEnable: Boolean) {
+
+        mCheckRightDesignStatus = isEnable
+
+        rightDesignSingleParamsView.checkEdit1.isEnabled = isEnable
+        rightDesignSingleParamsView.checkEdit3.isEnabled = isEnable
+        rightDesignSingleParamsView.checkEdit4.isEnabled = isEnable
+
+        rightDesignSingleParamsView.checkCpdLeftRealSpinner.isClickable = isEnable
+        rightDesignSingleParamsView.checkCpdLeftRealSpinner.isEnabled = isEnable
+
+        rightDesignDoubleParamsView.checkEdit1.isEnabled = isEnable
+        rightDesignDoubleParamsView.checkEdit2.isEnabled = isEnable
+        rightDesignDoubleParamsView.checkEdit3.isEnabled = isEnable
+        rightDesignDoubleParamsView.checkEdit4.isEnabled = isEnable
+
+
+        rightDesignView.checkCpdBeamRightRealMeasured.checkCpdLeftRealSpinner2.isClickable = isEnable
+        rightDesignView.checkCpdBeamRightRealMeasured.checkCpdLeftRealSpinner2.isEnabled = isEnable
+        rightDesignView.checkCpdBeamRightRealMeasured.checkCpdLeftRealSpinner3.isClickable = isEnable
+        rightDesignView.checkCpdBeamRightRealMeasured.checkCpdLeftRealSpinner3.isEnabled = isEnable
+
+        rightDesignView.checkCpdBeamRightRealMeasured.checkEdit2.isEnabled = isEnable
+
+
+        rightDesignView.checkEditEncrypt.isEnabled = isEnable
+
+
+        rightDesignView.checkEdit.isEnabled = isEnable
+
+        rightDesignView.checkCpdLeftRealRemarkContent.isEnabled = isEnable
+
+    }
+
+    fun resetView(damageV3Bean: DamageV3Bean?) {
+        LogUtils.d("resetView:///damageV3Bean" + (context as CheckComponentDetectionActivity).mCurrentDrawing!!.toString())
+        mBinding.checkCpdSubtitle1.checkEdit.setText((context as CheckComponentDetectionActivity).mCurrentDrawing!!.floorName + "梁")
         if (damageV3Bean == null) {
 
 
@@ -786,8 +809,10 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
             mRightRealPicSrc = ""
             mRightDesignPicSrc = ""
 
-            mPicLeftRealList!!.clear()
-            mPicLeftDesignList!!.clear()
+
+
+            mPicLeftRealList = ArrayList()
+            mPicLeftDesignList= ArrayList()
 
             mBinding.checkCpdSubtitle1.checkEdit.setText("")
             mBinding.checkCpdSubtitle2.content.visibility = View.VISIBLE
@@ -796,6 +821,20 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
             mBinding.checkCpdSubtitle2.checkCdpPlateMenuAxis3.setText("")
             mBinding.checkCpdSubtitle2Second.content.visibility = View.INVISIBLE
             mBinding.checkCpdSubtitle2Second.checkEdit.setText("")
+
+            leftRealView.checkCpdLeftMenu.checkCpdLeftMenu4.isChecked = false
+            leftDesignView.checkCpdLeftMenu.checkCpdLeftMenu4.isChecked = false
+
+            rightRealView.checkCpdLeftMenu.checkCpdLeftMenu4.isChecked = false
+            rightDesignView.checkCpdLeftMenu.checkCpdLeftMenu4.isChecked = false
+            rightRealView.checkCpdLeftMenu.checkCpdLeftMenu3.isChecked = true
+            rightDesignView.checkCpdLeftMenu.checkCpdLeftMenu3.isChecked = true
+
+            checkLeftDesignStatus(false)
+            checkRightDesignStatus(false)
+            checkRightRealStatus(true)
+
+
 
             leftRealView.content.visibility = View.VISIBLE
             leftRealView.checkCpdLeftRealSpinner1.setText(mTypeLeftList!!.get(0))
@@ -857,6 +896,9 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
 
 
             rightRealView.content.visibility = View.VISIBLE
+
+            rightRealView.checkCpdLeftMenu.checkCpdLeftMenu3.visibility = View.VISIBLE
+            rightDesignView.checkCpdLeftMenu.checkCpdLeftMenu3.visibility = View.VISIBLE
             rightDesignView.content.visibility = View.INVISIBLE
             rightRealView.checkCpdLeftRealDesignTv.checkCpdLeftRealSpinner2.setText(
                 mTypeRightList!!.get(
@@ -943,9 +985,15 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
             )
             rightDesignView.checkEdit.setText("")
             rightDesignView.checkCpdLeftRealRemarkContent.setText("")
-            rightDesignView.checkCpdBeamPic.setImageResource(R.color.gray)
+
+            rightDesignView.ll11.visibility = View.GONE
+            rightDesignView.checkEditEncrypt.setText("")
         } else {
 
+
+            mPicLeftRealList = damageV3Bean.beamLeftRealPicList
+
+            mPicLeftDesignList = damageV3Bean.beamLeftDesignPicList
 
 
             mBinding.checkCpdSubtitle1.checkEdit.setText(damageV3Bean.beamName)
@@ -976,36 +1024,86 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
                 mBinding.checkCpdSubtitle2Second.content.visibility = View.VISIBLE
             }
             mBinding.checkCpdSubtitle2Second.checkEdit.setText(damageV3Bean.beamAxisNote)
+
+            rightRealView.checkCpdLeftMenu.checkCpdLeftMenu3.visibility = View.VISIBLE
+            rightDesignView.checkCpdLeftMenu.checkCpdLeftMenu3.visibility = View.VISIBLE
+
+
+            if ("true".equals(damageV3Bean.beamCheckStatus!!.get(0))){
+                leftRealView.checkCpdLeftMenu.checkCpdLeftMenu4.isChecked = true
+                leftDesignView.checkCpdLeftMenu.checkCpdLeftMenu4.isChecked = true
+                checkLeftDesignStatus(true)
+            }else{
+                leftRealView.checkCpdLeftMenu.checkCpdLeftMenu4.isChecked = false
+                leftDesignView.checkCpdLeftMenu.checkCpdLeftMenu4.isChecked = false
+                checkLeftDesignStatus(false)
+            }
+
+            if ("true".equals(damageV3Bean.beamCheckStatus!!.get(1))){
+                rightRealView.checkCpdLeftMenu.checkCpdLeftMenu3.isChecked = true
+                rightDesignView.checkCpdLeftMenu.checkCpdLeftMenu3.isChecked = true
+                checkRightRealStatus(true)
+            }else{
+                checkRightRealStatus(false)
+                rightRealView.checkCpdLeftMenu.checkCpdLeftMenu3.isChecked = false
+                rightDesignView.checkCpdLeftMenu.checkCpdLeftMenu3.isChecked = false
+            }
+
+            if ("true".equals(damageV3Bean.beamCheckStatus!!.get(2))){
+                rightRealView.checkCpdLeftMenu.checkCpdLeftMenu4.isChecked = true
+                rightDesignView.checkCpdLeftMenu.checkCpdLeftMenu4.isChecked = true
+                checkRightDesignStatus(true)
+
+            }else{
+                checkRightDesignStatus(false)
+                rightRealView.checkCpdLeftMenu.checkCpdLeftMenu4.isChecked = false
+                rightDesignView.checkCpdLeftMenu.checkCpdLeftMenu4.isChecked = false
+            }
+
             leftRealView.content.visibility = View.VISIBLE
+            leftDesignView.content.visibility = View.INVISIBLE
+
+            rightRealView.content.visibility = View.VISIBLE
+            rightDesignView.content.visibility =View.INVISIBLE
+
             leftRealView.checkCpdLeftRealSpinner1.setText(damageV3Bean.beamLeftRealTypeList!!.get(0))
             leftRealView.checkCpdLeftRealSpinner1.setSelect(
                 mTypeLeftList!!.indexOf(damageV3Bean.beamLeftRealTypeList!!.get(0))
             )
 
 
-            currentLeftRealType =  mTypeLeftList!!.indexOf(damageV3Bean.beamLeftRealTypeList!!.get(0))
-            currentLeftRealType2 =  mTypeLeftList2!!.indexOf(damageV3Bean.beamLeftRealTypeList!!.get(1))
-            mPicLeftRealList!!.addAll(damageV3Bean.beamLeftRealPicList!!)
-            mPicLeftDesignList!!.addAll(damageV3Bean.beamLeftDesignPicList!!)
-            currentLeftDesignType =  mTypeLeftList!!.indexOf(damageV3Bean.beamLeftDesignTypeList!!.get(0))
-            currentLeftDesignType2 =  mTypeLeftList2!!.indexOf(damageV3Bean.beamLeftDesignTypeList!!.get(1))
+            currentLeftRealType =
+                mTypeLeftList!!.indexOf(damageV3Bean.beamLeftRealTypeList!!.get(0))
+            currentLeftRealType2 =
+                mTypeLeftList2!!.indexOf(damageV3Bean.beamLeftRealTypeList!!.get(1))
+
+            currentLeftDesignType =
+                mTypeLeftList!!.indexOf(damageV3Bean.beamLeftDesignTypeList!!.get(0))
+            currentLeftDesignType2 =
+                mTypeLeftList2!!.indexOf(damageV3Bean.beamLeftDesignTypeList!!.get(1))
 
 
             currentRightRealType = mTypeRightList!!.indexOf(damageV3Bean.beamRightRealSectionType)
-            currentRightRealType2 = mPicList!!.indexOf(damageV3Bean.beamRightRealSectionParamsList!!.get(1))
-            if (currentRightRealType2<0){
+            currentRightRealType2 =
+                mPicList!!.indexOf(damageV3Bean.beamRightRealSectionParamsList!!.get(1))
+            if (currentRightRealType2 < 0) {
                 currentRightRealType2 = 0
             }
-            currentRightRealType4 = mPicList!!.indexOf(damageV3Bean.beamRightRealStirrupsTypeList!!.get(1))
+            currentRightRealType4 =
+                mPicList!!.indexOf(damageV3Bean.beamRightRealStirrupsTypeList!!.get(1))
 
 
-            currentRightDesignType = mTypeRightList!!.indexOf(damageV3Bean.beamRightDesignSectionType)
-            currentRightDesignType2 = mPicList!!.indexOf(damageV3Bean.beamRightDesignSectionTypeParamsList!!.get(1))
-            if (currentRightDesignType2<0){
+            currentRightDesignType =
+                mTypeRightList!!.indexOf(damageV3Bean.beamRightDesignSectionType)
+            currentRightDesignType2 =
+                mPicList!!.indexOf(damageV3Bean.beamRightDesignSectionTypeParamsList!!.get(1))
+            if (currentRightDesignType2 < 0) {
                 currentRightDesignType2 = 0
             }
-            currentRightDesignType3 = mTypeRightList2!!.indexOf(damageV3Bean.beamRightDesignStirrupsTypeList!!.get(0))
-            currentRightDesignType4 = mPicList!!.indexOf(damageV3Bean.beamRightDesignStirrupsTypeList!!.get(1))
+            currentRightDesignType3 =
+                mTypeRightList2!!.indexOf(damageV3Bean.beamRightDesignStirrupsTypeList!!.get(0))
+            currentRightDesignType4 =
+                mPicList!!.indexOf(damageV3Bean.beamRightDesignStirrupsTypeList!!.get(1))
 
 
 
@@ -1017,6 +1115,8 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
                     )
                 )
             )
+
+
 
             when (damageV3Bean.beamLeftRealTypeList!!.get(1)) {
                 "矩形" -> {
@@ -1105,7 +1205,6 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
             }
 
 
-            leftDesignView.content.visibility = View.INVISIBLE
             leftDesignView.checkCpdLeftRealSpinner1.setText(
                 damageV3Bean.beamLeftDesignTypeList!!.get(
                     0
@@ -1229,11 +1328,17 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
 
 
             rightRealView.checkCpdLeftRealDesignTv.checkCpdLeftRealSpinner2.setText(damageV3Bean.beamRightRealSectionType)
-            rightRealView.checkCpdLeftRealDesignTv.checkCpdLeftRealSpinner2.setSelect(mTypeRightList!!.indexOf(damageV3Bean.beamRightRealSectionType))
+            rightRealView.checkCpdLeftRealDesignTv.checkCpdLeftRealSpinner2.setSelect(
+                mTypeRightList!!.indexOf(
+                    damageV3Bean.beamRightRealSectionType
+                )
+            )
 
 
             rightDesignView.checkCpdLeftRealDesignTv.checkCpdLeftRealSpinner2.setText(damageV3Bean.beamRightDesignSectionType)
-            rightDesignView.checkCpdLeftRealDesignTv.checkCpdLeftRealSpinner2.setSelect(mTypeRightList!!.indexOf(damageV3Bean.beamRightDesignSectionType))
+            rightDesignView.checkCpdLeftRealDesignTv.checkCpdLeftRealSpinner2.setSelect(
+                mTypeRightList!!.indexOf(damageV3Bean.beamRightDesignSectionType)
+            )
 
 
 
@@ -1281,7 +1386,7 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
                     )
                 )
             } else {
-                currentRightRealType3 =0
+                currentRightRealType3 = 0
                 rightRealView.checkCpdBeamRightRealEncrypted.content.visibility = View.GONE
                 rightRealView.checkCpdBeamRightRealEncryptedText.visibility = View.GONE
 
@@ -1328,26 +1433,62 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
                 )
             )
 
-            if (mTypeRightList!!.get(0).equals(damageV3Bean.beamRightRealSectionType)){
+            if (mTypeRightList!!.get(0).equals(damageV3Bean.beamRightRealSectionType)) {
                 rightRealSingleParamsView.content.visibility = View.VISIBLE
-                rightRealSingleParamsView.checkEdit1.setText(damageV3Bean.beamRightRealSectionParamsList!!.get(0))
-                rightRealSingleParamsView.checkEdit3.setText(damageV3Bean.beamRightRealSectionParamsList!!.get(2))
-                rightRealSingleParamsView.checkEdit4.setText(damageV3Bean.beamRightRealSectionParamsList!!.get(3))
-                rightRealSingleParamsView.checkCpdLeftRealSpinner.setSelect(mPicList!!.indexOf(damageV3Bean.beamRightRealSectionParamsList!!.get(1)))
-                rightRealSingleParamsView.checkCpdLeftRealSpinner.setText(damageV3Bean.beamRightRealSectionParamsList!!.get(1))
+                rightRealSingleParamsView.checkEdit1.setText(
+                    damageV3Bean.beamRightRealSectionParamsList!!.get(
+                        0
+                    )
+                )
+                rightRealSingleParamsView.checkEdit3.setText(
+                    damageV3Bean.beamRightRealSectionParamsList!!.get(
+                        2
+                    )
+                )
+                rightRealSingleParamsView.checkEdit4.setText(
+                    damageV3Bean.beamRightRealSectionParamsList!!.get(
+                        3
+                    )
+                )
+                rightRealSingleParamsView.checkCpdLeftRealSpinner.setSelect(
+                    mPicList!!.indexOf(
+                        damageV3Bean.beamRightRealSectionParamsList!!.get(1)
+                    )
+                )
+                rightRealSingleParamsView.checkCpdLeftRealSpinner.setText(
+                    damageV3Bean.beamRightRealSectionParamsList!!.get(
+                        1
+                    )
+                )
 
                 rightRealDoubleParamsView.content.visibility = View.INVISIBLE
                 rightRealDoubleParamsView.checkEdit1.setText("")
                 rightRealDoubleParamsView.checkEdit2.setText("")
                 rightRealDoubleParamsView.checkEdit3.setText("")
                 rightRealDoubleParamsView.checkEdit4.setText("")
-            }else{
+            } else {
 
                 rightRealDoubleParamsView.content.visibility = View.VISIBLE
-                rightRealDoubleParamsView.checkEdit1.setText(damageV3Bean.beamRightRealSectionParamsList!!.get(0))
-                rightRealDoubleParamsView.checkEdit2.setText(damageV3Bean.beamRightRealSectionParamsList!!.get(1))
-                rightRealDoubleParamsView.checkEdit3.setText(damageV3Bean.beamRightRealSectionParamsList!!.get(2))
-                rightRealDoubleParamsView.checkEdit4.setText(damageV3Bean.beamRightRealSectionParamsList!!.get(3))
+                rightRealDoubleParamsView.checkEdit1.setText(
+                    damageV3Bean.beamRightRealSectionParamsList!!.get(
+                        0
+                    )
+                )
+                rightRealDoubleParamsView.checkEdit2.setText(
+                    damageV3Bean.beamRightRealSectionParamsList!!.get(
+                        1
+                    )
+                )
+                rightRealDoubleParamsView.checkEdit3.setText(
+                    damageV3Bean.beamRightRealSectionParamsList!!.get(
+                        2
+                    )
+                )
+                rightRealDoubleParamsView.checkEdit4.setText(
+                    damageV3Bean.beamRightRealSectionParamsList!!.get(
+                        3
+                    )
+                )
 
                 rightRealSingleParamsView.content.visibility = View.INVISIBLE
                 rightRealSingleParamsView.checkEdit1.setText("")
@@ -1359,25 +1500,61 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
 
 
 
-            if (mTypeRightList!!.get(0).equals(damageV3Bean.beamRightDesignSectionType)){
+            if (mTypeRightList!!.get(0).equals(damageV3Bean.beamRightDesignSectionType)) {
                 rightDesignSingleParamsView.content.visibility = View.VISIBLE
-                rightDesignSingleParamsView.checkEdit1.setText(damageV3Bean.beamRightDesignSectionTypeParamsList!!.get(0))
-                rightDesignSingleParamsView.checkEdit3.setText(damageV3Bean.beamRightDesignSectionTypeParamsList!!.get(2))
-                rightDesignSingleParamsView.checkEdit4.setText(damageV3Bean.beamRightDesignSectionTypeParamsList!!.get(3))
-                rightDesignSingleParamsView.checkCpdLeftRealSpinner.setSelect(mPicList!!.indexOf(damageV3Bean.beamRightDesignSectionTypeParamsList!!.get(1)))
-                rightDesignSingleParamsView.checkCpdLeftRealSpinner.setText(damageV3Bean.beamRightDesignSectionTypeParamsList!!.get(1))
+                rightDesignSingleParamsView.checkEdit1.setText(
+                    damageV3Bean.beamRightDesignSectionTypeParamsList!!.get(
+                        0
+                    )
+                )
+                rightDesignSingleParamsView.checkEdit3.setText(
+                    damageV3Bean.beamRightDesignSectionTypeParamsList!!.get(
+                        2
+                    )
+                )
+                rightDesignSingleParamsView.checkEdit4.setText(
+                    damageV3Bean.beamRightDesignSectionTypeParamsList!!.get(
+                        3
+                    )
+                )
+                rightDesignSingleParamsView.checkCpdLeftRealSpinner.setSelect(
+                    mPicList!!.indexOf(
+                        damageV3Bean.beamRightDesignSectionTypeParamsList!!.get(1)
+                    )
+                )
+                rightDesignSingleParamsView.checkCpdLeftRealSpinner.setText(
+                    damageV3Bean.beamRightDesignSectionTypeParamsList!!.get(
+                        1
+                    )
+                )
 
                 rightDesignDoubleParamsView.content.visibility = View.INVISIBLE
                 rightDesignDoubleParamsView.checkEdit1.setText("")
                 rightDesignDoubleParamsView.checkEdit2.setText("")
                 rightDesignDoubleParamsView.checkEdit3.setText("")
                 rightDesignDoubleParamsView.checkEdit4.setText("")
-            }else{
+            } else {
                 rightDesignDoubleParamsView.content.visibility = View.VISIBLE
-                rightDesignDoubleParamsView.checkEdit1.setText(damageV3Bean.beamRightDesignSectionTypeParamsList!!.get(0))
-                rightDesignDoubleParamsView.checkEdit2.setText(damageV3Bean.beamRightDesignSectionTypeParamsList!!.get(1))
-                rightDesignDoubleParamsView.checkEdit3.setText(damageV3Bean.beamRightDesignSectionTypeParamsList!!.get(2))
-                rightDesignDoubleParamsView.checkEdit4.setText(damageV3Bean.beamRightDesignSectionTypeParamsList!!.get(3))
+                rightDesignDoubleParamsView.checkEdit1.setText(
+                    damageV3Bean.beamRightDesignSectionTypeParamsList!!.get(
+                        0
+                    )
+                )
+                rightDesignDoubleParamsView.checkEdit2.setText(
+                    damageV3Bean.beamRightDesignSectionTypeParamsList!!.get(
+                        1
+                    )
+                )
+                rightDesignDoubleParamsView.checkEdit3.setText(
+                    damageV3Bean.beamRightDesignSectionTypeParamsList!!.get(
+                        2
+                    )
+                )
+                rightDesignDoubleParamsView.checkEdit4.setText(
+                    damageV3Bean.beamRightDesignSectionTypeParamsList!!.get(
+                        3
+                    )
+                )
 
                 rightDesignSingleParamsView.content.visibility = View.INVISIBLE
                 rightDesignSingleParamsView.checkEdit1.setText("")
@@ -1387,18 +1564,29 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
                 rightDesignSingleParamsView.checkCpdLeftRealSpinner.setText(mPicList!!.get(0))
             }
 
-            mRightRealPicSrc = damageV3Bean.beamRightRealPic?.get(1)?:""
-            mRightDesignPicSrc = damageV3Bean.beamRightDesignPic?.get(1)?:""
+            mRightRealPicSrc = damageV3Bean.beamRightRealPic?.get(1) ?: ""
+            mRightDesignPicSrc = damageV3Bean.beamRightDesignPic?.get(1) ?: ""
 
             rightRealView.checkCpdBeamPic.setImageURI(Uri.fromFile(File(mRightRealPicSrc)))
 
-            rightDesignView.checkCpdBeamPic.setImageURI(Uri.fromFile(File(mRightDesignPicSrc)))
 
             rightDesignView.checkEdit.setText(damageV3Bean.beamRightDesignStirrupsTypeList!!.get(3))
+
+
+
+
 
             rightDesignView.checkCpdBeamRightRealMeasured.checkCpdLeftRealSpinner2.setSelect(
                 mTypeRightList2!!.indexOf(damageV3Bean.beamRightDesignStirrupsTypeList!!.get(0))
             )
+
+            if (currentRightDesignType3==1){
+                rightDesignView.ll11.visibility =View.VISIBLE
+                rightDesignView.checkEditEncrypt.setText(damageV3Bean.beamRightDesignStirrupsTypeList!!.get(4))
+            }else{
+                rightDesignView.ll11.visibility = View.GONE
+            }
+
             rightDesignView.checkCpdBeamRightRealMeasured.checkCpdLeftRealSpinner2.setText(
                 damageV3Bean.beamRightDesignStirrupsTypeList!!.get(0)
             )
@@ -1424,27 +1612,27 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
         (activity as CheckComponentDetectionActivity).choosePDF(data!!)
     }
 
-    fun setRealPicList(picList: ArrayList<String>){
+    fun setRealPicList(picList: ArrayList<String>) {
         mPicLeftRealList?.clear()
         mPicLeftRealList?.addAll(picList)
-        if (mPicLeftRealList.isNullOrEmpty()){
+        if (mPicLeftRealList.isNullOrEmpty()) {
             leftRealAnotherView.checkCpdAnotherPicStatus.setText("未绘制")
-        }else{
+        } else {
             leftRealAnotherView.checkCpdAnotherPicStatus.setText("已绘制")
         }
     }
 
-    fun setDesignPicList(picList: ArrayList<String>){
+    fun setDesignPicList(picList: ArrayList<String>) {
         mPicLeftDesignList?.clear()
         mPicLeftDesignList?.addAll(picList)
-        if (mPicLeftDesignList.isNullOrEmpty()){
+        if (mPicLeftDesignList.isNullOrEmpty()) {
             leftDesignAnotherView.checkCpdAnotherPicStatus.setText("未绘制")
-        }else{
+        } else {
             leftDesignAnotherView.checkCpdAnotherPicStatus.setText("已绘制")
         }
     }
 
-    fun openImgSelector(requestCode:Int) {
+    fun openImgSelector(requestCode: Int) {
 
         //仅拍照
         ImageSelector
@@ -1457,21 +1645,16 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
 
     }
 
-    fun setImageBitmap(filePath: String, type:Int){
-        when(type){
-            REQUEST_BEAM_REAL_TAKE_PHOTO->
-            {
+    fun setImageBitmap(filePath: String, type: Int) {
+        when (type) {
+            REQUEST_BEAM_REAL_TAKE_PHOTO -> {
                 rightRealView.checkCpdBeamPic.setImageURI(Uri.fromFile(File(filePath)))
                 mRightRealPicSrc = filePath
             }
-            REQUEST_BEAM_DESIGN_TAKE_PHOTO->
-            {
-                rightDesignView.checkCpdBeamPic.setImageURI(Uri.fromFile(File(filePath)))
-                mRightDesignPicSrc = filePath
-            }
+
         }
     }
-
-
-
 }
+
+
+

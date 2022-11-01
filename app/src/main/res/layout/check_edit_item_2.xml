@@ -25,6 +25,7 @@
         android:layout_marginLeft="@dimen/_6sdp"
         android:hint="请输入点位名称"
         android:minWidth="@dimen/_90sdp"
+        android:inputType="text"
         android:paddingLeft="@dimen/_4sdp"
         android:paddingRight="@dimen/_4sdp"
         android:minHeight="@dimen/_12sdp"

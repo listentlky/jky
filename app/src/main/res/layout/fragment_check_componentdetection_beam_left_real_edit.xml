@@ -17,6 +17,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+
+
         <include
             android:id="@+id/check_cpd_left_menu"
             layout="@layout/item_component_detection_menu"
@@ -130,7 +132,9 @@
                 android:layout_height="match_parent"
                 android:minHeight="@dimen/_50sdp"
                 android:background="@null"
-                android:paddingLeft="@dimen/_4sdp"                android:gravity="start"
+                android:inputType="text"
+                android:paddingLeft="@dimen/_4sdp"
+                android:gravity="start"
                 android:hint="请输入内容"
                 android:textSize="@dimen/_6ssp">
 

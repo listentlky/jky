@@ -23,22 +23,22 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
+
         <include
             android:id="@+id/check_cdp_plate_right_real_single"
             layout="@layout/item_component_detection_plate_right_real_measured_stirrups_edit"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/_15sdp"
-            android:layout_marginTop="@dimen/_5sdp"
+            android:layout_marginLeft="@dimen/_10sdp"
+            android:layout_marginTop="8dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@id/check_cdp_right_menu" />
-
 
         <TextView
             android:id="@+id/check_cdp_plate_right_real_encrypted_text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/_15sdp"
+            android:layout_marginLeft="@dimen/_10sdp"
             android:layout_marginTop="@dimen/_3sdp"
             android:text="长度 / 档数 = 间距"
             android:textColor="@color/blue"
@@ -64,7 +64,7 @@
             layout="@layout/item_component_detection_plate_right_real_measured_stirrups_edit"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/_15sdp"
+            android:layout_marginLeft="@dimen/_10sdp"
             android:layout_marginTop="@dimen/_5sdp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@id/first_line" />
@@ -74,7 +74,7 @@
             android:id="@+id/check_cdp_plate_right_real_encrypted_text2"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/_15sdp"
+            android:layout_marginLeft="@dimen/_10sdp"
             android:layout_marginTop="@dimen/_3sdp"
             android:text="长度 / 档数 = 间距"
             android:textColor="@color/blue"
@@ -89,7 +89,7 @@
             android:id="@+id/second_line"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginLeft="@dimen/_15sdp"
+            android:layout_marginLeft="@dimen/_10sdp"
             android:layout_marginTop="@dimen/_5sdp"
             android:layout_marginRight="@dimen/_15sdp"
             android:background="@color/gray_400"
@@ -104,7 +104,7 @@
             layout="@layout/item_component_detection_wall_right_real_protect_edit"
             android:layout_width="0dp"
             android:layout_height="@dimen/_20sdp"
-            android:layout_marginLeft="@dimen/_15sdp"
+            android:layout_marginLeft="@dimen/_10sdp"
             android:layout_marginTop="@dimen/_3sdp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@id/second_line" />
@@ -113,7 +113,7 @@
             android:id="@+id/third_line"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginLeft="@dimen/_15sdp"
+            android:layout_marginLeft="@dimen/_10sdp"
             android:layout_marginTop="@dimen/_5sdp"
             android:layout_marginRight="@dimen/_15sdp"
             android:background="@color/gray_400"
@@ -126,7 +126,7 @@
             android:id="@+id/check_cdp_plate_right_remark"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/_15sdp"
+            android:layout_marginLeft="@dimen/_10sdp"
             android:layout_marginTop="@dimen/_5sdp"
             android:text="备注"
 
@@ -140,20 +140,20 @@
             android:id="@+id/check_cdp_left_real_remark_content"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:paddingLeft="@dimen/_4sdp"
-            android:layout_marginLeft="@dimen/_15sdp"
+            android:layout_marginLeft="@dimen/_10sdp"
             android:layout_marginTop="@dimen/_2sdp"
-            android:layout_marginRight="@dimen/_10sdp"
-            android:layout_marginBottom="@dimen/_30sdp"
+            android:layout_marginBottom="@dimen/_15sdp"
             android:background="@drawable/check_gray_stroke_bg"
-            android:scrollbars="vertical"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintDimensionRatio="3:1"
-            app:layout_constraintLeft_toLeftOf="parent"
             android:gravity="start"
             android:hint="请输入内容"
+            android:inputType="textMultiLine"
+            android:paddingLeft="@dimen/_4sdp"
+            android:scrollbars="vertical"
             android:textSize="@dimen/_6ssp"
-            app:layout_constraintTop_toBottomOf="@id/check_cdp_plate_right_remark">
+            app:layout_constraintDimensionRatio="3:1"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/check_cdp_plate_right_remark"
+            app:layout_constraintVertical_bias="0.0">
 
         </EditText>
 
@@ -164,7 +164,7 @@
             android:layout_height="0dp"
             android:layout_marginLeft="@dimen/_5sdp"
             android:layout_marginRight="@dimen/_10sdp"
-            android:src="@color/gray"
+            android:src="@color/gray_400"
             android:scaleType="fitXY"
             app:layout_constraintBottom_toBottomOf="@id/check_cdp_left_real_remark_content"
             app:layout_constraintDimensionRatio="1:1"
@@ -172,7 +172,7 @@
             app:layout_constraintHorizontal_weight="1"
             app:layout_constraintLeft_toRightOf="@id/check_cdp_left_real_remark_content"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="@id/check_cdp_left_real_remark_content"
+            app:layout_constraintTop_toBottomOf="@id/check_cdp_plate_right_remark"
             app:layout_constraintVertical_bias="0.0">
 
         </ImageView>
@@ -183,7 +183,7 @@
             app:layout_constraintLeft_toLeftOf="@id/check_cdp_plate_pic"
             android:text="图片"
             android:textColor="@color/black"
-            android:textSize="@dimen/_7ssp"
+            android:textSize="@dimen/_6ssp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"></TextView>
 

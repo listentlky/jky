@@ -25,6 +25,7 @@
         android:paddingLeft="@dimen/_4sdp"
         android:paddingRight="@dimen/_4sdp"
         android:textColor="@color/black"
+        android:inputType="text"
         android:textColorHint="@color/gray_600"
         android:textSize="@dimen/_6ssp" />
 

@@ -28,6 +28,7 @@
             android:id="@+id/check_cdp_plate_left_design_tv"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
             android:layout_marginLeft="@dimen/_15sdp"
             android:layout_marginTop="@dimen/_17sdp"
             android:text="设计 板厚度"
@@ -47,6 +48,7 @@
             android:background="@drawable/check_gray_stroke_bg"
             app:layout_constraintBottom_toBottomOf="@id/check_cdp_plate_left_design_tv"
             app:layout_constraintLeft_toRightOf="@id/check_cdp_plate_left_design_tv"
+            android:inputType="numberDecimal"
             app:layout_constraintTop_toTopOf="@id/check_cdp_plate_left_design_tv">
 
         </EditText>

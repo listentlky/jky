@@ -25,6 +25,7 @@
         android:minWidth="@dimen/_25sdp"
         android:paddingLeft="@dimen/_4sdp"
         android:paddingRight="@dimen/_4sdp"
+        android:inputType="text"
         android:textColor="@color/black"
         android:textColorHint="@color/gray_600"
         android:textSize="@dimen/_6ssp" />
@@ -45,6 +46,7 @@
         android:layout_marginLeft="@dimen/_2sdp"
         android:layout_marginRight="@dimen/_2sdp"
         android:background="@drawable/check_gray_stroke_bg"
+        android:inputType="text"
         android:gravity="center_vertical"
         android:minWidth="@dimen/_25sdp"
         android:paddingLeft="@dimen/_4sdp"
@@ -72,6 +74,7 @@
         android:minWidth="@dimen/_25sdp"
         android:paddingLeft="@dimen/_4sdp"
         android:paddingRight="@dimen/_4sdp"
+        android:inputType="text"
         android:textColor="@color/black"
         android:textColorHint="@color/gray_600"
         android:textSize="@dimen/_6ssp" />
@@ -97,6 +100,7 @@
         android:minWidth="@dimen/_25sdp"
         android:paddingLeft="@dimen/_4sdp"
         android:paddingRight="@dimen/_4sdp"
+        android:inputType="text"
         android:textColor="@color/black"
         android:textColorHint="@color/gray_600"
         android:textSize="@dimen/_6ssp" />
