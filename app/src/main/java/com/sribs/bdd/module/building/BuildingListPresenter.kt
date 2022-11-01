@@ -10,6 +10,7 @@ import com.sribs.bdd.bean.BuildingMainBean
 import com.sribs.bdd.bean.BuildingModule
 import com.sribs.bdd.bean.FloorSortBean
 import com.sribs.bdd.utils.ModuleHelper
+import com.sribs.bdd.utils.UUIDUtil
 import com.sribs.bdd.v3.bean.UpdateModuleVersionBean
 import com.sribs.bdd.v3.util.LogUtils
 import com.sribs.common.bean.V3VersionBean
@@ -510,6 +511,8 @@ class BuildingListPresenter : BasePresenter(), IBuildingContrast.IBuildingListPr
                         it.fileName.equals(b.localAbsPath)
                     }
 
+                    var drawingID = UUIDUtil.getUUID(b.fileName!!)
+
                     b.damage?.forEach { d ->
 
                         when (d.type) {
@@ -530,7 +533,7 @@ class BuildingListPresenter : BasePresenter(), IBuildingContrast.IBuildingListPr
                                 d.type ?: "",
                                 Gson().toJson(d),
                                 resId?.get(0)?.resId ?: "",
-                                b.drawingID!!,
+                                drawingID,
                                 b.fileName ?: "",
                                 b.floorName ?: "",
                                 inspectorList,
@@ -544,7 +547,7 @@ class BuildingListPresenter : BasePresenter(), IBuildingContrast.IBuildingListPr
                     V3UploadDrawingReq.add(
                         V3UploadDrawingReq(
                             if (it.buildingRemoteId.isNullOrEmpty()) it.buildingUUID!! else it.buildingRemoteId!!,
-                            b.drawingID!!,
+                            drawingID,
                             b.fileName!!,
                             b.fileType!!,
                             "",
@@ -572,6 +575,8 @@ class BuildingListPresenter : BasePresenter(), IBuildingContrast.IBuildingListPr
                         var resId = res?.filter {
                             it.fileName.equals(bbb.localAbsPath)
                         }
+
+                        var drawingID = UUIDUtil.getUUID(bbb.fileName!!)
 
                         bbb.damage?.forEach { ddd ->
 
@@ -675,7 +680,7 @@ class BuildingListPresenter : BasePresenter(), IBuildingContrast.IBuildingListPr
                                     ddd.type ?: "",
                                     Gson().toJson(ddd),
                                     resId?.get(0)?.resId ?: "",
-                                    bbb.drawingID!!,
+                                    drawingID,
                                     bbb.fileName ?: "",
                                     bbb.floorName ?: "",
                                     inspectorList,
@@ -689,7 +694,7 @@ class BuildingListPresenter : BasePresenter(), IBuildingContrast.IBuildingListPr
                         V3UploadDrawingReq.add(
                             V3UploadDrawingReq(
                                 if (it.buildingRemoteId.isNullOrEmpty()) it.buildingUUID!! else it.buildingRemoteId!!,
-                                bbb.drawingID!!,
+                                drawingID,
                                 bbb.fileName!!,
                                 bbb.fileType!!,
                                 cc.floorId!!,
@@ -735,10 +740,12 @@ class BuildingListPresenter : BasePresenter(), IBuildingContrast.IBuildingListPr
                 it.fileName.equals(drawingV3Bean.localAbsPath)
             }
 
+            var drawingID = UUIDUtil.getUUID(drawingV3Bean.fileName!!)
+
             V3UploadDrawingReq.add(
                 V3UploadDrawingReq(
                     if (bean.remoteId.isNullOrEmpty()) bean.bldUUID!! else bean.remoteId!!,
-                    drawingV3Bean.drawingID!!,
+                    drawingID,
                     drawingV3Bean.fileName!!,
                     drawingV3Bean.fileType!!,
                     "",
@@ -765,10 +772,12 @@ class BuildingListPresenter : BasePresenter(), IBuildingContrast.IBuildingListPr
                     ff.fileName.equals(dd.localAbsPath)
                 }
 
+                var drawingID = UUIDUtil.getUUID(dd.fileName!!)
+
                 V3UploadDrawingReq.add(
                     V3UploadDrawingReq(
                         if (bean.remoteId.isNullOrEmpty()) bean.bldUUID!! else bean.remoteId!!,
-                        dd.drawingID!!,
+                        drawingID,
                         dd.fileName!!,
                         dd.fileType!!,
                         floorBean.floorId!!,

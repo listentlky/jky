@@ -50,7 +50,9 @@ class CheckRHDiffPresenter : BasePresenter(), ICheckRHDiffContrast.ICheckRHDiffP
                     })
                     LogUtils.d("获取到该模块下所有数据 " + list.toString())
                     mView?.onModuleInfo(list)
+                    dispose()
                 }, {
+                    dispose()
                     mView?.onMsg(it.toString())
                     LogUtils.d("获取到该模块下数据失败 ${it}")
                 })

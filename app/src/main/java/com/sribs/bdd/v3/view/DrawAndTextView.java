@@ -6,6 +6,7 @@ import android.graphics.Point;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.MotionEvent;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -84,13 +85,13 @@ public class DrawAndTextView extends RelativeLayout {
         mMarkView.setGravity(Gravity.CENTER);
         LayoutParams textParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         textParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
-        LogUtils.INSTANCE.d("getHeight(): " + getHeight());
         textParams.topMargin = getHeight()==0?mTextViewHeight / 4:getHeight()/4;
         addView(mMarkView, textParams);
 
     }
 
     public void setMarkView(String text){
+
         if(mMarkView != null){
             mMarkView.setText(text);
             LayoutParams textParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);

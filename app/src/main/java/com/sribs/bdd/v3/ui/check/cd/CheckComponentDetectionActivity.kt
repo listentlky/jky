@@ -285,15 +285,56 @@ class CheckComponentDetectionActivity : BaseActivity(), ICheckCDContrast.ICheckC
         val damageType = view.findViewById<TextView>(R.id.damage_type)
         val damageText = view.findViewById<TextView>(R.id.damage_text)
         damageType.text = ""+damageInfo.type
+
         when(damageInfo.type){
             "梁"->{
-                damageText.text = damageInfo.beamName
+
+                var damageAxisNote = damageInfo.beamAxisNote
+                if(damageAxisNote.isNullOrEmpty()){
+                    damageInfo.beamAxisNoteList?.forEachIndexed { index, s ->
+                        if(index == 0){
+                            damageAxisNote+=s
+                        }else if(index == 1){
+                            damageAxisNote+="/"+s
+                        }else{
+                            damageAxisNote+="-"+s
+                        }
+                    }
+                }
+
+                damageText.text = damageInfo.beamName+" "+damageAxisNote
             }
             "柱"->{
-                damageText.text = damageInfo.columnName
+
+                var damageAxisNote = damageInfo.columnAxisNote
+                if(damageAxisNote.isNullOrEmpty()){
+                    damageInfo.columnAxisNoteList?.forEachIndexed { index, s ->
+                        if(index == 0){
+                            damageAxisNote+=s
+                        }else{
+                            damageAxisNote+="/"+s
+                        }
+                    }
+                }
+
+                damageText.text = damageInfo.columnName+" "+damageAxisNote
             }
             "板","墙"->{
-                damageText.text = damageInfo.plateName
+
+                var damageAxisNote = damageInfo.axisSingleNote
+                if(damageAxisNote.isNullOrEmpty()){
+                    damageInfo.axisPlateNoteList?.forEachIndexed { index, s ->
+                        if(index == 0){
+                            damageAxisNote+=s
+                        }else if(index == 1){
+                            damageAxisNote+="/"+s
+                        }else{
+                            damageAxisNote+="-"+s
+                        }
+                    }
+                }
+
+                damageText.text = damageInfo.plateName+" "+damageAxisNote
             }
         }
         var size = resources.getDimensionPixelSize(R.dimen._30sdp)

@@ -486,6 +486,8 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
                     it.fileName.equals(b.localAbsPath)
                 }
 
+                var drawingID = UUIDUtil.getUUID(b.fileName!!)
+
                 b.damage?.forEach { d ->
 
                     when (d.type) {
@@ -506,7 +508,7 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
                             d.type ?: "",
                             Gson().toJson(d),
                             resId?.get(0)?.resId ?: "",
-                            b.drawingID!!,
+                            drawingID,
                             b.fileName ?: "",
                             b.floorName ?: "",
                             inspectorList,
@@ -520,7 +522,7 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
                 V3UploadDrawingReq.add(
                     V3UploadDrawingReq(
                         if (bean.buildingRemoteId.isNullOrEmpty()) bean.buildingUUID!! else bean.buildingRemoteId!!,
-                        b.drawingID!!,
+                        drawingID,
                         b.fileName!!,
                         b.fileType!!,
                         "",
@@ -548,6 +550,8 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
                     var resId = res?.filter {
                         it.fileName.equals(bbb.localAbsPath)
                     }
+
+                    var drawingID = UUIDUtil.getUUID(bbb.fileName!!)
 
                     bbb.damage?.forEach { ddd ->
 
@@ -651,7 +655,7 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
                                 ddd.type ?: "",
                                 Gson().toJson(ddd),
                                 resId?.get(0)?.resId ?: "",
-                                bbb.drawingID!!,
+                                drawingID,
                                 bbb.fileName ?: "",
                                 bbb.floorName ?: "",
                                 inspectorList,
@@ -665,7 +669,7 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
                     V3UploadDrawingReq.add(
                         V3UploadDrawingReq(
                             if (bean.buildingRemoteId.isNullOrEmpty()) bean.buildingUUID!! else bean.buildingRemoteId!!,
-                            bbb.drawingID!!,
+                            drawingID,
                             bbb.fileName!!,
                             bbb.fileType!!,
                             cc.floorId!!,
@@ -1377,16 +1381,18 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
         remoteId: String?,
         projectName: String,
         buildingName: String,
-        moduleName: String?,
+     //   moduleName: String?,
+    moduleNameList:ArrayList<String>
     ) {
-        LogUtils.d("创建本地模块 ")
+        LogUtils.d("创建本地模块 "+moduleNameList)
+
+        if(moduleNameList.size<=0){
+            return
+        }
+
         /**
          * 查询copy楼栋下的图纸
          */
-        cacheRootDir = FileUtil.getDrawingCacheRootDir(mView!!.getContext()!!)
-        mCurDrawingsDir =
-            "/" + ModuleHelper.DRAWING_CACHE_FOLDER + "/" + projectName + "/" + buildingName + "/" + moduleName + "/"
-
         //页面数据
         var cc = v3BuildingModuleDbBean()
         var mModuleUUID: String? = ""
@@ -1398,7 +1404,100 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
         mDb.getLocalBuildingOnce(buildingId).toObservable()
             .subscribeOn(Schedulers.computation())
             .observeOn(Schedulers.computation())
+            .subscribe({
+                moduleNameList.forEach { moduleName->
+
+                    var  cacheRootDir = FileUtil.getDrawingCacheRootDir(mView!!.getContext()!!)
+                    var  mCurDrawingsDir =
+                        "/" + ModuleHelper.DRAWING_CACHE_FOLDER + "/" + projectName + "/" + buildingName + "/" + moduleName + "/"
+
+                    if(!isCopyFloorDrawing(moduleName)){
+                        it[0].drawing?.forEachIndexed { index, item ->
+                            item.drawingID = UUIDUtil.getUUID(item.fileName!!)
+                            var cacheFileParent = File(cacheRootDir + mCurDrawingsDir + index)
+                            cacheFileParent.mkdirs()
+                            var cacheFile = File(cacheFileParent, item.fileName)
+                            LogUtils.d("当前缓存地址: " + cacheFile.absolutePath)
+                            FileUtil.copyTo(File(item.localAbsPath), cacheFile)
+                            item.localAbsPath = cacheFile.absolutePath
+                        }
+                    }
+
+                    LogUtils.d("查询楼： " + it)
+                    mModuleUUID = UUIDUtil.getUUID(moduleName!!)
+                    mInspectors = it[0].inspectorName
+                    mLeader = it[0].leader
+                    aboveGroundNumber = it[0].aboveGroundNumber
+                    underGroundNumber = it[0].underGroundNumber
+
+                    cc.id = -1
+                    cc.uuid = mModuleUUID
+                    cc.projectUUID = projectUUID
+                    cc.projectId = projectId
+                    cc.buildingUUID = buildingUUID
+                    cc.buildingId = buildingId
+                    cc.remoteId = remoteId
+                    cc.moduleName = moduleName
+                    cc.drawings = if(isCopyFloorDrawing(moduleName)) ArrayList() else it[0].drawing
+                    cc.inspectors = mInspectors
+                    cc.leaderId = Dict.getLeaderId(mLeader!!)
+                    cc.leaderName = mLeader
+                    cc.createTime = TimeUtil.YMD_HMS.format(Date())
+                    cc.updateTime = TimeUtil.YMD_HMS.format(Date())
+                    cc.aboveGroundNumber = aboveGroundNumber
+                    cc.underGroundNumber = underGroundNumber
+                    cc.superiorVersion = it[0].version
+                    cc.version = System.currentTimeMillis()
+                    cc.isChanged = 1
+
+                    LogUtils.d("查询到楼栋下面的数据包装进 model表 : " + cc)
+                    mDb.updatev3BuildingModule(cc)
+                        .subscribeOn(Schedulers.computation())
+                        .observeOn(Schedulers.computation())
+                        .subscribe({
+                            LogUtils.d("本地model创建成功 " + it+" ; "+moduleName)
+                            dispose()
+                            if (isCopyFloorDrawing(moduleName)) {
+                                createModuleFloor(
+                                    it,
+                                    mModuleUUID!!,
+                                    moduleName!!,
+                                    projectId,
+                                    projectUUID,
+                                    buildingId,
+                                    buildingUUID,
+                                    remoteId,
+                                    mInspectors,
+                                    mLeader,
+                                    aboveGroundNumber,
+                                    underGroundNumber,
+                                    cacheRootDir,
+                                    mCurDrawingsDir
+                                )
+                            }
+                        },{
+
+                        })
+                }
+
+
+
+            },{
+
+            })
+
+
+
+
+     /*   mDb.getLocalBuildingOnce(buildingId).toObservable()
+            .subscribeOn(Schedulers.computation())
+            .observeOn(Schedulers.computation())
             .flatMap {
+
+                var  cacheRootDir = FileUtil.getDrawingCacheRootDir(mView!!.getContext()!!)
+                var  mCurDrawingsDir =
+                    "/" + ModuleHelper.DRAWING_CACHE_FOLDER + "/" + projectName + "/" + buildingName + "/" + moduleName + "/"
+
                 it[0].drawing?.forEachIndexed { index, item ->
                     item.drawingID = UUIDUtil.getUUID(item.fileName!!)
                     var cacheFileParent = File(cacheRootDir + mCurDrawingsDir + index)
@@ -1443,7 +1542,7 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
             .subscribeOn(Schedulers.computation())
             .observeOn(Schedulers.computation())
             .subscribe({
-                LogUtils.d("本地model创建成功 " + it)
+                LogUtils.d("本地model创建成功 " + it+" ; "+moduleName)
                 if (isCopyFloorDrawing(moduleName)) {
                     createModuleFloor(
                         it,
@@ -1457,12 +1556,12 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
                         mInspectors,
                         mLeader,
                         aboveGroundNumber,
-                        underGroundNumber
+                        underGroundNumber,
                     )
                 }
             }, {
                 LogUtils.d("本地楼层model创建失败 : " + it)
-            })
+            })*/
     }
 
     fun isCopyFloorDrawing(moduleName: String?): Boolean {
@@ -1486,9 +1585,11 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
         mInspectors: String?,
         mLeader: String?,
         aboveGroundNumber: Int?,
-        underGroundNumber: Int?
+        underGroundNumber: Int?,
+        cacheRootDir:String,
+        mCurDrawingsDir:String
     ) {
-        LogUtils.d("copy 层关系图纸")
+        LogUtils.d("copy 层关系图纸: ${moduleName} ${moduleId}")
 
         mDb.getLocalFloorsInTheBuilding(buildingId).toObservable()
             .subscribeOn(Schedulers.computation())
@@ -1530,6 +1631,8 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
                 })
                 LogUtils.d("查询包装 model楼层表 : " + floorList)
 
+                var index = 0
+
                 Observable.fromIterable(floorList)
                     .subscribeOn(Schedulers.computation())
                     .observeOn(Schedulers.computation())
@@ -1537,6 +1640,9 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
                         mDb.updatev3ModuleFloor(it)
                     }.observeOn(AndroidSchedulers.mainThread())
                     .subscribe({
+                        if(index == floorList.size){
+                            dispose()
+                        }
                         LogUtils.d("存储到model 楼层表 : " + it)
                     }, {
 

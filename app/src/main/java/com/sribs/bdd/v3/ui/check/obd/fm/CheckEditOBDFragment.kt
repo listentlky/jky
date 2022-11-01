@@ -24,7 +24,7 @@ import java.text.DecimalFormat
 
 
 @Route(path = ARouterPath.CHECK_OBLIQUE_DEFORMATION_Edit_FRAGMENT)
-class CheckEditOBDFragment : BaseFragment(R.layout.fragment_check_obliquedeformation_edit){
+class CheckEditOBDFragment : BaseFragment(R.layout.fragment_check_obliquedeformation_edit) {
 
     private val mBinding: FragmentCheckObliquedeformationEditBinding by bindView()
 
@@ -38,7 +38,7 @@ class CheckEditOBDFragment : BaseFragment(R.layout.fragment_check_obliquedeforma
      */
     var mAddAnnotReF: Long = -1L
 
-    var pointScalePath:String?= ""
+    var pointScalePath: String? = ""
 
     override fun deinitView() {
 
@@ -59,18 +59,21 @@ class CheckEditOBDFragment : BaseFragment(R.layout.fragment_check_obliquedeforma
         mBinding.checkEditH1.checkEdit.addTextChangedListener {
             LogUtils.d(" mBinding.checkEditH1.checkEdit：" + it)
             if (it.isNullOrEmpty()) {
-                if(mBinding.checkEditQx1.checkEdit.text.isNullOrEmpty()) {
+                if (mBinding.checkEditQx1.checkEdit.text.isNullOrEmpty()) {
                     mBinding.checkObdQx1Hint.text = ("倾斜量/测量高度1=斜率‰")
-                }else{
-                    mBinding.checkObdQx1Hint.text = (""+mBinding.checkEditQx1.checkEdit.text.toString()+"/测量高度1=斜率‰")
+                } else {
+                    mBinding.checkObdQx1Hint.text =
+                        ("" + mBinding.checkEditQx1.checkEdit.text.toString() + "/测量高度1=斜率‰")
                 }
             } else if (mBinding.checkEditQx1.checkEdit.text.isNullOrEmpty()) {
                 mBinding.checkObdQx1Hint.text = ("倾斜量/" + it + "=斜率‰")
             } else {
                 mBinding.checkObdQx1Hint.text =
-                    (""+(mBinding.checkEditQx1.checkEdit.text.toString().toDouble()) + "/" + it
-                            + "=" + getNoMoreThanTwoDigits((mBinding.checkEditQx1.checkEdit.text.toString()
-                        .toDouble()) / it.toString().toDouble()) + "‰")
+                    ("" + (mBinding.checkEditQx1.checkEdit.text.toString().toDouble()) + "/" + it
+                            + "=" + getNoMoreThanTwoDigits(
+                        (mBinding.checkEditQx1.checkEdit.text.toString()
+                            .toDouble()) / it.toString().toDouble()
+                    ) + "‰")
             }
         }
 
@@ -84,56 +87,65 @@ class CheckEditOBDFragment : BaseFragment(R.layout.fragment_check_obliquedeforma
         mBinding.checkEditH2.checkEdit.addTextChangedListener {
             LogUtils.d(" mBinding.checkEditH2.checkEdit：" + it)
             if (it.isNullOrEmpty()) {
-                if(mBinding.checkEditQx2.checkEdit.text.isNullOrEmpty()) {
+                if (mBinding.checkEditQx2.checkEdit.text.isNullOrEmpty()) {
                     mBinding.checkObdQx2Hint.text = ("倾斜量/测量高度2=斜率‰")
-                }else{
-                    mBinding.checkObdQx2Hint.text = (""+mBinding.checkEditQx2.checkEdit.text.toString()+"/测量高度2=斜率%")
+                } else {
+                    mBinding.checkObdQx2Hint.text =
+                        ("" + mBinding.checkEditQx2.checkEdit.text.toString() + "/测量高度2=斜率%")
                 }
             } else if (mBinding.checkEditQx2.checkEdit.text.isNullOrEmpty()) {
                 mBinding.checkObdQx2Hint.text = ("倾斜量/" + it + "=斜率‰")
             } else {
                 mBinding.checkObdQx2Hint.text =
-                    (""+mBinding.checkEditQx2.checkEdit.text.toString() + "/" + it
-                            + "=" + getNoMoreThanTwoDigits((mBinding.checkEditQx2.checkEdit.text.toString()
-                        .toDouble()) / it.toString().toDouble()) + "‰")
+                    ("" + mBinding.checkEditQx2.checkEdit.text.toString() + "/" + it
+                            + "=" + getNoMoreThanTwoDigits(
+                        (mBinding.checkEditQx2.checkEdit.text.toString()
+                            .toDouble()) / it.toString().toDouble()
+                    ) + "‰")
             }
         }
 
         mBinding.checkEditQx1.checkEdit.addTextChangedListener {
             LogUtils.d(" mBinding.checkEditQx1.checkEdit：" + it)
             if (it.isNullOrEmpty()) {
-                if(mBinding.checkEditH1.checkEdit.text.isNullOrEmpty()){
+                if (mBinding.checkEditH1.checkEdit.text.isNullOrEmpty()) {
                     mBinding.checkObdQx1Hint.text = ("倾斜量/测量高度1=斜率‰")
-                }else{
-                    mBinding.checkObdQx1Hint.text = ("倾斜量/"+mBinding.checkEditH1.checkEdit.text.toString()+"=斜率‰")
+                } else {
+                    mBinding.checkObdQx1Hint.text =
+                        ("倾斜量/" + mBinding.checkEditH1.checkEdit.text.toString() + "=斜率‰")
                 }
             } else if (mBinding.checkEditH1.checkEdit.text.isNullOrEmpty()) {
-                mBinding.checkObdQx1Hint.text =(""+it.toString() + "/测量高度1" + "=斜率‰")
+                mBinding.checkObdQx1Hint.text = ("" + it.toString() + "/测量高度1" + "=斜率‰")
             } else {
                 mBinding.checkObdQx1Hint.text =
-                    (""+it.toString() + "/" + mBinding.checkEditH1.checkEdit.text.toString()
-                            + "=" + getNoMoreThanTwoDigits((it.toString()
-                        .toDouble()) / mBinding.checkEditH1.checkEdit.text.toString()
-                        .toDouble()) + "‰")
+                    ("" + it.toString() + "/" + mBinding.checkEditH1.checkEdit.text.toString()
+                            + "=" + getNoMoreThanTwoDigits(
+                        (it.toString()
+                            .toDouble()) / mBinding.checkEditH1.checkEdit.text.toString()
+                            .toDouble()
+                    ) + "‰")
             }
         }
 
         mBinding.checkEditQx2.checkEdit.addTextChangedListener {
             LogUtils.d(" mBinding.checkEditQx2.checkEdit：" + it)
             if (it.isNullOrEmpty()) {
-                if(mBinding.checkEditH2.checkEdit.text.isNullOrEmpty()){
+                if (mBinding.checkEditH2.checkEdit.text.isNullOrEmpty()) {
                     mBinding.checkObdQx2Hint.text = ("倾斜量/测量高度2=斜率‰")
-                }else{
-                    mBinding.checkObdQx2Hint.text = ("倾斜量/"+mBinding.checkEditH2.checkEdit.text.toString()+"=斜率‰")
+                } else {
+                    mBinding.checkObdQx2Hint.text =
+                        ("倾斜量/" + mBinding.checkEditH2.checkEdit.text.toString() + "=斜率‰")
                 }
             } else if (mBinding.checkEditH2.checkEdit.text.isNullOrEmpty()) {
-                mBinding.checkObdQx2Hint.text = (""+it.toString() + "/测量高度2" + "=斜率‰")
+                mBinding.checkObdQx2Hint.text = ("" + it.toString() + "/测量高度2" + "=斜率‰")
             } else {
                 mBinding.checkObdQx2Hint.text =
-                    (""+it.toString() + "/" + mBinding.checkEditH2.checkEdit.text.toString()
-                            + "=" + getNoMoreThanTwoDigits((it.toString()
-                        .toDouble()) / mBinding.checkEditH2.checkEdit.text.toString()
-                        .toDouble()) + "‰")
+                    ("" + it.toString() + "/" + mBinding.checkEditH2.checkEdit.text.toString()
+                            + "=" + getNoMoreThanTwoDigits(
+                        (it.toString()
+                            .toDouble()) / mBinding.checkEditH2.checkEdit.text.toString()
+                            .toDouble()
+                    ) + "‰")
             }
         }
 
@@ -189,9 +201,9 @@ class CheckEditOBDFragment : BaseFragment(R.layout.fragment_check_obliquedeforma
          */
         mBinding.checkObdConfirm.setOnClickListener {
 
-            LogUtils.d("获取旋转角度"+ mBinding.checkObdUiCaptureView.content.rotation)
+            LogUtils.d("获取旋转角度" + mBinding.checkObdUiCaptureView.content.rotation)
 
-            LogUtils.d("获取旋转角度22"+ mBinding.checkObdUiCaptureView.content2.rotation)
+            LogUtils.d("获取旋转角度22" + mBinding.checkObdUiCaptureView.content2.rotation)
 
             if (mBinding.checkObdOnlyRadio.isSelected) {
                 if (mBinding.checkEditH1.checkEdit.text.isNullOrEmpty()) {
@@ -224,25 +236,30 @@ class CheckEditOBDFragment : BaseFragment(R.layout.fragment_check_obliquedeforma
                 showToast("请输入点位名称")
                 return@setOnClickListener
             }
-          /*  if (mBinding.checkObdHintText.text.isNullOrEmpty()) {
-                showToast("请添加房屋倾斜点备注")
-                return@setOnClickListener
-            }*/
+            /*  if (mBinding.checkObdHintText.text.isNullOrEmpty()) {
+                  showToast("请添加房屋倾斜点备注")
+                  return@setOnClickListener
+              }*/
             mAddAnnotReF = (activity as CheckObliqueDeformationActivity).mCurrentAddAnnotReF
 
-            if((activity as CheckObliqueDeformationActivity).addPDFDamageMark &&
+            if ((activity as CheckObliqueDeformationActivity).addPDFDamageMark &&
                 !(activity as CheckObliqueDeformationActivity).isEditDamage &&
                 (activity as CheckObliqueDeformationActivity).scaleBitmap != null
-                    ){
+            ) {
                 var cacheRootDir: String = FileUtil.getDrawingCacheRootDir(context!!)
 
                 var mCurDrawingsDir =
                     "/" + ModuleHelper.DRAWING_CACHE_FOLDER + "/" + (activity as CheckObliqueDeformationActivity).mProjectName +
-                 "/" + (activity as CheckObliqueDeformationActivity).mBldName + "倾斜测量/damage/点位"
+                            "/" + (activity as CheckObliqueDeformationActivity).mBldName + "倾斜测量/damage/点位"
 
-                var name =  mBinding.checkEditPoint.checkEdit.text.toString()+System.currentTimeMillis()+".jpg";
-                pointScalePath = File(cacheRootDir+mCurDrawingsDir,name).absolutePath
-                FileUtil.saveBitmap((activity as CheckObliqueDeformationActivity).scaleBitmap!!,File(cacheRootDir+mCurDrawingsDir),name)
+                var name = mBinding.checkEditPoint.checkEdit.text.toString()
+                    .replace(" ", "") + System.currentTimeMillis() + ".jpg";
+                pointScalePath = File(cacheRootDir + mCurDrawingsDir, name).absolutePath
+                FileUtil.saveBitmap(
+                    (activity as CheckObliqueDeformationActivity).scaleBitmap!!,
+                    File(cacheRootDir + mCurDrawingsDir),
+                    name
+                )
                 (activity as CheckObliqueDeformationActivity).scaleBitmap?.recycle()
             }
 
@@ -256,22 +273,32 @@ class CheckEditOBDFragment : BaseFragment(R.layout.fragment_check_obliquedeforma
                 if (mDamageCreateTime < 0) System.currentTimeMillis() else mDamageCreateTime,
                 ((activity as CheckObliqueDeformationActivity)).mGuideText,
                 ((activity as CheckObliqueDeformationActivity)).mGuideRotate,
-                if(pointScalePath.isNullOrEmpty()) ArrayList() else arrayListOf(FileUtil.getFileName(pointScalePath!!)?:"",pointScalePath!!),
-                if(mBinding.checkObdOnlyRadio.isSelected) 1 else 2,
+                if (pointScalePath.isNullOrEmpty()) ArrayList() else arrayListOf(
+                    FileUtil.getFileName(
+                        pointScalePath!!
+                    ) ?: "", pointScalePath!!
+                ),
+                if (mBinding.checkObdOnlyRadio.isSelected) 1 else 2,
                 mBinding.checkEditPoint.checkEdit.text.toString(),
                 mBinding.checkEditH1.checkEdit.text.toString(),
                 mBinding.checkEditH2.checkEdit.text.toString(),
                 mBinding.checkEditQx1.checkEdit.text.toString(),
                 mBinding.checkEditQx2.checkEdit.text.toString(),
-                mBinding.checkObdUiCaptureView.content1.oriRotation%360,
-                mBinding.checkObdUiCaptureView.content2.oriRotation%360,
+                mBinding.checkObdUiCaptureView.content1.oriRotation % 360,
+                mBinding.checkObdUiCaptureView.content2.oriRotation % 360,
+                getDirection((mBinding.checkObdUiCaptureView.content1.oriRotation % 360).toInt()),
+                getDirection((mBinding.checkObdUiCaptureView.content2.oriRotation % 360).toInt()),
+                mBinding.checkObdQx1Hint.text.toString().split("=")[1],
+                if (mBinding.checkObdDoubleRadio.isSelected) mBinding.checkObdQx2Hint.text.toString()
+                    .split("=")[1] else "",
             )
 
-            var layout:View
+            var layout: View
             if (mBinding.checkObdOnlyRadio.isSelected) {
 
-                layout= LayoutInflater.from(activity).inflate(R.layout.damage_mark_index_layout_2, null)
-                val drawAndTextView = layout.findViewById< (DrawAndTextView)>(R.id.content_1)
+                layout =
+                    LayoutInflater.from(activity).inflate(R.layout.damage_mark_index_layout_2, null)
+                val drawAndTextView = layout.findViewById<(DrawAndTextView)>(R.id.content_1)
 
                 val content = layout.findViewById<TextView>(R.id.point_text)
 
@@ -282,10 +309,11 @@ class CheckEditOBDFragment : BaseFragment(R.layout.fragment_check_obliquedeforma
                 drawAndTextView.setMarkView("倾斜1")
                 drawAndTextView.addTopView(mBinding.checkObdQx1Hint.text.toString().split("=")[1])
 
-            }else{
-                layout= LayoutInflater.from(activity).inflate(R.layout.damage_mark_index_layout_3, null)
-                val drawAndTextView = layout.findViewById< (DrawAndTextView)>(R.id.content_1)
-                val drawAndTextView2 = layout.findViewById< (DrawAndTextView)>(R.id.content_2)
+            } else {
+                layout =
+                    LayoutInflater.from(activity).inflate(R.layout.damage_mark_index_layout_3, null)
+                val drawAndTextView = layout.findViewById<(DrawAndTextView)>(R.id.content_1)
+                val drawAndTextView2 = layout.findViewById<(DrawAndTextView)>(R.id.content_2)
                 val content = layout.findViewById<TextView>(R.id.point_text)
 
                 content.text = mBinding.checkEditPoint.checkEdit.text
@@ -302,12 +330,55 @@ class CheckEditOBDFragment : BaseFragment(R.layout.fragment_check_obliquedeforma
                 drawAndTextView2.addTopView(mBinding.checkObdQx2Hint.text.toString().split("=")[1])
 
             }
-            (context as CheckObliqueDeformationActivity).saveDamage(damage,layout)
 
-            }
+            (context as CheckObliqueDeformationActivity).saveDamage(damage, layout)
 
         }
 
+    }
+
+
+    /**
+     * 转换方向
+     */
+    fun getDirection(direction: Int): String {
+
+        if (direction > 0) {
+            if (direction < 90) {
+                return "东北"+direction+"°"
+            } else if (direction == 90) {
+                return "东"
+            } else if (direction > 90 && direction < 180) {
+                return "东南"+direction+"°"
+            }else if(direction == 180){
+                return "南"
+            }else if(direction > 180 && direction < 270){
+                return "西南"+(360-direction)+"°"
+            }else if(direction == 270){
+                return "西"
+            }else if(direction > 270 && direction < 360){
+                return "西北"+(360-direction)+"°"
+            }
+        } else if (direction < 0) {
+            var direction2 = Math.abs(direction)
+            if (direction2 < 90) {
+                return "西北"+direction2+"°"
+            } else if (direction2 == 90) {
+                return "西"
+            } else if (direction2 > 90 && direction2 < 180) {
+                return "西南"+direction2+"°"
+            }else if(direction2 == 180){
+                return "南"
+            }else if(direction2 > 180 && direction2 < 270){
+                return "东南"+(360-direction2)+"°"
+            }else if(direction2 == 270){
+                return "东"
+            }else if(direction2 > 270 && direction2 < 360){
+                return "东北"+(360-direction2)+"°"
+            }
+        }
+        return "北"
+    }
 
     /**
      * 保留两位小数
@@ -324,7 +395,8 @@ class CheckEditOBDFragment : BaseFragment(R.layout.fragment_check_obliquedeforma
     fun resetView(damageV3Bean: DamageV3Bean?) {
         LogUtils.d("resetView " + damageV3Bean)
 
-        mBinding.checkObdIndex.text="当前图纸: "+(context as CheckObliqueDeformationActivity).mCurrentPDFName
+        mBinding.checkObdIndex.text =
+            "当前图纸: " + (context as CheckObliqueDeformationActivity).mCurrentPDFName
         if (damageV3Bean == null) {
             mBinding.checkObdOnlyRadio.isSelected = false
             mBinding.checkObdDoubleRadio.isSelected = true
@@ -342,12 +414,10 @@ class CheckEditOBDFragment : BaseFragment(R.layout.fragment_check_obliquedeforma
             mBinding.checkObdHintText.setText("")
             mDamageCreateTime = -1L
 
-            LogUtils.d("111111"+(context as CheckObliqueDeformationActivity).scaleBitmap)
-
-            if((context as CheckObliqueDeformationActivity).scaleBitmap != null){
+            if ((context as CheckObliqueDeformationActivity).scaleBitmap != null) {
                 mBinding.checkObdPointMark.visibility = View.GONE
                 mBinding.checkObdUi.setImageBitmap((context as CheckObliqueDeformationActivity).scaleBitmap)
-            }else{
+            } else {
                 mBinding.checkObdPointMark.visibility = View.VISIBLE
                 mBinding.checkObdUi.setImageDrawable(null)
             }
@@ -391,11 +461,11 @@ class CheckEditOBDFragment : BaseFragment(R.layout.fragment_check_obliquedeforma
             mBinding.checkObdHintText.setText(damageV3Bean.note)
             mDamageCreateTime = damageV3Bean.createTime
 
-            if(!damageV3Bean.scalePath.isNullOrEmpty()) {
+            if (!damageV3Bean.scalePath.isNullOrEmpty()) {
                 mBinding.checkObdPointMark.visibility = View.GONE
                 pointScalePath = damageV3Bean.scalePath?.get(1)
                 mBinding.checkObdUi.setImageURI(Uri.fromFile(File(pointScalePath)))
-            }else{
+            } else {
                 mBinding.checkObdPointMark.visibility = View.VISIBLE
                 mBinding.checkObdUi.setImageDrawable(null)
             }

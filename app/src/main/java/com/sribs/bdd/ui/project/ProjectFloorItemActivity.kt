@@ -565,8 +565,6 @@ class ProjectFloorItemActivity : BaseActivity(), IProjectContrast.IProjectFloorD
         "全选", "建筑结构复核", "倾斜测量", "相对高差测量", "构件检测"/*, "居民类检测测量", "非居民类检测测量"*/
     )
 
-
-
     fun showMutilAlertDialog(view: View?) {
 
         var checkedList = ArrayList<String>()
@@ -576,9 +574,9 @@ class ProjectFloorItemActivity : BaseActivity(), IProjectContrast.IProjectFloorD
         )
         localList.forEach {
             items.forEachIndexed { index, s ->
-                if(it.moduleName == s){
+                if (it.moduleName == s) {
                     checkedList.add(s)
-                    checkBooleanList.set(index,true)
+                    checkBooleanList.set(index, true)
                 }
             }
         }
@@ -620,43 +618,47 @@ class ProjectFloorItemActivity : BaseActivity(), IProjectContrast.IProjectFloorD
             "确定"
         ) { _, i ->
             var isSame = false
-          /*  var moduleName = ""
+            /*  var moduleName = ""
+              checkedList.forEach {
+                  isSame = mAdapter.hasSameName(it)
+                  if(isSame) {
+                      if (moduleName.isNullOrEmpty()) {
+                          moduleName += it
+                      } else {
+                          moduleName += "," + it
+                      }
+                  }
+              }
+              if (!moduleName.isNullOrEmpty()) {
+                  showToast(moduleName + "已存在，请勿重复创建")
+                  return@setPositiveButton
+              }*/
+
+            var filterList=ArrayList<String>()
+
             checkedList.forEach {
                 isSame = mAdapter.hasSameName(it)
-                if(isSame) {
-                    if (moduleName.isNullOrEmpty()) {
-                        moduleName += it
-                    } else {
-                        moduleName += "," + it
-                    }
+                if(!isSame){
+                    filterList.add(it)
                 }
             }
-            if (!moduleName.isNullOrEmpty()) {
-                showToast(moduleName + "已存在，请勿重复创建")
+
+            LogUtils.d("过滤后的模块: "+filterList)
+
+            if(filterList.size<=0){
                 return@setPositiveButton
-            }*/
-
-            checkedList.forEach {
-                LogUtils.d("创建的模块为: "+it)
             }
 
-            checkedList.forEach {
-                isSame = mAdapter.hasSameName(it)
-                if(isSame) {
-                    return@forEach
-                }
-                mPresenter.createOrSaveModule(
-                    mLocalProjectId,
-                    mLocalProjectUUID,
-                    mBuildingId,
-                    mBuildingUUID,
-                    mRemoteId,
-                    mProjectName,
-                    mBldName,
-                    it,
-                )
-            }
-
+            mPresenter.createOrSaveModule(
+                mLocalProjectId,
+                mLocalProjectUUID,
+                mBuildingId,
+                mBuildingUUID,
+                mRemoteId,
+                mProjectName,
+                mBldName,
+                filterList,
+            )
             alertDialog3?.dismiss();
 
         }
@@ -667,6 +669,4 @@ class ProjectFloorItemActivity : BaseActivity(), IProjectContrast.IProjectFloorD
         alertList = alertDialog3?.listView
         alertDialog3!!.show()
     }
-
-
 }

@@ -457,6 +457,7 @@ class ModuleFloorConfigCreateTypePresenter : BasePresenter(), IProjectContrast.I
                     "floor",
                     cacheFilePath.absolutePath,
                     "",
+                    floorBean.name,
                     damageList
                 )
                 floorDrawingsList.add(drawingItem)

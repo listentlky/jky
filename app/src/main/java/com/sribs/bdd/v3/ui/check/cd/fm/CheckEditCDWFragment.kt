@@ -307,28 +307,32 @@ class CheckEditCDWFragment : BaseFragment(R.layout.fragment_check_componentdetec
                 axisList,
                 arrayListOf(
                     currentRealPicType,
+                    mBinding.checkCdpPlateRightRealUi.checkCdpPlateRightRealSingle.checkEdit4.text.toString(),
                     mBinding.checkCdpPlateRightRealUi.checkCdpPlateRightRealSingle.checkEdit2.text.toString(),
                     mBinding.checkCdpPlateRightRealUi.checkCdpPlateRightRealSingle.checkEdit3.text.toString(),
-                    mBinding.checkCdpPlateRightRealUi.checkCdpPlateRightRealSingle.checkEdit4.text.toString(),
+
                 ),
                 arrayListOf(
                     currentRealPicType2,
+                    mBinding.checkCdpPlateRightRealUi.checkCdpPlateRightRealMeasured.checkEdit4.text.toString(),
                     mBinding.checkCdpPlateRightRealUi.checkCdpPlateRightRealMeasured.checkEdit2.text.toString(),
                     mBinding.checkCdpPlateRightRealUi.checkCdpPlateRightRealMeasured.checkEdit3.text.toString(),
-                    mBinding.checkCdpPlateRightRealUi.checkCdpPlateRightRealMeasured.checkEdit4.text.toString(),
+
                 ),
                 mBinding.checkCdpPlateRightRealUi.checkCdpPlateRightRealProtect.checkEditProtect.text.toString(),
                 mBinding.checkCdpPlateRightRealUi.checkCdpLeftRealRemarkContent.text.toString(),
                 arrayListOf(FileUtil.getFileName(mRightRealPicSrc) ?: "", mRightRealPicSrc),
                 arrayListOf(
                     currentDesignPicType,
+                    mBinding.checkCdpPlateRightDesignUi.checkCdpBeamRightDesinSingle.checkEdit3.text.toString(),
                     mBinding.checkCdpPlateRightDesignUi.checkCdpBeamRightDesinSingle.checkEdit2.text.toString(),
-                    mBinding.checkCdpPlateRightDesignUi.checkCdpBeamRightDesinSingle.checkEdit3.text.toString()
+
                 ),
                 arrayListOf(
                     currentDesignPicType2,
-                    mBinding.checkCdpPlateRightDesignUi.checkCdpBeamRightDesinMeasured.checkEdit2.text.toString(),
                     mBinding.checkCdpPlateRightDesignUi.checkCdpBeamRightDesinMeasured.checkEdit3.text.toString(),
+                    mBinding.checkCdpPlateRightDesignUi.checkCdpBeamRightDesinMeasured.checkEdit2.text.toString(),
+
                 ),
                 mBinding.checkCdpPlateRightDesignUi.checkCdpLeftRealRemarkContent.text.toString(),
                 arrayListOf(FileUtil.getFileName(mRightDesignPicSrc) ?: "", mRightDesignPicSrc),
@@ -525,11 +529,15 @@ class CheckEditCDWFragment : BaseFragment(R.layout.fragment_check_componentdetec
             mBinding.checkCdpPlateRightRealUi.checkCdpPlateRightRealSingle.checkCpdLeftRealSpinner2.setSelect(
                 mtypePicList!!.indexOf(damageV3Bean.realEastWestRebarList!!.get(0))
             )
+
             mBinding.checkCdpPlateRightRealUi.checkCdpPlateRightRealSingle.checkEdit2.setText(
-                damageV3Bean.realEastWestRebarList!!.get(1)
+                damageV3Bean.realEastWestRebarList!!.get(2)
             )
             mBinding.checkCdpPlateRightRealUi.checkCdpPlateRightRealSingle.checkEdit3.setText(
-                damageV3Bean.realEastWestRebarList!!.get(2)
+                damageV3Bean.realEastWestRebarList!!.get(3)
+            )
+            mBinding.checkCdpPlateRightRealUi.checkCdpPlateRightRealSingle.checkEdit4.setText(
+                damageV3Bean.realEastWestRebarList!!.get(1)
             )
 
 
@@ -540,6 +548,10 @@ class CheckEditCDWFragment : BaseFragment(R.layout.fragment_check_componentdetec
                 mtypePicList!!.indexOf(damageV3Bean.designEastWestRebarList!!.get(0))
             )
             mBinding.checkCdpPlateRightDesignUi.checkCdpBeamRightDesinSingle.checkEdit2.setText(
+                damageV3Bean.designEastWestRebarList!!.get(2)
+            )
+
+            mBinding.checkCdpPlateRightDesignUi.checkCdpBeamRightDesinSingle.checkEdit3.setText(
                 damageV3Bean.designEastWestRebarList!!.get(1)
             )
 
@@ -550,13 +562,13 @@ class CheckEditCDWFragment : BaseFragment(R.layout.fragment_check_componentdetec
                 mtypePicList!!.indexOf(damageV3Bean.realNorthSouthRebarList!!.get(0))
             )
             mBinding.checkCdpPlateRightRealUi.checkCdpPlateRightRealMeasured.checkEdit2.setText(
-                damageV3Bean.realNorthSouthRebarList!!.get(1)
-            )
-            mBinding.checkCdpPlateRightRealUi.checkCdpPlateRightRealMeasured.checkEdit3.setText(
                 damageV3Bean.realNorthSouthRebarList!!.get(2)
             )
-            mBinding.checkCdpPlateRightRealUi.checkCdpPlateRightRealMeasured.checkEdit4.setText(
+            mBinding.checkCdpPlateRightRealUi.checkCdpPlateRightRealMeasured.checkEdit3.setText(
                 damageV3Bean.realNorthSouthRebarList!!.get(3)
+            )
+            mBinding.checkCdpPlateRightRealUi.checkCdpPlateRightRealMeasured.checkEdit4.setText(
+                damageV3Bean.realNorthSouthRebarList!!.get(1)
             )
 
             mBinding.checkCdpPlateRightDesignUi.checkCdpBeamRightDesinMeasured.checkCpdLeftRealSpinner2.setText(
@@ -566,10 +578,10 @@ class CheckEditCDWFragment : BaseFragment(R.layout.fragment_check_componentdetec
                 mtypePicList!!.indexOf(damageV3Bean.designNorthSouthRebarList!!.get(0))
             )
             mBinding.checkCdpPlateRightDesignUi.checkCdpBeamRightDesinMeasured.checkEdit2.setText(
-                damageV3Bean.designNorthSouthRebarList!!.get(1)
+                damageV3Bean.designNorthSouthRebarList!!.get(2)
             )
             mBinding.checkCdpPlateRightDesignUi.checkCdpBeamRightDesinMeasured.checkEdit3.setText(
-                damageV3Bean.designNorthSouthRebarList!!.get(2)
+                damageV3Bean.designNorthSouthRebarList!!.get(1)
             )
 
             mBinding.checkCdpPlateRightRealUi.checkCdpPlateRightRealProtect.checkEditProtect.setText(

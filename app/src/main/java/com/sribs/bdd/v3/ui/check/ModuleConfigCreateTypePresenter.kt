@@ -252,6 +252,7 @@ class ModuleConfigCreateTypePresenter : BasePresenter(), IBasePresenter {
                     "overall",
                     cacheFilePath.absolutePath,
                     "",
+                    "",
                     damageList
                 )
                 mAppFacadeDrawingList!!.add(drawingV3ToBuild)

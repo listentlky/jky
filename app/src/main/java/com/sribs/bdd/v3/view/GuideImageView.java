@@ -104,7 +104,7 @@ public class GuideImageView extends androidx.appcompat.widget.AppCompatImageView
                         mGuide = "东北"+(90-Math.abs(rotate-270))+"°";
                     }
                 }
-                LogUtils.INSTANCE.d("mGuide: "+mGuide+" ; mRotate: "+mRotate);
+
                 if(mGuideCallback != null){
                     mGuideCallback.onChange(mGuide,mRotate);
                 }

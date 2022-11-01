@@ -19,10 +19,14 @@ import com.sribs.common.ARouterPath
 import com.sribs.common.bean.db.DamageV3Bean
 import com.sribs.common.bean.db.DrawingV3Bean
 import com.sribs.common.utils.FileUtil
+import kotlinx.android.synthetic.main.check_cdp_item.view.*
 import java.io.File
 import java.util.*
 import kotlin.collections.ArrayList
 
+/**
+ * 构件检测-梁
+ */
 @Route(path = ARouterPath.CHECK_COMPONENT_DETECTION_BEAM_FRAGMENT)
 class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetection_beam_edit_new),
     FloorDrawingSpinnerPopupWindow.FloorDrawItemClickCallback {
@@ -665,8 +669,9 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
                     mTypeRightList2!!.get(currentRightDesignType3),
                     mPicList!!.get(currentRightDesignType4),
                     rightDesignView.checkCpdBeamRightRealMeasured.checkEdit2.text.toString(),
-                    rightDesignView.checkEdit.text.toString(),
-                    rightDesignView.checkEditEncrypt.text.toString()
+                    rightDesignView.checkEditEncrypt.text.toString(),
+                    rightDesignView.ll1.check_edit.text.toString(),
+
                 ),
                 rightDesignView.checkCpdLeftRealRemarkContent.text.toString(),
                 arrayListOf(
@@ -1579,7 +1584,7 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
             rightRealView.checkCpdBeamPic.setImageURI(Uri.fromFile(File(mRightRealPicSrc)))
 
 
-            rightDesignView.checkEdit.setText(damageV3Bean.beamRightDesignStirrupsTypeList!!.get(3))
+            rightDesignView.checkEdit.setText(damageV3Bean.beamRightDesignStirrupsTypeList!!.get(4))
 
 
 
@@ -1591,7 +1596,7 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
 
             if (currentRightDesignType3==1){
                 rightDesignView.ll11.visibility =View.VISIBLE
-                rightDesignView.checkEditEncrypt.setText(damageV3Bean.beamRightDesignStirrupsTypeList!!.get(4))
+                rightDesignView.checkEditEncrypt.setText(damageV3Bean.beamRightDesignStirrupsTypeList!!.get(3))
             }else{
                 rightDesignView.ll11.visibility = View.GONE
             }

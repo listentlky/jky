@@ -117,7 +117,7 @@ class CheckCDFragment : BaseFragment(R.layout.fragment_check_componentdetection)
                     (activity as CheckComponentDetectionActivity).mCurrentDamageType[0] -> { // 梁
                         mMenuList!![0].menu!![0].item!!.add(CheckMenuModule.Item.Mark().also { b ->
                             if (it.beamAxisNote.isNullOrEmpty()){
-                                b.name = it.beamName+" "+ it.beamAxisNoteList!!.get(0)+"-"+it!!.beamAxisNoteList!!.get(1)+"-"+it.beamAxisNoteList!!.get(2)
+                                b.name = it.beamName+" "+ it.beamAxisNoteList!!.get(0)+"/"+it!!.beamAxisNoteList!!.get(1)+"-"+it.beamAxisNoteList!!.get(2)
 
                             }else{
                                 b.name = it.beamName+" "+ it.beamAxisNote
@@ -130,7 +130,7 @@ class CheckCDFragment : BaseFragment(R.layout.fragment_check_componentdetection)
                         mMenuList!![0].menu!![1].item!!.add(CheckMenuModule.Item.Mark().also { c ->
 
                             if (it.columnAxisNote.isNullOrEmpty()){
-                                c.name = it.columnName+" "+  it.columnAxisNoteList!!.get(0)+"-"+it.columnAxisNoteList!!.get(1)
+                                c.name = it.columnName+" "+  it.columnAxisNoteList!!.get(0)+"/"+it.columnAxisNoteList!!.get(1)
 
                             }else{
                                 c.name = it.columnName+" "+  it.columnAxisNote
@@ -142,7 +142,7 @@ class CheckCDFragment : BaseFragment(R.layout.fragment_check_componentdetection)
                     (activity as CheckComponentDetectionActivity).mCurrentDamageType[2] -> { //墙
                         mMenuList!![0].menu!![2].item!!.add(CheckMenuModule.Item.Mark().also { c ->
                             if (it.axisSingleNote.isNullOrEmpty()){
-                                c.name = it.plateName +" "+it.axisPlateNoteList!!.get(0)+"-"+it.axisPlateNoteList!!.get(1)+"-"+it.axisPlateNoteList!!.get(2)
+                                c.name = it.plateName +" "+it.axisPlateNoteList!!.get(0)+"/"+it.axisPlateNoteList!!.get(1)+"-"+it.axisPlateNoteList!!.get(2)
                             }else{
                                 c.name = it.plateName+" "+it.axisSingleNote
                             }
@@ -153,7 +153,7 @@ class CheckCDFragment : BaseFragment(R.layout.fragment_check_componentdetection)
                     (activity as CheckComponentDetectionActivity).mCurrentDamageType[3] -> { //板
                         mMenuList!![0].menu!![3].item!!.add(CheckMenuModule.Item.Mark().also { c ->
                             if (it.axisSingleNote.isNullOrEmpty()){
-                                c.name = it.plateName +" "+it.axisPlateNoteList!!.get(0)+"-"+it.axisPlateNoteList!!.get(1)+"-"+it.axisPlateNoteList!!.get(2)+"-"+it.axisPlateNoteList!!.get(3)
+                                c.name = it.plateName +" "+it.axisPlateNoteList!!.get(0)+"/"+it.axisPlateNoteList!!.get(1)+"-"+it.axisPlateNoteList!!.get(2)+"-"+it.axisPlateNoteList!!.get(3)
                             }else{
                                 c.name = it.plateName+" "+it.axisSingleNote
                             }

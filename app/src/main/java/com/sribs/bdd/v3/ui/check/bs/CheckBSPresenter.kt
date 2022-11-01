@@ -50,7 +50,9 @@ class CheckBSPresenter : BasePresenter(),ICheckBSContrast.ICheckBSPresenter{
                 })
                 LogUtils.d("获取到该楼下所有楼层数据 "+list.toString())
                 mView?.onModuleInfo(list)
+                dispose()
             },{
+                dispose()
                 mView?.onMsg(it.toString())
                 LogUtils.d("获取到该楼下所有楼层失败 ${it}")
             }))

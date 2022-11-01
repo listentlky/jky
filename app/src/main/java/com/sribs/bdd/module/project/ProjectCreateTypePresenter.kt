@@ -485,6 +485,7 @@ class ProjectCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCre
                     "overall",
                     cacheFilePath.absolutePath,
                     "",
+                    "",
                     ArrayList()
                 )
                 mAppFacadeDrawingList!!.add(drawingV3ToBuild)
@@ -540,6 +541,7 @@ class ProjectCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCre
                     "floor",
                     cacheFilePath.absolutePath,
                     "",
+                    floorBean.name,
                     ArrayList()
                 )
                 floorDrawingsList.add(drawingV3ToBuild)

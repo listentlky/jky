@@ -25,7 +25,9 @@ import kotlinx.android.synthetic.main.fragment_check_componentdetection_column_r
 import java.io.File
 import java.util.*
 
-
+/**
+ * 构件检测-柱
+ */
 @Route(path = ARouterPath.CHECK_COMPONENT_DETECTION_COLUMN_FRAGMENT)
 class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetection_column_edit),
     FloorDrawingSpinnerPopupWindow.FloorDrawItemClickCallback {
@@ -896,7 +898,7 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
                 arrayListOf(
                     mTypeRightList!!.get(currentRightRealType),
                     mPicList!!.get(currentRightRealType2),
-                    rightRealRowSteelView!!.checkEdit.text.toString()
+                 //   rightRealRowSteelView!!.checkEdit.text.toString()
                 ),
                 rightRealSectionTypeParamsList,
                 mPicRightRealList!!,
@@ -924,7 +926,7 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
                 arrayListOf(
                     mTypeRightList!!.get(currentRightDesignType),
                     mPicList!!.get(currentRightDesignType2),
-                    rightDesignRowSteelView!!.checkEdit.text.toString()
+                //    rightDesignRowSteelView!!.checkEdit.text.toString()
                 ),
                 rightDesignSectionTypeParamsList,
                 mPicRightDesignList!!,
@@ -932,8 +934,8 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
                     mTypeRight2List!!.get(currentRightDesignType3),
                     mPicList!!.get(currentRightDesignType4),
                     rightDesignMeasuredView!!.checkEdit2.text.toString(),
-                    rightDesignView!!.checkEdit.text.toString(),
-                    rightDesignView!!.checkEditEncrypt.text.toString()
+                    rightDesignView!!.checkEditEncrypt.text.toString(),
+                    rightDesignView!!.ll1.check_edit.text.toString()
                 ),
                 rightDesignView!!.checkCpdLeftRealRemarkContent.text.toString(),
                 arrayListOf(FileUtil.getFileName(mRightDesignPicSrc)?:"",mRightDesignPicSrc),
@@ -1299,7 +1301,7 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
 
             if (currentRightDesignType3==1){
                 rightDesignView!!.ll11.visibility =View.VISIBLE
-                rightDesignView!!.checkEditEncrypt.setText(damageV3Bean.rightDesignStirrupsTypeList!!.get(4))
+                rightDesignView!!.checkEditEncrypt.setText(damageV3Bean.rightDesignStirrupsTypeList!!.get(3))
             }else{
                 rightDesignView!!.ll11.visibility = View.GONE
             }
@@ -1533,7 +1535,7 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
                 rightRealRowSteelView!!.checkCpdLeftRealSpinner3.setSelect(1)
                 rightRealRowSteelView!!.checkCpdLeftRealSpinner3.setText(mPicList!!.get(1))
             }
-            rightRealRowSteelView!!.checkEdit.setText(damageV3Bean.rightRealSectionTypeList!!.get(2))
+        //    rightRealRowSteelView!!.checkEdit.setText(damageV3Bean.rightRealSectionTypeList!!.get(2))
 
             if ("A".equals(damageV3Bean.rightDesignSectionTypeList!!.get(1))) {
                 rightDesignRowSteelView!!.checkCpdLeftRealSpinner3.setSelect(0)
@@ -1542,11 +1544,7 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
                 rightDesignRowSteelView!!.checkCpdLeftRealSpinner3.setSelect(1)
                 rightDesignRowSteelView!!.checkCpdLeftRealSpinner3.setText(mPicList!!.get(1))
             }
-            rightDesignRowSteelView!!.checkEdit.setText(
-                damageV3Bean.rightDesignSectionTypeList!!.get(
-                    2
-                )
-            )
+         //   rightDesignRowSteelView!!.checkEdit.setText(damageV3Bean.rightDesignSectionTypeList!!.get(2))
 
             //实测纵筋
             when (damageV3Bean.rightRealSectionTypeList!!.get(0)) {
@@ -1571,6 +1569,15 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
                     rightRealRowSteelParamsView!!.checkEdit5.setText(
                         damageV3Bean.rightRealSectionTypeParamsList!!.get(4)
                     )
+
+                    val lp: ViewGroup.LayoutParams
+                    lp = rightRealRowSteelParamsView!!.content.getLayoutParams()
+                    lp.width = -1
+                    lp.height = getResources().getDimensionPixelSize(R.dimen._45sdp)
+                    rightRealRowSteelParamsView!!.content.setLayoutParams(lp)
+
+
+
                 }
                 "圆形" -> {
                     rightRealRowSteelView!!.checkCpdLeftRealSpinner2.setSelect(1)
@@ -1621,6 +1628,13 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
                     rightDesignRowSteelParamsView!!.checkEdit5.setText(
                         damageV3Bean.rightDesignSectionTypeParamsList!!.get(4)
                     )
+
+                    val lp2: ViewGroup.LayoutParams
+                    lp2 = rightDesignRowSteelParamsView!!.content.getLayoutParams()
+                    lp2.width = -1
+                    lp2.height = getResources().getDimensionPixelSize(R.dimen._45sdp)
+                    rightDesignRowSteelParamsView!!.content.setLayoutParams(lp2)
+
                 }
                 "圆形" -> {
                     rightDesignRowSteelView!!.checkCpdLeftRealSpinner2.setSelect(1)
@@ -1671,7 +1685,7 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
                 damageV3Bean.rightDesignStirrupsTypeList!!.get(2
                 )
             )
-            rightDesignView!!.ll1.check_edit.setText(damageV3Bean.rightDesignStirrupsTypeList!!.get(3))
+            rightDesignView!!.ll1.check_edit.setText(damageV3Bean.rightDesignStirrupsTypeList!!.get(4))
 
 
             //实测箍筋-加密区

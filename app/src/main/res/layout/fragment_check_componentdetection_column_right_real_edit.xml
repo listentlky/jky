@@ -240,7 +240,7 @@
             app:layout_constraintLeft_toLeftOf="@id/check_cpd_beam_pic"
             android:text="图片"
             android:textColor="@color/black"
-            android:textSize="@dimen/_7ssp"
+            android:textSize="@dimen/_6ssp"
             android:layout_width="0dp"
             android:layout_height="wrap_content"></TextView>
 

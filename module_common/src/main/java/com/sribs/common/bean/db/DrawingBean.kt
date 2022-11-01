@@ -42,16 +42,18 @@ class DrawingV3Bean():BaseDbBean(){
     var localAbsPath: String?=""//移动端缓存地址
     var remoteAbsPath: String?=""//服务端缓存地址,
     var sort:Int?=0
+    var floorName:String?=""
     var damage:ArrayList<DamageV3Bean>?=ArrayList() //损伤
 
     constructor(drawingID:String,fileName: String?,fileType: String?,drawingType: String?,localAbsPath: String?,
-                remoteAbsPath: String?,damage:ArrayList<DamageV3Bean>):this(){
+                remoteAbsPath: String?,floorName:String?,damage:ArrayList<DamageV3Bean>):this(){
         this.drawingID = drawingID
         this.fileName = fileName
         this.fileType = fileType
         this.drawingType = drawingType
         this.localAbsPath = localAbsPath
         this.remoteAbsPath = remoteAbsPath
+        this.floorName = floorName
         this.damage = damage
     }
 
@@ -83,7 +85,6 @@ class DrawingV3Bean():BaseDbBean(){
         this.rotate = rotate
     }
 
-    var floorName:String?=""
     override fun toString(): String {
         return "DrawingV3Bean(drawingID=$drawingID, fileName=$fileName, fileType=$fileType, drawingType=$drawingType, localAbsPath=$localAbsPath, remoteAbsPath=$remoteAbsPath, damage=$damage, direction=$direction, rotate=$rotate, floorName=$floorName)"
     }
