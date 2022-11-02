@@ -456,7 +456,9 @@ class CheckComponentDetectionActivity : BaseActivity(), ICheckCDContrast.ICheckC
 
 
         LogUtils.d("当前数据：" + damageInfo)
-
+        if (exitDamageBeanList == null) {
+            exitDamageBeanList = ArrayList()
+        }
         LogUtils.d("过滤前损伤数据：" + exitDamageBeanList)
         /**
          * 先过滤相同损伤

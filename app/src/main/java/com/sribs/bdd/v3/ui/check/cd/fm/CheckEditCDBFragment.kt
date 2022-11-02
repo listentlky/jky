@@ -122,18 +122,14 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
         mTypeRightList!!.addAll(Arrays.asList("单排钢筋", "双排钢筋"))
         mTypeRightList2!!.addAll(Arrays.asList("无加密", "有加密"))
 
-        mBinding.checkCpdSubtitle1.checkEditName.setText("梁名称")
+        mBinding.checkCpdSubtitle1.checkEditName.text ="梁名称"
         mBinding.checkCpdSubtitle1.checkEdit.hint = "请输入梁名称"
-
-
 
 
         leftRealView = mBinding.checkCpdBeamLeftRealUi
         leftDesignView = mBinding.checkCpdBeamLeftDesignUi
         rightRealView = mBinding.checkCpdBeamRightRealUi
         rightDesignView = mBinding.checkCpdBeamRightDesignUi
-
-
 
 
         leftRealRectangleView = leftRealView.checkCpdLeftRealRectangleTv
@@ -153,11 +149,14 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
         rightDesignDoubleParamsView = rightDesignView.checkCpdBeamRightRealSingle2
 
 
-        rightRealView.checkCpdLeftMenu.checkCpdLeftMenu1.setText("实测配筋")
-        rightRealView.checkCpdLeftMenu.checkCpdLeftMenu2.setText("设计配筋")
+        rightRealView.checkCpdLeftMenu.checkCpdLeftMenu1.text = "实测配筋"
+        rightRealView.checkCpdLeftMenu.checkCpdLeftMenu2.text ="设计配筋"
 
-        rightDesignView.checkCpdLeftMenu.checkCpdLeftMenu1.setText("实测配筋")
-        rightDesignView.checkCpdLeftMenu.checkCpdLeftMenu2.setText("设计配筋")
+        rightDesignView.checkCpdLeftMenu.checkCpdLeftMenu1.text ="实测配筋"
+        rightDesignView.checkCpdLeftMenu.checkCpdLeftMenu2.text ="设计配筋"
+
+        rightDesignView.checkCpdLeftRealDesignTv.checkEditName.text ="设计纵筋"
+        rightDesignView.checkCpdBeamRightRealMeasured.checkEditName.text ="设计箍筋"
 
         rightRealView.checkCpdLeftMenu.checkCpdLeftMenu4.visibility = View.VISIBLE
         rightDesignView.checkCpdLeftMenu.checkCpdLeftMenu4.visibility = View.VISIBLE

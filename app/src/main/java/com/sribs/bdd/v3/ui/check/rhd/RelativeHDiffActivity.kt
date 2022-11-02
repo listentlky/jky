@@ -188,6 +188,7 @@ class RelativeHDiffActivity : BaseActivity() ,ICheckRHDiffContrast.ICheckRHDiffV
                 AlertDialog.Builder(this).setTitle("提示")
                     .setMessage(R.string.is_save_hint)
                     .setPositiveButton(R.string.dialog_ok) { dialog, which ->
+                        saveDamage()
                         mController?.savePDF()
                         saveDamageDrawingToDb();
                     }.setNegativeButton(

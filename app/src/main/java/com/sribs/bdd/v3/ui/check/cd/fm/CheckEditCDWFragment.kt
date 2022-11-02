@@ -22,6 +22,9 @@ import java.io.File
 import java.util.*
 import kotlin.collections.ArrayList
 
+/**
+ * 构件检测-墙
+ */
 @Route(path = ARouterPath.CHECK_COMPONENT_DETECTION_WALL_FRAGMENT)
 class CheckEditCDWFragment : BaseFragment(R.layout.fragment_check_componentdetection_wall_edit),
     FloorDrawingSpinnerPopupWindow.FloorDrawItemClickCallback {

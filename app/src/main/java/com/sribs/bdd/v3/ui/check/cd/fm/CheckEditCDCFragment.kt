@@ -242,7 +242,7 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
         rightDesignMeasuredView!!.checkEditName2.text = "钢筋规格"
         rightRealMeasuredView!!.checkEditName2.text = "钢筋规格"
 
-        leftRealView!!.checkCpdLeftRealDesignTv.setText("实测截面类型")
+        leftRealView!!.checkCpdLeftRealDesignTv.text ="实测截面类型"
 
         mBinding.checkCpdSubtitleChange.setOnClickListener {
             if (mBinding.checkCpdSubtitle2.content.visibility == View.VISIBLE) {

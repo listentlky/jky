@@ -21,38 +21,38 @@ class DamageV3Bean(){
     var createTime:Long = -1 // 生成时间戳
     var annotX:Int=0 //标记X坐标 注意需要使用PDF坐标转换
     var annotY:Int=0 //标记Y坐标
-    var annotName:String="" //标记名
-
+    var annotName:String="" //标记名 mark和损伤关系唯一标识
 
     //梁
     var beamName:String?= ""  //梁名称
     var beamAxisNote:String?="" // 梁-轴线
     var beamAxisNoteList: ArrayList<String>? = ArrayList()//梁-多个轴线
+    //左侧
     var beamLeftRealTypeList:ArrayList<String>?=ArrayList() //实测截面类型
     var beamLeftRealParamsList:ArrayList<String>?=ArrayList() //实测截面类型参数
     var beamLeftRealNote:String = "" //实测-备注
-    var beamLeftRealPicList:ArrayList<String>?=ArrayList() //实测-手绘草图
+    var beamLeftRealPicList:ArrayList<String>?=ArrayList() //实测-手绘草图 (0 名称  1 路径  2 远端resId)
 
-    var beamLeftDesignTypeList:ArrayList<String>?=ArrayList() //实测截面类型
+    var beamLeftDesignTypeList:ArrayList<String>?=ArrayList() //设计截面类型
     var beamLeftDesignParamsList:ArrayList<String>?=ArrayList() //设计截面类型参数
     var beamLeftDesignNote:String = "" //设计-备注
-    var beamLeftDesignPicList:ArrayList<String>?=ArrayList() //设计-手绘草图
-
-    var beamRightRealSectionType : String?="" //实测配筋类型
-    var beamRightRealSectionParamsList : ArrayList<String>?=ArrayList() //实测配筋参数
+    var beamLeftDesignPicList:ArrayList<String>?=ArrayList() //设计-手绘草图 (0 名称  1 路径  2 远端resId)
+    //右测
+    var beamRightRealSectionType : String?="" //实测纵筋类型   单排钢筋/双排钢筋
+    var beamRightRealSectionParamsList : ArrayList<String>?=ArrayList() //实测钢筋参数
     var beamRightRealStirrupsTypeList: ArrayList<String>?=ArrayList() //实测箍筋参数
     var beamRightRealStirrupsTypeEncryptList: ArrayList<String>? = ArrayList() //实测箍筋-加密区
-    var beamRightRealStirrupsTypeNonEncryptList: ArrayList<String>? = ArrayList() //实测箍筋-非加密区
+    var beamRightRealStirrupsTypeNonEncryptList: ArrayList<String>? = ArrayList() //实测箍筋-非加密
     var beamRightRealProtectList: ArrayList<String>? = ArrayList() //实测保护层厚度
     var beamRightRealNote:String?="" //实测配筋-备注
-    var beamRightRealPic :ArrayList<String>?= ArrayList() //实测图
+    var beamRightRealPic :ArrayList<String>?= ArrayList() //实测图(0 名称  1 路径  2 远端resId)
 
-    var beamRightDesignSectionType : String?="" //设计纵筋
-    var beamRightDesignSectionTypeParamsList: ArrayList<String>? = ArrayList() //设计纵筋-矩形
+    var beamRightDesignSectionType : String?="" //设计纵筋类型
+    var beamRightDesignSectionTypeParamsList: ArrayList<String>? = ArrayList() //设计纵筋-参数
     var beamRightDesignStirrupsTypeList: ArrayList<String>? = ArrayList() //设计箍筋
     var beamRightDesignNote: String? = ""//设计配筋-备注
-    var beamRightDesignPic :ArrayList<String>?= ArrayList() //设计图
-    var beamCheckStatus :ArrayList<String>?= ArrayList() //展示状态
+    var beamRightDesignPic :ArrayList<String>?= ArrayList() //设计图   //设计内取消图，该字段废弃
+    var beamCheckStatus :ArrayList<String>?= ArrayList() //展示状态  客户端是否可输入状态维护
 
 
     constructor(
@@ -130,22 +130,20 @@ class DamageV3Bean(){
     var columnName: String? = "" //柱名称
     var columnAxisNote: String? = "" // 轴线
     var columnAxisNoteList: ArrayList<String>? = ArrayList()//多个轴线
+    //左侧
     var leftRealSectionType: String? = "" //实测截面类型
-    var leftRealSectionTypeParamsList: ArrayList<String>? = ArrayList() //实测截面类型-矩形
-
-    var leftRealNote: String? = "" //实测截面类型-备注
-    var columnLeftRealPicList:ArrayList<String>?=ArrayList() //实测-手绘草图
+    var leftRealSectionTypeParamsList: ArrayList<String>? = ArrayList() //实测截面类型参数
+    var leftRealNote: String? = "" //实测截面尺寸-备注
+    var columnLeftRealPicList:ArrayList<String>?=ArrayList() //实测-手绘草图 (0 名称  1 路径  2 远端resId)
 
     var leftDesignSectionType: String? = "" //设计截面类型
-    var leftDesignSectionTypeParamsList: ArrayList<String>? = ArrayList() //设计截面类型-矩形
-    var leftDesignNote: String? = "" //设计截面类型-备注
-    var columnLeftDesignPicList:ArrayList<String>?=ArrayList() //设计-手绘草图
-
+    var leftDesignSectionTypeParamsList: ArrayList<String>? = ArrayList() //设计截面类型-参数
+    var leftDesignNote: String? = "" //设计截面尺寸-备注
+    var columnLeftDesignPicList:ArrayList<String>?=ArrayList() //设计-手绘草图 (0 名称  1 路径  2 远端resId)
     //右侧界面
     var rightRealSectionTypeList: ArrayList<String>? = ArrayList() //实测纵筋
-    var rightRealSectionTypeParamsList: ArrayList<String>? = ArrayList() //实测纵筋-矩形
+    var rightRealSectionTypeParamsList: ArrayList<String>? = ArrayList() //实测纵筋-参数
     var rightRealSectionTypeParamsPicList: ArrayList<String>? = ArrayList() //实测纵筋-草图
-
     var rightRealStirrupsTypeList: ArrayList<String>? = ArrayList() //实测箍筋
     var rightRealStirrupsTypeEncryptList: ArrayList<String>? = ArrayList() //实测箍筋-加密区
     var rightRealStirrupsTypeNonEncryptList: ArrayList<String>? = ArrayList() //实测箍筋-加密区
@@ -154,12 +152,12 @@ class DamageV3Bean(){
     var columnRightRealPic :ArrayList<String>?= ArrayList() //实测图(0 名称  1 路径  2 远端resId)
 
     var rightDesignSectionTypeList: ArrayList<String>? = ArrayList() //设计纵筋
-    var rightDesignSectionTypeParamsList: ArrayList<String>? = ArrayList() //设计纵筋-矩形
-    var rightDesignSectionTypeParamsPicList: ArrayList<String>? = ArrayList() //实测纵筋-草图
+    var rightDesignSectionTypeParamsList: ArrayList<String>? = ArrayList() //设计纵筋-参数
+    var rightDesignSectionTypeParamsPicList: ArrayList<String>? = ArrayList() //实测纵筋-草图 (0 名称  1 路径  2 远端resId)
     var rightDesignStirrupsTypeList: ArrayList<String>? = ArrayList() //设计箍筋
     var rightDesignNote: String? = ""//设计配筋-备注
-    var columnRightDesignPic :ArrayList<String>?= ArrayList() //设计图(0 名称  1 路径  2 远端resId)
-    var columnCheckStatus :ArrayList<String>?= ArrayList() //勾选展示状态
+    var columnRightDesignPic :ArrayList<String>?= ArrayList() //设计图  //设计内取消图，该字段废弃
+    var columnCheckStatus :ArrayList<String>?= ArrayList() //勾选展示状态 客户端是否可输入状态维护
 
     constructor(
         id: Long,
@@ -234,26 +232,24 @@ class DamageV3Bean(){
 
     }
 
-
-
-
     //构件检测-板 墙 通用
-    var realPlateThickness: String? = "" //实测 板厚度
-    var designPlateThickness: String? = "" //设计 板厚度
-    var plateName: String = "" //板墙名称
-    var axisSingleNote: String? = ""//轴线
-    var axisPlateNoteList: ArrayList<String>? = ArrayList()//多个轴线
-    var realEastWestRebarList: ArrayList<String>? = ArrayList() // 0 实测-东西向钢筋-类型 // 1 实测-东西向钢筋-长度 // 2 实测-东西向钢筋-档数
-    var realNorthSouthRebarList: ArrayList<String>? = ArrayList()//0 实测-南北向钢筋-类型 // 1 实测-南北向钢筋-长度 // 2 实测-南北向钢筋-档数
-    var realProtectThickness: String? = "" //实测-保护层厚度
+    var plateName: String = "" //板/墙名称
+    var axisSingleNote: String? = ""//板/墙轴线
+    var axisPlateNoteList: ArrayList<String>? = ArrayList()//板/墙多个轴线
+    //左侧
+    var realPlateThickness: String? = "" //实测 板/墙厚度
+    var designPlateThickness: String? = "" //设计 板/墙厚度
+    //右侧
+    var realEastWestRebarList: ArrayList<String>? = ArrayList() //  板 实测板底东西向钢筋 / 墙 实测竖向钢筋
+    var realNorthSouthRebarList: ArrayList<String>? = ArrayList()// 板 实测板底南北向钢筋 / 墙 实测水平钢筋
+    var realProtectThickness: String? = "" // 板/墙 实测-保护层厚度
     var realNote: String? = "" //实测-备注
     var realPicture: ArrayList<String>? = ArrayList() //实测-照片 0名称 1路径 2远端resID
-    var designEastWestRebarList: ArrayList<String>? = ArrayList()//0 设计-东西向钢筋-类型 //1 设计-东西向钢筋-长度
-    var designNorthSouthRebarList: ArrayList<String>? = ArrayList() //0 设计-南北向钢筋-类型 // 1 设计-南北向钢筋-长度
+    var designEastWestRebarList: ArrayList<String>? = ArrayList()// 板 设计板底东西向钢筋 / 墙 设计竖向钢筋
+    var designNorthSouthRebarList: ArrayList<String>? = ArrayList() // 板 设计板底南北向钢筋 / 墙 设计水平钢筋
     var designNote: String? = "" //设计-备注
-    var designPicture:  ArrayList<String>? = ArrayList() //设计-照片 0名称 1路径 2远端resID
-    var plateCheckStatus :ArrayList<String>?= ArrayList() //展示状态
-
+    var designPicture:  ArrayList<String>? = ArrayList() //设计内取消图，该字段废弃
+    var plateCheckStatus :ArrayList<String>?= ArrayList() //勾选展示状态 客户端是否可输入状态维护
 
     //构件检测-板/墙
     constructor(
@@ -376,7 +372,7 @@ class DamageV3Bean(){
     var tiltRotate2:Float?=90f //倾斜角度2
     var tiltDirection1:String?=""//倾斜方向1
     var tiltDirection2:String?="" // 倾斜方向2
-    var slope1:String?=""//倾斜率1
+    var slope1:String?="" //倾斜率1
     var slope2:String?="" // 倾斜率2
     //倾斜测量点位
     constructor(id:Long,drawingId:String,type:String?,action:Int?,annotRef:Long,note:String?,createTime:Long,
@@ -409,7 +405,16 @@ class DamageV3Bean(){
     //相对高差
     var closeDiff:String?="" //闭合差
     var rhdiffInfo:ArrayList<RelativeHDiffInfoBean>?=ArrayList() //顺序测量转点闭合数据
+    //示例
+    /**
+     * [RelativeHDiffInfoBean(tag=BM1, after=1, before=, abDiff=, height=2, pointDiff=), RelativeHDiffInfoBean(tag=111-222, after=, before=3, abDiff=-2, height=0, pointDiff=-2), RelativeHDiffInfoBean(tag=TP1, after=4, before=5, abDiff=3, height=-2, pointDiff=-4), RelativeHDiffInfoBean(tag=333-444, after=, before=6, abDiff=-2, height=-4, pointDiff=-6), RelativeHDiffInfoBean(tag=闭合点, after=, before=7, abDiff=-3, height=-5, pointDiff=-7)]
+     */
+
     var pointList:List<RelativeHDiffPointBean>?=ArrayList() //添加的测点数据
+    //示例
+    /**
+     * [RelativeHDiffPointBean(name=闭合点, colorBg=, menu=[]), RelativeHDiffPointBean(name=333, colorBg=#ff5fe9c1, menu=[Item(name=444, annotName=1667364954198)]), RelativeHDiffPointBean(name=111, colorBg=#ff4f8692, menu=[Item(name=222, annotName=1667364951032)])]
+     */
 
     constructor(id:Long,drawingId:String,type:String?,action:Int?,annotRef:Long,note:String?,createTime:Long, closeDiff:String,
                 rhdiffInfo:ArrayList<RelativeHDiffInfoBean>,pointList:List<RelativeHDiffPointBean>):this(){

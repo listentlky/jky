@@ -21,6 +21,9 @@ import java.io.File
 import java.util.*
 import kotlin.collections.ArrayList
 
+/**
+ * 构件检测-板
+ */
 @Route(path = ARouterPath.CHECK_COMPONENT_DETECTION_PLATE_FRAGMENT)
 class CheckEditCDPFragment : BaseFragment(R.layout.fragment_check_componentdetection_plate_edit),
     FloorDrawingSpinnerPopupWindow.FloorDrawItemClickCallback {
