@@ -24,6 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/_5sdp"
+            android:id="@+id/first_tv_name"
             android:text="底部"
             android:textSize="@dimen/_5ssp"></TextView>
 
@@ -52,11 +53,13 @@
         android:layout_marginTop="@dimen/_3sdp"
         android:layout_marginRight="@dimen/_2sdp"
         android:text=","
+        android:id="@+id/sencond_comma"
         android:textColor="@color/black"
         android:textSize="@dimen/_5ssp"></TextView>
 
 
     <LinearLayout
+        android:id="@+id/sencond_ll"
         android:layout_width="@dimen/_45sdp"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -66,6 +69,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/_5sdp"
             android:text="侧面"
+            android:id="@+id/sencond_tv_name"
             android:textSize="@dimen/_5ssp"></TextView>
 
         <EditText

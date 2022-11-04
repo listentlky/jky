@@ -158,6 +158,8 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
         rightDesignView.checkCpdLeftRealDesignTv.checkEditName.text ="设计纵筋"
         rightDesignView.checkCpdBeamRightRealMeasured.checkEditName.text ="设计箍筋"
 
+
+
         rightRealView.checkCpdLeftMenu.checkCpdLeftMenu4.visibility = View.VISIBLE
         rightDesignView.checkCpdLeftMenu.checkCpdLeftMenu4.visibility = View.VISIBLE
 
@@ -316,8 +318,8 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
                 "fonts/SJQY.cb6e0829.TTF"
             )
         )
-        rightRealSingleParamsView.checkCpdLeftRealSpinner.setText(mPicList!!.get(0))
-        rightRealSingleParamsView.checkCpdLeftRealSpinner.setSelect(0)
+        rightRealSingleParamsView.checkCpdLeftRealSpinner.setText(mPicList!!.get(1))
+        rightRealSingleParamsView.checkCpdLeftRealSpinner.setSelect(1)
         rightRealSingleParamsView.checkCpdLeftRealSpinner.setSpinnerData(mPicList)
             .setSpinnerTextGravity(Gravity.CENTER).setSpinnerCallback {
                 currentRightRealType2 = it
@@ -330,8 +332,8 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
                 "fonts/SJQY.cb6e0829.TTF"
             )
         )
-        rightDesignSingleParamsView.checkCpdLeftRealSpinner.setText(mPicList!!.get(0))
-        rightDesignSingleParamsView.checkCpdLeftRealSpinner.setSelect(0)
+        rightDesignSingleParamsView.checkCpdLeftRealSpinner.setText(mPicList!!.get(1))
+        rightDesignSingleParamsView.checkCpdLeftRealSpinner.setSelect(1)
         rightDesignSingleParamsView.checkCpdLeftRealSpinner.setSpinnerData(mPicList)
             .setSpinnerTextGravity(Gravity.CENTER).setSpinnerCallback {
                 currentRightDesignType2 = it
@@ -921,8 +923,8 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
             rightRealSingleParamsView.checkEdit1.setText("")
             rightRealSingleParamsView.checkEdit3.setText("")
             rightRealSingleParamsView.checkEdit4.setText("")
-            rightRealSingleParamsView.checkCpdLeftRealSpinner.setSelect(0)
-            rightRealSingleParamsView.checkCpdLeftRealSpinner.setText(mPicList!!.get(0))
+            rightRealSingleParamsView.checkCpdLeftRealSpinner.setSelect(1)
+            rightRealSingleParamsView.checkCpdLeftRealSpinner.setText(mPicList!!.get(1))
 
 
             rightRealDoubleParamsView.content.visibility = View.INVISIBLE
@@ -941,8 +943,8 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
 
             rightDesignSingleParamsView.content.visibility = View.VISIBLE
             rightDesignSingleParamsView.checkEdit1.setText("")
-            rightDesignSingleParamsView.checkCpdLeftRealSpinner.setText(mPicList!!.get(0))
-            rightDesignSingleParamsView.checkCpdLeftRealSpinner.setSelect(0)
+            rightDesignSingleParamsView.checkCpdLeftRealSpinner.setText(mPicList!!.get(1))
+            rightDesignSingleParamsView.checkCpdLeftRealSpinner.setSelect(1)
             rightDesignSingleParamsView.checkEdit3.setText("")
             rightDesignSingleParamsView.checkEdit4.setText("")
 
@@ -1213,7 +1215,13 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
                             1
                         )
                     )
-                    leftRealAnotherView.checkCpdAnotherPicStatus.setText("已绘制")
+                    if (damageV3Bean.beamLeftRealPicList.isNullOrEmpty()){
+                        leftRealAnotherView.checkCpdAnotherPicStatus.setText("未绘制")
+
+                    }else{
+                        leftRealAnotherView.checkCpdAnotherPicStatus.setText("已绘制")
+
+                    }
                 }
             }
 
@@ -1332,7 +1340,13 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
                             1
                         )
                     )
-                    leftDesignAnotherView.checkCpdAnotherPicStatus.setText("已绘制")
+                    if (damageV3Bean.beamLeftDesignPicList.isNullOrEmpty()){
+                        leftDesignAnotherView.checkCpdAnotherPicStatus.setText("未绘制")
+
+                    }else{
+                        leftDesignAnotherView.checkCpdAnotherPicStatus.setText("已绘制")
+
+                    }
                 }
             }
             leftRealView.checkCpdLeftRealRemarkContent.setText(damageV3Bean.beamLeftRealNote)
@@ -1580,7 +1594,13 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
             mRightRealPicSrc = damageV3Bean.beamRightRealPic?.get(1) ?: ""
             mRightDesignPicSrc = damageV3Bean.beamRightDesignPic?.get(1) ?: ""
 
-            rightRealView.checkCpdBeamPic.setImageURI(Uri.fromFile(File(mRightRealPicSrc)))
+            if (mRightRealPicSrc.isNullOrEmpty()){
+                rightRealView.checkCpdBeamPic.setImageResource(R.color.gray)
+
+            }else{
+                rightRealView.checkCpdBeamPic.setImageURI(Uri.fromFile(File(mRightRealPicSrc)))
+
+            }
 
 
             rightDesignView.checkEdit.setText(damageV3Bean.beamRightDesignStirrupsTypeList!!.get(4))

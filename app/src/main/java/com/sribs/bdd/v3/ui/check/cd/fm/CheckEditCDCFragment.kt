@@ -75,6 +75,7 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
     private  var mCheckLeftDesignStatus = false
     private  var mCheckRightDesignStatus = false
     private  var mCheckRightRealStatus = false
+    private  var mIsCircleColumProtect = false
 
 
     var leftRealView: FragmentCheckComponentdetectionColumnLeftRealEditBinding? = null
@@ -243,6 +244,8 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
         rightRealMeasuredView!!.checkEditName2.text = "钢筋规格"
 
         leftRealView!!.checkCpdLeftRealDesignTv.text ="实测截面类型"
+
+
 
         mBinding.checkCpdSubtitleChange.setOnClickListener {
             if (mBinding.checkCpdSubtitle2.content.visibility == View.VISIBLE) {
@@ -521,6 +524,20 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
         rightDesignView!!.checkCpdLeftMenu.checkCpdLeftMenu1.text = "实测配筋"
         rightDesignView!!.checkCpdLeftMenu.checkCpdLeftMenu2.text = "设计配筋"
 
+        leftRealRectangleView!!.firstTvName.text = "南北侧"
+        leftRealRectangleView!!.secondTvName.text = "东西侧"
+
+        leftDesignRectangleView!!.firstTvName.text = "南北侧"
+        leftDesignRectangleView!!.secondTvName.text = "东西侧"
+
+        rightRealProtectView!!.firstTvName.text = "南北侧"
+        rightRealProtectView!!.sencondTvName.text = "东西侧"
+
+
+
+
+
+
 
         rightRealView!!.checkCpdBeamPic.setOnClickListener {
             openImgSelector(REQUEST_COLUMN_REAL_TAKE_PHOTO)
@@ -571,7 +588,9 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
                         lp2.width = -1
                         lp2.height = getResources().getDimensionPixelSize(R.dimen._45sdp)
                         rightDesignRowSteelParamsView!!.content.setLayoutParams(lp2)
-
+                        mIsCircleColumProtect = false
+                        rightRealProtectView!!.sencondComma.visibility = View.VISIBLE
+                        rightRealProtectView!!.sencondLl.visibility =View.VISIBLE
                     }
                     1 -> {
                         rightRealRowSteelParamsView!!.content.visibility =
@@ -603,6 +622,9 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
                         lp2.height = getResources().getDimensionPixelSize(R.dimen._20sdp)
                         rightDesignRowSteelParamsView!!.content.setLayoutParams(lp2)
 
+                        mIsCircleColumProtect = true
+                        rightRealProtectView!!.sencondComma.visibility = View.GONE
+                        rightRealProtectView!!.sencondLl.visibility =View.GONE
                     }
                     2 -> {
                         rightRealRowSteelParamsView!!.content.visibility =
@@ -634,11 +656,16 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
                         lp2.width = -1
                         lp2.height = getResources().getDimensionPixelSize(R.dimen._20sdp)
                         rightDesignRowSteelParamsView!!.content.setLayoutParams(lp2)
+                        mIsCircleColumProtect = false
 
+                        rightRealProtectView!!.sencondComma.visibility = View.VISIBLE
+                        rightRealProtectView!!.sencondLl.visibility =View.VISIBLE
                     }
                 }
 
             }.build()
+
+
 
 
         rightRealRowSteelView!!.checkCpdLeftRealSpinner3.setSpinnerData(
@@ -652,6 +679,9 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
             }.setTypeface(Typeface.createFromAsset(activity?.assets,"fonts/SJQY.cb6e0829.TTF"))
             .build()
 
+        rightRealRowSteelView!!.checkCpdLeftRealSpinner3.setText(mPicList!!.get(1))
+        rightRealRowSteelView!!.checkCpdLeftRealSpinner3.setSelect(1)
+
         rightDesignRowSteelView!!.checkCpdLeftRealSpinner3.setSpinnerData(
             mPicList
         )
@@ -664,6 +694,8 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
             }.setTypeface(Typeface.createFromAsset(activity?.assets,"fonts/SJQY.cb6e0829.TTF"))
             .build()
 
+        rightDesignRowSteelView!!.checkCpdLeftRealSpinner3.setText(mPicList!!.get(1))
+        rightDesignRowSteelView!!.checkCpdLeftRealSpinner3.setSelect(1)
 
         (rightRealMeasuredView!! as ItemComponentDetectionBeamRightRealMeasuredStirrupsEditBinding).checkCpdLeftRealSpinner2.setSpinnerData(
             mTypeRight2List
@@ -862,6 +894,7 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
             generateParamsList()
 
             var axis:String
+            var protectThicknessList:ArrayList<String>
             var axisList:ArrayList<String>
             if (mBinding.checkCpdSubtitle2Second.content.visibility ==View.VISIBLE){
                 axis = mBinding.checkCpdSubtitle2Second.checkEdit.text.toString()
@@ -874,6 +907,14 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
                 )
             }
 
+            if (rightRealProtectView!!.sencondLl.visibility ==View.VISIBLE){
+                protectThicknessList = arrayListOf(
+                    rightRealProtectView!!.checkEditProtect.text.toString(),
+                    rightRealProtectView!!.checkEditProtect2.text.toString()
+                )
+            }else{
+                protectThicknessList = arrayListOf(rightRealProtectView!!.checkEditProtect.text.toString())
+            }
 
             var damage = DamageV3Bean(
                 -1,
@@ -916,10 +957,7 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
                     rightRealNonEncryptedView!!.checkEdit.text.toString(),
                     rightRealNonEncryptedView!!.checkEdit2.text.toString()
                 ),
-                arrayListOf(
-                    rightRealProtectView!!.checkEditProtect.text.toString(),
-                    rightRealProtectView!!.checkEditProtect2.text.toString()
-                ),
+                protectThicknessList,
                 rightRealView!!.checkCpdLeftRealRemarkContent.text.toString(),
                 arrayListOf(FileUtil.getFileName(mRightRealPicSrc)?:"",mRightRealPicSrc),
                 //右侧设计
@@ -1036,6 +1074,7 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
     }
 
     fun resetView(damageV3Bean: DamageV3Bean?) {
+        LogUtils.d("柱 resetView: "+damageV3Bean.toString())
         mBinding.checkCpdSubtitle1.checkEdit.setText((context as CheckComponentDetectionActivity).mCurrentDrawing!!.floorName+"柱")
 
         if (damageV3Bean == null) {
@@ -1056,6 +1095,12 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
             mRightRealPicSrc = ""
             mRightDesignPicSrc = ""
 
+
+            mPicLeftRealList=null
+            mPicLeftDesignList = null
+            mPicRightRealList = null
+            mPicRightDesignList = null
+
             mPicLeftRealList = ArrayList()
             mPicLeftDesignList= ArrayList()
 
@@ -1063,6 +1108,12 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
             mPicRightDesignList = ArrayList()
 
 
+
+
+            mIsCircleColumProtect = false
+
+            rightRealProtectView!!.sencondComma.visibility = View.VISIBLE
+            rightRealProtectView!!.sencondLl.visibility =View.VISIBLE
 
 
             mBinding.checkCpdSubtitle2.content.visibility = View.VISIBLE
@@ -1143,8 +1194,8 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
             rightRealRowSteelView!!.checkCpdLeftRealSpinner2.setSelect(0)
             rightRealRowSteelView!!.checkCpdLeftRealSpinner2.setText(mTypeRightList!!.get(0))
 
-            rightRealRowSteelView!!.checkCpdLeftRealSpinner3.setSelect(0)
-            rightRealRowSteelView!!.checkCpdLeftRealSpinner3.setText(mPicList!!.get(0))
+            rightRealRowSteelView!!.checkCpdLeftRealSpinner3.setSelect(1)
+            rightRealRowSteelView!!.checkCpdLeftRealSpinner3.setText(mPicList!!.get(1))
             rightRealRowSteelView!!.checkEdit.setText("")
 
             rightRealRowSteelParamsView!!.content.visibility = View.VISIBLE
@@ -1167,8 +1218,8 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
             //右侧设计-纵筋类型
             rightDesignRowSteelView!!.checkCpdLeftRealSpinner2.setSelect(0)
             rightDesignRowSteelView!!.checkCpdLeftRealSpinner2.setText(mTypeRightList!!.get(0))
-            rightDesignRowSteelView!!.checkCpdLeftRealSpinner3.setSelect(0)
-            rightDesignRowSteelView!!.checkCpdLeftRealSpinner3.setText(mPicList!!.get(0))
+            rightDesignRowSteelView!!.checkCpdLeftRealSpinner3.setSelect(1)
+            rightDesignRowSteelView!!.checkCpdLeftRealSpinner3.setText(mPicList!!.get(1))
             rightDesignRowSteelView!!.checkEdit.setText("")
 
             rightDesignRowSteelParamsView!!.content.visibility = View.VISIBLE
@@ -1319,6 +1370,11 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
             mPicRightDesignList = null
             mPicRightDesignList = ArrayList()*/
 
+            mPicLeftRealList=null
+            mPicLeftDesignList = null
+            mPicRightRealList = null
+            mPicRightDesignList = null
+
             mPicLeftRealList = damageV3Bean.columnLeftRealPicList
 
 
@@ -1354,7 +1410,13 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
             mRightRealPicSrc = damageV3Bean.columnRightRealPic?.get(1)?:""
             mRightDesignPicSrc = damageV3Bean.columnRightDesignPic?.get(1)?:""
 
-            rightRealView!!.checkCpdBeamPic.setImageURI(Uri.fromFile(File(mRightRealPicSrc)))
+            if (mRightRealPicSrc.isNullOrEmpty()){
+                rightRealView!!.checkCpdBeamPic.setImageResource( R.color.gray)
+
+            }else{
+                rightRealView!!.checkCpdBeamPic.setImageURI(Uri.fromFile(File(mRightRealPicSrc)))
+
+            }
          //   rightDesignView!!.checkCpdBeamPic.setImageURI(Uri.fromFile(File(mRightDesignPicSrc)))
 
             when (damageV3Bean.leftRealSectionType) {
@@ -1435,8 +1497,13 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
                     leftRealAnotherView!!.checkCpdLeftDesignAnotherDescribe.setText(
                         damageV3Bean.leftRealSectionTypeParamsList!!.get(1)
                     )
-                    leftRealAnotherView!!.checkCpdAnotherPicStatus.setText("已绘制")
+                    if (damageV3Bean.columnLeftRealPicList.isNullOrEmpty()){
+                        leftRealAnotherView!!.checkCpdAnotherPicStatus.setText("未绘制")
 
+                    }else{
+                        leftRealAnotherView!!.checkCpdAnotherPicStatus.setText("已绘制")
+
+                    }
                 }
             }
 
@@ -1518,7 +1585,14 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
                     leftDesignAnotherView!!.checkCpdLeftDesignAnotherDescribe.setText(
                         damageV3Bean.leftDesignSectionTypeParamsList!!.get(1)
                     )
-                    leftDesignAnotherView!!.checkCpdAnotherPicStatus.setText("已绘制")
+
+                    if (damageV3Bean.columnLeftDesignPicList.isNullOrEmpty()){
+                        leftDesignAnotherView!!.checkCpdAnotherPicStatus.setText("未绘制")
+
+                    }else{
+                        leftDesignAnotherView!!.checkCpdAnotherPicStatus.setText("已绘制")
+
+                    }
                 }
             }
 
@@ -1576,10 +1650,13 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
                     lp.height = getResources().getDimensionPixelSize(R.dimen._45sdp)
                     rightRealRowSteelParamsView!!.content.setLayoutParams(lp)
 
-
+                    mIsCircleColumProtect =false
+                    rightRealProtectView!!.sencondComma.visibility = View.VISIBLE
+                    rightRealProtectView!!.sencondLl.visibility =View.VISIBLE
 
                 }
                 "圆形" -> {
+
                     rightRealRowSteelView!!.checkCpdLeftRealSpinner2.setSelect(1)
                     rightRealRowSteelView!!.checkCpdLeftRealSpinner2.setText(mTypeRightList!!.get(1))
                     rightRealRowSteelParamsView!!.content.visibility = View.INVISIBLE
@@ -1591,6 +1668,16 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
                     rightRealRowSteelCircleView!!.checkEdit2.setText(
                         damageV3Bean.rightRealSectionTypeParamsList!!.get(1)
                     )
+
+                    val lp: ViewGroup.LayoutParams
+                    lp = rightRealRowSteelParamsView!!.content.getLayoutParams()
+                    lp.width = -1
+                    lp.height = getResources().getDimensionPixelSize(R.dimen._20sdp)
+                    rightRealRowSteelParamsView!!.content.setLayoutParams(lp)
+
+                    mIsCircleColumProtect = true
+                    rightRealProtectView!!.sencondComma.visibility = View.GONE
+                    rightRealProtectView!!.sencondLl.visibility =View.GONE
                 }
                 "其他" -> {
                     rightRealRowSteelView!!.checkCpdLeftRealSpinner2.setSelect(2)
@@ -1601,7 +1688,25 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
                     rightRealRowSteelAnotherView!!.checkEdit.setText(
                         damageV3Bean.rightRealSectionTypeParamsList!!.get(0)
                     )
-                    rightRealRowSteelAnotherView!!.checkCpdAnotherPicStatus.setText("已绘制")
+
+                    val lp: ViewGroup.LayoutParams
+                    lp = rightRealRowSteelParamsView!!.content.getLayoutParams()
+                    lp.width = -1
+                    lp.height = getResources().getDimensionPixelSize(R.dimen._20sdp)
+                    rightRealRowSteelParamsView!!.content.setLayoutParams(lp)
+
+                    mIsCircleColumProtect = false
+                    rightRealProtectView!!.sencondComma.visibility = View.VISIBLE
+                    rightRealProtectView!!.sencondLl.visibility =View.VISIBLE
+
+
+                    if (damageV3Bean.rightRealSectionTypeParamsPicList.isNullOrEmpty()){
+                        rightRealRowSteelAnotherView!!.checkCpdAnotherPicStatus.setText("未绘制")
+
+                    }else{
+                        rightRealRowSteelAnotherView!!.checkCpdAnotherPicStatus.setText("已绘制")
+
+                    }
                 }
             }
 
@@ -1648,6 +1753,12 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
                     rightDesignRowSteelCircleView!!.checkEdit2.setText(
                         damageV3Bean.rightDesignSectionTypeParamsList!!.get(1)
                     )
+
+                    val lp2: ViewGroup.LayoutParams
+                    lp2 = rightDesignRowSteelParamsView!!.content.getLayoutParams()
+                    lp2.width = -1
+                    lp2.height = getResources().getDimensionPixelSize(R.dimen._20sdp)
+                    rightDesignRowSteelParamsView!!.content.setLayoutParams(lp2)
                 }
                 "其他" -> {
                     rightDesignRowSteelView!!.checkCpdLeftRealSpinner2.setSelect(2)
@@ -1658,7 +1769,21 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
                     rightDesignRowSteelAnotherView!!.checkEdit.setText(
                         damageV3Bean.rightDesignSectionTypeParamsList!!.get(0)
                     )
-                    rightDesignRowSteelAnotherView!!.checkCpdAnotherPicStatus.setText("已绘制")
+
+                    val lp2: ViewGroup.LayoutParams
+                    lp2 = rightDesignRowSteelParamsView!!.content.getLayoutParams()
+                    lp2.width = -1
+                    lp2.height = getResources().getDimensionPixelSize(R.dimen._20sdp)
+                    rightDesignRowSteelParamsView!!.content.setLayoutParams(lp2)
+
+
+                    if (damageV3Bean.rightDesignSectionTypeParamsPicList.isNullOrEmpty()){
+                        rightDesignRowSteelAnotherView!!.checkCpdAnotherPicStatus.setText("未绘制")
+
+                    }else{
+                        rightDesignRowSteelAnotherView!!.checkCpdAnotherPicStatus.setText("已绘制")
+
+                    }
                 }
             }
 
@@ -1726,11 +1851,18 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
                     0
                 )
             )
-            rightRealProtectView!!.checkEditProtect2.setText(
-                damageV3Bean.rightRealProtectList!!.get(
-                    1
+
+            if (mIsCircleColumProtect){
+
+            }else{
+                rightRealProtectView!!.checkEditProtect2.setText(
+                    damageV3Bean.rightRealProtectList!!.get(
+                        1
+                    )
                 )
-            )
+            }
+
+
 
             rightRealView!!.checkCpdLeftRealRemarkContent.setText(damageV3Bean.rightRealNote)
             rightDesignView!!.checkCpdLeftRealRemarkContent.setText(damageV3Bean.rightDesignNote)

@@ -22,6 +22,7 @@
         android:orientation="vertical">
 
         <TextView
+            android:id="@+id/first_tv_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/_5sdp"
@@ -66,6 +67,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/_5sdp"
+            android:id="@+id/second_tv_name"
             android:text="高度"
             android:textSize="@dimen/_5ssp"></TextView>
 
