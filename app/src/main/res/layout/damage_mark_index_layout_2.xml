@@ -32,7 +32,7 @@
             android:gravity="center"
             android:lines="2"
             android:textColor="@color/white"
-            android:textSize="@dimen/_3ssp" />
+            android:textSize="@dimen/_4ssp" />
 
     </androidx.cardview.widget.CardView>
 

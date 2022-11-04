@@ -48,8 +48,9 @@ import com.sribs.common.bean.db.DrawingV3Bean
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import kotlin.random.Random
-import kotlin.random.nextLong
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 /**
  * 相对高差
@@ -78,13 +79,13 @@ class RelativeHDiffActivity : BaseActivity() ,ICheckRHDiffContrast.ICheckRHDiffV
 
     private val mPresenter by lazy { CheckRHDiffPresenter() }
 
-    private val mFragments by lazy {
-        listOf(
-            ARouter.getInstance()
-                .build(com.sribs.common.ARouterPath.CHECK_RELATIVE_H_DIFF_FRAGMENT)
-                .navigation() as BaseFragment,
-        )
-    }
+    val mFragments by lazy {
+            listOf(
+                ARouter.getInstance()
+                    .build(com.sribs.common.ARouterPath.CHECK_RELATIVE_H_DIFF_FRAGMENT)
+                    .navigation() as BaseFragment,
+            )
+        }
 
     override fun deinitView() {
         unbindPresenter()
@@ -224,25 +225,19 @@ class RelativeHDiffActivity : BaseActivity() ,ICheckRHDiffContrast.ICheckRHDiffV
      */
     var mDamageBeanList: HashMap<String?, ArrayList<DamageV3Bean>?>? = HashMap()
 
+    var isRun = true
+
     /**
      * 回调view层数据
      */
     override fun onModuleInfo(checkHDiffMainBean: List<CheckHDiffMainBean>) {
+
         this.mCheckHDiffMainBean!!.clear()
         mCheckHDiffMainBean!!.addAll(checkHDiffMainBean)
-
         /**
-         * 初始化并加载第一张图纸
+         * 初始化第一张图纸
          */
         mCurrentDrawing = checkHDiffMainBean[0].drawing!![0]
-        if (mCurrentDrawing != null) {
-            openPDF(mCurrentDrawing!!)
-        }
-
-        /**
-         * 初始化损伤列表
-         *
-         */
 
         checkHDiffMainBean.forEach { a ->
             a.drawing!!.forEach { b ->
@@ -255,13 +250,41 @@ class RelativeHDiffActivity : BaseActivity() ,ICheckRHDiffContrast.ICheckRHDiffV
 
         LogUtils.d("损伤列表详情: " + mDamageBeanList)
 
-        resetDamageList()
-
         /**
-         * 初始化选择窗图纸列表
+         * fm创建后于activity 延时处理
          */
-        (mFragments[0] as RelativeHDiffFragment).initFloorDrawData(checkHDiffMainBean)
+        Timer().schedule(object :TimerTask(){
+            override fun run() {
+                while (isRun){
+                    if((mFragments[0] as RelativeHDiffFragment).mIsViewCreated){
+                        LogUtils.d("fm初始化成功 设置数据")
+                        isRun = false
 
+                        runOnUiThread {
+                            /**
+                             * 加载第一张图纸
+                             */
+                            if (mCurrentDrawing != null) {
+                                openPDF(mCurrentDrawing!!)
+                            }
+                            /**
+                             * 初始化损伤列表
+                             *
+                             */
+                            resetDamageList()
+                            /**
+                             * 初始化选择窗图纸列表
+                             */
+                            (mFragments[0] as RelativeHDiffFragment).initFloorDrawData(checkHDiffMainBean)
+                        }
+
+                    }else{
+                        LogUtils.d("fm未初始化 延迟10毫秒轮询")
+                    }
+                }
+            }
+
+        },10)
     }
 
     /**
@@ -380,6 +403,7 @@ class RelativeHDiffActivity : BaseActivity() ,ICheckRHDiffContrast.ICheckRHDiffV
             showToast("该图纸类型不是pdf，无法加载")
             return
         }
+
         this.mView = (mFragments[0] as RelativeHDiffFragment).getPDFView()
         mView!!.setV3Version(true)
         mView!!.setCurrentModuleType(mView!!.mModuleType.get(2))

@@ -588,6 +588,11 @@ public class CheckHTableView extends LinearLayout {
         int gcMax = Integer.valueOf(mViewHolderList.get(0).EditViewList.get(3).getText().toString());
         for (int j = 1; j < mViewHolderList.size(); j++) {
             ViewHolder viewHolder = mViewHolderList.get(j);
+            if(viewHolder.dnTag.getText().toString().contains("BM1")||
+                    viewHolder.dnTag.getText().toString().contains("TP")||
+                    viewHolder.dnTag.getText().toString().contains("闭合点")){
+                continue;
+            }
             List<EditText> EditList = viewHolder.EditViewList;
             int currentGc = Integer.valueOf(EditList.get(3).getText().toString());
             if(gcMax<currentGc){

@@ -38,6 +38,8 @@ import com.sribs.bdd.databinding.ActivityCheckComponentDetectionBinding
 import com.sribs.bdd.v3.bean.CheckCDMainBean
 import com.sribs.bdd.v3.event.RefreshPDFEvent
 import com.sribs.bdd.v3.ui.check.cd.fm.*
+import com.sribs.bdd.v3.ui.check.obd.fm.CheckOBDFragment
+import com.sribs.bdd.v3.ui.check.rhd.fm.RelativeHDiffFragment
 import com.sribs.bdd.v3.util.LogUtils
 import com.sribs.common.ARouterPath
 import com.sribs.common.bean.db.DamageV3Bean
@@ -514,7 +516,13 @@ class CheckComponentDetectionActivity : BaseActivity(), ICheckCDContrast.ICheckC
      * 选择pdf图片
      */
     fun choosePDF(data: DrawingV3Bean) {
-        if (isPDFModifiedNotSaved()) {
+        mController?.savePDF()
+        (mFragments[0] as CheckCDFragment).mBinding.checkSelectIndex.text =
+            data.fileName
+        openPDF(data)
+        resetDamageList()
+
+     /*   if (isPDFModifiedNotSaved()) {
             AlertDialog.Builder(this).setTitle("提示")
                 .setMessage(R.string.save_pdf_message)
                 .setPositiveButton(R.string.dialog_ok) { dialog, which ->
@@ -538,7 +546,7 @@ class CheckComponentDetectionActivity : BaseActivity(), ICheckCDContrast.ICheckC
             (mFragments[0] as CheckCDFragment).mBinding.checkSelectIndex.text = data.fileName
             openPDF(data)
             resetDamageList()
-        }
+        }*/
     }
 
     fun openPDF(drawingV3Bean: DrawingV3Bean) {
@@ -661,20 +669,18 @@ class CheckComponentDetectionActivity : BaseActivity(), ICheckCDContrast.ICheckC
         }
     }
 
+    var isRun = true
+
     override fun onModuleInfo(checkMainBean: List<CheckCDMainBean>) {
         this.mCheckCDMainBeanList!!.clear()
         mCheckCDMainBeanList!!.addAll(checkMainBean)
         LogUtils.d("回调到view层数据 " + mCheckCDMainBeanList)
 
         /**
-         * 初始化并加载第一张图纸
+         * 初始化第一张图纸
          */
         mCurrentDrawing = checkMainBean[0].drawing!![0]
-        LogUtils.d("mCurrentDrawing " + mCurrentDrawing)
-        if (mCurrentDrawing != null) {
-            openPDF(mCurrentDrawing!!)
-        }
-        LogUtils.d("初始化损伤列表11111 ")
+
         /**
          * 初始化损伤列表
          *
@@ -691,12 +697,42 @@ class CheckComponentDetectionActivity : BaseActivity(), ICheckCDContrast.ICheckC
 
         LogUtils.d("损伤列表详情: " + mDamageBeanList)
 
-        resetDamageList()
-
         /**
-         * 初始化选择窗图纸列表
+         * fm创建后于activity 延时处理
          */
-        (mFragments[0] as CheckCDFragment).initFloorDrawData(checkMainBean)
+        Timer().schedule(object :TimerTask(){
+            override fun run() {
+                while (isRun){
+                    if((mFragments[0] as CheckCDFragment).mIsViewCreated){
+                        LogUtils.d("fm初始化成功 设置数据")
+                        isRun = false
+
+                        runOnUiThread {
+                            /**
+                             * 加载第一张图纸
+                             */
+                            if (mCurrentDrawing != null) {
+                                openPDF(mCurrentDrawing!!)
+                            }
+                            /**
+                             * 初始化损伤列表
+                             *
+                             */
+                            resetDamageList()
+
+                            /**
+                             * 初始化选择窗图纸列表
+                             */
+                            (mFragments[0] as CheckCDFragment).initFloorDrawData(checkMainBean)
+                        }
+
+                    }else{
+                        LogUtils.d("fm未初始化 延迟10毫秒轮询")
+                    }
+                }
+            }
+
+        },10)
     }
 
     override fun bindPresenter() {

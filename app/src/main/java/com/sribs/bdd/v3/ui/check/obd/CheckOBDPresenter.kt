@@ -52,6 +52,7 @@ class CheckOBDPresenter :BasePresenter(),ICheckOBDContrast.ICheckOBDPresenter{
                 )
                 })
                 LogUtils.d("获取到该模块下所有数据 "+list.toString())
+                LogUtils.d("mView "+mView)
                 mView?.onModuleInfo(list)
                 dispose()
             },{

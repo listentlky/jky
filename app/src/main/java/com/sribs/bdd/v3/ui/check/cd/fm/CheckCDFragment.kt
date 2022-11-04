@@ -2,6 +2,7 @@ package com.sribs.bdd.v3.ui.check.cd.fm
 
 import android.app.AlertDialog
 import android.graphics.Canvas
+import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.RelativeLayout
@@ -36,12 +37,18 @@ class CheckCDFragment : BaseFragment(R.layout.fragment_check_componentdetection)
 
     private var mFloorDrawModule: ArrayList<FloorDrawingModule>? = ArrayList()
 
+    var mIsViewCreated = false
+
     override fun deinitView() {
+        mIsViewCreated = false
+    }
+
+    override fun initView() {
 
     }
 
-
-    override fun initView() {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        mIsViewCreated = true
         var popupWidth = resources.getDimensionPixelOffset(R.dimen._80sdp)
         mBinding.checkSelectIndex.setOnClickListener {
             if (mChooseFloorDraw == null) {

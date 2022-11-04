@@ -1,5 +1,6 @@
 package com.sribs.bdd.v3.ui.check.bs.fm
 
+import android.os.Bundle
 import android.view.View
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.cbj.sdk.libui.mvp.BaseFragment
@@ -41,6 +42,13 @@ class CheckBSGridFragment : BaseFragment(R.layout.fragment_check_build_structure
     }
 
     override fun initView() {
+
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        mBinding.checkBsFloorEdit1.checkEdit2.visibility = View.GONE
+        mBinding.checkBsFloorEdit1.checkEditFlag.visibility = View.GONE
+
         mBinding.checkBsFloorZwsjz.checkEditName.text="轴网设计值(mm)"
         mBinding.checkBsFloorZwsjz.checkEdit.hint="请输入轴网设计值"
 
@@ -84,15 +92,15 @@ class CheckBSGridFragment : BaseFragment(R.layout.fragment_check_build_structure
 
             if (mBinding.checkBsFloorZxEdit.visibility == View.GONE) {
                 if (mBinding.checkBsFloorEdit1.root.check_edit.text.isNullOrEmpty() ||
-                    mBinding.checkBsFloorEdit1.root.check_edit_flag.text.isNullOrEmpty() ||
+                   /* mBinding.checkBsFloorEdit1.root.check_edit_flag.text.isNullOrEmpty() ||*/
                     mBinding.checkBsFloorEdit2.root.check_edit.text.isNullOrEmpty() ||
-                    mBinding.checkBsFloorEdit1.root.check_edit_flag.text.isNullOrEmpty()
+                    mBinding.checkBsFloorEdit2.root.check_edit_flag.text.isNullOrEmpty()
                 ) {
                     showToast("请完善轴线")
                     return@setOnClickListener
                 }
                 mAxisNoteList!!.add(mBinding.checkBsFloorEdit1.root.check_edit.text.toString())
-                mAxisNoteList!!.add(mBinding.checkBsFloorEdit1.root.check_edit_flag.text.toString())
+             /*   mAxisNoteList!!.add(mBinding.checkBsFloorEdit1.root.check_edit_flag.text.toString())*/
                 mAxisNoteList!!.add(mBinding.checkBsFloorEdit2.root.check_edit.text.toString())
                 mAxisNoteList!!.add(mBinding.checkBsFloorEdit2.root.check_edit_flag.text.toString())
             } else {

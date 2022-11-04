@@ -39,6 +39,7 @@ import com.sribs.bdd.v3.event.RefreshPDFEvent
 import com.sribs.bdd.v3.ui.check.bs.fm.CheckBSFloorFragment
 import com.sribs.bdd.v3.ui.check.bs.fm.CheckBSFragment
 import com.sribs.bdd.v3.ui.check.bs.fm.CheckBSGridFragment
+import com.sribs.bdd.v3.ui.check.cd.fm.CheckCDFragment
 import com.sribs.bdd.v3.util.LogUtils
 import com.sribs.common.ARouterPath
 import com.sribs.common.bean.db.DamageV3Bean
@@ -353,6 +354,8 @@ class CheckBuildStructureActivity : BaseActivity(), ICheckBSContrast.ICheckBSVie
      */
     var mCurrentDrawing: DrawingV3Bean? = null
 
+    var isRun = true
+
     /**
      * 获取数据
      */
@@ -362,12 +365,9 @@ class CheckBuildStructureActivity : BaseActivity(), ICheckBSContrast.ICheckBSVie
         LogUtils.d("回调到view层数据")
 
         /**
-         * 初始化并加载第一张图纸
+         * 初始化第一张图纸
          */
         mCurrentDrawing = checkMainBean[0].drawing!![0]
-        if (mCurrentDrawing != null) {
-            openPDF(mCurrentDrawing!!)
-        }
 
         /**
          * 初始化损伤列表
@@ -385,12 +385,42 @@ class CheckBuildStructureActivity : BaseActivity(), ICheckBSContrast.ICheckBSVie
 
         LogUtils.d("损伤列表详情: " + mDamageBeanList)
 
-        resetDamageList()
-
         /**
-         * 初始化选择窗图纸列表
+         * fm创建后于activity 延时处理
          */
-        (mFragments[0] as CheckBSFragment).initFloorDrawData(checkMainBean)
+        Timer().schedule(object :TimerTask(){
+            override fun run() {
+                while (isRun){
+                    if((mFragments[0] as CheckBSFragment).mIsViewCreated){
+                        LogUtils.d("fm初始化成功 设置数据")
+                        isRun = false
+
+                        runOnUiThread {
+                            /**
+                             * 加载第一张图纸
+                             */
+                            if (mCurrentDrawing != null) {
+                                openPDF(mCurrentDrawing!!)
+                            }
+                            /**
+                             * 初始化损伤列表
+                             *
+                             */
+                            resetDamageList()
+
+                            /**
+                             * 初始化选择窗图纸列表
+                             */
+                            (mFragments[0] as CheckBSFragment).initFloorDrawData(checkMainBean)
+                        }
+
+                    }else{
+                        LogUtils.d("fm未初始化 延迟10毫秒轮询")
+                    }
+                }
+            }
+
+        },10)
     }
 
     /**
@@ -534,6 +564,12 @@ class CheckBuildStructureActivity : BaseActivity(), ICheckBSContrast.ICheckBSVie
      * 选择pdf图片
      */
     fun choosePDF(data: DrawingV3Bean) {
+        mController?.savePDF()
+        (mFragments[0] as CheckBSFragment).mBinding.checkSelectIndex.text =
+            data.fileName
+        openPDF(data)
+        resetDamageList()
+       /*
         if (isPDFModifiedNotSaved()) {
             AlertDialog.Builder(this).setTitle("提示")
                 .setMessage(R.string.save_pdf_message)
@@ -558,7 +594,7 @@ class CheckBuildStructureActivity : BaseActivity(), ICheckBSContrast.ICheckBSVie
             (mFragments[0] as CheckBSFragment).mBinding.checkSelectIndex.text = data.fileName
             openPDF(data)
             resetDamageList()
-        }
+        }*/
     }
 
     var mScaleDamageIndex = 0

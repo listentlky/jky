@@ -1,6 +1,7 @@
 package com.sribs.bdd.v3.ui.check.obd.fm
 
 import android.app.AlertDialog
+import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.RelativeLayout
@@ -37,12 +38,19 @@ class CheckOBDFragment : BaseFragment(R.layout.fragment_check_obliquedeformation
 
     private var mChoosePicPopupWindow:ChoosePicPopupWindow?=null
 
-    override fun deinitView() {
+    var mIsViewCreated = false
 
+    override fun deinitView() {
+        mIsViewCreated = false
     }
 
     override fun initView() {
 
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        mIsViewCreated = true
         var popupWidth = resources.getDimensionPixelOffset(R.dimen._70sdp)
         if(mChoosePicPopupWindow == null){
             mChoosePicPopupWindow = ChoosePicPopupWindow(context,popupWidth,mDrawingV3Bean,object: ChoosePicPopupWindow.PopupCallback{
@@ -66,7 +74,6 @@ class CheckOBDFragment : BaseFragment(R.layout.fragment_check_obliquedeformation
             (activity as CheckObliqueDeformationActivity).mGuideRotate = rotate
             mBinding.checkGuideHint.text = text
         }
-
     }
 
     /**
@@ -111,6 +118,7 @@ class CheckOBDFragment : BaseFragment(R.layout.fragment_check_obliquedeformation
         }
 
         mBinding.toolLayout.setMenuModuleList(mMenuList)
+            .setIsAdd(false)
             .setCheckMenuCallback(object : CheckMenuView2.CheckMenuCallback {
                 override fun onClick(v: View?, damageType:String?) {
                     (activity as CheckObliqueDeformationActivity).setAddAnnotReF(-1L)

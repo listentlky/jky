@@ -1,6 +1,7 @@
 package com.sribs.bdd.v3.ui.check.bs.fm
 
 import android.app.AlertDialog
+import android.os.Bundle
 import android.view.View
 import android.widget.RelativeLayout
 import com.alibaba.android.arouter.facade.annotation.Route
@@ -37,11 +38,17 @@ class CheckBSFragment : BaseFragment(R.layout.fragment_check_build_structure),
 
     private var mFloorDrawModule:ArrayList<FloorDrawingModule>?= ArrayList()
 
+    var mIsViewCreated = false
+
     override fun deinitView() {
+        mIsViewCreated = false
+    }
+    override fun initView() {
 
     }
 
-    override fun initView() {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        mIsViewCreated = true
         var popupWidth = resources.getDimensionPixelOffset(R.dimen._80sdp)
         mBinding.checkSelectIndex.setOnClickListener {
             if(mChooseFloorDraw == null){
@@ -124,7 +131,7 @@ class CheckBSFragment : BaseFragment(R.layout.fragment_check_build_structure),
                                 it.axisNoteList?.forEachIndexed { index, s ->
                                     if(index == 0){
                                         nameText+=s
-                                    }else if(index == 2){
+                                    }else if(index == 1){
                                         nameText+="/"+s
                                     }else{
                                         nameText+="-"+s

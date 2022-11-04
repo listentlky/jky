@@ -30,6 +30,7 @@ class CheckMenuView2 : LinearLayout {
     private val MARK_TYPE: Int? = 2
     private var menuModuleList: ArrayList<CheckMenuModule>? = ArrayList()
     private var mContext: Context? = null
+    private var mIsAdd = true
 
     constructor(context: Context) : super(context) {
         this.mContext = context
@@ -42,6 +43,11 @@ class CheckMenuView2 : LinearLayout {
 
     fun setMenuModuleList(menuList: ArrayList<CheckMenuModule>): CheckMenuView2 {
         this.menuModuleList = menuList
+        return this
+    }
+
+    fun setIsAdd(isAdd:Boolean): CheckMenuView2 {
+        this.mIsAdd = isAdd
         return this
     }
 
@@ -120,27 +126,32 @@ class CheckMenuView2 : LinearLayout {
                 tv2Params.addRule(RelativeLayout.CENTER_VERTICAL)
                 itemLayout.addView(tv2, tv2Params)
 
-                val tv3 = TextView(mContext)
-                tv3.text = "+"
-                tv3.gravity = Gravity.CENTER_VERTICAL
-                tv3.setTextSize(
-                    TypedValue.COMPLEX_UNIT_PX,
-                    mContext!!.resources.getDimension(R.dimen._8ssp)
-                )
-                tv3.setTextColor(Color.parseColor("#FFFFFF"))
-                val tv3Params = RelativeLayout.LayoutParams(
-                    ViewGroup.LayoutParams.WRAP_CONTENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT
-                )
-                tv3Params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT)
-                tv3Params.addRule(RelativeLayout.CENTER_VERTICAL)
-                itemLayout.addView(tv3, tv3Params)
+                if(mIsAdd) {
+
+                    val tv3 = TextView(mContext)
+                    tv3.text = "+"
+                    tv3.gravity = Gravity.CENTER_VERTICAL
+                    tv3.setTextSize(
+                        TypedValue.COMPLEX_UNIT_PX,
+                        mContext!!.resources.getDimension(R.dimen._8ssp)
+                    )
+                    tv3.setTextColor(Color.parseColor("#FFFFFF"))
+                    val tv3Params = RelativeLayout.LayoutParams(
+                        ViewGroup.LayoutParams.WRAP_CONTENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT
+                    )
+                    tv3Params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT)
+                    tv3Params.addRule(RelativeLayout.CENTER_VERTICAL)
+                    itemLayout.addView(tv3, tv3Params)
+
+                    itemLayout.setOnClickListener { v ->
+                        if (mCheckMenuCallback != null)
+                            mCheckMenuCallback!!.onClick(v, damageType)
+                    }
+                }
 
                 itemLayout.layoutParams = itemLayoutParams
-                itemLayout.setOnClickListener { v ->
-                    if (mCheckMenuCallback != null)
-                        mCheckMenuCallback!!.onClick(v, damageType)
-                }
+
                 return itemLayout
             }
             MARK_TYPE -> {

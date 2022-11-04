@@ -1,5 +1,6 @@
 package com.sribs.bdd.v3.ui.check.rhd.fm
 
+import android.os.Bundle
 import android.view.View
 import android.widget.RelativeLayout
 import com.alibaba.android.arouter.facade.annotation.Route
@@ -15,7 +16,6 @@ import com.sribs.bdd.v3.util.LogUtils
 import com.sribs.common.bean.db.DamageV3Bean
 import com.sribs.common.bean.db.DrawingV3Bean
 import com.sribs.common.bean.db.RelativeHDiffPointBean
-import kotlinx.android.synthetic.main.fragment_relative_h_diff.view.*
 import kotlin.collections.ArrayList
 
 /**
@@ -32,12 +32,22 @@ class RelativeHDiffFragment : BaseFragment(R.layout.fragment_relative_h_diff) {
 
     private var mChoosePicPopupWindow: ChoosePicPopupWindow? = null
 
+    var mIsViewCreated = false
+
     override fun deinitView() {
+        mIsViewCreated = false
+        LogUtils.d("deinitView")
         if (mBinding.checkTableInfo != null)
             mBinding.checkTableInfo.removeAllViews()
     }
 
     override fun initView() {
+        LogUtils.d("initView")
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        mIsViewCreated = true
+        LogUtils.d("onViewCreated "+mBinding)
         mBinding.checkLeftMenuRoot.setOnClickListener {
             when (mBinding.checkLeftLayout.visibility) {
                 View.VISIBLE -> {

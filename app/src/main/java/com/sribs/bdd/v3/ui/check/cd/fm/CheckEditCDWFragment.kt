@@ -3,6 +3,7 @@ package com.sribs.bdd.v3.ui.check.cd.fm
 import android.graphics.Color
 import android.graphics.Typeface
 import android.net.Uri
+import android.os.Bundle
 import android.view.Gravity
 import android.view.View
 import com.alibaba.android.arouter.facade.annotation.Route
@@ -67,6 +68,10 @@ class CheckEditCDWFragment : BaseFragment(R.layout.fragment_check_componentdetec
     }
 
     override fun initView() {
+
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         mtypePicList!!.addAll(Arrays.asList("A", "B"))
 
         currentRealPicType = mtypePicList!!.get(0)

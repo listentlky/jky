@@ -2,6 +2,7 @@ package com.sribs.bdd.v3.ui.check.cd.fm
 
 import android.graphics.Typeface
 import android.net.Uri
+import android.os.Bundle
 import android.view.Gravity
 import android.view.MotionEvent
 import android.view.View
@@ -145,6 +146,10 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
     }
 
     override fun initView() {
+
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         mTypeList!!.addAll(Arrays.asList("矩形", "圆形", "圆管", "H型", "其他"))
         mTypeRightList!!.addAll(Arrays.asList("矩形", "圆形", "其他"))

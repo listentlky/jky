@@ -1393,13 +1393,6 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
         /**
          * 查询copy楼栋下的图纸
          */
-        //页面数据
-        var cc = v3BuildingModuleDbBean()
-        var mModuleUUID: String? = ""
-        var mInspectors: String? = ""
-        var mLeader: String? = ""
-        var aboveGroundNumber: Int? = 0
-        var underGroundNumber: Int? = 0
 
         mDb.getLocalBuildingOnce(buildingId).toObservable()
             .subscribeOn(Schedulers.computation())
@@ -1424,11 +1417,12 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
                     }
 
                     LogUtils.d("查询楼： " + it)
-                    mModuleUUID = UUIDUtil.getUUID(moduleName!!)
-                    mInspectors = it[0].inspectorName
-                    mLeader = it[0].leader
-                    aboveGroundNumber = it[0].aboveGroundNumber
-                    underGroundNumber = it[0].underGroundNumber
+                    var cc = v3BuildingModuleDbBean()
+                    var mModuleUUID = UUIDUtil.getUUID(moduleName!!)
+                    var mInspectors = it[0].inspectorName
+                    var mLeader = it[0].leader
+                    var aboveGroundNumber = it[0].aboveGroundNumber
+                    var underGroundNumber = it[0].underGroundNumber
 
                     cc.id = -1
                     cc.uuid = mModuleUUID
@@ -1476,14 +1470,14 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
                                 )
                             }
                         },{
-
+                            LogUtils.d("本地模块创建失败: "+it)
                         })
                 }
 
 
 
             },{
-
+                LogUtils.d("本地模块创建失败: "+it)
             })
 
 

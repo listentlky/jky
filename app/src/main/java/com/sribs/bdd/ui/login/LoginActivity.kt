@@ -33,18 +33,6 @@ class LoginActivity:BaseActivity(),ILoginContrast.IVew {
 
     private val mPresenter by lazy { LoginPresenter() }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        if(!this.isTaskRoot){
-            var intent = intent
-            var action = intent.action
-            if(intent.hasCategory(Intent.CATEGORY_LAUNCHER) && Intent.ACTION_MAIN.equals(action)){
-                finish()
-                return
-            }
-        }
-    }
-
     override fun deinitView() {
         unbindPresenter()
     }
@@ -53,6 +41,15 @@ class LoginActivity:BaseActivity(),ILoginContrast.IVew {
 
     override fun initView() {
 //        setStateBarColor(resources.getColor(R.color.blue_800_10))
+
+        if(!this.isTaskRoot){
+            var intent = intent
+            var action = intent.action
+            if(intent.hasCategory(Intent.CATEGORY_LAUNCHER) && Intent.ACTION_MAIN.equals(action)){
+                finish()
+                return
+            }
+        }
 
         bindPresenter()
 

@@ -1,6 +1,7 @@
 package com.sribs.bdd.v3.ui.check.obd.fm
 
 import android.net.Uri
+import android.os.Bundle
 import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
@@ -40,11 +41,24 @@ class CheckEditOBDFragment : BaseFragment(R.layout.fragment_check_obliquedeforma
 
     var pointScalePath: String? = ""
 
+    var isViewCreated = false
+
     override fun deinitView() {
 
     }
 
     override fun initView() {
+
+    }
+
+    override fun onDestroyView() {
+        isViewCreated = false
+        super.onDestroyView()
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        isViewCreated = true;
         mBinding.checkEditH1.checkEditName.text = "测量高度1(m)"
         mBinding.checkEditH1.checkEdit.hint = "请输入测量高度"
         mBinding.checkEditH2.checkEditName.text = "测量高度2(m)"
@@ -306,7 +320,7 @@ class CheckEditOBDFragment : BaseFragment(R.layout.fragment_check_obliquedeforma
 
                 drawAndTextView.setTextViewHeight(resources.getDimensionPixelSize(R.dimen._60sdp))
                 drawAndTextView.resetView(mBinding.checkObdUiCaptureView.content1.oriRotation)
-                drawAndTextView.setMarkView("倾斜1")
+                drawAndTextView.setMarkView(mBinding.checkEditQx1.checkEdit.text.toString())
                 drawAndTextView.addTopView(mBinding.checkObdQx1Hint.text.toString().split("=")[1])
 
             } else {
@@ -320,13 +334,13 @@ class CheckEditOBDFragment : BaseFragment(R.layout.fragment_check_obliquedeforma
 
                 drawAndTextView.setTextViewHeight(resources.getDimensionPixelSize(R.dimen._60sdp))
                 drawAndTextView.resetView(mBinding.checkObdUiCaptureView.content1.oriRotation)
-                drawAndTextView.setMarkView("倾斜1")
+                drawAndTextView.setMarkView(mBinding.checkEditQx1.checkEdit.text.toString())
                 drawAndTextView.addTopView(mBinding.checkObdQx1Hint.text.toString().split("=")[1])
 
 
-                drawAndTextView2.setTextViewHeight(resources.getDimensionPixelSize(R.dimen._50sdp))
+                drawAndTextView2.setTextViewHeight(resources.getDimensionPixelSize(R.dimen._60sdp))
                 drawAndTextView2.resetView(mBinding.checkObdUiCaptureView.content2.oriRotation)
-                drawAndTextView2.setMarkView("倾斜2")
+                drawAndTextView2.setMarkView(mBinding.checkEditQx2.checkEdit.text.toString())
                 drawAndTextView2.addTopView(mBinding.checkObdQx2Hint.text.toString().split("=")[1])
 
             }
@@ -336,7 +350,6 @@ class CheckEditOBDFragment : BaseFragment(R.layout.fragment_check_obliquedeforma
         }
 
     }
-
 
     /**
      * 转换方向
@@ -393,6 +406,7 @@ class CheckEditOBDFragment : BaseFragment(R.layout.fragment_check_obliquedeforma
      * 根据是否为null来设置数据
      */
     fun resetView(damageV3Bean: DamageV3Bean?) {
+        LogUtils.d("isViewCreated " + isViewCreated)
         LogUtils.d("resetView " + damageV3Bean)
 
         mBinding.checkObdIndex.text =

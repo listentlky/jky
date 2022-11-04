@@ -202,6 +202,7 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".v3.ui.check.obd.CheckObliqueDeformationActivity"
+            android:launchMode="singleTask"
             android:windowSoftInputMode="stateHidden|adjustPan"
             android:configChanges="density|fontScale|keyboard|keyboardHidden|layoutDirection|locale|mcc|mnc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|touchscreen|uiMode"
             android:screenOrientation="landscape"
@@ -224,24 +225,28 @@
             android:name=".v3.ui.check.bs.CheckBuildStructureActivity"
             android:windowSoftInputMode="stateHidden|adjustPan"
             android:screenOrientation="landscape"
+            android:launchMode="singleTop"
             android:configChanges="density|fontScale|keyboard|keyboardHidden|layoutDirection|locale|mcc|mnc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|touchscreen|uiMode"
             android:theme="@style/AppTheme.Main" />
 
         <activity
             android:name=".v3.ui.check.rhd.RelativeHDiffActivity"
             android:windowSoftInputMode="stateHidden|adjustPan"
+            android:launchMode="singleTop"
             android:screenOrientation="landscape"
             android:configChanges="density|fontScale|keyboard|keyboardHidden|layoutDirection|locale|mcc|mnc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|touchscreen|uiMode"
             android:theme="@style/AppTheme.Main"  />
         <activity
             android:name=".v3.ui.check.cd.CheckComponentDetectionActivity"
             android:windowSoftInputMode="stateHidden|adjustPan"
+            android:launchMode="singleTop"
             android:screenOrientation="landscape"
             android:configChanges="density|fontScale|keyboard|keyboardHidden|layoutDirection|locale|mcc|mnc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|touchscreen|uiMode"
             android:theme="@style/AppTheme.Main"  />
         <activity
             android:name=".v3.ui.draw.DrawPDFActivity"
             android:windowSoftInputMode="stateHidden|adjustPan"
+            android:launchMode="singleTop"
             android:screenOrientation="landscape"
             android:configChanges="density|fontScale|keyboard|keyboardHidden|layoutDirection|locale|mcc|mnc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|touchscreen|uiMode"
             android:theme="@style/AppTheme.Main" />

@@ -1,5 +1,6 @@
 package com.sribs.bdd.v3.ui.check.bs.fm
 
+import android.os.Bundle
 import android.view.Gravity
 import android.view.View
 import com.alibaba.android.arouter.facade.annotation.Route
@@ -49,6 +50,10 @@ class CheckBSFloorFragment : BaseFragment(R.layout.fragment_check_build_structur
     }
 
     override fun initView() {
+
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         mJgZgList!!.addAll(Arrays.asList("净高", "总高"))
 
         /**

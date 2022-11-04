@@ -100,8 +100,8 @@ public class DrawAndTextView extends RelativeLayout {
             textParams.topMargin = getHeight()==0?mTextViewHeight / 3:getHeight()/3;
 
             mMarkView.setLayoutParams(textParams);
-
-            mMarkView.setBackgroundResource(R.drawable.retancgle_blue_drawable);
+            mMarkView.setRotation(-getRotation());
+            mMarkView.setBackgroundResource(0);
         }
     }
 
@@ -120,17 +120,15 @@ public class DrawAndTextView extends RelativeLayout {
     public void addTopView(String text) {
         LayoutParams textParams2 = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         textParams2.addRule(RelativeLayout.CENTER_HORIZONTAL);
-        int margin = getHeight()==0?mTextViewHeight / 10:getHeight()/10;
-        textParams2.leftMargin = margin;
-        textParams2.rightMargin = margin;
+        int margin = getHeight()==0?mTextViewHeight / 8:getHeight()/8;
         textParams2.topMargin = margin;
-        textParams2.bottomMargin = margin;
 
         mTopTextView = new TextView(mContext);
         mTopTextView.setTextColor(Color.BLACK);
         mTopTextView.setText(text);
-        mTopTextView.setTextSize(getResources().getDimensionPixelSize(R.dimen._2ssp));
-        mTopTextView.setBackgroundResource(R.drawable.retancgle_blue_drawable);
+        mTopTextView.setTextSize(getResources().getDimensionPixelSize(R.dimen._2sdp));
+
+    //    mTopTextView.setBackgroundResource(R.drawable.retancgle_blue_drawable);
         mTopTextView.setGravity(Gravity.CENTER);
         mTopTextView.setRotation(-getRotation());
         addView(mTopTextView, textParams2);
