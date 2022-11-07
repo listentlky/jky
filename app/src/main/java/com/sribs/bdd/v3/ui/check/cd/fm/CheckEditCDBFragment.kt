@@ -10,6 +10,7 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.cbj.sdk.libui.mvp.BaseFragment
 import com.cbj.sdk.libui.mvp.bindView
+import com.cbj.sdk.utils.NumberUtil
 import com.donkingliang.imageselector.utils.ImageSelector
 import com.sribs.bdd.R
 import com.sribs.bdd.databinding.*
@@ -72,6 +73,9 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
     private  var mCheckLeftDesignStatus = false
     private  var mCheckRightDesignStatus = false
     private  var mCheckRightRealStatus = false
+
+    private var mBeforeIndex = -1
+    private var mAboveIndex = -1
 
     private lateinit var leftRealView: FragmentCheckComponentdetectionBeamLeftRealEditBinding
     private lateinit var leftDesignView: FragmentCheckComponentdetectionBeamLeftDesignEditBinding
@@ -802,7 +806,40 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
 
     fun resetView(damageV3Bean: DamageV3Bean?) {
         LogUtils.d("resetView:///damageV3Bean" +damageV3Bean.toString())
-        mBinding.checkCpdSubtitle1.checkEdit.setText((context as CheckComponentDetectionActivity).mCurrentDrawing!!.floorName + "梁")
+        mBeforeIndex = -1
+        mAboveIndex = -1
+        (context as CheckComponentDetectionActivity).mBeforeList!!.forEachIndexed { index, it ->
+            it.drawing!!.forEach { x->
+                if (x.drawingID.equals((context as CheckComponentDetectionActivity).mCurrentDrawing!!.drawingID)){
+                    mBeforeIndex = index
+                }
+            }
+        }
+
+        (context as CheckComponentDetectionActivity).mAboveList!!.forEachIndexed { index, it ->
+            it.drawing!!.forEach { x->
+                if (x.drawingID.equals((context as CheckComponentDetectionActivity).mCurrentDrawing!!.drawingID)){
+                    mAboveIndex = index
+                }
+            }
+        }
+
+
+        LogUtils.d("resetView index---"+mBeforeIndex+"---"+mAboveIndex)
+
+        if(mBeforeIndex ==0){
+            mBinding.checkCpdSubtitle1.checkEdit.setText("一层梁") //地下只有一层
+        }else if(mBeforeIndex>-1){
+            mBinding.checkCpdSubtitle1.checkEdit.setText("负"+NumberUtil.num2Chinese(mBeforeIndex)+"层梁")
+        }
+
+        if ((context as CheckComponentDetectionActivity).mAboveList!!.size>0 &&mAboveIndex ==(context as CheckComponentDetectionActivity).mAboveList!!.size-1){
+            mBinding.checkCpdSubtitle1.checkEdit.setText("顶层梁")
+        }else if (mAboveIndex>-1){
+            mBinding.checkCpdSubtitle1.checkEdit.setText(NumberUtil.num2Chinese(mAboveIndex+2)+"层梁")  //下标为0 实际第一层 展示为第二层
+
+        }
+
         if (damageV3Bean == null) {
 
 

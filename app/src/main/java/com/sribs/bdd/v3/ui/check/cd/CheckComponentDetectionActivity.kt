@@ -64,6 +64,9 @@ class CheckComponentDetectionActivity : BaseActivity(), ICheckCDContrast.ICheckC
 
     private val mBinding: ActivityCheckComponentDetectionBinding by inflate()
 
+     var  mBeforeList: ArrayList<CheckCDMainBean>? = ArrayList()
+     var  mAboveList: ArrayList<CheckCDMainBean>? = ArrayList()
+
     private val REQUEST_BEAM_REAL_TAKE_PHOTO = 12 //选择图片
     private val REQUEST_BEAM_DESIGN_TAKE_PHOTO = 13 //选择图片
 
@@ -80,6 +83,7 @@ class CheckComponentDetectionActivity : BaseActivity(), ICheckCDContrast.ICheckC
     private val REQUEST_CODE_COLUMN_DESIGN_WHITE_FLLOR = 17 //基于柱-草图
     private val REQUEST_CODE_COLUMN_RIGHT_REAL_WHITE_FLLOR = 30 //基于柱-右侧草图
     private val REQUEST_CODE_COLUMN_RIGHT_DESIGN_WHITE_FLLOR = 31 //基于柱-右侧草图
+
 
 
     @JvmField
@@ -360,46 +364,7 @@ class CheckComponentDetectionActivity : BaseActivity(), ICheckCDContrast.ICheckC
      * 设置损伤页面详情，并展示
      */
     fun resetDamageInfo(damageV3Bean: DamageV3Bean?, type: String?,isAddDamageMark:Boolean,isEditDamageMark:Boolean) {
-       /* if (mBinding.checkMenuLayout.root.visibility == View.VISIBLE) {
-            AlertDialog.Builder(this).setTitle("提示")
-                .setMessage("当前有缩小详情页，是否移除？")
-                .setPositiveButton(R.string.dialog_ok) { dialog, which ->
-                    mBinding.checkMenuLayout.root.visibility = View.GONE
-                    when (type) {
-                        mCurrentDamageType[0] -> { //梁
-                            (mFragments[1] as CheckEditCDBFragment).resetView(damageV3Bean)
-                            mBinding.checkVp.currentItem = 1
-                            addPDFDamageMark = isAddDamageMark
-                            isEditDamage = isEditDamageMark
-                        }
 
-                        mCurrentDamageType[1] -> { //柱
-                            (mFragments[2] as CheckEditCDCFragment).resetView(damageV3Bean)
-                            mBinding.checkVp.currentItem = 2
-                            addPDFDamageMark = isAddDamageMark
-                            isEditDamage = isEditDamageMark
-                        }
-                        mCurrentDamageType[2] -> { //墙
-                            (mFragments[3] as CheckEditCDWFragment).resetView(damageV3Bean)
-                            mBinding.checkVp.currentItem = 3
-                            addPDFDamageMark = isAddDamageMark
-                            isEditDamage = isEditDamageMark
-                        }
-                        mCurrentDamageType[3] -> { //板
-                            (mFragments[4] as CheckEditCDPFragment).resetView(damageV3Bean)
-                            mBinding.checkVp.currentItem = 4
-                            addPDFDamageMark = isAddDamageMark
-                            isEditDamage = isEditDamageMark
-                        }
-
-                    }
-                }.setNegativeButton(
-                    R.string.dialog_cancel
-                ) { dialog, which ->
-                    cancelDamageMark()
-                }
-                .show()
-        } else {*/
         if (mBinding.checkMenuLayout.root.visibility == View.VISIBLE) {
             mBinding.checkMenuLayout.root.visibility = View.GONE
         }
@@ -676,10 +641,20 @@ class CheckComponentDetectionActivity : BaseActivity(), ICheckCDContrast.ICheckC
         mCheckCDMainBeanList!!.addAll(checkMainBean)
         LogUtils.d("回调到view层数据 " + mCheckCDMainBeanList)
 
+        mBeforeList!!.clear()
+        mAboveList!!.clear()
+
+
+        //获取地上地下数据
+        mBeforeList!!.addAll(mCheckCDMainBeanList!!.filter { it.floorType==0 })
+        mAboveList!!.addAll(mCheckCDMainBeanList!!.filter { it.floorType==1})
+
         /**
          * 初始化第一张图纸
          */
         mCurrentDrawing = checkMainBean[0].drawing!![0]
+
+
 
         /**
          * 初始化损伤列表

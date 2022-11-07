@@ -42,6 +42,7 @@ class CheckCDPresenter : BasePresenter(),ICheckCDContrast.ICheckCDPresenter{
                     moduleId = b.moduleId,
                     floorId = b.floorId,
                     floorName = b.floorName,
+                    floorType = b.floorType,
                     remoteId = b.remoteId,
                     drawing = b.drawingsList,
                     createTime = b.createTime,
