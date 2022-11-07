@@ -9,6 +9,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import com.sribs.bdd.R;
+import com.sribs.bdd.v3.util.LogUtils;
 
 
 public class DrawView extends View {
@@ -16,7 +17,11 @@ public class DrawView extends View {
     private static int mArrowHeight = 0;
     private static int mArrowBottom = 0;
 
+    private Context mContext;
+
     private Paint mPaint;
+
+    private float mZoom = 1.0f;
 
     public DrawView(Context context) {
         super(context);
@@ -34,6 +39,7 @@ public class DrawView extends View {
     }
 
     private void init(Context context){
+        this.mContext = context;
         mPaint = new Paint();
         mPaint.setColor(Color.parseColor("#FF005B82"));
         mPaint.setAntiAlias(true);
@@ -41,6 +47,7 @@ public class DrawView extends View {
 
         mArrowHeight = context.getResources().getDimensionPixelOffset(R.dimen._6sdp);
         mArrowBottom = context.getResources().getDimensionPixelOffset(R.dimen._2sdp);
+
     }
 
     private float mLineEndX,mLineEndY, mLineArrowEndX, mLineArrowEndY;
@@ -52,12 +59,22 @@ public class DrawView extends View {
         invalidate();
     }
 
+    public void setZoom(float zoom){
+        this.mZoom = zoom;
+        mPaint.setStrokeWidth(mContext.getResources().getDimensionPixelOffset(R.dimen._1sdp)*zoom);
+        mArrowHeight = (int) (mContext.getResources().getDimensionPixelOffset(R.dimen._6sdp)*zoom);
+        mArrowBottom = (int) (mContext.getResources().getDimensionPixelOffset(R.dimen._2sdp)*zoom);
+        invalidate();
+    }
+
     @Override
     protected void onDraw(Canvas canvas) {
 
         Log.e("bruce", "开始绘制view "+mAngle );
 
-        if(mAngle==0 ){
+        Path path = new Path();
+
+        if(mAngle==0){
             mLineEndX = getWidth()/2;
             mLineEndY = 0;
 
@@ -89,10 +106,11 @@ public class DrawView extends View {
         }
 
         canvas.drawLine(getWidth()/2, getHeight()/2, mLineEndX, mLineEndY, mPaint);
+
         drawArrow(canvas, mPaint, getWidth()/2, getHeight()/2, mLineArrowEndX, mLineArrowEndY, mArrowHeight, mArrowBottom);
 
     }
-
+    
     /**
      * 绘制三角
      * @param canvas
@@ -105,6 +123,7 @@ public class DrawView extends View {
      */
     private void drawArrow(Canvas canvas, Paint paintLine, float fromX, float fromY, float toX, float toY, int height, int bottom){
         try{
+
             float juli = (float) Math.sqrt((toX - fromX) * (toX - fromX)
                     + (toY - fromY) * (toY - fromY));// 获取线段距离
             float juliX = toX - fromX;// 有正负，不要取绝对值
@@ -117,7 +136,7 @@ public class DrawView extends View {
             Path path = new Path();
             path.moveTo(toX, toY);// 此点为三边形的起点
             path.lineTo(dianX + (bottom / juli * juliY), dianY
-                    - (bottom / juli * juliX));
+                    - bottom / juli * juliX);
             path.lineTo(dianX - (bottom / juli * juliY), dianY
                     + (bottom / juli * juliX));
             path.close(); // 使这些点构成封闭的三边形

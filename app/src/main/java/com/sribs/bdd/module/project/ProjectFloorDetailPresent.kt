@@ -1382,7 +1382,7 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
         projectName: String,
         buildingName: String,
      //   moduleName: String?,
-    moduleNameList:ArrayList<String>
+    moduleNameList:ArrayList<String>,
     ) {
         LogUtils.d("创建本地模块 "+moduleNameList)
 
@@ -1398,83 +1398,96 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
             .subscribeOn(Schedulers.computation())
             .observeOn(Schedulers.computation())
             .subscribe({
-                moduleNameList.forEach { moduleName->
+                var index = 0
+                Timer().schedule(object :TimerTask(){
+                    override fun run() {
+                        while (index<moduleNameList.size){
 
-                    var  cacheRootDir = FileUtil.getDrawingCacheRootDir(mView!!.getContext()!!)
-                    var  mCurDrawingsDir =
-                        "/" + ModuleHelper.DRAWING_CACHE_FOLDER + "/" + projectName + "/" + buildingName + "/" + moduleName + "/"
+                            var moduleName = moduleNameList.get(index)
 
-                    if(!isCopyFloorDrawing(moduleName)){
-                        it[0].drawing?.forEachIndexed { index, item ->
-                            item.drawingID = UUIDUtil.getUUID(item.fileName!!)
-                            var cacheFileParent = File(cacheRootDir + mCurDrawingsDir + index)
-                            cacheFileParent.mkdirs()
-                            var cacheFile = File(cacheFileParent, item.fileName)
-                            LogUtils.d("当前缓存地址: " + cacheFile.absolutePath)
-                            FileUtil.copyTo(File(item.localAbsPath), cacheFile)
-                            item.localAbsPath = cacheFile.absolutePath
+                            index++
+
+                            var  cacheRootDir = FileUtil.getDrawingCacheRootDir(mView!!.getContext()!!)
+                            var  mCurDrawingsDir =
+                                "/" + ModuleHelper.DRAWING_CACHE_FOLDER + "/" + projectName + "/" + buildingName + "/" + moduleName + "/"
+
+                            if(!isCopyFloorDrawing(moduleName)){
+                                it[0].drawing?.forEachIndexed { index, item ->
+                                    item.drawingID = UUIDUtil.getUUID(item.fileName!!)
+                                    var cacheFileParent = File(cacheRootDir + mCurDrawingsDir + index)
+                                    cacheFileParent.mkdirs()
+                                    var cacheFile = File(cacheFileParent, item.fileName)
+                                    LogUtils.d("当前缓存地址: " + cacheFile.absolutePath)
+                                    FileUtil.copyTo(File(item.localAbsPath), cacheFile)
+                                    item.localAbsPath = cacheFile.absolutePath
+                                }
+                            }
+
+                            LogUtils.d("查询楼： " + it)
+                            var cc = v3BuildingModuleDbBean()
+                            var mModuleUUID = UUIDUtil.getUUID(moduleName!!)
+                            var mInspectors = it[0].inspectorName
+                            var mLeader = it[0].leader
+                            var aboveGroundNumber = it[0].aboveGroundNumber
+                            var underGroundNumber = it[0].underGroundNumber
+
+                            cc.id = -1
+                            cc.uuid = mModuleUUID
+                            cc.projectUUID = projectUUID
+                            cc.projectId = projectId
+                            cc.buildingUUID = buildingUUID
+                            cc.buildingId = buildingId
+                            cc.remoteId = remoteId
+                            cc.moduleName = moduleName
+                            cc.drawings = if(isCopyFloorDrawing(moduleName)) ArrayList() else it[0].drawing
+                            cc.inspectors = mInspectors
+                            cc.leaderId = Dict.getLeaderId(mLeader!!)
+                            cc.leaderName = mLeader
+                            cc.createTime = TimeUtil.YMD_HMS.format(Date())
+                            cc.updateTime = TimeUtil.YMD_HMS.format(Date())
+                            cc.aboveGroundNumber = aboveGroundNumber
+                            cc.underGroundNumber = underGroundNumber
+                            cc.superiorVersion = it[0].version
+                            cc.version = System.currentTimeMillis()
+                            cc.isChanged = 1
+
+                            LogUtils.d("查询到楼栋下面的数据包装进 model表 : " + cc)
+                            mDb.updatev3BuildingModule(cc)
+                                .subscribeOn(Schedulers.computation())
+                                .observeOn(Schedulers.computation())
+                                .subscribe({
+                                    LogUtils.d("本地model创建成功 " + it+" ; "+moduleName)
+                                    dispose()
+                                    if (isCopyFloorDrawing(moduleName)) {
+                                        createModuleFloor(
+                                            it,
+                                            mModuleUUID!!,
+                                            moduleName!!,
+                                            projectId,
+                                            projectUUID,
+                                            buildingId,
+                                            buildingUUID,
+                                            remoteId,
+                                            mInspectors,
+                                            mLeader,
+                                            aboveGroundNumber,
+                                            underGroundNumber,
+                                            cacheRootDir,
+                                            mCurDrawingsDir
+                                        )
+                                    }
+                                },{
+                                    LogUtils.d("本地模块创建失败: "+it)
+                                })
+
                         }
                     }
 
-                    LogUtils.d("查询楼： " + it)
-                    var cc = v3BuildingModuleDbBean()
-                    var mModuleUUID = UUIDUtil.getUUID(moduleName!!)
-                    var mInspectors = it[0].inspectorName
-                    var mLeader = it[0].leader
-                    var aboveGroundNumber = it[0].aboveGroundNumber
-                    var underGroundNumber = it[0].underGroundNumber
+                },50)
 
-                    cc.id = -1
-                    cc.uuid = mModuleUUID
-                    cc.projectUUID = projectUUID
-                    cc.projectId = projectId
-                    cc.buildingUUID = buildingUUID
-                    cc.buildingId = buildingId
-                    cc.remoteId = remoteId
-                    cc.moduleName = moduleName
-                    cc.drawings = if(isCopyFloorDrawing(moduleName)) ArrayList() else it[0].drawing
-                    cc.inspectors = mInspectors
-                    cc.leaderId = Dict.getLeaderId(mLeader!!)
-                    cc.leaderName = mLeader
-                    cc.createTime = TimeUtil.YMD_HMS.format(Date())
-                    cc.updateTime = TimeUtil.YMD_HMS.format(Date())
-                    cc.aboveGroundNumber = aboveGroundNumber
-                    cc.underGroundNumber = underGroundNumber
-                    cc.superiorVersion = it[0].version
-                    cc.version = System.currentTimeMillis()
-                    cc.isChanged = 1
+               /* moduleNameList.forEach { moduleName->
 
-                    LogUtils.d("查询到楼栋下面的数据包装进 model表 : " + cc)
-                    mDb.updatev3BuildingModule(cc)
-                        .subscribeOn(Schedulers.computation())
-                        .observeOn(Schedulers.computation())
-                        .subscribe({
-                            LogUtils.d("本地model创建成功 " + it+" ; "+moduleName)
-                            dispose()
-                            if (isCopyFloorDrawing(moduleName)) {
-                                createModuleFloor(
-                                    it,
-                                    mModuleUUID!!,
-                                    moduleName!!,
-                                    projectId,
-                                    projectUUID,
-                                    buildingId,
-                                    buildingUUID,
-                                    remoteId,
-                                    mInspectors,
-                                    mLeader,
-                                    aboveGroundNumber,
-                                    underGroundNumber,
-                                    cacheRootDir,
-                                    mCurDrawingsDir
-                                )
-                            }
-                        },{
-                            LogUtils.d("本地模块创建失败: "+it)
-                        })
-                }
-
-
+                }*/
 
             },{
                 LogUtils.d("本地模块创建失败: "+it)

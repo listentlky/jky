@@ -4,13 +4,10 @@ import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Canvas
-import android.graphics.Color
-import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.RelativeLayout
-import android.widget.TextView
 import com.alibaba.android.arouter.facade.annotation.Autowired
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
@@ -30,7 +27,6 @@ import com.radaee.pdf.Page
 import com.radaee.reader.PDFLayoutView
 import com.radaee.reader.PDFPagesAct
 import com.radaee.reader.PDFViewController
-import com.radaee.util.CommonUtil
 import com.radaee.util.PDFAssetStream
 import com.radaee.util.PDFHttpStream
 import com.radaee.util.RadaeePluginCallback
@@ -41,7 +37,6 @@ import com.sribs.bdd.v3.bean.CheckOBDMainBean
 import com.sribs.bdd.v3.event.RefreshPDFEvent
 import com.sribs.bdd.v3.ui.check.obd.fm.CheckEditOBDFragment
 import com.sribs.bdd.v3.ui.check.obd.fm.CheckOBDFragment
-import com.sribs.bdd.v3.ui.check.rhd.fm.RelativeHDiffFragment
 import com.sribs.bdd.v3.util.LogUtils
 import com.sribs.common.ARouterPath
 import com.sribs.common.bean.db.DamageV3Bean
@@ -155,7 +150,7 @@ class CheckObliqueDeformationActivity : BaseActivity(), ICheckOBDContrast.ICheck
                 mBinding.checkVp.currentItem = 0
                 cancelDamageMark()
             } else {
-                ExitToSave()
+                exitToSave()
             }
         }
     }
@@ -513,7 +508,9 @@ class CheckObliqueDeformationActivity : BaseActivity(), ICheckOBDContrast.ICheck
      */
     fun addDamageMark(damageInfo: DamageV3Bean, view: View) {
 
-        var size = resources.getDimensionPixelSize(R.dimen._80sdp)
+        LogUtils.d("当前放大比例: "+mView?.PDFGetZoom())
+
+        var size = (resources.getDimensionPixelSize(R.dimen._80sdp) * mView?.PDFGetZoom()!!).toInt()
 
         mView!!.layoutView(view, size, size)
 
@@ -606,10 +603,14 @@ class CheckObliqueDeformationActivity : BaseActivity(), ICheckOBDContrast.ICheck
         cancelDamageMark()
     }
 
+    override fun onBackPressed() {
+        exitToSave()
+    }
+
     /**
      * 退出提示保存框
      */
-    private fun ExitToSave() {
+    private fun exitToSave() {
         AlertDialog.Builder(this).setTitle(getString(R.string.drawing_edit_exit_dialog_title))
             .setMessage(R.string.is_save_hint)
             .setPositiveButton(R.string.dialog_ok) { dialog, which ->

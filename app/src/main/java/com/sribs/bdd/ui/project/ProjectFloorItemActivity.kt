@@ -22,6 +22,7 @@ import com.sribs.bdd.module.project.ProjectFloorDetailPresent
 import com.sribs.bdd.ui.adapter.FloorItemAdapter
 import com.sribs.bdd.v3.util.LogUtils
 import com.sribs.common.utils.DialogUtil
+import java.util.*
 import kotlin.collections.ArrayList
 
 
@@ -648,7 +649,6 @@ class ProjectFloorItemActivity : BaseActivity(), IProjectContrast.IProjectFloorD
             if(filterList.size<=0){
                 return@setPositiveButton
             }
-
             mPresenter.createOrSaveModule(
                 mLocalProjectId,
                 mLocalProjectUUID,

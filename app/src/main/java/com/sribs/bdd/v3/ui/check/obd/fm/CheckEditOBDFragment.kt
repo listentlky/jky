@@ -3,9 +3,12 @@ package com.sribs.bdd.v3.ui.check.obd.fm
 import android.net.Uri
 import android.os.Bundle
 import android.text.InputType
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.core.widget.addTextChangedListener
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.cbj.sdk.libui.mvp.BaseFragment
@@ -307,18 +310,31 @@ class CheckEditOBDFragment : BaseFragment(R.layout.fragment_check_obliquedeforma
                     .split("=")[1] else "",
             )
 
+            var zoom = (activity as CheckObliqueDeformationActivity).mView?.PDFGetZoom()!!
+
+            var viewHeight = (resources.getDimensionPixelSize(R.dimen._60sdp)*zoom).toInt()
+
+            var cardViewHeight = (resources.getDimensionPixelSize(R.dimen._15sdp)*zoom).toInt()
+
             var layout: View
             if (mBinding.checkObdOnlyRadio.isSelected) {
 
                 layout =
                     LayoutInflater.from(activity).inflate(R.layout.damage_mark_index_layout_2, null)
+
+                var cardView = layout.findViewById<CardView>(R.id.damage_type_cardView)
+                var cardViewLayoutParams = RelativeLayout.LayoutParams(cardViewHeight,cardViewHeight)
+                cardViewLayoutParams.addRule(RelativeLayout.CENTER_IN_PARENT)
+                cardView.layoutParams = cardViewLayoutParams
+
                 val drawAndTextView = layout.findViewById<(DrawAndTextView)>(R.id.content_1)
 
                 val content = layout.findViewById<TextView>(R.id.point_text)
-
+                content.setTextSize(TypedValue.COMPLEX_UNIT_PX,resources.getDimensionPixelSize(R.dimen._3ssp)*zoom)
                 content.text = mBinding.checkEditPoint.checkEdit.text
 
-                drawAndTextView.setTextViewHeight(resources.getDimensionPixelSize(R.dimen._60sdp))
+                drawAndTextView.setTextViewHeight(viewHeight)
+                drawAndTextView.setZoom(zoom)
                 drawAndTextView.resetView(mBinding.checkObdUiCaptureView.content1.oriRotation)
                 drawAndTextView.setMarkView(mBinding.checkEditQx1.checkEdit.text.toString())
                 drawAndTextView.addTopView(mBinding.checkObdQx1Hint.text.toString().split("=")[1])
@@ -326,19 +342,27 @@ class CheckEditOBDFragment : BaseFragment(R.layout.fragment_check_obliquedeforma
             } else {
                 layout =
                     LayoutInflater.from(activity).inflate(R.layout.damage_mark_index_layout_3, null)
+
+                var cardView = layout.findViewById<CardView>(R.id.damage_type_cardView)
+                var cardViewLayoutParams = RelativeLayout.LayoutParams(cardViewHeight,cardViewHeight)
+                cardViewLayoutParams.addRule(RelativeLayout.CENTER_IN_PARENT)
+                cardView.layoutParams = cardViewLayoutParams
+
                 val drawAndTextView = layout.findViewById<(DrawAndTextView)>(R.id.content_1)
                 val drawAndTextView2 = layout.findViewById<(DrawAndTextView)>(R.id.content_2)
                 val content = layout.findViewById<TextView>(R.id.point_text)
-
+                content.setTextSize(TypedValue.COMPLEX_UNIT_PX,resources.getDimensionPixelSize(R.dimen._3ssp)*zoom)
                 content.text = mBinding.checkEditPoint.checkEdit.text
 
-                drawAndTextView.setTextViewHeight(resources.getDimensionPixelSize(R.dimen._60sdp))
+                drawAndTextView.setTextViewHeight(viewHeight)
+                drawAndTextView.setZoom(zoom)
                 drawAndTextView.resetView(mBinding.checkObdUiCaptureView.content1.oriRotation)
                 drawAndTextView.setMarkView(mBinding.checkEditQx1.checkEdit.text.toString())
                 drawAndTextView.addTopView(mBinding.checkObdQx1Hint.text.toString().split("=")[1])
 
 
-                drawAndTextView2.setTextViewHeight(resources.getDimensionPixelSize(R.dimen._60sdp))
+                drawAndTextView2.setTextViewHeight(viewHeight)
+                drawAndTextView2.setZoom(zoom)
                 drawAndTextView2.resetView(mBinding.checkObdUiCaptureView.content2.oriRotation)
                 drawAndTextView2.setMarkView(mBinding.checkEditQx2.checkEdit.text.toString())
                 drawAndTextView2.addTopView(mBinding.checkObdQx2Hint.text.toString().split("=")[1])

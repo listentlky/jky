@@ -583,11 +583,10 @@ public class CheckHTableView extends LinearLayout {
         }
 
         /**
-         * 获得最大高程值
+         * 计算相对高差
          */
-        int gcMax = Integer.valueOf(mViewHolderList.get(0).EditViewList.get(3).getText().toString());
-        for (int j = 1; j < mViewHolderList.size(); j++) {
-            ViewHolder viewHolder = mViewHolderList.get(j);
+        for (int q = 1; q < mViewHolderList.size(); q++) {
+            ViewHolder viewHolder = mViewHolderList.get(q);
             if(viewHolder.dnTag.getText().toString().contains("BM1")||
                     viewHolder.dnTag.getText().toString().contains("TP")||
                     viewHolder.dnTag.getText().toString().contains("闭合点")){
@@ -595,23 +594,38 @@ public class CheckHTableView extends LinearLayout {
             }
             List<EditText> EditList = viewHolder.EditViewList;
             int currentGc = Integer.valueOf(EditList.get(3).getText().toString());
-            if(gcMax<currentGc){
-                gcMax = currentGc;
-            }
-        }
-
-        /**
-         * 计算相对高差
-         */
-        for (int q = 1; q < mViewHolderList.size(); q++) {
-            ViewHolder viewHolder = mViewHolderList.get(q);
-            List<EditText> EditList = viewHolder.EditViewList;
-            int currentGc = Integer.valueOf(EditList.get(3).getText().toString());
-            EditList.get(4).setText(""+(currentGc-gcMax));
+            int currentGroupMaxGc = getCurrentGroupMaxGc(viewHolder.dnTag.getText().toString().split("-")[0],currentGc);
+            EditList.get(4).setText(""+(currentGc-currentGroupMaxGc));
         }
 
         getTableInfo();
     }
+
+    /**
+     * 计算当前组的最大高程值
+     * @return
+     */
+    private int getCurrentGroupMaxGc(String group,int gcMax){
+
+        for (int j = 1; j < mViewHolderList.size(); j++) {
+            ViewHolder viewHolder = mViewHolderList.get(j);
+            if(viewHolder.dnTag.getText().toString().contains("BM1")||
+                    viewHolder.dnTag.getText().toString().contains("TP")||
+                    viewHolder.dnTag.getText().toString().contains("闭合点")){
+                continue;
+            }
+            if(viewHolder.dnTag.getText().toString().split("-")[0].equals(group)) {
+                List<EditText> EditList = viewHolder.EditViewList;
+                int currentGc = Integer.valueOf(EditList.get(3).getText().toString());
+                if (gcMax < currentGc) {
+                    gcMax = currentGc;
+                }
+            }
+        }
+        LogUtils.INSTANCE.d("分组为 "+group+" ; 高程最大值: "+gcMax);
+        return gcMax;
+    }
+
 
     private int bhc;
 

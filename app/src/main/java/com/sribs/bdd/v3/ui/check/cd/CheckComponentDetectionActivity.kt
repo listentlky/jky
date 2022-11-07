@@ -3,6 +3,10 @@ package com.sribs.bdd.v3.ui.check.cd
 import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
+import android.os.Build
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
@@ -38,8 +42,6 @@ import com.sribs.bdd.databinding.ActivityCheckComponentDetectionBinding
 import com.sribs.bdd.v3.bean.CheckCDMainBean
 import com.sribs.bdd.v3.event.RefreshPDFEvent
 import com.sribs.bdd.v3.ui.check.cd.fm.*
-import com.sribs.bdd.v3.ui.check.obd.fm.CheckOBDFragment
-import com.sribs.bdd.v3.ui.check.rhd.fm.RelativeHDiffFragment
 import com.sribs.bdd.v3.util.LogUtils
 import com.sribs.common.ARouterPath
 import com.sribs.common.bean.db.DamageV3Bean
@@ -203,7 +205,7 @@ class CheckComponentDetectionActivity : BaseActivity(), ICheckCDContrast.ICheckC
                 mBinding.checkVp.currentItem = 0
                 cancelDamageMark()
             } else {
-                ExitToSave()
+                exitToSave()
             }
         }
 
@@ -290,6 +292,9 @@ class CheckComponentDetectionActivity : BaseActivity(), ICheckCDContrast.ICheckC
             LayoutInflater.from(this).inflate(R.layout.damage_checkbuildstructure_mark_layout, null)
         val damageType = view.findViewById<TextView>(R.id.damage_type)
         val damageText = view.findViewById<TextView>(R.id.damage_text)
+        damageText.background = getTextBgDrawableRes()
+        damageType.setTextSize(TypedValue.COMPLEX_UNIT_PX,resources.getDimensionPixelSize(R.dimen._6ssp)*mView?.PDFGetZoom()!!)
+        damageText.setTextSize(TypedValue.COMPLEX_UNIT_PX,resources.getDimensionPixelSize(R.dimen._4ssp)*mView?.PDFGetZoom()!!)
         damageType.text = ""+damageInfo.type
 
         when(damageInfo.type){
@@ -343,10 +348,23 @@ class CheckComponentDetectionActivity : BaseActivity(), ICheckCDContrast.ICheckC
                 damageText.text = damageInfo.plateName+" "+damageAxisNote
             }
         }
-        var size = resources.getDimensionPixelSize(R.dimen._30sdp)
+        var size = (resources.getDimensionPixelSize(R.dimen._30sdp)*mView?.PDFGetZoom()!!).toInt()
         mView!!.layoutView(view, size, size/2)
         var bitmap = PDFLayoutView.getViewBitmap(view)
         mView!!.PDFSetStamp(1,bitmap,size.toFloat(),(size/2).toFloat(),damageInfo.type+damageInfo.createTime)
+    }
+
+    fun getTextBgDrawableRes(): GradientDrawable? {
+        val drawable = GradientDrawable()
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            val padding: Int = (resources.getDimensionPixelSize(R.dimen._2sdp) * mView?.PDFGetZoom()!!).toInt()
+            drawable.setPadding(padding, 0, padding, 0)
+        }
+        drawable.cornerRadius = (resources.getDimensionPixelSize(R.dimen._2sdp) * mView?.PDFGetZoom()!!)
+        drawable.setStroke((2 * mView?.PDFGetZoom()!!).toInt(), Color.parseColor("#FF005B82"))
+        drawable.setColor(Color.WHITE)
+        return drawable
     }
 
     /**
@@ -583,10 +601,14 @@ class CheckComponentDetectionActivity : BaseActivity(), ICheckCDContrast.ICheckC
         mView?.PDFCancelStamp()
     }
 
+    override fun onBackPressed() {
+        exitToSave()
+    }
+
     /**
      * 退出提示保存框
      */
-    private fun ExitToSave() {
+    private fun exitToSave() {
         AlertDialog.Builder(this).setTitle(getString(R.string.drawing_edit_exit_dialog_title))
             .setMessage(R.string.is_save_hint)
             .setPositiveButton(R.string.dialog_ok) { dialog, which ->

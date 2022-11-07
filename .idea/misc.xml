@@ -330,6 +330,7 @@
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/drawable/ic_sel_copy_config.xml" value="0.1485" />
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/drawable/icon_bk_red_point.xml" value="0.3495" />
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/drawable/main_button_inhabit_click.xml" value="0.3495" />
+        <entry key="..\:/jiankeyuan/2022915/app/src/main/res/drawable/mark_text_bg.xml" value="0.1" />
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/drawable/popup_bg_selector.xml" value="0.1485" />
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/drawable/popup_textcolor_selector.xml" value="0.1485" />
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/drawable/radio_selector.xml" value="0.13" />
@@ -403,6 +404,7 @@
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/fragment_relative_h_diff_edit.xml" value="0.33958333333333335" />
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/item_component_detection_beam_left_another_item.xml" value="0.67" />
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/item_component_detection_beam_right_real_measured_stirrups_edit.xml" value="0.67" />
+        <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/item_component_detection_beam_right_real_protect_edit.xml" value="0.5" />
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/item_component_detection_beam_right_real_single_row_steel.xml" value="0.67" />
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/item_component_detection_beam_right_real_single_row_steel_2.xml" value="0.67" />
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/item_component_detection_column_right_real_row_steel.xml" value="0.67" />

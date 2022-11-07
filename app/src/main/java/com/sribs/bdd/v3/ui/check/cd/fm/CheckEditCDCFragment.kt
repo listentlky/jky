@@ -596,6 +596,7 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
                         mIsCircleColumProtect = false
                         rightRealProtectView!!.sencondComma.visibility = View.VISIBLE
                         rightRealProtectView!!.sencondLl.visibility =View.VISIBLE
+                        rightRealProtectView!!.firstTvName.visibility = View.VISIBLE
                     }
                     1 -> {
                         rightRealRowSteelParamsView!!.content.visibility =
@@ -630,6 +631,7 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
                         mIsCircleColumProtect = true
                         rightRealProtectView!!.sencondComma.visibility = View.GONE
                         rightRealProtectView!!.sencondLl.visibility =View.GONE
+                        rightRealProtectView!!.firstTvName.visibility = View.INVISIBLE
                     }
                     2 -> {
                         rightRealRowSteelParamsView!!.content.visibility =
@@ -665,6 +667,7 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
 
                         rightRealProtectView!!.sencondComma.visibility = View.VISIBLE
                         rightRealProtectView!!.sencondLl.visibility =View.VISIBLE
+                        rightRealProtectView!!.firstTvName.visibility = View.VISIBLE
                     }
                 }
 
@@ -1119,6 +1122,7 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
 
             rightRealProtectView!!.sencondComma.visibility = View.VISIBLE
             rightRealProtectView!!.sencondLl.visibility =View.VISIBLE
+            rightRealProtectView!!.firstTvName.visibility = View.VISIBLE
 
 
             mBinding.checkCpdSubtitle2.content.visibility = View.VISIBLE
@@ -1658,6 +1662,7 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
                     mIsCircleColumProtect =false
                     rightRealProtectView!!.sencondComma.visibility = View.VISIBLE
                     rightRealProtectView!!.sencondLl.visibility =View.VISIBLE
+                    rightRealProtectView!!.firstTvName.visibility = View.VISIBLE
 
                 }
                 "圆形" -> {
@@ -1683,6 +1688,7 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
                     mIsCircleColumProtect = true
                     rightRealProtectView!!.sencondComma.visibility = View.GONE
                     rightRealProtectView!!.sencondLl.visibility =View.GONE
+                    rightRealProtectView!!.firstTvName.visibility = View.INVISIBLE
                 }
                 "其他" -> {
                     rightRealRowSteelView!!.checkCpdLeftRealSpinner2.setSelect(2)
@@ -1703,6 +1709,7 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
                     mIsCircleColumProtect = false
                     rightRealProtectView!!.sencondComma.visibility = View.VISIBLE
                     rightRealProtectView!!.sencondLl.visibility =View.VISIBLE
+                    rightRealProtectView!!.firstTvName.visibility = View.VISIBLE
 
 
                     if (damageV3Bean.rightRealSectionTypeParamsPicList.isNullOrEmpty()){

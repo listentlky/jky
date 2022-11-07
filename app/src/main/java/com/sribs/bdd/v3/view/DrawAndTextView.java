@@ -3,6 +3,8 @@ package com.sribs.bdd.v3.view;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.graphics.drawable.GradientDrawable;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -30,7 +32,7 @@ public class DrawAndTextView extends RelativeLayout {
     private int mDrawViewHeight = 0;
     private int mDrawViewWidth = 0;
     private TextView mTopTextView;
-
+    private float mZoom = 1.0f;
 
     public DrawAndTextView(Context context) {
         super(context);
@@ -69,9 +71,15 @@ public class DrawAndTextView extends RelativeLayout {
         mMarkView.setText(mContent);
     }
 
+    public void setZoom(float zoom){
+        this.mZoom = zoom;
+    }
+
     public void init() {
 
         mDrawView = new DrawView(mContext);
+        mDrawView.setZoom(mZoom);
+        mDrawViewWidth = (int)(30*mZoom);
         LayoutParams drawParams = new LayoutParams(mDrawViewWidth == 0 ? 30 : mDrawViewWidth, mDrawViewHeight == 0 ? ViewGroup.LayoutParams.WRAP_CONTENT : mDrawViewHeight);
         drawParams.addRule(RelativeLayout.CENTER_IN_PARENT);
         addView(mDrawView, drawParams);
@@ -79,7 +87,7 @@ public class DrawAndTextView extends RelativeLayout {
         mMarkView = new TextView(mContext);
         mMarkView.setText(mContent);
         mMarkView.setTextColor(Color.BLACK);
-        mMarkView.setTextSize(getResources().getDimensionPixelSize(R.dimen._2ssp));
+        mMarkView.setTextSize(getResources().getDimensionPixelSize(R.dimen._2ssp)*mZoom);
         mMarkView.setLines(1);
         mMarkView.setBackgroundResource(R.drawable.retancgle_drawable);
         mMarkView.setGravity(Gravity.CENTER);
@@ -98,11 +106,28 @@ public class DrawAndTextView extends RelativeLayout {
             textParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
 
             textParams.topMargin = getHeight()==0?mTextViewHeight / 3:getHeight()/3;
+            mMarkView.setTextColor(Color.parseColor("#FF005B82"));
 
+            mMarkView.setBackground(getTextBgDrawableRes());
+      //      mMarkView.setBackgroundResource(R.drawable.retancgle_blue_drawable);
             mMarkView.setLayoutParams(textParams);
             mMarkView.setRotation(-getRotation());
-            mMarkView.setBackgroundResource(0);
         }
+    }
+
+    private GradientDrawable getTextBgDrawableRes(){
+
+        GradientDrawable drawable = new GradientDrawable();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            int padding = (int) (getResources().getDimensionPixelSize(R.dimen._2sdp)*mZoom);
+            drawable.setPadding(padding,0,padding,0);
+        }
+        drawable.setStroke((int) (2*mZoom), Color.parseColor("#FF005B82"));
+
+        drawable.setColor(Color.parseColor("#80FFFFFF"));
+
+        return drawable;
     }
 
 
@@ -111,8 +136,12 @@ public class DrawAndTextView extends RelativeLayout {
         Point first = new Point((int) startX, (int) startY);
         Point second = new Point((int) event.getX(), (int) event.getY());
         float startAngle = angle(center, first, second);
-        if (Math.abs(startAngle) > 1) {
-            oriRotation += startAngle;
+        if (Math.abs(startAngle) > 10) {
+            if(startAngle<0){
+                oriRotation -= 15;
+            }else {
+                oriRotation += 15;
+            }
             setRotation(oriRotation);
         }
     }
@@ -124,10 +153,11 @@ public class DrawAndTextView extends RelativeLayout {
         textParams2.topMargin = margin;
 
         mTopTextView = new TextView(mContext);
-        mTopTextView.setTextColor(Color.BLACK);
+        mTopTextView.setTextColor(Color.parseColor("#FF005B82"));
         mTopTextView.setText(text);
-        mTopTextView.setTextSize(getResources().getDimensionPixelSize(R.dimen._2sdp));
+        mTopTextView.setTextSize(getResources().getDimensionPixelSize(R.dimen._2sdp)*mZoom);
 
+        mTopTextView.setBackground(getTextBgDrawableRes());
     //    mTopTextView.setBackgroundResource(R.drawable.retancgle_blue_drawable);
         mTopTextView.setGravity(Gravity.CENTER);
         mTopTextView.setRotation(-getRotation());

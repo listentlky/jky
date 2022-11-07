@@ -834,7 +834,7 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
         }
 
         if ((context as CheckComponentDetectionActivity).mAboveList!!.size>0 &&mAboveIndex ==(context as CheckComponentDetectionActivity).mAboveList!!.size-1){
-            mBinding.checkCpdSubtitle1.checkEdit.setText("顶层梁")
+            mBinding.checkCpdSubtitle1.checkEdit.setText("屋面梁")
         }else if (mAboveIndex>-1){
             mBinding.checkCpdSubtitle1.checkEdit.setText(NumberUtil.num2Chinese(mAboveIndex+2)+"层梁")  //下标为0 实际第一层 展示为第二层
 

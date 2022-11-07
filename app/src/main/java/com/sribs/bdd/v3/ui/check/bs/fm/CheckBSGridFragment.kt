@@ -156,7 +156,7 @@ class CheckBSGridFragment : BaseFragment(R.layout.fragment_check_build_structure
         if(damageV3Bean == null){
             mBinding.checkBsFloorEdit1.root.visibility = View.VISIBLE
             mBinding.checkBsFloorEdit1.root.check_edit.setText("")
-            mBinding.checkBsFloorEdit1.root.check_edit_flag.setText("")
+         //   mBinding.checkBsFloorEdit1.root.check_edit_flag.setText("")
             mBinding.checkBsFloorFj.visibility = View.VISIBLE
             mBinding.checkBsFloorEdit2.root.visibility = View.VISIBLE
             mBinding.checkBsFloorEdit2.root.check_edit.setText("")
@@ -172,11 +172,11 @@ class CheckBSGridFragment : BaseFragment(R.layout.fragment_check_build_structure
             if(!damageV3Bean.axisNoteList.isNullOrEmpty() && damageV3Bean.axisNoteList!!.size>0){
                 mBinding.checkBsFloorEdit1.root.visibility = View.VISIBLE
                 mBinding.checkBsFloorEdit1.root.check_edit.setText(damageV3Bean.axisNoteList!!.get(0))
-                mBinding.checkBsFloorEdit1.root.check_edit_flag.setText(damageV3Bean.axisNoteList!!.get(1))
+            //    mBinding.checkBsFloorEdit1.root.check_edit_flag.setText(damageV3Bean.axisNoteList!!.get(1))
                 mBinding.checkBsFloorFj.visibility = View.VISIBLE
                 mBinding.checkBsFloorEdit2.root.visibility = View.VISIBLE
-                mBinding.checkBsFloorEdit2.root.check_edit.setText(damageV3Bean.axisNoteList!!.get(2))
-                mBinding.checkBsFloorEdit2.root.check_edit_flag.setText(damageV3Bean.axisNoteList!!.get(3))
+                mBinding.checkBsFloorEdit2.root.check_edit.setText(damageV3Bean.axisNoteList!!.get(1))
+                mBinding.checkBsFloorEdit2.root.check_edit_flag.setText(damageV3Bean.axisNoteList!!.get(2))
                 mBinding.checkBsFloorZxEdit.visibility = View.GONE
             }else{
                 mBinding.checkBsFloorEdit1.root.visibility = View.INVISIBLE
