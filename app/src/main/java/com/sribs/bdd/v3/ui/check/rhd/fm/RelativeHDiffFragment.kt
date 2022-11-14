@@ -106,6 +106,17 @@ class RelativeHDiffFragment : BaseFragment(R.layout.fragment_relative_h_diff) {
             (activity as RelativeHDiffActivity).mIsUpdateData = true
         }
 
+        mBinding.checkBzEdit.addTextChangedListener {
+            var note = ""
+            if(currentDamageV3Bean != null){
+                note = currentDamageV3Bean?.note?:""
+            }
+            LogUtils.d("${note}  ${mBinding.checkBzEdit.text.toString()}")
+            (activity as RelativeHDiffActivity).mIsUpdateData = false
+            if(mBinding.checkBzEdit.text.toString() != note){
+                (activity as RelativeHDiffActivity).mIsUpdateData = true
+            }
+        }
     }
 
     /**
@@ -195,6 +206,7 @@ class RelativeHDiffFragment : BaseFragment(R.layout.fragment_relative_h_diff) {
         LogUtils.d("mDrawingV3Bean"+mDrawingV3Bean)
     }
 
+    var currentDamageV3Bean : DamageV3Bean?=null
     /**
      * 根据是否为null来设置数据
      */
@@ -202,8 +214,9 @@ class RelativeHDiffFragment : BaseFragment(R.layout.fragment_relative_h_diff) {
         LogUtils.d("resetView: "+damageV3Bean)
         mBinding.checkTableInfo.setDatas(damageV3Bean).build()
         if(damageV3Bean != null && damageV3Bean.size>0) {
-            mBinding.checkBzEdit.setText(damageV3Bean.get(0).note)
-            mBinding.checkTextBhc.text =  "闭合差: "+damageV3Bean.get(0).closeDiff
+            currentDamageV3Bean = damageV3Bean[0]
+            mBinding.checkBzEdit.setText(currentDamageV3Bean?.note)
+            mBinding.checkTextBhc.text =  "闭合差: "+currentDamageV3Bean?.closeDiff
         }
     }
 

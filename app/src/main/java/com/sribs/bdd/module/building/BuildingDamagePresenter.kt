@@ -71,7 +71,8 @@ class BuildingDamagePresenter :BasePresenter(), IBuildingContrast.IBuildingPrese
                             item.projectId,
                             "",
                             item.floorName,
-                            item.floorType
+                            item.floorType,
+                            item.floorIndex,
                         )
                         println("leon getLocalBuilding floorName=${item.floorName}")
                         mAppFloorList?.add(floor!!)

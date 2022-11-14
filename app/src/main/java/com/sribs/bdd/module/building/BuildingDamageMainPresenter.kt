@@ -177,6 +177,7 @@ class BuildingDamageMainPresenter :BasePresenter(), IBuildingContrast.IBuildingP
                         it.floorId,
                         it.floorName,
                         it.floorType,
+                        it.floorIndex,
                         TimeUtil.stampToDate(""+it.createTime),
                         TimeUtil.stampToDate(""+it.createTime),
                         "",
