@@ -2573,6 +2573,7 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
     public void PDFSetStamp(int code) {
         if (code == 0)//start
         {
+            mIsIntercept = true;
             m_status = STA_STAMP;
             if (m_dicon == null) {
                 m_icon = BitmapFactory.decodeResource(this.getResources(), R.drawable.ic_custom_stamp);
@@ -2629,6 +2630,7 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
                         m_listener.OnPDFPageModified(vpage.GetPageNo());
                 }
             }
+            mIsIntercept = false;
             m_status = STA_NONE;
             m_rects = null;
             invalidate();

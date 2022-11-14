@@ -1,5 +1,6 @@
 package com.sribs.bdd.v3.ui.check.bs.fm
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import com.alibaba.android.arouter.facade.annotation.Route
@@ -9,6 +10,7 @@ import com.sribs.bdd.R
 import com.sribs.bdd.databinding.FragmentCheckBuildStructureGridBinding
 import com.sribs.bdd.v3.ui.check.bs.CheckBuildStructureActivity
 import com.sribs.bdd.v3.util.LogUtils
+import com.sribs.bdd.v3.util.SpannableUtils
 import com.sribs.common.ARouterPath
 import com.sribs.common.bean.db.DamageV3Bean
 import kotlinx.android.synthetic.main.double_edit_item.view.*
@@ -46,13 +48,16 @@ class CheckBSGridFragment : BaseFragment(R.layout.fragment_check_build_structure
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        mBinding.checkBsFloorZx.text = SpannableUtils.setTextColor(mBinding.checkBsFloorZx.text.toString(),
+            0,1,Color.RED)
         mBinding.checkBsFloorEdit1.checkEdit2.visibility = View.GONE
         mBinding.checkBsFloorEdit1.checkEditFlag.visibility = View.GONE
 
         mBinding.checkBsFloorZwsjz.checkEditName.text="轴网设计值(mm)"
         mBinding.checkBsFloorZwsjz.checkEdit.hint="请输入轴网设计值"
 
-        mBinding.checkBsFloorZwscz.checkEditName.text="轴网实测值(mm)"
+        mBinding.checkBsFloorZwscz.checkEditName.text = SpannableUtils.setTextColor("*轴网实测值(mm)",
+            0,1, Color.RED)
         mBinding.checkBsFloorZwscz.checkEdit.hint="请输入轴网实测值"
 
         /**

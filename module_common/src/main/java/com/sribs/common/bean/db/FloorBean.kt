@@ -13,7 +13,7 @@ data class FloorBean(
     var floorId:String?=null,
     var floorName:String?=null,
     var floorType:Int?=0, // 0地下 1地上
-
+    var floorIndex:Int?=0, // 楼层生成下标
     var createTime:String?=null,
     var updateTime:String?=null,
     var deleteTime:String?=null,

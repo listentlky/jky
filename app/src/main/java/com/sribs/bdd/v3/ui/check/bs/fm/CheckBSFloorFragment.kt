@@ -1,5 +1,6 @@
 package com.sribs.bdd.v3.ui.check.bs.fm
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
@@ -11,6 +12,7 @@ import com.sribs.bdd.databinding.FragmentCheckBuildStructureFloorBinding
 import com.sribs.bdd.v3.ui.check.bs.CheckBuildStructureActivity
 import com.sribs.bdd.v3.util.LogUtils
 import com.sribs.bdd.v3.util.LogUtils.d
+import com.sribs.bdd.v3.util.SpannableUtils
 import com.sribs.common.ARouterPath
 import com.sribs.common.bean.db.DamageV3Bean
 import kotlinx.android.synthetic.main.double_edit_item.view.*
@@ -55,7 +57,8 @@ class CheckBSFloorFragment : BaseFragment(R.layout.fragment_check_build_structur
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         mJgZgList!!.addAll(Arrays.asList("净高", "总高"))
-
+        mBinding.checkBsFloorZx.text = SpannableUtils.setTextColor(mBinding.checkBsFloorZx.text.toString(),
+        0,1,Color.RED)
         /**
          * 默认选中净高  装饰面板厚度不可输入
          */
@@ -67,7 +70,9 @@ class CheckBSFloorFragment : BaseFragment(R.layout.fragment_check_build_structur
         mBinding.checkBsFloorMchd.checkEdit.isEnabled = true
 
         mBinding.checkBsFloorSpinner.setSpinnerData(mJgZgList)
-            .setSpinnerTextGravity(Gravity.CENTER_VERTICAL).setSpinnerCallback { position: Int ->
+            .setSpinnerTextGravity(Gravity.CENTER)
+            .setSpinnerBgRes(R.mipmap.icon_popup_bg)
+            .setSpinnerCallback { position: Int ->
                 mSelectPosition = position
                 d("当前选择：$position")
                 if (position == 1) {
@@ -102,7 +107,8 @@ class CheckBSFloorFragment : BaseFragment(R.layout.fragment_check_build_structur
         mBinding.checkBsFloorCgsj.checkEditName.text = "层高设计值(mm)"
         mBinding.checkBsFloorCgsj.checkEdit.hint = "请输入层高设计值"
 
-        mBinding.checkBsFloorCgsc.checkEditName.text = "层高实测值(mm)"
+        mBinding.checkBsFloorCgsc.checkEditName.text = SpannableUtils.setTextColor("*层高实测值(mm)",
+            0,1,Color.RED)
         mBinding.checkBsFloorCgsc.checkEdit.hint = "请输入层高实测值"
 
         mBinding.checkBsFloorSjbh.checkEditName.text = "设计板厚(mm)"

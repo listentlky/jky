@@ -128,6 +128,11 @@ class CheckComponentDetectionActivity : BaseActivity(), ICheckCDContrast.ICheckC
      */
     var mCurrentDamageType = Arrays.asList("梁", "柱", "墙", "板")
 
+    /**
+     * 数据是否更新
+     */
+    var mIsUpdateData:Boolean = false
+
     private val mPresenter by lazy { CheckCDPresenter() }
 
     private val mFragments by lazy {
@@ -348,7 +353,7 @@ class CheckComponentDetectionActivity : BaseActivity(), ICheckCDContrast.ICheckC
                 damageText.text = damageInfo.plateName+" "+damageAxisNote
             }
         }
-        var size = (resources.getDimensionPixelSize(R.dimen._30sdp)*mView?.PDFGetZoom()!!).toInt()
+        var size = (resources.getDimensionPixelSize(R.dimen._25sdp)*mView?.PDFGetZoom()!!).toInt()
         mView!!.layoutView(view, size, size/2)
         var bitmap = PDFLayoutView.getViewBitmap(view)
         mView!!.PDFSetStamp(1,bitmap,size.toFloat(),(size/2).toFloat(),damageInfo.type+damageInfo.createTime)
@@ -473,6 +478,7 @@ class CheckComponentDetectionActivity : BaseActivity(), ICheckCDContrast.ICheckC
             }
             addDamageMark(damageInfo)
         }
+        mIsUpdateData = true
     }
 
     /**
@@ -485,6 +491,7 @@ class CheckComponentDetectionActivity : BaseActivity(), ICheckCDContrast.ICheckC
             }
             mPresenter.saveDamageToDb(it)
         }
+        mIsUpdateData = false
     }
 
     /**
@@ -609,18 +616,22 @@ class CheckComponentDetectionActivity : BaseActivity(), ICheckCDContrast.ICheckC
      * 退出提示保存框
      */
     private fun exitToSave() {
-        AlertDialog.Builder(this).setTitle(getString(R.string.drawing_edit_exit_dialog_title))
-            .setMessage(R.string.is_save_hint)
-            .setPositiveButton(R.string.dialog_ok) { dialog, which ->
-                mController?.savePDF()
-                saveDamageDrawingToDb()
-                finish()
-            }.setNegativeButton(
-                R.string.dialog_cancel
-            ) { dialog, which ->
-                finish()
-            }
-            .show()
+        if(mIsUpdateData) {
+            AlertDialog.Builder(this).setTitle(getString(R.string.drawing_edit_exit_dialog_title))
+                .setMessage(R.string.is_save_hint)
+                .setPositiveButton(R.string.dialog_ok) { dialog, which ->
+                    mController?.savePDF()
+                    saveDamageDrawingToDb()
+                    finish()
+                }.setNegativeButton(
+                    R.string.dialog_cancel
+                ) { dialog, which ->
+                    finish()
+                }
+                .show()
+        }else{
+            finish()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

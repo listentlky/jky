@@ -1,5 +1,6 @@
 package com.sribs.bdd.v3.ui.check.obd.fm
 
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.text.InputType
@@ -18,6 +19,7 @@ import com.sribs.bdd.databinding.FragmentCheckObliquedeformationEditBinding
 import com.sribs.bdd.utils.ModuleHelper
 import com.sribs.bdd.v3.ui.check.obd.CheckObliqueDeformationActivity
 import com.sribs.bdd.v3.util.LogUtils
+import com.sribs.bdd.v3.util.SpannableUtils
 import com.sribs.bdd.v3.view.DrawAndTextView
 import com.sribs.common.ARouterPath
 import com.sribs.common.bean.db.DamageV3Bean
@@ -61,14 +63,20 @@ class CheckEditOBDFragment : BaseFragment(R.layout.fragment_check_obliquedeforma
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        isViewCreated = true;
-        mBinding.checkEditH1.checkEditName.text = "测量高度1(m)"
+        isViewCreated = true
+        mBinding.checkEditPoint.checkEditName.text = SpannableUtils.setTextColor("*点位名称",
+            0,1, Color.RED)
+        mBinding.checkEditH1.checkEditName.text = SpannableUtils.setTextColor("*测量高度1(m)",
+            0,1, Color.RED)
         mBinding.checkEditH1.checkEdit.hint = "请输入测量高度"
-        mBinding.checkEditH2.checkEditName.text = "测量高度2(m)"
+        mBinding.checkEditH2.checkEditName.text = SpannableUtils.setTextColor("*测量高度2(m)",
+            0,1, Color.RED)
         mBinding.checkEditH2.checkEdit.hint = "请输入测量高度"
-        mBinding.checkEditQx1.checkEditName.text = "倾斜量1(mm)"
+        mBinding.checkEditQx1.checkEditName.text = SpannableUtils.setTextColor("*倾斜量1(mm)",
+            0,1, Color.RED)
         mBinding.checkEditQx1.checkEdit.hint = "请输入倾斜量"
-        mBinding.checkEditQx2.checkEditName.text = "倾斜量2(mm)"
+        mBinding.checkEditQx2.checkEditName.text = SpannableUtils.setTextColor("*倾斜量2(mm)",
+            0,1, Color.RED)
         mBinding.checkEditQx2.checkEdit.hint = "请输入倾斜量"
 
         mBinding.checkEditPoint.checkEdit.inputType = InputType.TYPE_CLASS_TEXT
@@ -337,7 +345,7 @@ class CheckEditOBDFragment : BaseFragment(R.layout.fragment_check_obliquedeforma
                 drawAndTextView.setZoom(zoom)
                 drawAndTextView.resetView(mBinding.checkObdUiCaptureView.content1.oriRotation)
                 drawAndTextView.setMarkView(mBinding.checkEditQx1.checkEdit.text.toString())
-                drawAndTextView.addTopView(mBinding.checkObdQx1Hint.text.toString().split("=")[1])
+                drawAndTextView.addTopView(mBinding.checkObdQx1Hint.text.toString())
 
             } else {
                 layout =
@@ -358,14 +366,14 @@ class CheckEditOBDFragment : BaseFragment(R.layout.fragment_check_obliquedeforma
                 drawAndTextView.setZoom(zoom)
                 drawAndTextView.resetView(mBinding.checkObdUiCaptureView.content1.oriRotation)
                 drawAndTextView.setMarkView(mBinding.checkEditQx1.checkEdit.text.toString())
-                drawAndTextView.addTopView(mBinding.checkObdQx1Hint.text.toString().split("=")[1])
+                drawAndTextView.addTopView(mBinding.checkObdQx1Hint.text.toString())
 
 
                 drawAndTextView2.setTextViewHeight(viewHeight)
                 drawAndTextView2.setZoom(zoom)
                 drawAndTextView2.resetView(mBinding.checkObdUiCaptureView.content2.oriRotation)
                 drawAndTextView2.setMarkView(mBinding.checkEditQx2.checkEdit.text.toString())
-                drawAndTextView2.addTopView(mBinding.checkObdQx2Hint.text.toString().split("=")[1])
+                drawAndTextView2.addTopView(mBinding.checkObdQx2Hint.text.toString())
 
             }
 

@@ -78,6 +78,11 @@ class RelativeHDiffActivity : BaseActivity() ,ICheckRHDiffContrast.ICheckRHDiffV
     @Autowired(name = com.sribs.common.ARouterPath.VAL_BUILDING_ID)
     var mBuildingId = -1L
 
+    /**
+     * 数据是否更新
+     */
+    var mIsUpdateData:Boolean = false
+
     private val mBinding: ActivityRelativeHdiffBinding by inflate()
 
     private val mPresenter by lazy { CheckRHDiffPresenter() }
@@ -336,6 +341,7 @@ class RelativeHDiffActivity : BaseActivity() ,ICheckRHDiffContrast.ICheckRHDiffV
             }
             mPresenter.saveDamageToDb(it.drawing!!,it.moduleId!!)
         }
+        mIsUpdateData = false
     }
 
     /**
@@ -369,19 +375,23 @@ class RelativeHDiffActivity : BaseActivity() ,ICheckRHDiffContrast.ICheckRHDiffV
      * 退出提示保存框
      */
     private fun exitToSave() {
-        AlertDialog.Builder(this).setTitle(getString(R.string.drawing_edit_exit_dialog_title))
-            .setMessage(R.string.is_save_hint)
-            .setPositiveButton(R.string.dialog_ok) { dialog, which ->
-                saveDamage()
-                mController?.savePDF()
-                saveDamageDrawingToDb();
-                finish()
-            }.setNegativeButton(
-                R.string.dialog_cancel
-            ) { dialog, which ->
-                finish()
-            }
-            .show()
+        if(mIsUpdateData) {
+            AlertDialog.Builder(this).setTitle(getString(R.string.drawing_edit_exit_dialog_title))
+                .setMessage(R.string.is_save_hint)
+                .setPositiveButton(R.string.dialog_ok) { dialog, which ->
+                    saveDamage()
+                    mController?.savePDF()
+                    saveDamageDrawingToDb();
+                    finish()
+                }.setNegativeButton(
+                    R.string.dialog_cancel
+                ) { dialog, which ->
+                    finish()
+                }
+                .show()
+        }else{
+            finish()
+        }
     }
 
     private var mDoc: Document = Document()
@@ -734,6 +744,7 @@ class RelativeHDiffActivity : BaseActivity() ,ICheckRHDiffContrast.ICheckRHDiffV
             mView?.PDFRemoveAnnot()
         }
         addDamageMark(group,point,pair.second,annotName)
+        mIsUpdateData = true
     }
 
     override fun onShowPoint(annot: Page.Annotation?, isShowDelete:Boolean) {
@@ -772,7 +783,7 @@ class RelativeHDiffActivity : BaseActivity() ,ICheckRHDiffContrast.ICheckRHDiffV
         var cardView =view.findViewById<CardView>(R.id.damage_type_cardView)
         cardView.setCardBackgroundColor(Color.parseColor(color))
         damageText.text = group+"-"+point
-        var size = (resources.getDimensionPixelSize(R.dimen._30sdp)*mView?.PDFGetZoom()!!).toInt()
+        var size = (resources.getDimensionPixelSize(R.dimen._25sdp)*mView?.PDFGetZoom()!!).toInt()
         mView!!.layoutView(view, size, size/2)
         var bitmap = PDFLayoutView.getViewBitmap(view)
         mView!!.PDFSetStamp(1,bitmap,size.toFloat(),(size/2).toFloat(),name)

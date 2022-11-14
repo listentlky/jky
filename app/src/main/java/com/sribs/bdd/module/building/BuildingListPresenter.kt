@@ -321,6 +321,7 @@ class BuildingListPresenter : BasePresenter(), IBuildingContrast.IBuildingListPr
                         floorId = b.floorId,
                         floorName = b.floorName,
                         floorType = b.floorType,
+                        floorIndex = b.floorIndex,
                         drawingsList = b.drawingsList,
                         remoteId = b.remoteId,
                         aboveNumber = b.aboveNumber,
@@ -552,6 +553,7 @@ class BuildingListPresenter : BasePresenter(), IBuildingContrast.IBuildingListPr
                             b.fileType!!,
                             "",
                             "",
+                            0,
                             1,
                             index,
                             inspectorList,
@@ -699,6 +701,7 @@ class BuildingListPresenter : BasePresenter(), IBuildingContrast.IBuildingListPr
                                 bbb.fileType!!,
                                 cc.floorId!!,
                                 cc.floorName ?: "",
+                                cc.floorIndex,
                                 cc.floorType,
                                 index,
                                 inspectorList,
@@ -750,6 +753,7 @@ class BuildingListPresenter : BasePresenter(), IBuildingContrast.IBuildingListPr
                     drawingV3Bean.fileType!!,
                     "",
                     "",
+                    0,
                     1,
                     index,
                     inspectorList,
@@ -782,6 +786,7 @@ class BuildingListPresenter : BasePresenter(), IBuildingContrast.IBuildingListPr
                         dd.fileType!!,
                         floorBean.floorId!!,
                         floorBean.floorName ?: "",
+                        floorBean.floorIndex?:0,
                         floorBean.floorType ?: 0,
                         index,
                         inspectorList,
@@ -1327,6 +1332,7 @@ class BuildingListPresenter : BasePresenter(), IBuildingContrast.IBuildingListPr
                             FloorSortBean(
                                 dd.floorId,
                                 dd.floorNo,
+                                dd.floorIndex,
                                 dd.direction,
                                 DrawingV3Bean.sort!!
                             )
@@ -1393,6 +1399,7 @@ class BuildingListPresenter : BasePresenter(), IBuildingContrast.IBuildingListPr
                                 ff.floorId,
                                 ff.floorNo,
                                 ff.direction,
+                                ff.floorIndex,
                                 TimeUtil.stampToDate("" + System.currentTimeMillis()),
                                 TimeUtil.stampToDate("" + System.currentTimeMillis()),
                                 "",
@@ -1593,6 +1600,7 @@ class BuildingListPresenter : BasePresenter(), IBuildingContrast.IBuildingListPr
                                         FloorSortBean(
                                             dd.floorId,
                                             dd.floorNo,
+                                            dd.floorIndex,
                                             dd.direction,
                                             DrawingV3Bean.sort!!
                                         )
@@ -1663,6 +1671,7 @@ class BuildingListPresenter : BasePresenter(), IBuildingContrast.IBuildingListPr
                                                 floorId = ff.floorId,
                                                 floorName = ff.floorNo,
                                                 floorType = ff.direction,
+                                                floorIndex = ff.floorIndex,
                                                 drawingsList = drawingV3Bean,
                                                 remoteId = mm.moduleId,
                                                 aboveNumber = mm.aboveGroundNumber,

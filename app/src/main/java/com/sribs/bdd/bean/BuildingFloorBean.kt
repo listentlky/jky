@@ -4,7 +4,7 @@ import com.sribs.common.bean.db.DrawingV3Bean
 import com.sribs.common.bean.db.UnitBean
 
 //楼层
-data class BuildingFloorBean(var name:String,var pictureList: ArrayList<BuildingFloorPictureBean>?,var floor:String?,var floorType:Int) // floorType 0地下 1地上
+data class BuildingFloorBean(var name:String,var pictureList: ArrayList<BuildingFloorPictureBean>?,var floor:String?,var floorType:Int,var floorIndex:Int) // floorType 0地下 1地上
 
 data class BuildingFloorIndexBean(var name:String,var floor:String,var pictureList: ArrayList<BuildingFloorPictureBean>?)
 //楼层配置图片

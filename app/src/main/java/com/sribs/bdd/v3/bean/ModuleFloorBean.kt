@@ -9,7 +9,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 //楼层
-data class ModuleFloorBean(val floorId:String,var name: String, var pictureList: ArrayList<ModuleFloorPictureBean>?,var floor:String?,var floorType:Int)
+data class ModuleFloorBean(val floorId:String,var name: String, var pictureList: ArrayList<ModuleFloorPictureBean>?,var floor:String?,var floorType:Int,var floorIndex:Int)
 
 data class ModuleFloorIndexBean(
     var name: String,
@@ -36,6 +36,7 @@ data class ModuleFloor(
     var floorId:String?,
     var floorName:String?=null,
     var floorType:Int,
+    var floorIndex:Int,
     var floorList: ArrayList<DrawingV3Bean>?=null,
     var aboveNumber:Int?=0,
     var afterNumber:Int?=0,

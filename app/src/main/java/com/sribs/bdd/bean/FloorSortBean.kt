@@ -8,6 +8,7 @@ package com.sribs.bdd.bean
 data class FloorSortBean (
     var floorId:String,
     var floorNo:String,
+    var floorIndex:Int,
     var direction:Int,
     var sort:Int
         )

@@ -25,6 +25,7 @@
         android:id="@+id/damage_type_cardView"
         android:layout_width="@dimen/_15sdp"
         app:cardCornerRadius="200dp"
+        android:padding="@dimen/_1sdp"
         android:layout_centerInParent="true"
         app:cardBackgroundColor="@color/blue_800"
         app:layout_constraintDimensionRatio="1:1"

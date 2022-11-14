@@ -101,7 +101,8 @@ public class DrawAndTextView extends RelativeLayout {
     public void setMarkView(String text){
 
         if(mMarkView != null){
-            mMarkView.setText(text);
+            mMarkView.setVisibility(GONE);
+          /*  mMarkView.setText(text);
             LayoutParams textParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             textParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
 
@@ -109,9 +110,8 @@ public class DrawAndTextView extends RelativeLayout {
             mMarkView.setTextColor(Color.parseColor("#FF005B82"));
 
             mMarkView.setBackground(getTextBgDrawableRes());
-      //      mMarkView.setBackgroundResource(R.drawable.retancgle_blue_drawable);
             mMarkView.setLayoutParams(textParams);
-            mMarkView.setRotation(-getRotation());
+            mMarkView.setRotation(-getRotation());*/
         }
     }
 
@@ -121,7 +121,7 @@ public class DrawAndTextView extends RelativeLayout {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             int padding = (int) (getResources().getDimensionPixelSize(R.dimen._2sdp)*mZoom);
-            drawable.setPadding(padding,0,padding,0);
+            drawable.setPadding(padding,padding/2,padding,padding/2);
         }
         drawable.setStroke((int) (2*mZoom), Color.parseColor("#FF005B82"));
 
@@ -149,7 +149,7 @@ public class DrawAndTextView extends RelativeLayout {
     public void addTopView(String text) {
         LayoutParams textParams2 = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         textParams2.addRule(RelativeLayout.CENTER_HORIZONTAL);
-        int margin = getHeight()==0?mTextViewHeight / 8:getHeight()/8;
+        int margin = getHeight()==0?mTextViewHeight / 4:getHeight()/4;
         textParams2.topMargin = margin;
 
         mTopTextView = new TextView(mContext);

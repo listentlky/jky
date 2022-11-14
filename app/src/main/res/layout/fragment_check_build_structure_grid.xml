@@ -39,7 +39,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:includeFontPadding="false"
-            android:text="轴线"
+            android:text="*轴线"
             android:textColor="@color/black"
             android:textSize="@dimen/_7ssp"
             app:layout_constraintBottom_toBottomOf="@id/check_bs_floor_edit1"

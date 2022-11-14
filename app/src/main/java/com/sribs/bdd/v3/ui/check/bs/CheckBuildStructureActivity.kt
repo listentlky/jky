@@ -84,6 +84,11 @@ class CheckBuildStructureActivity : BaseActivity(), ICheckBSContrast.ICheckBSVie
      */
     var mCurrentDamageType = Arrays.asList("层高", "轴网")
 
+    /**
+     * 数据是否更新
+     */
+    var mIsUpdateData:Boolean = false
+
     private val mPresenter by lazy { CheckBSPresenter() }
 
     private val mBinding: ActivityCheckBuildStructureBinding by inflate()
@@ -333,18 +338,22 @@ class CheckBuildStructureActivity : BaseActivity(), ICheckBSContrast.ICheckBSVie
      * 退出提示保存框
      */
     private fun exitToSave() {
-        AlertDialog.Builder(this).setTitle(getString(R.string.drawing_edit_exit_dialog_title))
-            .setMessage(R.string.is_save_hint)
-            .setPositiveButton(R.string.dialog_ok) { dialog, which ->
-                mController?.savePDF()
-                saveDamageDrawingToDb();
-                finish()
-            }.setNegativeButton(
-                R.string.dialog_cancel
-            ) { dialog, which ->
-                finish()
-            }
-            .show()
+        if(mIsUpdateData) {
+            AlertDialog.Builder(this).setTitle(getString(R.string.drawing_edit_exit_dialog_title))
+                .setMessage(R.string.is_save_hint)
+                .setPositiveButton(R.string.dialog_ok) { dialog, which ->
+                    mController?.savePDF()
+                    saveDamageDrawingToDb();
+                    finish()
+                }.setNegativeButton(
+                    R.string.dialog_cancel
+                ) { dialog, which ->
+                    finish()
+                }
+                .show()
+        }else{
+            finish()
+        }
     }
 
     var mCheckBSMainBeanList: ArrayList<CheckBSMainBean>? = ArrayList()
@@ -545,6 +554,7 @@ class CheckBuildStructureActivity : BaseActivity(), ICheckBSContrast.ICheckBSVie
             }
             addDamageMark(damageInfo)
         }
+        mIsUpdateData = true
     }
 
     /**
@@ -557,6 +567,7 @@ class CheckBuildStructureActivity : BaseActivity(), ICheckBSContrast.ICheckBSVie
             }
             mPresenter.saveDamageToDb(it)
         }
+        mIsUpdateData = false
     }
 
     /**
@@ -842,7 +853,7 @@ class CheckBuildStructureActivity : BaseActivity(), ICheckBSContrast.ICheckBSVie
             }
         }
         damageText.text = damageAxisNote
-        var size = (resources.getDimensionPixelSize(R.dimen._30sdp)*mView?.PDFGetZoom()!!).toInt()
+        var size = (resources.getDimensionPixelSize(R.dimen._25sdp)*mView?.PDFGetZoom()!!).toInt()
         mView!!.layoutView(view, size, size/2)
         var bitmap = PDFLayoutView.getViewBitmap(view)
         mView!!.PDFSetStamp(1,bitmap,size.toFloat(),(size/2).toFloat(),damageInfo.type+damageInfo.createTime)

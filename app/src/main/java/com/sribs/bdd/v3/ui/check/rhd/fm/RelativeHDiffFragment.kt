@@ -3,6 +3,7 @@ package com.sribs.bdd.v3.ui.check.rhd.fm
 import android.os.Bundle
 import android.view.View
 import android.widget.RelativeLayout
+import androidx.core.widget.addTextChangedListener
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.cbj.sdk.libui.mvp.BaseFragment
 import com.cbj.sdk.libui.mvp.bindView
@@ -90,17 +91,21 @@ class RelativeHDiffFragment : BaseFragment(R.layout.fragment_relative_h_diff) {
         mBinding.checkButJspcz.setOnClickListener {
             mBinding.checkTableInfo.calculate(true)
             mBinding.checkTextBhc.text = "闭合差: "+mBinding.checkTableInfo.bhc
+            (activity as RelativeHDiffActivity).mIsUpdateData = true
         }
 
         //计算
         mBinding.checkButJs.setOnClickListener {
             mBinding.checkTableInfo.calculate(false)
+            (activity as RelativeHDiffActivity).mIsUpdateData = true
         }
 
         //添加测点
         mBinding.checkButTjcd.setOnClickListener {
             mBinding.checkTableInfo.addPoint()
+            (activity as RelativeHDiffActivity).mIsUpdateData = true
         }
+
     }
 
     /**

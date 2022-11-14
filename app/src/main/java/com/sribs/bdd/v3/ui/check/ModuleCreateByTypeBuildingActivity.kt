@@ -109,7 +109,7 @@ class ModuleCreateByTypeBuildingActivity : BaseActivity(),
         mBinding.chosePicList.setOnClickListener {
 
             if (selected.size == 0) {
-                ToastUtil.getInstance()._short(getContext(), "请先上传图片")
+                ToastUtil.getInstance()._short(getContext(), "请先上传图纸")
                 return@setOnClickListener
             }
             selectedPic.clear()

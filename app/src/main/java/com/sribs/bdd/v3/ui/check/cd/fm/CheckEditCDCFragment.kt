@@ -1,5 +1,6 @@
 package com.sribs.bdd.v3.ui.check.cd.fm
 
+import android.graphics.Color
 import android.graphics.Typeface
 import android.net.Uri
 import android.os.Bundle
@@ -18,6 +19,7 @@ import com.sribs.bdd.databinding.*
 import com.sribs.bdd.v3.popup.FloorDrawingSpinnerPopupWindow
 import com.sribs.bdd.v3.ui.check.cd.CheckComponentDetectionActivity
 import com.sribs.bdd.v3.util.LogUtils
+import com.sribs.bdd.v3.util.SpannableUtils
 import com.sribs.common.ARouterPath
 import com.sribs.common.bean.db.DamageV3Bean
 import com.sribs.common.bean.db.DrawingV3Bean
@@ -239,9 +241,15 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
          * 默认选中净高  装饰面板厚度不可输入
          */
 
-        mBinding.checkCpdSubtitle1.checkEditName.text = "柱名称"
+        mBinding.checkCpdSubtitle1.checkEditName.text = SpannableUtils.setTextColor("*柱名称",
+        0,1, Color.RED)
+
         mBinding.checkCpdSubtitle1.checkEdit.hint = "请输入柱名称"
-        mBinding.checkCpdSubtitle2Second.checkEditName.text = "轴线"
+
+        mBinding.checkCpdSubtitle2.checkEditName.text = SpannableUtils.setTextColor("*轴线",
+            0,1, Color.RED)
+        mBinding.checkCpdSubtitle2Second.checkEditName.text = SpannableUtils.setTextColor("*轴线",
+            0,1, Color.RED)
         mBinding.checkCpdSubtitle2Second.checkEdit.hint = "请输入轴线"
         rightDesignRowSteelView!!.checkEditName2.text = "钢筋规格"
         rightRealRowSteelView!!.checkEditName2.text = "钢筋规格"

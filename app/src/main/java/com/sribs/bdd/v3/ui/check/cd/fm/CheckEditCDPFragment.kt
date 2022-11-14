@@ -1,5 +1,6 @@
 package com.sribs.bdd.v3.ui.check.cd.fm
 
+import android.graphics.Color
 import android.graphics.Typeface
 import android.net.Uri
 import android.os.Bundle
@@ -14,6 +15,7 @@ import com.sribs.bdd.databinding.FragmentCheckComponentdetectionPlateEditBinding
 import com.sribs.bdd.v3.popup.FloorDrawingSpinnerPopupWindow
 import com.sribs.bdd.v3.ui.check.cd.CheckComponentDetectionActivity
 import com.sribs.bdd.v3.util.LogUtils
+import com.sribs.bdd.v3.util.SpannableUtils
 import com.sribs.common.ARouterPath
 import com.sribs.common.bean.db.DamageV3Bean
 import com.sribs.common.bean.db.DrawingV3Bean
@@ -77,11 +79,14 @@ class CheckEditCDPFragment : BaseFragment(R.layout.fragment_check_componentdetec
         currentDesignPicType = mtypePicList!!.get(0)
         currentDesignPicType2 = mtypePicList!!.get(0)
 
-        mBinding.checkCdpSubtitle1.checkEditName.text = "板名称"
+        mBinding.checkCdpSubtitle1.checkEditName.text = SpannableUtils.setTextColor("*板名称",
+            0,1, Color.RED)
         mBinding.checkCdpSubtitle1.checkEdit.hint = "请输入板名称"
 
-        mBinding.checkCdpSubtitle2.checkEditName.text = "轴线"
-        mBinding.checkCdpSubtitle2Second.checkEditName.text = "轴线"
+        mBinding.checkCdpSubtitle2.checkEditName.text = SpannableUtils.setTextColor("*轴线",
+            0,1, Color.RED)
+        mBinding.checkCdpSubtitle2Second.checkEditName.text = SpannableUtils.setTextColor("*轴线",
+            0,1, Color.RED)
         mBinding.checkCdpSubtitle2Second.checkEdit.hint = "请输入轴线"
 
         mBinding.checkCdpPlateLeftRealUi.checkCdpLeftMenu.checkCpdLeftMenu1.text = "实测板厚度"

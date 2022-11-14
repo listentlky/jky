@@ -5,7 +5,7 @@
     <string name="upload_overall_drawing">上传底层/总平面图纸</string>
 
     <string name="save_pdf_message" tools:ignore="ExtraTranslation">图纸已修改，要保存修改吗？</string>
-    <string name="is_save_hint" tools:ignore="ExtraTranslation">是否保存修改？</string>
+    <string name="is_save_hint" tools:ignore="ExtraTranslation">当前数据有更新,是否保存修改？</string>
     <string name="inhab_damage" tools:ignore="ExtraTranslation">居民入户损伤</string>
     <string name="noninhab_damage" tools:ignore="ExtraTranslation">非居民入户损伤</string>
     <string name="select_admage_type" translatable="false">选择损伤类型</string>

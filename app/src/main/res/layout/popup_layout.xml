@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:background="@mipmap/icon_popup_bg"
+    android:background="@mipmap/popup_center_portrait_bg"
     android:orientation="vertical"
     android:layout_height="wrap_content">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/popup_recyclerView"
-        android:paddingTop="@dimen/_15sdp"
+        android:paddingTop="@dimen/_10sdp"
         android:paddingBottom="@dimen/_10sdp"
         android:minHeight="@dimen/_30sdp"
         android:layout_width="match_parent"

@@ -319,6 +319,7 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
                             floorId = b.floorId,
                             floorName = b.floorName,
                             floorType = b.floorType,
+                            floorIndex = b.floorIndex,
                             drawingsList = b.drawingsList,
                             remoteId = b.remoteId,
                             aboveNumber = b.aboveNumber,
@@ -527,6 +528,7 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
                         b.fileType!!,
                         "",
                         "",
+                        0,
                         1,
                         index,
                         inspectorList,
@@ -674,6 +676,7 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
                             bbb.fileType!!,
                             cc.floorId!!,
                             cc.floorName ?: "",
+                            cc.floorIndex,
                             cc.floorType,
                             index,
                             inspectorList,
@@ -1260,6 +1263,7 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
                             FloorSortBean(
                                 dd.floorId,
                                 dd.floorNo,
+                                dd.floorIndex,
                                 dd.direction,
                                 DrawingV3Bean.sort!!
                             )
@@ -1330,6 +1334,7 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
                                     floorId = ff.floorId,
                                     floorName = ff.floorNo,
                                     floorType = ff.direction,
+                                    floorIndex = ff.floorIndex,
                                     drawingsList = drawingV3Bean,
                                     remoteId = a?.moduleId,
                                     aboveNumber = a?.aboveGroundNumber,
@@ -1626,6 +1631,7 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
                         floorId = UUIDUtil.getUUID(b.floorName!!),
                         floorName = b.floorName,
                         floorType = b.floorType ?: 0,
+                        floorIndex = b.floorIndex?:0,
                         drawingsList = b.drawing,
                         remoteId = remoteId,
                         aboveNumber = b.aboveGroundNumber,

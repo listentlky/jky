@@ -30,10 +30,12 @@ public class ChooseRHDPointPopupWindow extends PopupWindow {
 
     private List<RelativeHDiffPointBean> datas;
 
-    public ChooseRHDPointPopupWindow(Context context,int width, List<RelativeHDiffPointBean> list,PopupCallback popupCallback) {
+    public ChooseRHDPointPopupWindow(Context context,int width, List<RelativeHDiffPointBean> list,
+                                     PopupCallback popupCallback) {
         super(context);
         this.datas = list;
         View view = LayoutInflater.from(context).inflate(R.layout.popup_layout,null);
+        view.setBackgroundResource(R.mipmap.popup_left_portrait_bg);
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(width,
                 width*2);
         view.setLayoutParams(layoutParams);

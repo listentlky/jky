@@ -31,13 +31,16 @@ public class OneChoosePopupWindow extends android.widget.PopupWindow {
     private List<String> datas = new ArrayList<>();
 
     public OneChoosePopupWindow(Context context, int width, List<String> list,Typeface typeface,int defaultSelect,
-                                int mTextGravity,int textLeftMargin,PopupCallback popupCallback) {
+                                int mTextGravity,int textLeftMargin,int spinnerBgRes,PopupCallback popupCallback) {
         super(context);
         this.mContext = context;
         if(list != null){
             this.datas.addAll(list);
         }
         View view = LayoutInflater.from(mContext).inflate(R.layout.popup_layout,null);
+        if(spinnerBgRes != 0){
+            view.setBackgroundResource(spinnerBgRes);
+        }
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(width,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
         view.setLayoutParams(layoutParams);

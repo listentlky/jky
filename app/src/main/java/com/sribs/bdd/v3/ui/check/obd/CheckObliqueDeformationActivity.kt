@@ -84,6 +84,11 @@ class CheckObliqueDeformationActivity : BaseActivity(), ICheckOBDContrast.ICheck
      */
     var mCurrentDamageType = Arrays.asList("点位")
 
+    /**
+     * 数据是否更新
+     */
+    var mIsUpdateData:Boolean = false
+
     private val mBinding: ActivityCheckObliqueDeformationBinding by inflate()
 
     val mFragments by lazy {
@@ -489,7 +494,7 @@ class CheckObliqueDeformationActivity : BaseActivity(), ICheckOBDContrast.ICheck
             }
             addDamageMark(damageInfo, view)
         }
-
+        mIsUpdateData = true
     }
 
     var addPDFDamageMark = false
@@ -541,6 +546,7 @@ class CheckObliqueDeformationActivity : BaseActivity(), ICheckOBDContrast.ICheck
             LogUtils.d("it.drawing： " + it.drawing)
             mPresenter.saveDamageToDb(it.drawing!!, it.moduleId!!)
         }
+        mIsUpdateData = false
     }
 
     /**
@@ -611,19 +617,23 @@ class CheckObliqueDeformationActivity : BaseActivity(), ICheckOBDContrast.ICheck
      * 退出提示保存框
      */
     private fun exitToSave() {
-        AlertDialog.Builder(this).setTitle(getString(R.string.drawing_edit_exit_dialog_title))
-            .setMessage(R.string.is_save_hint)
-            .setPositiveButton(R.string.dialog_ok) { dialog, which ->
-                mController?.savePDF()
-                savePDFGuide()
-                saveDamageDrawingToDb();
-                finish()
-            }.setNegativeButton(
-                R.string.dialog_cancel
-            ) { dialog, which ->
-                finish()
-            }
-            .show()
+        if(mIsUpdateData) {
+            AlertDialog.Builder(this).setTitle(getString(R.string.drawing_edit_exit_dialog_title))
+                .setMessage(R.string.is_save_hint)
+                .setPositiveButton(R.string.dialog_ok) { dialog, which ->
+                    mController?.savePDF()
+                    savePDFGuide()
+                    saveDamageDrawingToDb();
+                    finish()
+                }.setNegativeButton(
+                    R.string.dialog_cancel
+                ) { dialog, which ->
+                    finish()
+                }
+                .show()
+        }else{
+            finish()
+        }
     }
 
     var mGuideText: String? = "北"

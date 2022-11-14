@@ -284,6 +284,7 @@ return*/
                         floorId = b.floorId,
                         floorName = b.floorName,
                         floorType = b.floorType,
+                        floorIndex = b.floorIndex,
                         drawingsList = b.drawingsList,
                         remoteId = b.remoteId,
                         aboveNumber = b.aboveNumber,
@@ -545,6 +546,7 @@ return*/
                             b.fileType!!,
                             "",
                             "",
+                            0,
                             1,
                             index,
                             inspectorList,
@@ -693,6 +695,7 @@ return*/
                                 bbb.fileType!!,
                                 cc.floorId!!,
                                 cc.floorName ?: "",
+                                cc.floorIndex,
                                 cc.floorType,
                                 index,
                                 inspectorList,
@@ -745,6 +748,7 @@ return*/
                         drawingV3Bean.fileType!!,
                         "",
                         "",
+                        0,
                         1,
                         index,
                         inspectorList,
@@ -777,6 +781,7 @@ return*/
                             dd.fileType!!,
                             floorBean.floorId!!,
                             floorBean.floorName ?: "",
+                            floorBean.floorIndex?:0,
                             floorBean.floorType ?: 0,
                             index,
                             inspectorList,
@@ -1007,6 +1012,7 @@ return*/
                                 FloorSortBean(
                                     dd.floorId,
                                     dd.floorNo,
+                                    dd.floorIndex,
                                     dd.direction,
                                     DrawingV3Bean.sort!!
                                 )
@@ -1076,6 +1082,7 @@ return*/
                                     ff.floorId,
                                     ff.floorNo,
                                     ff.direction,
+                                    ff.floorIndex,
                                     TimeUtil.stampToDate("" + System.currentTimeMillis()),
                                     TimeUtil.stampToDate("" + System.currentTimeMillis()),
                                     "",
@@ -1290,6 +1297,7 @@ return*/
                                             FloorSortBean(
                                                 dd.floorId,
                                                 dd.floorNo,
+                                                dd.floorIndex,
                                                 dd.direction,
                                                 DrawingV3Bean.sort!!
                                             )
@@ -1363,6 +1371,7 @@ return*/
                                                     floorId = ff.floorId,
                                                     floorName = ff.floorNo,
                                                     floorType = ff.direction,
+                                                    floorIndex = ff.floorIndex,
                                                     drawingsList = drawingV3Bean,
                                                     remoteId = mm.moduleId,
                                                     aboveNumber = mm.aboveGroundNumber,

@@ -39,6 +39,8 @@ public class OneChooseSpinnerView extends LinearLayout {
     private int mSelectPosition;
     private View inflate;
     private int mSpinnerTextGravity = Gravity.CENTER;
+    private int mSpinnerLeftMargin = 0;
+    private int mSpinnerBgRes = 0;
 
     public OneChooseSpinnerView(Context context) {
         super(context);
@@ -70,6 +72,16 @@ public class OneChooseSpinnerView extends LinearLayout {
         return this;
     }
 
+    public OneChooseSpinnerView setSpinnerLeftMargin(int mSpinnerLeftMargin) {
+        this.mSpinnerLeftMargin = mSpinnerLeftMargin;
+        return this;
+    }
+
+    public OneChooseSpinnerView setSpinnerBgRes(int mSpinnerBgRes) {
+        this.mSpinnerBgRes = mSpinnerBgRes;
+        return this;
+    }
+
     public OneChooseSpinnerView setSpinnerCallback(SpinnerCallback mSpinnerCallback) {
         this.mSpinnerCallback = mSpinnerCallback;
         return this;
@@ -90,7 +102,7 @@ public class OneChooseSpinnerView extends LinearLayout {
             public void onClick(View v) {
                 if(mOneChoosePopupWindow == null){
                     mOneChoosePopupWindow = new OneChoosePopupWindow(mContext, getWidth(), mSpinnerData,mTypeface,
-                            mSelectPosition, mSpinnerTextGravity ,mContext.getResources().getDimensionPixelSize(R.dimen._10sdp),
+                            mSelectPosition, mSpinnerTextGravity ,mSpinnerLeftMargin,mSpinnerBgRes,
                             new OneChoosePopupWindow.PopupCallback(){
                         @Override
                         public void onSelect(String text) {

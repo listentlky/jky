@@ -86,7 +86,7 @@ class ModuleFloorConfigCreateTypePresenter : BasePresenter(), IProjectContrast.I
             if (mAboveOldIndex == 0 && above.size < 1) {
                 for (i in 0 until num) {
                     var name = NumberUtil.num2Chinese(i + 1)
-                    var buildingFloorBean = ModuleFloorBean(UUIDUtil.getUUID(name + "层"),name + "层", arrayListOf(), "地上",1)
+                    var buildingFloorBean = ModuleFloorBean(UUIDUtil.getUUID(name + "层"),name + "层", arrayListOf(), "地上",1,i)
                     above.add(buildingFloorBean)
                 }
                 array?.addAll(above)
@@ -117,7 +117,7 @@ class ModuleFloorConfigCreateTypePresenter : BasePresenter(), IProjectContrast.I
             if (mAboveOldIndex > 0 && mAboveOldIndex < num) {
                 for (i in mAboveOldIndex until num) {
                     var name = NumberUtil.num2Chinese(1 + i)
-                    var buildingFloorBean = ModuleFloorBean(UUIDUtil.getUUID(name + "层"),name + "层", arrayListOf(), "地上",1)
+                    var buildingFloorBean = ModuleFloorBean(UUIDUtil.getUUID(name + "层"),name + "层", arrayListOf(), "地上",1,i)
                     above.add(buildingFloorBean)
                 }
                 array?.addAll(above)
@@ -151,7 +151,7 @@ class ModuleFloorConfigCreateTypePresenter : BasePresenter(), IProjectContrast.I
             if (mBeforeOldIndex == 0 && before.size < 1) {
                 for (i in 0 until num) {
                     var name = NumberUtil.num2Chinese(i + 1)
-                    var buildingFloorBean = ModuleFloorBean(UUIDUtil.getUUID("负"+name + "层"),"负"+name + "层", arrayListOf(), "地下",0)
+                    var buildingFloorBean = ModuleFloorBean(UUIDUtil.getUUID("负"+name + "层"),"负"+name + "层", arrayListOf(), "地下",0,i)
                     before.add(buildingFloorBean)
                 }
                 array?.addAll(before)
@@ -185,7 +185,7 @@ class ModuleFloorConfigCreateTypePresenter : BasePresenter(), IProjectContrast.I
             if (mBeforeOldIndex > 0 && mBeforeOldIndex < num) {
                 for (i in mBeforeOldIndex until num) {
                     var name = NumberUtil.num2Chinese(1 + i)
-                    var buildingFloorBean = ModuleFloorBean(UUIDUtil.getUUID("负"+name + "层"),"负"+name + "层", arrayListOf(), "地下",0)
+                    var buildingFloorBean = ModuleFloorBean(UUIDUtil.getUUID("负"+name + "层"),"负"+name + "层", arrayListOf(), "地下",0,i)
                     before.add(buildingFloorBean)
                 }
                 array?.addAll(before)
@@ -233,7 +233,8 @@ class ModuleFloorConfigCreateTypePresenter : BasePresenter(), IProjectContrast.I
                     name = it.floorName!!,
                     pictureList = beanPicList,
                     floor = "",
-                    floorType = it.floorType
+                    floorType = it.floorType,
+                    floorIndex = it.floorIndex
                 )
             )
         }
@@ -344,6 +345,7 @@ class ModuleFloorConfigCreateTypePresenter : BasePresenter(), IProjectContrast.I
                 floorId = it.floorId,
                 floorName = it.floorName,
                 floorType = it.floorType,
+                floorIndex = it.floorIndex,
                 drawingsList = it.floorList,
                 deleteTime = "",
                 aboveNumber = it.aboveNumber,
@@ -397,6 +399,7 @@ class ModuleFloorConfigCreateTypePresenter : BasePresenter(), IProjectContrast.I
                     floorId = item.floorId,
                     floorName = item.name,
                     floorType = item.floorType,
+                    floorIndex = item.floorIndex,
                     aboveNumber = aboveGroundNumber,
                     afterNumber = underGroundNumber,
                 )

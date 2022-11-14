@@ -236,7 +236,7 @@ public class CheckHTableView extends LinearLayout {
         dhText.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                new ChooseRHDPointPopupWindow(mContext, dhText.getWidth() - 10,
+                new ChooseRHDPointPopupWindow(mContext, (int)(dhText.getWidth()*1.5),
                         mChoosePointList, new ChooseRHDPointPopupWindow.PopupCallback() {
                     @Override
                     public void onSelect(String text) {
