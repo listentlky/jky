@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.Gravity
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.cbj.sdk.libui.mvp.BaseFragment
@@ -61,7 +62,7 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
     private var mTypeRightList: ArrayList<String>? = ArrayList()
     private var mTypeRightList2: ArrayList<String>? = ArrayList()
 
-    private var mPicList: ArrayList<String>? = ArrayList()
+    private var mMarkPicList: ArrayList<String>? = ArrayList()
 
     private var mRightRealPicSrc: String = ""
     private var mRightDesignPicSrc: String = ""
@@ -95,6 +96,8 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
      */
     var mAddAnnotReF: Long = -1L
 
+    private var mCurrentRightRealDoubleRowSteelMark:String = ""
+    private var mCurrentRightDesignDoubleRowSteelMark:String = ""
 
     lateinit var leftRealRectangleView: CheckComponentDetectionBeamLeftRectangleItemBinding
     lateinit var leftRealHView: ItemComponentDetectionBeamLeftHItemBinding
@@ -107,15 +110,17 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
     lateinit var leftDesignAnotherView: ItemComponentDetectionBeamLeftAnotherItemBinding
 
     lateinit var rightRealSingleParamsView: ItemComponentDetectionBeamRightRealSingleRowSteelBinding
-    lateinit var rightRealDoubleParamsView: ItemComponentDetectionBeamRightRealSingleRowSteel2Binding
+    lateinit var rightRealDoubleParamsView: ItemComponentDetectionBeamRightRealSingleRowSteel3Binding
 
     lateinit var rightDesignSingleParamsView: ItemComponentDetectionBeamRightRealSingleRowSteelBinding
-    lateinit var rightDesignDoubleParamsView: ItemComponentDetectionBeamRightRealSingleRowSteel2Binding
+    lateinit var rightDesignDoubleParamsView: ItemComponentDetectionBeamRightRealSingleRowSteel3Binding
 
 
     private val REQUEST_BEAM_REAL_TAKE_PHOTO = 12 //
     private val REQUEST_CODE_BEAN_REAL_WHITE_FLLOR = 14 //实测梁-草图
     private val REQUEST_CODE_BEAN_DESIGN_WHITE_FLLOR = 15 //设计梁-草图
+
+
 
     override fun deinitView() {
     }
@@ -128,7 +133,7 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
 
         mTypeLeftList!!.addAll(Arrays.asList("总高", "净高"))
         mTypeLeftList2!!.addAll(Arrays.asList("矩形", "H型", "T型", "其他"))
-        mPicList!!.addAll(Arrays.asList("A", "B"))
+        mMarkPicList!!.addAll(Arrays.asList("A", "B"))
         mTypeRightList!!.addAll(Arrays.asList("单排钢筋", "双排钢筋"))
         mTypeRightList2!!.addAll(Arrays.asList("无加密", "有加密"))
 
@@ -188,6 +193,10 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
 
             }.build()
 
+
+        leftRealView.checkCpdLeftRealSpinner1.setSelect(1)
+        leftRealView.checkCpdLeftRealSpinner1.setText(mTypeLeftList!!.get(1))
+
         leftRealView.checkCpdLeftRealSpinner2.setSpinnerData(mTypeLeftList2)
             .setSpinnerTextGravity(Gravity.CENTER).setSpinnerCallback {
                 currentLeftRealType2 = it
@@ -197,24 +206,35 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
                         leftRealHView.content.visibility = View.INVISIBLE
                         leftRealTView.content.visibility = View.INVISIBLE
                         leftRealAnotherView.content.visibility = View.INVISIBLE
+
+                        leftRealView.checkCpdLeftRealSpinner1.setSelect(1)
+                        leftRealView.checkCpdLeftRealSpinner1.setText(mTypeLeftList!!.get(1))
                     }
                     1 -> {
                         leftRealRectangleView.content.visibility = View.INVISIBLE
                         leftRealHView.content.visibility = View.VISIBLE
                         leftRealTView.content.visibility = View.INVISIBLE
                         leftRealAnotherView.content.visibility = View.INVISIBLE
+
+                        leftRealView.checkCpdLeftRealSpinner1.setSelect(0)
+                        leftRealView.checkCpdLeftRealSpinner1.setText(mTypeLeftList!!.get(0))
                     }
                     2 -> {
                         leftRealRectangleView.content.visibility = View.INVISIBLE
                         leftRealHView.content.visibility = View.INVISIBLE
                         leftRealTView.content.visibility = View.VISIBLE
                         leftRealAnotherView.content.visibility = View.INVISIBLE
+                        leftRealView.checkCpdLeftRealSpinner1.setSelect(0)
+                        leftRealView.checkCpdLeftRealSpinner1.setText(mTypeLeftList!!.get(0))
                     }
                     3 -> {
                         leftRealRectangleView.content.visibility = View.INVISIBLE
                         leftRealHView.content.visibility = View.INVISIBLE
                         leftRealTView.content.visibility = View.INVISIBLE
                         leftRealAnotherView.content.visibility = View.VISIBLE
+                        leftRealView.checkCpdLeftRealSpinner1.setSelect(0)
+                        leftRealView.checkCpdLeftRealSpinner1.setText(mTypeLeftList!!.get(0))
+
                     }
                 }
             }.build()
@@ -224,6 +244,8 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
                 currentLeftDesignType = it
             }.build()
 
+        leftDesignView.checkCpdLeftRealSpinner1.setText(mTypeLeftList!!.get(1))
+        leftDesignView.checkCpdLeftRealSpinner1.setSelect(1)
         leftDesignView.checkCpdLeftRealSpinner2.setSpinnerData(mTypeLeftList2)
             .setSpinnerTextGravity(Gravity.CENTER).setSpinnerCallback {
                 currentLeftDesignType2 = it
@@ -233,24 +255,32 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
                         leftDesignHView.content.visibility = View.INVISIBLE
                         leftDesignTView.content.visibility = View.INVISIBLE
                         leftDesignAnotherView.content.visibility = View.INVISIBLE
+                        leftDesignView.checkCpdLeftRealSpinner1.setText(mTypeLeftList!!.get(1))
+                        leftDesignView.checkCpdLeftRealSpinner1.setSelect(1)
                     }
                     1 -> {
                         leftDesignRectangleView.content.visibility = View.INVISIBLE
                         leftDesignHView.content.visibility = View.VISIBLE
                         leftDesignTView.content.visibility = View.INVISIBLE
                         leftDesignAnotherView.content.visibility = View.INVISIBLE
+                        leftDesignView.checkCpdLeftRealSpinner1.setText(mTypeLeftList!!.get(0))
+                        leftDesignView.checkCpdLeftRealSpinner1.setSelect(0)
                     }
                     2 -> {
                         leftDesignRectangleView.content.visibility = View.INVISIBLE
                         leftDesignHView.content.visibility = View.INVISIBLE
                         leftDesignTView.content.visibility = View.VISIBLE
                         leftDesignAnotherView.content.visibility = View.INVISIBLE
+                        leftDesignView.checkCpdLeftRealSpinner1.setText(mTypeLeftList!!.get(0))
+                        leftDesignView.checkCpdLeftRealSpinner1.setSelect(0)
                     }
                     3 -> {
                         leftDesignRectangleView.content.visibility = View.INVISIBLE
                         leftDesignHView.content.visibility = View.INVISIBLE
                         leftDesignTView.content.visibility = View.INVISIBLE
                         leftDesignAnotherView.content.visibility = View.VISIBLE
+                        leftDesignView.checkCpdLeftRealSpinner1.setText(mTypeLeftList!!.get(0))
+                        leftDesignView.checkCpdLeftRealSpinner1.setSelect(0)
                     }
                 }
 
@@ -276,7 +306,7 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
         )
 
         rightDesignView.checkCpdBeamRightRealMeasured.checkCpdLeftRealSpinner3.setSpinnerData(
-            mPicList
+            mMarkPicList
         ).setSpinnerTextGravity(Gravity.CENTER).setSpinnerCallback {
             currentRightDesignType4 = it
         }.setTypeface(Typeface.createFromAsset(activity?.assets, "fonts/SJQY.cb6e0829.TTF"))
@@ -290,10 +320,37 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
             )
         )
         rightDesignView.checkCpdBeamRightRealMeasured.checkCpdLeftRealSpinner3.setText(
-            mPicList!!.get(
+            mMarkPicList!!.get(
                 0
             )
         )
+
+        mCurrentRightRealDoubleRowSteelMark = mMarkPicList!!.get(0)
+        mCurrentRightDesignDoubleRowSteelMark = mMarkPicList!!.get(0)
+
+        rightRealView.checkCpdBeamRightRealSingle2.checkDoubleRowSteelSpinner.setSpinnerData(mMarkPicList)
+            .setSpinnerTextGravity(Gravity.CENTER).setTypeface(
+            Typeface.createFromAsset(
+                activity?.assets,
+                "fonts/SJQY.cb6e0829.TTF"
+            )
+        ).setSpinnerCallback {
+                mCurrentRightRealDoubleRowSteelMark = mMarkPicList!!.get(it)
+
+            }.build()
+
+        rightDesignView.checkCpdBeamRightRealSingle2.checkDoubleRowSteelSpinner.setSpinnerData(mMarkPicList)
+            .setSpinnerTextGravity(Gravity.CENTER).setTypeface(
+                Typeface.createFromAsset(
+                    activity?.assets,
+                    "fonts/SJQY.cb6e0829.TTF"
+                )
+            ).setSpinnerCallback {
+                mCurrentRightDesignDoubleRowSteelMark = mMarkPicList!!.get(it)
+
+
+            }.build()
+
 
         mBinding.checkCpdBeamRightRealUi.checkCpdLeftRealDesignTv.checkCpdLeftRealSpinner2.setSpinnerData(
             mTypeRightList
@@ -303,10 +360,22 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
                 0 -> {
                     rightRealSingleParamsView.content.visibility = View.VISIBLE
                     rightRealDoubleParamsView.content.visibility = View.INVISIBLE
+
+                    val lp: ViewGroup.LayoutParams
+                    lp = rightRealDoubleParamsView!!.content.getLayoutParams()
+                    lp.width = -1
+                    lp.height = getResources().getDimensionPixelSize(R.dimen._20sdp)
+                    rightRealDoubleParamsView!!.content.setLayoutParams(lp)
                 }
                 1 -> {
                     rightRealSingleParamsView.content.visibility = View.INVISIBLE
                     rightRealDoubleParamsView.content.visibility = View.VISIBLE
+
+                    val lp: ViewGroup.LayoutParams
+                    lp = rightRealDoubleParamsView!!.content.getLayoutParams()
+                    lp.width = -1
+                    lp.height = getResources().getDimensionPixelSize(R.dimen._45sdp)
+                    rightRealDoubleParamsView!!.content.setLayoutParams(lp)
                 }
             }
         }.build()
@@ -319,10 +388,23 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
                 0 -> {
                     rightDesignSingleParamsView.content.visibility = View.VISIBLE
                     rightDesignDoubleParamsView.content.visibility = View.INVISIBLE
+
+                    val lp: ViewGroup.LayoutParams
+                    lp = rightDesignDoubleParamsView!!.content.getLayoutParams()
+                    lp.width = -1
+                    lp.height = getResources().getDimensionPixelSize(R.dimen._20sdp)
+                    rightDesignDoubleParamsView!!.content.setLayoutParams(lp)
+
                 }
                 1 -> {
                     rightDesignSingleParamsView.content.visibility = View.INVISIBLE
                     rightDesignDoubleParamsView.content.visibility = View.VISIBLE
+
+                    val lp: ViewGroup.LayoutParams
+                    lp = rightDesignDoubleParamsView!!.content.getLayoutParams()
+                    lp.width = -1
+                    lp.height = getResources().getDimensionPixelSize(R.dimen._45sdp)
+                    rightDesignDoubleParamsView!!.content.setLayoutParams(lp)
                 }
             }
         }.build()
@@ -334,9 +416,9 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
                 "fonts/SJQY.cb6e0829.TTF"
             )
         )
-        rightRealSingleParamsView.checkCpdLeftRealSpinner.setText(mPicList!!.get(1))
+        rightRealSingleParamsView.checkCpdLeftRealSpinner.setText(mMarkPicList!!.get(1))
         rightRealSingleParamsView.checkCpdLeftRealSpinner.setSelect(1)
-        rightRealSingleParamsView.checkCpdLeftRealSpinner.setSpinnerData(mPicList)
+        rightRealSingleParamsView.checkCpdLeftRealSpinner.setSpinnerData(mMarkPicList)
             .setSpinnerTextGravity(Gravity.CENTER).setSpinnerCallback {
                 currentRightRealType2 = it
             }.setTypeface(Typeface.createFromAsset(activity?.assets, "fonts/SJQY.cb6e0829.TTF"))
@@ -348,9 +430,9 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
                 "fonts/SJQY.cb6e0829.TTF"
             )
         )
-        rightDesignSingleParamsView.checkCpdLeftRealSpinner.setText(mPicList!!.get(1))
+        rightDesignSingleParamsView.checkCpdLeftRealSpinner.setText(mMarkPicList!!.get(1))
         rightDesignSingleParamsView.checkCpdLeftRealSpinner.setSelect(1)
-        rightDesignSingleParamsView.checkCpdLeftRealSpinner.setSpinnerData(mPicList)
+        rightDesignSingleParamsView.checkCpdLeftRealSpinner.setSpinnerData(mMarkPicList)
             .setSpinnerTextGravity(Gravity.CENTER).setSpinnerCallback {
                 currentRightDesignType2 = it
             }.setTypeface(Typeface.createFromAsset(activity?.assets, "fonts/SJQY.cb6e0829.TTF"))
@@ -385,12 +467,12 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
             )
         )
         rightRealView.checkCpdBeamRightRealMeasured.checkCpdLeftRealSpinner3.setText(
-            mPicList!!.get(
+            mMarkPicList!!.get(
                 0
             )
         )
         rightRealView.checkCpdBeamRightRealMeasured.checkCpdLeftRealSpinner3.setSpinnerData(
-            mPicList
+            mMarkPicList
         ).setSpinnerTextGravity(Gravity.CENTER).setSpinnerCallback {
             currentRightRealType4 = it
         }.setTypeface(Typeface.createFromAsset(activity?.assets, "fonts/SJQY.cb6e0829.TTF"))
@@ -590,12 +672,13 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
             when (currentRightRealType) {
                 0 -> {
                     rightRealSectionTypeParamsList.add(rightRealSingleParamsView.checkEdit1.text.toString())
-                    rightRealSectionTypeParamsList.add(mPicList!!.get(currentRightRealType2))
+                    rightRealSectionTypeParamsList.add(mMarkPicList!!.get(currentRightRealType2))
                     rightRealSectionTypeParamsList.add(rightRealSingleParamsView.checkEdit3.text.toString())
                     rightRealSectionTypeParamsList.add(rightRealSingleParamsView.checkEdit4.text.toString())
                 }
                 1 -> {
                     rightRealSectionTypeParamsList.add(rightRealDoubleParamsView.checkEdit1.text.toString())
+                    rightRealSectionTypeParamsList.add(mCurrentRightRealDoubleRowSteelMark)
                     rightRealSectionTypeParamsList.add(rightRealDoubleParamsView.checkEdit2.text.toString())
                     rightRealSectionTypeParamsList.add(rightRealDoubleParamsView.checkEdit3.text.toString())
                     rightRealSectionTypeParamsList.add(rightRealDoubleParamsView.checkEdit4.text.toString())
@@ -606,12 +689,13 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
             when (currentRightDesignType) {
                 0 -> {
                     rightDesignSectionTypeParamsList.add(rightDesignSingleParamsView.checkEdit1.text.toString())
-                    rightDesignSectionTypeParamsList.add(mPicList!!.get(currentRightDesignType2))
+                    rightDesignSectionTypeParamsList.add(mMarkPicList!!.get(currentRightDesignType2))
                     rightDesignSectionTypeParamsList.add(rightDesignSingleParamsView.checkEdit3.text.toString())
                     rightDesignSectionTypeParamsList.add(rightDesignSingleParamsView.checkEdit4.text.toString())
                 }
                 1 -> {
                     rightDesignSectionTypeParamsList.add(rightDesignDoubleParamsView.checkEdit1.text.toString())
+                    rightDesignSectionTypeParamsList.add(mCurrentRightDesignDoubleRowSteelMark)
                     rightDesignSectionTypeParamsList.add(rightDesignDoubleParamsView.checkEdit2.text.toString())
                     rightDesignSectionTypeParamsList.add(rightDesignDoubleParamsView.checkEdit3.text.toString())
                     rightDesignSectionTypeParamsList.add(rightDesignDoubleParamsView.checkEdit4.text.toString())
@@ -659,7 +743,7 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
                 rightRealSectionTypeParamsList,
                 arrayListOf(
                     mTypeRightList2!!.get(currentRightRealType3),
-                    mPicList!!.get(currentRightRealType4),
+                    mMarkPicList!!.get(currentRightRealType4),
                     rightRealView.checkCpdBeamRightRealMeasured.checkEdit2.text.toString()
                 ),
                 arrayListOf(
@@ -684,7 +768,7 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
                 rightDesignSectionTypeParamsList,
                 arrayListOf(
                     mTypeRightList2!!.get(currentRightDesignType3),
-                    mPicList!!.get(currentRightDesignType4),
+                    mMarkPicList!!.get(currentRightDesignType4),
                     rightDesignView.checkCpdBeamRightRealMeasured.checkEdit2.text.toString(),
                     rightDesignView.checkEditEncrypt.text.toString(),
                     rightDesignView.ll1.check_edit.text.toString(),
@@ -777,7 +861,6 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
 
     }
 
-    //TODO hhh
     fun checkRightDesignStatus(isEnable: Boolean) {
 
         mCheckRightDesignStatus = isEnable
@@ -871,7 +954,8 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
             mRightRealPicSrc = ""
             mRightDesignPicSrc = ""
 
-
+            mCurrentRightRealDoubleRowSteelMark = mMarkPicList!!.get(0)
+            mCurrentRightDesignDoubleRowSteelMark = mMarkPicList!!.get(0)
 
             mPicLeftRealList = ArrayList()
             mPicLeftDesignList= ArrayList()
@@ -882,6 +966,18 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
             mBinding.checkCpdSubtitle2.checkCdpPlateMenuAxis3.setText("")
             mBinding.checkCpdSubtitle2Second.content.visibility = View.INVISIBLE
             mBinding.checkCpdSubtitle2Second.checkEdit.setText("")
+
+            val lp: ViewGroup.LayoutParams
+            lp = rightRealDoubleParamsView!!.content.getLayoutParams()
+            lp.width = -1
+            lp.height = getResources().getDimensionPixelSize(R.dimen._20sdp)
+            rightRealDoubleParamsView!!.content.setLayoutParams(lp)
+
+            val lp2: ViewGroup.LayoutParams
+            lp2 = rightDesignDoubleParamsView!!.content.getLayoutParams()
+            lp2.width = -1
+            lp2.height = getResources().getDimensionPixelSize(R.dimen._20sdp)
+            rightDesignDoubleParamsView!!.content.setLayoutParams(lp2)
 
             leftRealView.checkCpdLeftMenu.checkCpdLeftMenu4.isChecked = false
             leftDesignView.checkCpdLeftMenu.checkCpdLeftMenu4.isChecked = false
@@ -898,8 +994,8 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
 
 
             leftRealView.content.visibility = View.VISIBLE
-            leftRealView.checkCpdLeftRealSpinner1.setText(mTypeLeftList!!.get(0))
-            leftRealView.checkCpdLeftRealSpinner1.setSelect(0)
+            leftRealView.checkCpdLeftRealSpinner1.setText(mTypeLeftList!!.get(1))
+            leftRealView.checkCpdLeftRealSpinner1.setSelect(1)
             leftRealView.checkCpdLeftRealSpinner2.setText(mTypeLeftList2!!.get(0))
             leftRealView.checkCpdLeftRealSpinner2.setSelect(0)
 
@@ -926,8 +1022,8 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
 
             leftDesignView.content.visibility = View.INVISIBLE
 
-            leftDesignView.checkCpdLeftRealSpinner1.setText(mTypeLeftList!!.get(0))
-            leftDesignView.checkCpdLeftRealSpinner1.setSelect(0)
+            leftDesignView.checkCpdLeftRealSpinner1.setText(mTypeLeftList!!.get(1))
+            leftDesignView.checkCpdLeftRealSpinner1.setSelect(1)
             leftDesignView.checkCpdLeftRealSpinner2.setText(mTypeLeftList2!!.get(0))
             leftDesignView.checkCpdLeftRealSpinner2.setSelect(0)
 
@@ -973,7 +1069,7 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
             rightRealSingleParamsView.checkEdit3.setText("")
             rightRealSingleParamsView.checkEdit4.setText("")
             rightRealSingleParamsView.checkCpdLeftRealSpinner.setSelect(1)
-            rightRealSingleParamsView.checkCpdLeftRealSpinner.setText(mPicList!!.get(1))
+            rightRealSingleParamsView.checkCpdLeftRealSpinner.setText(mMarkPicList!!.get(1))
 
 
             rightRealDoubleParamsView.content.visibility = View.INVISIBLE
@@ -992,7 +1088,7 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
 
             rightDesignSingleParamsView.content.visibility = View.VISIBLE
             rightDesignSingleParamsView.checkEdit1.setText("")
-            rightDesignSingleParamsView.checkCpdLeftRealSpinner.setText(mPicList!!.get(1))
+            rightDesignSingleParamsView.checkCpdLeftRealSpinner.setText(mMarkPicList!!.get(1))
             rightDesignSingleParamsView.checkCpdLeftRealSpinner.setSelect(1)
             rightDesignSingleParamsView.checkEdit3.setText("")
             rightDesignSingleParamsView.checkEdit4.setText("")
@@ -1010,7 +1106,7 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
             )
             rightRealView.checkCpdBeamRightRealMeasured.checkCpdLeftRealSpinner2.setSelect(0)
             rightRealView.checkCpdBeamRightRealMeasured.checkCpdLeftRealSpinner3.setText(
-                mPicList!!.get(
+                mMarkPicList!!.get(
                     0
                 )
             )
@@ -1040,7 +1136,7 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
             )
             rightDesignView.checkCpdBeamRightRealMeasured.checkCpdLeftRealSpinner3.setSelect(0)
             rightDesignView.checkCpdBeamRightRealMeasured.checkCpdLeftRealSpinner3.setText(
-                mPicList!!.get(
+                mMarkPicList!!.get(
                     0
                 )
             )
@@ -1149,25 +1245,25 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
 
             currentRightRealType = mTypeRightList!!.indexOf(damageV3Bean.beamRightRealSectionType)
             currentRightRealType2 =
-                mPicList!!.indexOf(damageV3Bean.beamRightRealSectionParamsList!!.get(1))
+                mMarkPicList!!.indexOf(damageV3Bean.beamRightRealSectionParamsList!!.get(1))
             if (currentRightRealType2 < 0) {
                 currentRightRealType2 = 0
             }
             currentRightRealType4 =
-                mPicList!!.indexOf(damageV3Bean.beamRightRealStirrupsTypeList!!.get(1))
+                mMarkPicList!!.indexOf(damageV3Bean.beamRightRealStirrupsTypeList!!.get(1))
 
 
             currentRightDesignType =
                 mTypeRightList!!.indexOf(damageV3Bean.beamRightDesignSectionType)
             currentRightDesignType2 =
-                mPicList!!.indexOf(damageV3Bean.beamRightDesignSectionTypeParamsList!!.get(1))
+                mMarkPicList!!.indexOf(damageV3Bean.beamRightDesignSectionTypeParamsList!!.get(1))
             if (currentRightDesignType2 < 0) {
                 currentRightDesignType2 = 0
             }
             currentRightDesignType3 =
                 mTypeRightList2!!.indexOf(damageV3Bean.beamRightDesignStirrupsTypeList!!.get(0))
             currentRightDesignType4 =
-                mPicList!!.indexOf(damageV3Bean.beamRightDesignStirrupsTypeList!!.get(1))
+                mMarkPicList!!.indexOf(damageV3Bean.beamRightDesignStirrupsTypeList!!.get(1))
 
 
 
@@ -1422,7 +1518,7 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
                 damageV3Bean.beamRightRealStirrupsTypeList!!.get(1)
             )
             rightRealView.checkCpdBeamRightRealMeasured.checkCpdLeftRealSpinner3.setSelect(
-                mPicList!!.indexOf(
+                mMarkPicList!!.indexOf(
                     damageV3Bean.beamRightRealStirrupsTypeList!!.get(1)
                 )
             )
@@ -1527,7 +1623,7 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
                     )
                 )
                 rightRealSingleParamsView.checkCpdLeftRealSpinner.setSelect(
-                    mPicList!!.indexOf(
+                    mMarkPicList!!.indexOf(
                         damageV3Bean.beamRightRealSectionParamsList!!.get(1)
                     )
                 )
@@ -1542,7 +1638,23 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
                 rightRealDoubleParamsView.checkEdit2.setText("")
                 rightRealDoubleParamsView.checkEdit3.setText("")
                 rightRealDoubleParamsView.checkEdit4.setText("")
+
+                val lp: ViewGroup.LayoutParams
+                lp = rightRealDoubleParamsView!!.content.getLayoutParams()
+                lp.width = -1
+                lp.height = getResources().getDimensionPixelSize(R.dimen._20sdp)
+                rightRealDoubleParamsView!!.content.setLayoutParams(lp)
+
             } else {
+
+                rightRealView.checkCpdLeftRealDesignTv.checkCpdLeftRealSpinner2.setText(mTypeRightList!!.get(1))
+                rightRealView.checkCpdLeftRealDesignTv.checkCpdLeftRealSpinner2.setSelect(1)
+
+                val lp: ViewGroup.LayoutParams
+                lp = rightRealDoubleParamsView!!.content.getLayoutParams()
+                lp.width = -1
+                lp.height = getResources().getDimensionPixelSize(R.dimen._45sdp)
+                rightRealDoubleParamsView!!.content.setLayoutParams(lp)
 
                 rightRealDoubleParamsView.content.visibility = View.VISIBLE
                 rightRealDoubleParamsView.checkEdit1.setText(
@@ -1550,19 +1662,22 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
                         0
                     )
                 )
+
+                rightRealDoubleParamsView.checkDoubleRowSteelSpinner.setText(damageV3Bean.beamRightRealSectionParamsList!!.get(1))
+                rightRealDoubleParamsView.checkDoubleRowSteelSpinner.setSelect(mMarkPicList!!.indexOf(damageV3Bean.beamRightRealSectionParamsList!!.get(1)))
                 rightRealDoubleParamsView.checkEdit2.setText(
-                    damageV3Bean.beamRightRealSectionParamsList!!.get(
-                        1
-                    )
-                )
-                rightRealDoubleParamsView.checkEdit3.setText(
                     damageV3Bean.beamRightRealSectionParamsList!!.get(
                         2
                     )
                 )
-                rightRealDoubleParamsView.checkEdit4.setText(
+                rightRealDoubleParamsView.checkEdit3.setText(
                     damageV3Bean.beamRightRealSectionParamsList!!.get(
                         3
+                    )
+                )
+                rightRealDoubleParamsView.checkEdit4.setText(
+                    damageV3Bean.beamRightRealSectionParamsList!!.get(
+                        4
                     )
                 )
 
@@ -1571,7 +1686,7 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
                 rightRealSingleParamsView.checkEdit3.setText("")
                 rightRealSingleParamsView.checkEdit4.setText("")
                 rightRealSingleParamsView.checkCpdLeftRealSpinner.setSelect(0)
-                rightRealSingleParamsView.checkCpdLeftRealSpinner.setText(mPicList!!.get(0))
+                rightRealSingleParamsView.checkCpdLeftRealSpinner.setText(mMarkPicList!!.get(0))
             }
 
 
@@ -1594,7 +1709,7 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
                     )
                 )
                 rightDesignSingleParamsView.checkCpdLeftRealSpinner.setSelect(
-                    mPicList!!.indexOf(
+                    mMarkPicList!!.indexOf(
                         damageV3Bean.beamRightDesignSectionTypeParamsList!!.get(1)
                     )
                 )
@@ -1609,26 +1724,42 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
                 rightDesignDoubleParamsView.checkEdit2.setText("")
                 rightDesignDoubleParamsView.checkEdit3.setText("")
                 rightDesignDoubleParamsView.checkEdit4.setText("")
+
+                val lp: ViewGroup.LayoutParams
+                lp = rightDesignDoubleParamsView!!.content.getLayoutParams()
+                lp.width = -1
+                lp.height = getResources().getDimensionPixelSize(R.dimen._20sdp)
+                rightDesignDoubleParamsView!!.content.setLayoutParams(lp)
             } else {
+
+                val lp: ViewGroup.LayoutParams
+                lp = rightDesignDoubleParamsView!!.content.getLayoutParams()
+                lp.width = -1
+                lp.height = getResources().getDimensionPixelSize(R.dimen._45sdp)
+                rightDesignDoubleParamsView!!.content.setLayoutParams(lp)
+
                 rightDesignDoubleParamsView.content.visibility = View.VISIBLE
                 rightDesignDoubleParamsView.checkEdit1.setText(
                     damageV3Bean.beamRightDesignSectionTypeParamsList!!.get(
                         0
                     )
                 )
+                rightDesignDoubleParamsView.checkDoubleRowSteelSpinner.setText(damageV3Bean.beamRightDesignSectionTypeParamsList!!.get(1))
+                rightDesignDoubleParamsView.checkDoubleRowSteelSpinner.setSelect(mMarkPicList!!.indexOf(damageV3Bean.beamRightDesignSectionTypeParamsList!!.get(1)))
+
                 rightDesignDoubleParamsView.checkEdit2.setText(
-                    damageV3Bean.beamRightDesignSectionTypeParamsList!!.get(
-                        1
-                    )
-                )
-                rightDesignDoubleParamsView.checkEdit3.setText(
                     damageV3Bean.beamRightDesignSectionTypeParamsList!!.get(
                         2
                     )
                 )
-                rightDesignDoubleParamsView.checkEdit4.setText(
+                rightDesignDoubleParamsView.checkEdit3.setText(
                     damageV3Bean.beamRightDesignSectionTypeParamsList!!.get(
                         3
+                    )
+                )
+                rightDesignDoubleParamsView.checkEdit4.setText(
+                    damageV3Bean.beamRightDesignSectionTypeParamsList!!.get(
+                        4
                     )
                 )
 
@@ -1637,7 +1768,7 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
                 rightDesignSingleParamsView.checkEdit3.setText("")
                 rightDesignSingleParamsView.checkEdit4.setText("")
                 rightDesignSingleParamsView.checkCpdLeftRealSpinner.setSelect(0)
-                rightDesignSingleParamsView.checkCpdLeftRealSpinner.setText(mPicList!!.get(0))
+                rightDesignSingleParamsView.checkCpdLeftRealSpinner.setText(mMarkPicList!!.get(0))
             }
 
             mRightRealPicSrc = damageV3Bean.beamRightRealPic?.get(1) ?: ""
@@ -1676,7 +1807,7 @@ class CheckEditCDBFragment : BaseFragment(R.layout.fragment_check_componentdetec
                 damageV3Bean.beamRightDesignStirrupsTypeList!!.get(1)
             )
             rightDesignView.checkCpdBeamRightRealMeasured.checkCpdLeftRealSpinner3.setSelect(
-                mPicList!!.indexOf(damageV3Bean.beamRightDesignStirrupsTypeList!!.get(1))
+                mMarkPicList!!.indexOf(damageV3Bean.beamRightDesignStirrupsTypeList!!.get(1))
             )
             rightDesignView.checkCpdBeamRightRealMeasured.checkEdit2.setText(
                 damageV3Bean.beamRightDesignStirrupsTypeList!!.get(

@@ -9,6 +9,7 @@ import android.view.View
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.cbj.sdk.libui.mvp.BaseFragment
 import com.cbj.sdk.libui.mvp.bindView
+import com.cbj.sdk.utils.NumberUtil
 import com.donkingliang.imageselector.utils.ImageSelector
 import com.sribs.bdd.R
 import com.sribs.bdd.databinding.FragmentCheckComponentdetectionPlateEditBinding
@@ -62,6 +63,8 @@ class CheckEditCDPFragment : BaseFragment(R.layout.fragment_check_componentdetec
      */
     var mAddAnnotReF: Long = -1L
 
+    private var mBeforeIndex = -1
+    private var mAboveIndex = -1
 
     override fun deinitView() {
 
@@ -411,8 +414,42 @@ class CheckEditCDPFragment : BaseFragment(R.layout.fragment_check_componentdetec
      * 根据是否为null来设置数据
      */
     fun resetView(damageV3Bean: DamageV3Bean?) {
-        mBinding.checkCdpSubtitle1.checkEdit.setText((context as CheckComponentDetectionActivity).mCurrentDrawing!!.floorName + "板")
-        LogUtils.d("重新resetView：" + damageV3Bean)
+        LogUtils.d("板 重新resetView：" + damageV3Bean.toString())
+
+        mBeforeIndex = -1
+        mAboveIndex = -1
+        (context as CheckComponentDetectionActivity).mBeforeList!!.forEachIndexed { index, it ->
+            it.drawing!!.forEach { x->
+                if (x.drawingID.equals((context as CheckComponentDetectionActivity).mCurrentDrawing!!.drawingID)){
+                    mBeforeIndex = index
+                }
+            }
+        }
+
+        (context as CheckComponentDetectionActivity).mAboveList!!.forEachIndexed { index, it ->
+            it.drawing!!.forEach { x->
+                if (x.drawingID.equals((context as CheckComponentDetectionActivity).mCurrentDrawing!!.drawingID)){
+                    mAboveIndex = index
+                }
+            }
+        }
+
+
+        LogUtils.d("resetView index---"+mBeforeIndex+"---"+mAboveIndex)
+
+        if(mBeforeIndex ==0){
+            mBinding.checkCdpSubtitle1.checkEdit.setText("一层板") //地下只有一层
+        }else if(mBeforeIndex>-1){
+            mBinding.checkCdpSubtitle1.checkEdit.setText("负"+ NumberUtil.num2Chinese(mBeforeIndex)+"层板")
+        }
+
+        if ((context as CheckComponentDetectionActivity).mAboveList!!.size>0 &&mAboveIndex ==(context as CheckComponentDetectionActivity).mAboveList!!.size-1){
+            mBinding.checkCdpSubtitle1.checkEdit.setText("屋面板")
+        }else if (mAboveIndex>-1){
+            mBinding.checkCdpSubtitle1.checkEdit.setText(NumberUtil.num2Chinese(mAboveIndex+2)+"层板")  //下标为0 实际第一层 展示为第二层
+
+        }
+
 
         mBinding.checkCdpPlateLeftRealUi.parent.visibility = View.VISIBLE
         mBinding.checkCdpPlateLeftDesignUi.parent.visibility = View.INVISIBLE

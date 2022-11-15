@@ -51,16 +51,18 @@ class ModuleFloorConfigCreateTypePresenter : BasePresenter(), IProjectContrast.I
 
     var mBeforeOldIndex = 0
 
-    var beanList: ArrayList<ModuleFloorBean>? = ArrayList()
-
-
     var isFirstCome :Boolean = true //首次进入设置楼层数量时 不该进行新建楼层操作
     var isFirstCome2 :Boolean = true //首次进入设置楼层数量时 不该进行新建楼层操作
 
 
 
+    var beanList: ArrayList<ModuleFloorBean>? = ArrayList()
+
+    private var oldAboveList = ArrayList<ModuleFloorBean>()
+    private var oldBeforeList = ArrayList<ModuleFloorBean>()
+
     private val floorAdapter by lazy {
-        CreateModuleFloorAdapter(this)
+        CreateModuleFloorAdapter(this,mView?.getContext())
     }
 
 
@@ -71,62 +73,39 @@ class ModuleFloorConfigCreateTypePresenter : BasePresenter(), IProjectContrast.I
 
     @SuppressLint("NotifyDataSetChanged")
     override fun addAboveFlourList(num: Int) {
+
         if (isFirstCome){
             isFirstCome = false
             return
         }
+
         LogUtils.d("addAboveFlourList： " + num)
 
         if (num == 0) {
             array?.removeAll(above)
+            above.clear()
             floorAdapter.notifyDataSetChanged()
         } else if (num > 0) {
             array?.removeAll(above)
+            above.clear()
+            for (i in 0 until num) {
+                var name = NumberUtil.num2Chinese(i + 1)
+                var buildingFloorBean = ModuleFloorBean(UUIDUtil.getUUID(name + "层"),name + "层", arrayListOf(), "地上",1,i)
 
-            if (mAboveOldIndex == 0 && above.size < 1) {
-                for (i in 0 until num) {
-                    var name = NumberUtil.num2Chinese(i + 1)
-                    var buildingFloorBean = ModuleFloorBean(UUIDUtil.getUUID(name + "层"),name + "层", arrayListOf(), "地上",1,i)
-                    above.add(buildingFloorBean)
+                for (j in 0 until oldAboveList.size){
+                    if (buildingFloorBean.floorIndex ==oldAboveList.get(j).floorIndex)
+                    {
+                        buildingFloorBean.pictureList =  oldAboveList.get(j).pictureList
+                        buildingFloorBean.name =  oldAboveList.get(j).name
+                    }
                 }
-                array?.addAll(above)
-                floorAdapter.notifyDataSetChanged()
-                mAboveOldIndex = num
-                return
+                above.add(buildingFloorBean)
             }
+            array?.addAll(above)
+            floorAdapter.notifyDataSetChanged()
+            oldAboveList.clear()
+            oldAboveList.addAll(above)
 
-            if (mAboveOldIndex > 0 && mAboveOldIndex == num) {
-                array?.addAll(above)
-                floorAdapter.notifyDataSetChanged()
-                mAboveOldIndex = num
-                return
-            }
-
-            if (mAboveOldIndex > 0 && mAboveOldIndex > num) {
-                for (i in 0 until mAboveOldIndex - num) {
-                    above.removeAt(above.size - 1)
-                }
-                array?.addAll(above)
-                floorAdapter.notifyDataSetChanged()
-                //     flourAdapter.notifyItemChanged(above.size-1)
-                mAboveOldIndex = num
-                return
-
-            }
-
-            if (mAboveOldIndex > 0 && mAboveOldIndex < num) {
-                for (i in mAboveOldIndex until num) {
-                    var name = NumberUtil.num2Chinese(1 + i)
-                    var buildingFloorBean = ModuleFloorBean(UUIDUtil.getUUID(name + "层"),name + "层", arrayListOf(), "地上",1,i)
-                    above.add(buildingFloorBean)
-                }
-                array?.addAll(above)
-                floorAdapter.notifyDataSetChanged()
-                //  flourAdapter.notifyItemInserted(before.size+above.size)
-                //  flourAdapter.notifyItemRangeChanged(before.size+above.size-1,before.size+above.size)
-                mAboveOldIndex = num
-                return
-            }
         }else {
             mView?.onMsg("请输入正确的数字")
         }
@@ -136,65 +115,40 @@ class ModuleFloorConfigCreateTypePresenter : BasePresenter(), IProjectContrast.I
     //地下楼层层数
     @SuppressLint("NotifyDataSetChanged")
     override fun addAfterFlourList(num: Int) {
+
         if (isFirstCome2){
             isFirstCome2 = false
             return
         }
+
         LogUtils.d("addAfterFlourList： " + num)
         if (num == 0) {
             array?.removeAll(before)
+            before.clear()
             floorAdapter.notifyDataSetChanged()
         } else if (num > 0) {
-            array?.removeAll(before)
-            array?.removeAll(above)
+            array?.clear()
+            before.clear()
 
-            if (mBeforeOldIndex == 0 && before.size < 1) {
-                for (i in 0 until num) {
-                    var name = NumberUtil.num2Chinese(i + 1)
-                    var buildingFloorBean = ModuleFloorBean(UUIDUtil.getUUID("负"+name + "层"),"负"+name + "层", arrayListOf(), "地下",0,i)
-                    before.add(buildingFloorBean)
+            for (i in 0 until num) {
+                var name = NumberUtil.num2Chinese(i + 1)
+                var buildingFloorBean = ModuleFloorBean(UUIDUtil.getUUID("负"+name + "层"),"负"+name + "层", arrayListOf(), "地下",0,i)
+                for (j in 0 until oldBeforeList.size){
+                    if (buildingFloorBean.floorIndex ==oldBeforeList.get(j).floorIndex)
+                    {
+                        buildingFloorBean.pictureList =  oldBeforeList.get(j).pictureList
+                        buildingFloorBean.name =  oldBeforeList.get(j).name
+                    }
                 }
-                array?.addAll(before)
-                array?.addAll(above)
-                floorAdapter.notifyDataSetChanged()
-                mBeforeOldIndex = num
-                return
+                before.add(buildingFloorBean)
             }
+            array?.addAll(before)
+            array?.addAll(above)
+            floorAdapter.notifyDataSetChanged()
 
-            if (mBeforeOldIndex > 0 && mBeforeOldIndex == num) {
-                array?.addAll(before)
-                array?.addAll(above)
-                floorAdapter.notifyDataSetChanged()
-                mBeforeOldIndex = num
-                return
-            }
+            oldBeforeList.clear()
+            oldBeforeList.addAll(before)
 
-            if (mBeforeOldIndex > 0 && mBeforeOldIndex > num) {
-                for (i in 0 until mBeforeOldIndex - num) {
-                    before.removeAt(before.size - 1)
-                }
-                array?.addAll(before)
-                array?.addAll(above)
-                floorAdapter.notifyDataSetChanged()
-                //   flourAdapter.notifyItemChanged(before.size-1)
-                mBeforeOldIndex = num
-                return
-
-            }
-
-            if (mBeforeOldIndex > 0 && mBeforeOldIndex < num) {
-                for (i in mBeforeOldIndex until num) {
-                    var name = NumberUtil.num2Chinese(1 + i)
-                    var buildingFloorBean = ModuleFloorBean(UUIDUtil.getUUID("负"+name + "层"),"负"+name + "层", arrayListOf(), "地下",0,i)
-                    before.add(buildingFloorBean)
-                }
-                array?.addAll(before)
-                array?.addAll(above)
-                floorAdapter.notifyDataSetChanged()
-                //   flourAdapter.notifyItemInserted(before.size)
-                mBeforeOldIndex = num
-                return
-            }
         } else {
             mView?.onMsg("请输入正确的数字")
         }
@@ -243,9 +197,17 @@ class ModuleFloorConfigCreateTypePresenter : BasePresenter(), IProjectContrast.I
         before.addAll(beanList!!.filter {
             it.floorType == 0
         })
+
+        oldBeforeList.addAll(beanList!!.filter {
+            it.floorType == 0
+        })
         above.addAll(beanList!!.filter {
             it.floorType == 1
         })
+        oldAboveList.addAll(beanList!!.filter {
+            it.floorType == 1
+        })
+
         array?.addAll(before)
         array?.addAll(above)
 
@@ -534,53 +496,6 @@ class ModuleFloorConfigCreateTypePresenter : BasePresenter(), IProjectContrast.I
 
     }
 
-  /*  private fun getPicList(activity: Activity, mLocalProjectId: Int, mBuildingId: Long) {
-        if (picList != null && picList!!.size > 0) {
-            var cachePath: String
-            var cacheRootDir: String = FileUtil.getDrawingCacheRootDir(mView!!.getContext()!!)
-            var curTime: Long = System.currentTimeMillis()
-
-            copyDrawingsToLocalCache(activity, picList!!,null, cacheRootDir)
-
-
-
-            picList!!.forEach {
-
-
-                var name =""
-                if(!it.name.endsWith("pdf")){
-                    name = it.name.replace(".","")+".pdf"
-                }else{
-                    name = it.name
-                }
-
-                cachePath = cacheRootDir + mCurDrawingsDir + name
-                LogUtils.d("楼图纸缓存目录：" + cachePath)
-                var drawing = Drawing(
-                    -1,
-                    mLocalProjectId.toLong(),
-                    mBuildingId,
-                    -1,
-                    -1,
-                    "",
-                    name,
-                    "overall",
-                    null,
-                    FileUtil.getFileExtension(name),
-                    cachePath,
-                    cachePath,
-                    curTime,
-                    curTime,
-                    mProLeader!!,
-                    "",
-                    1,
-                    0
-                )
-                //   mAppFacadeDrawingList!!.add(drawing)
-            }
-        }
-
-    }*/
 
     private lateinit var mPrefs: SharedPreferences
     private var mCurDrawingsDir: String? = ""

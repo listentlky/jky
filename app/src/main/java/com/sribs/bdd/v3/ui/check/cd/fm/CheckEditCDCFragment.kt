@@ -560,6 +560,12 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
             openImgSelector(REQUEST_COLUMN_DESIGN_TAKE_PHOTO)
         }*/
 
+        val lp: ViewGroup.LayoutParams
+        lp = rightRealRowSteelParamsView!!.content.getLayoutParams()
+        lp.width = -1
+        lp.height = getResources().getDimensionPixelSize(R.dimen._45sdp)
+        rightRealRowSteelParamsView!!.content.setLayoutParams(lp)
+
         rightRealRowSteelView!!.checkCpdLeftRealSpinner2.setSpinnerData(
             mTypeRightList
         )
@@ -1178,6 +1184,7 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
 
             leftDesignHView!!.content.visibility = View.INVISIBLE
             leftDesignHView!!.checkCpdLeftRectangle1.setText("")
+
             leftDesignHView!!.checkCpdLeftRectangle2.setText("")
             leftDesignHView!!.checkCpdLeftRectangle3.setText("")
             leftDesignHView!!.checkCpdLeftRectangle4.setText("")
@@ -1308,7 +1315,17 @@ class CheckEditCDCFragment : BaseFragment(R.layout.fragment_check_componentdetec
             checkRightRealStatus(true)
 
 
+            val lp: ViewGroup.LayoutParams
+            lp = rightRealRowSteelParamsView!!.content.getLayoutParams()
+            lp.width = -1
+            lp.height = getResources().getDimensionPixelSize(R.dimen._45sdp)
+            rightRealRowSteelParamsView!!.content.setLayoutParams(lp)
 
+            val lp2: ViewGroup.LayoutParams
+            lp2 = rightDesignRowSteelParamsView!!.content.getLayoutParams()
+            lp2.width = -1
+            lp2.height = getResources().getDimensionPixelSize(R.dimen._45sdp)
+            rightDesignRowSteelParamsView!!.content.setLayoutParams(lp2)
 
 
             mDamageCreateTime = -1L

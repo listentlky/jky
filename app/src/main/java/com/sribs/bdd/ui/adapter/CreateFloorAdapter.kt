@@ -1,5 +1,6 @@
 package com.sribs.bdd.ui.adapter
 
+import android.content.Context
 import android.text.Editable
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +13,7 @@ import com.sribs.bdd.databinding.ItemFloorListBinding
 import com.sribs.common.ui.widget.TagEditView
 
 
-class CreateFloorAdapter(var iCallback: ICallback?):BaseListAdapter<BuildingFloorBean,ItemFloorListBinding>() {
+class CreateFloorAdapter(var iCallback: ICallback?,var context: Context?):BaseListAdapter<BuildingFloorBean,ItemFloorListBinding>() {
 
 
     override fun init(bind: ItemFloorListBinding, bean: BuildingFloorBean, pos: Int) {
@@ -27,7 +28,17 @@ class CreateFloorAdapter(var iCallback: ICallback?):BaseListAdapter<BuildingFloo
 
         })
 
+
         var adapter = ShowFloorPictureAdapter()
+        if (bean.pictureList==null|| bean.pictureList!!.size==0){
+        }else{
+            bind.recyclerView.layoutManager = LinearLayoutManager(context)
+            adapter.setData(bean.pictureList!!)
+            bind.recyclerView.adapter = adapter
+            bind.recyclerView.visibility = View.VISIBLE
+
+        }
+
         bind.showimages.setOnClickListener {
             if (bind.recyclerView.visibility==View.VISIBLE){
                 bind.recyclerView.visibility = View.GONE

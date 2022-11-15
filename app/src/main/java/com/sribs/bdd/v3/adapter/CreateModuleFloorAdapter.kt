@@ -1,6 +1,8 @@
 package com.sribs.bdd.v3.adapter
 
+import android.content.Context
 import android.text.Editable
+import android.view.ContextMenu
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -14,9 +16,10 @@ import com.sribs.bdd.databinding.ItemFloorListBinding
 import com.sribs.common.ui.widget.TagEditView
 
 
-class CreateModuleFloorAdapter(var iCallback: ICallback?):BaseListAdapter<ModuleFloorBean,ItemFloorListBinding>() {
+class CreateModuleFloorAdapter(var iCallback: ICallback?,var context: Context?):BaseListAdapter<ModuleFloorBean,ItemFloorListBinding>() {
 
     var picList= ArrayList<ModuleFloorPictureBean>()
+
 
 
     override fun init(bind: ItemFloorListBinding, bean: ModuleFloorBean, pos: Int) {
@@ -30,7 +33,17 @@ class CreateModuleFloorAdapter(var iCallback: ICallback?):BaseListAdapter<Module
             }
 
         })
+
         var adapter = ShowModuleFloorPictureAdapter()
+        if (bean.pictureList==null|| bean.pictureList!!.size==0){
+        }else{
+            bind.recyclerView.layoutManager = LinearLayoutManager(context)
+            adapter.setData(bean.pictureList!!)
+            bind.recyclerView.adapter = adapter
+            bind.recyclerView.visibility = View.VISIBLE
+
+        }
+
         bind.showimages.setOnClickListener {
             if (bind.recyclerView.visibility==View.VISIBLE){
                 bind.recyclerView.visibility = View.GONE
@@ -39,7 +52,6 @@ class CreateModuleFloorAdapter(var iCallback: ICallback?):BaseListAdapter<Module
                     return@setOnClickListener
                 }
                 bind.recyclerView.layoutManager = LinearLayoutManager(it.context)
-
                 adapter.setData(bean.pictureList!!)
                 bind.recyclerView.adapter = adapter
                 bind.recyclerView.visibility = View.VISIBLE
@@ -84,7 +96,6 @@ class CreateModuleFloorAdapter(var iCallback: ICallback?):BaseListAdapter<Module
         mList = list
         notifyDataSetChanged()
     }
-
 
     override fun onBindViewHolder(holder: BindingViewHolder<ItemFloorListBinding>, position: Int) {
         super.onBindViewHolder(holder, position)

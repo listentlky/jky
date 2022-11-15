@@ -54,9 +54,9 @@
 
         <include
             android:id="@+id/check_cpd_beam_right_real_single_2"
-            layout="@layout/item_component_detection_beam_right_real_single_row_steel_2"
+            layout="@layout/item_component_detection_beam_right_real_single_row_steel_3"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/_20sdp"
             android:layout_marginLeft="@dimen/_15sdp"
             android:visibility="invisible"
             android:layout_marginTop="@dimen/_5sdp"
@@ -72,7 +72,7 @@
             android:layout_marginTop="@dimen/_5sdp"
             android:layout_marginRight="@dimen/_15sdp"
             android:background="@color/gray_400"
-            app:layout_constraintTop_toBottomOf="@id/check_cpd_beam_right_real_single" />
+            app:layout_constraintTop_toBottomOf="@id/check_cpd_beam_right_real_single_2" />
 
         <include
             android:id="@+id/check_cpd_beam_right_real_measured"
