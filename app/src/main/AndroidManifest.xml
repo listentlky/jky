@@ -250,6 +250,13 @@
             android:screenOrientation="landscape"
             android:configChanges="density|fontScale|keyboard|keyboardHidden|layoutDirection|locale|mcc|mnc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|touchscreen|uiMode"
             android:theme="@style/AppTheme.Main" />
+        <activity
+            android:name=".v3.ui.check.nres.CheckNonResidentsActivity"
+            android:windowSoftInputMode="stateHidden|adjustPan"
+            android:launchMode="singleTop"
+            android:screenOrientation="landscape"
+            android:configChanges="density|fontScale|keyboard|keyboardHidden|layoutDirection|locale|mcc|mnc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|touchscreen|uiMode"
+            android:theme="@style/AppTheme.Main" />
         <receiver
             android:name=".receiver.NetworkReceiver"
             android:enabled="true"

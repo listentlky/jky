@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="@dimen/house_damage_edit_photo_btn_margin"
+    app:cardBackgroundColor="@android:color/transparent"
+    android:clickable="true"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="@dimen/_50sdp"
+        android:layout_height="wrap_content"
+        android:textColor="@color/gray_600"
+        android:textSize="@dimen/_7ssp"
+        android:text="添加照片"
+        android:textColorHint="@color/gray_600"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:drawableTop="@mipmap/icon_photo_add"
+        />
+
+    <ImageView
+        android:id="@+id/damage_photo"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        />
+
+</androidx.cardview.widget.CardView>

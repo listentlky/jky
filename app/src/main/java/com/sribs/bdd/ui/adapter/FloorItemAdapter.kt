@@ -46,13 +46,13 @@ class FloorItemAdapter : BaseListAdapter<BuildingModule, ItemFloorDetailBinding>
                 routing = com.sribs.common.ARouterPath.CHECK_COMPONENT_DETECTION_ACTIVITY
                 configRouting = com.sribs.common.ARouterPath.CHECK_MODULE_CONFIG_TYPE_FLOOR_ACTIVITY
             }
-            "居民类检测测量" -> {
-                text = "居民类检测测量"
-                routing = com.sribs.common.ARouterPath.BLD_DAMAGE_LIST_ATY
+            "居民类检测" -> {
+                text = "居民类检测"
+             //   routing = com.sribs.common.ARouterPath.BLD_DAMAGE_LIST_ATY
             }
-            "非居民类检测测量" -> {
-                text = "非居民类检测测量"
-                routing = com.sribs.common.ARouterPath.BLD_DRW_DMG_DIAL_REC_FGT
+            "非居民类检测" -> {
+                text = "非居民类检测"
+                routing = com.sribs.common.ARouterPath.CHECK_NON_RESIDENTS_ACTIVITY
             }
             else -> {
                 text = ""

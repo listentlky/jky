@@ -189,20 +189,6 @@ class MainPresenter : BaseUnitConfigPresenter(), IMainListContrast.IMainPresente
 
         var drawingList = ArrayList<String>()
 
-/*        Observable.just("uploadProject")
-            .subscribeOn(Schedulers.computation())
-            .observeOn(Schedulers.computation())
-            .subscribe({
-                var list = mDb.getBuildingByProjectId(bean.localId)
-                LogUtils.d("查询项目下楼表"+list.)
-                dispose()
-                cb(true)
-            },{
-                cb(false)
-            })
-
-return*/
-
         addDisposable(mDb.getBuildingByProjectId(bean.localId)
             .subscribeOn(Schedulers.computation())
             .observeOn(Schedulers.computation())
@@ -439,15 +425,14 @@ return*/
                 cb(false)
             })
         )
+    }
 
-        /*   ProjectCreateReq().also {
-               it.inspectors = inspectorList
-               it.leaderId = Dict.getLeaderId(bean.leader)!!
-               it.leaderName = bean.leader
-               it.projectName = bean.address
-               it.projectId = bean.localUUID
-           }*/
-
+    fun isCopyAllDrawing(moduleName: String?): Boolean {
+        if (moduleName == "非居民类检测"
+        ) {
+            return true
+        }
+        return false
     }
 
     fun isCopyFloorDrawing(moduleName: String?): Boolean {
@@ -458,14 +443,6 @@ return*/
         }
         return false
     }
-
-    var buildingList = ArrayList<BuildingBean>()
-
-    var buildingFloorList = ArrayList<FloorBean>()
-
-    var buildingModuleList = ArrayList<BuildingModule>()
-
-    var buildingModuleFloorList = ArrayList<v3ModuleFloorDbBean>()
 
     private fun makeUploadProject(
         buildingList: ArrayList<BuildingBean>,
@@ -543,6 +520,7 @@ return*/
                             if (it.buildingRemoteId.isNullOrEmpty()) it.buildingUUID!! else it.buildingRemoteId!!,
                             drawingID,
                             b.fileName!!,
+                            b.drawingType!!,
                             b.fileType!!,
                             "",
                             "",
@@ -557,7 +535,9 @@ return*/
                         )
                     )
                 }
-            } else { //层概念下的图纸
+            }
+
+            if (isCopyAllDrawing(it.moduleName) || isCopyFloorDrawing(it.moduleName)) { //层概念下的图纸
 
                 var currentModuleFloorList = buildingModuleFloorList.filter { bb ->
                     it.moduleid == bb.moduleId
@@ -692,6 +672,7 @@ return*/
                                 if (it.buildingRemoteId.isNullOrEmpty()) it.buildingUUID!! else it.buildingRemoteId!!,
                                 drawingID,
                                 bbb.fileName!!,
+                                bbb.drawingType!!,
                                 bbb.fileType!!,
                                 cc.floorId!!,
                                 cc.floorName ?: "",
@@ -745,6 +726,7 @@ return*/
                         if (it.remoteId.isNullOrEmpty()) it.UUID!! else it.remoteId!!,
                         drawingID,
                         drawingV3Bean.fileName!!,
+                        drawingV3Bean.drawingType!!,
                         drawingV3Bean.fileType!!,
                         "",
                         "",
@@ -778,10 +760,11 @@ return*/
                             if (it.remoteId.isNullOrEmpty()) it.UUID!! else it.remoteId!!,
                             drawingID,
                             dd.fileName!!,
+                            dd.drawingType!!,
                             dd.fileType!!,
                             floorBean.floorId!!,
                             floorBean.floorName ?: "",
-                            floorBean.floorIndex?:0,
+                            floorBean.floorIndex ?: 0,
                             floorBean.floorType ?: 0,
                             index,
                             inspectorList,

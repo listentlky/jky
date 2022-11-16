@@ -22,7 +22,7 @@ data class v3ModuleFloorDbBean(
     var createTime:String?=null,
     var updateTime:String?=null,
     var deleteTime:String?=null,
-    var version:Int?=null,
+    var version:Long?=null,
     var remoteId:String?=null,
     var status:Int?=0,
 ){

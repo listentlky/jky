@@ -9,6 +9,7 @@ data class V3UploadDrawingReq (
         var buildingId:String,
         var drawingId:String,
         var drawingName:String,
+        var drawingType:String,
         var fileType:String,
         var floorId:String,
         var floorNo:String,

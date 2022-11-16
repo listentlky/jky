@@ -550,6 +550,7 @@ class BuildingListPresenter : BasePresenter(), IBuildingContrast.IBuildingListPr
                             if (it.buildingRemoteId.isNullOrEmpty()) it.buildingUUID!! else it.buildingRemoteId!!,
                             drawingID,
                             b.fileName!!,
+                            b.drawingType!!,
                             b.fileType!!,
                             "",
                             "",
@@ -564,7 +565,9 @@ class BuildingListPresenter : BasePresenter(), IBuildingContrast.IBuildingListPr
                         )
                     )
                 }
-            } else { //层概念下的图纸
+            }
+
+            if(isCopyAllDrawing(it.moduleName) || isCopyFloorDrawing(it.moduleName)){ //层概念下的图纸
 
                 var currentModuleFloorList = buildingModuleFloorList.filter { bb ->
                     it.moduleid == bb.moduleId
@@ -698,6 +701,7 @@ class BuildingListPresenter : BasePresenter(), IBuildingContrast.IBuildingListPr
                                 if (it.buildingRemoteId.isNullOrEmpty()) it.buildingUUID!! else it.buildingRemoteId!!,
                                 drawingID,
                                 bbb.fileName!!,
+                                bbb.drawingType!!,
                                 bbb.fileType!!,
                                 cc.floorId!!,
                                 cc.floorName ?: "",
@@ -750,6 +754,7 @@ class BuildingListPresenter : BasePresenter(), IBuildingContrast.IBuildingListPr
                     if (bean.remoteId.isNullOrEmpty()) bean.bldUUID!! else bean.remoteId!!,
                     drawingID,
                     drawingV3Bean.fileName!!,
+                    drawingV3Bean.drawingType!!,
                     drawingV3Bean.fileType!!,
                     "",
                     "",
@@ -783,6 +788,7 @@ class BuildingListPresenter : BasePresenter(), IBuildingContrast.IBuildingListPr
                         if (bean.remoteId.isNullOrEmpty()) bean.bldUUID!! else bean.remoteId!!,
                         drawingID,
                         dd.fileName!!,
+                        dd.drawingType!!,
                         dd.fileType!!,
                         floorBean.floorId!!,
                         floorBean.floorName ?: "",
@@ -871,6 +877,14 @@ class BuildingListPresenter : BasePresenter(), IBuildingContrast.IBuildingListPr
                 cb(false)
             })
 
+    }
+
+    fun isCopyAllDrawing(moduleName: String?): Boolean {
+        if (moduleName == "非居民类检测"
+        ) {
+            return true
+        }
+        return false
     }
 
     fun isCopyFloorDrawing(moduleName: String?): Boolean {

@@ -111,7 +111,6 @@ class RelativeHDiffFragment : BaseFragment(R.layout.fragment_relative_h_diff) {
             if(currentDamageV3Bean != null){
                 note = currentDamageV3Bean?.note?:""
             }
-            LogUtils.d("${note}  ${mBinding.checkBzEdit.text.toString()}")
             (activity as RelativeHDiffActivity).mIsUpdateData = false
             if(mBinding.checkBzEdit.text.toString() != note){
                 (activity as RelativeHDiffActivity).mIsUpdateData = true

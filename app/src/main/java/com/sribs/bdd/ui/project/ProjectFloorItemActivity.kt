@@ -563,7 +563,7 @@ class ProjectFloorItemActivity : BaseActivity(), IProjectContrast.IProjectFloorD
 
     )
     val items = arrayOf(
-        "全选", "建筑结构复核", "倾斜测量", "相对高差测量", "构件检测"/*, "居民类检测测量", "非居民类检测测量"*/
+        "全选", "建筑结构复核", "倾斜测量", "相对高差测量", "构件检测"/*, "居民类检测"*/, "非居民类检测"
     )
 
     fun showMutilAlertDialog(view: View?) {
@@ -571,7 +571,7 @@ class ProjectFloorItemActivity : BaseActivity(), IProjectContrast.IProjectFloorD
         var checkedList = ArrayList<String>()
 
         var checkBooleanList = booleanArrayOf(
-            false, false, false, false, false
+            false, false, false, false, false,false
         )
         localList.forEach {
             items.forEachIndexed { index, s ->

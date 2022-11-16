@@ -21,7 +21,7 @@ data class CheckCDMainBean (
     var createTime:String?="",
     var updateTime:String?="",
     var deleteTime:String?="",
-    var version:Int?=1,
+    var version:Long?=1,
     var status:Int?=0
 ){
     override fun toString(): String {

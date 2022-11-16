@@ -104,6 +104,14 @@ object ARouterPath {
     /**
      * 3.0项目检测
      */
+
+    const val CHECK_NON_RESIDENTS_ACTIVITY = "/check/nonResidents/activity"; //非居民检测
+
+    const val CHECK_NON_RESIDENTS_FRAGMENT = "/check/nonResidents/fragment"; //非居民检测
+
+    const val CHECK_NON_RESIDENTS_EDIT_FRAGMENT = "/check/nonResidents/edit/fragment"; //非居民检测
+
+
     const val CHECK_OBLIQUE_DEFORMATION_ACTIVITY = "/check/obliqueDeformation/activity"; //倾斜变形检测
 
     const val CHECK_OBLIQUE_DEFORMATION_FRAGMENT = "/check/obliqueDeformation/fragment"; //倾斜变形检测

@@ -2,6 +2,7 @@ package com.sribs.bdd.v3.view;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
@@ -49,7 +50,7 @@ public class FloorDrawingSpinnerView extends LinearLayout {
         init(context);
     }
 
-    private void init(Context context){
+    private void init(Context context) {
         this.mContext = context;
         setOrientation(VERTICAL);
     }
@@ -70,14 +71,14 @@ public class FloorDrawingSpinnerView extends LinearLayout {
 
     private LinearLayout.LayoutParams layoutParams;
 
-    public void build(){
+    public void build() {
         removeAllViews();
         mView.clear();
         mTextViews.clear();
         layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 mContext.getResources().getDimensionPixelSize(R.dimen._20sdp));
 
-        for (int i =0; i <mData.size();i++){
+        for (int i = 0; i < mData.size(); i++) {
 
             LinearLayout mSpinnerLayout = new LinearLayout(mContext);
             mSpinnerLayout.setOrientation(VERTICAL);
@@ -85,39 +86,46 @@ public class FloorDrawingSpinnerView extends LinearLayout {
 
             FloorDrawingModule menuData = mData.get(i);
 
-            View menuLayout = View.inflate(mContext, R.layout.floor_drawing_spinner_item,null);
-            mView.add(menuLayout);
-            TextView menuName = menuLayout.findViewById(R.id.spinner_name);
-            mTextViews.add(menuName);
-            ImageView menuImg = menuLayout.findViewById(R.id.spinner_img);
-            menuName.setText(menuData.getMFloorName());
-            if(i > 0){
-                mSpinnerLayout.setVisibility(GONE);
-                menuImg.setRotation(-90);
-            }
-            menuLayout.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    resetSpinnerItemBg();
-                    menuLayout.setBackgroundColor(Color.parseColor("#FF005B82"));
-                    menuName.setTextColor(Color.WHITE);
-                    if(mSpinnerLayout.getVisibility() == VISIBLE){
-                        menuImg.setRotation(-90);
-                        mSpinnerLayout.setVisibility(GONE);
-                    }else {
-                        menuImg.setRotation(0);
-                        mSpinnerLayout.setVisibility(VISIBLE);
-                    }
-                    if(mFloorDrawItemClickCallback != null){
-                        mFloorDrawItemClickCallback.onClick(null);
-                    }
-                }
-            });
+            if (!TextUtils.isEmpty(menuData.getMFloorName())) {
 
-            for (int k = 0; k < menuData.getMNameList().size();k++){
+                View menuLayout = View.inflate(mContext, R.layout.floor_drawing_spinner_item, null);
+                mView.add(menuLayout);
+                TextView menuName = menuLayout.findViewById(R.id.spinner_name);
+                mTextViews.add(menuName);
+                ImageView menuImg = menuLayout.findViewById(R.id.spinner_img);
+                menuName.setText(menuData.getMFloorName());
+                if (i > 0) {
+                    mSpinnerLayout.setVisibility(GONE);
+                    menuImg.setRotation(-90);
+                }
+
+                menuLayout.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        resetSpinnerItemBg();
+                        menuLayout.setBackgroundColor(Color.parseColor("#FF005B82"));
+                        menuName.setTextColor(Color.WHITE);
+                        if (mSpinnerLayout.getVisibility() == VISIBLE) {
+                            menuImg.setRotation(-90);
+                            mSpinnerLayout.setVisibility(GONE);
+                        } else {
+                            menuImg.setRotation(0);
+                            mSpinnerLayout.setVisibility(VISIBLE);
+                        }
+                        if (mFloorDrawItemClickCallback != null) {
+                            mFloorDrawItemClickCallback.onClick(null);
+                        }
+                    }
+                });
+
+                addView(menuLayout, layoutParams);
+
+            }
+
+            for (int k = 0; k < menuData.getMNameList().size(); k++) {
                 DrawingV3Bean drawingV3Bean = menuData.getMNameList().get(k);
                 drawingV3Bean.setFloorName(menuData.getMFloorName());
-                View mSpinnerItemView = View.inflate(mContext, R.layout.floor_drawing_spinner_child_item,null);
+                View mSpinnerItemView = View.inflate(mContext, R.layout.floor_drawing_spinner_child_item, null);
                 TextView spinnerItem = mSpinnerItemView.findViewById(R.id.spinner_item_name);
                 spinnerItem.setText(drawingV3Bean.getFileName());
                 mTextViews.add(spinnerItem);
@@ -128,29 +136,28 @@ public class FloorDrawingSpinnerView extends LinearLayout {
                         resetSpinnerItemBg();
                         mSpinnerItemView.setBackgroundColor(Color.parseColor("#FF005B82"));
                         spinnerItem.setTextColor(Color.WHITE);
-                        if(mFloorDrawItemClickCallback != null){
+                        if (mFloorDrawItemClickCallback != null) {
                             mFloorDrawItemClickCallback.onClick(drawingV3Bean);
                         }
                     }
                 });
-                mSpinnerLayout.addView(mSpinnerItemView,layoutParams);
-                if(k == 0){ // 默认打开第一个
+                mSpinnerLayout.addView(mSpinnerItemView, layoutParams);
+                if (k == 0) { // 默认打开第一个
                     LogUtils.INSTANCE.d("默认设置第一个");
                     mSpinnerItemView.setBackgroundColor(Color.parseColor("#FF005B82"));
                     spinnerItem.setTextColor(Color.WHITE);
                 }
             }
-            addView(menuLayout,layoutParams);
 
             addView(mSpinnerLayout);
         }
     }
 
-    private void resetSpinnerItemBg(){
-        for (View view:mView) {
+    private void resetSpinnerItemBg() {
+        for (View view : mView) {
             view.setBackgroundColor(Color.WHITE);
         }
-        for (TextView view:mTextViews) {
+        for (TextView view : mTextViews) {
             view.setTextColor(Color.parseColor("#FF323334"));
         }
     }
