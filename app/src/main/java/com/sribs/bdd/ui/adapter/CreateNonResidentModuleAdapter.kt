@@ -1,7 +1,8 @@
-package com.sribs.bdd.ui.adapter
+package com.sribs.bdd.v3.adapter
 
 import android.content.Context
 import android.text.Editable
+import android.view.ContextMenu
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -9,27 +10,32 @@ import com.cbj.sdk.libui.mvp.BindingViewHolder
 import com.cbj.sdk.libui.mvp.adapter.BaseListAdapter
 import com.cbj.sdk.libui.mvp.newBindingViewHolder
 import com.sribs.bdd.bean.BuildingFloorBean
+import com.sribs.bdd.bean.data.ModuleFloorBean
+import com.sribs.bdd.bean.data.ModuleFloorPictureBean
 import com.sribs.bdd.databinding.ItemFloorListBinding
+import com.sribs.bdd.databinding.ItemNonResidentListBinding
 import com.sribs.common.ui.widget.TagEditView
 
 
-class CreateFloorAdapter(var iCallback: ICallback?,var context: Context?):BaseListAdapter<BuildingFloorBean,ItemFloorListBinding>() {
+class CreateNonResidentModuleAdapter(var iCallback: ICallback?,var context: Context?):BaseListAdapter<ModuleFloorBean,ItemNonResidentListBinding>() {
+
+    var picList= ArrayList<ModuleFloorPictureBean>()
 
 
-    override fun init(bind: ItemFloorListBinding, bean: BuildingFloorBean, pos: Int) {
-        bind.floorName.getEditText().setHint(bean.name)
+
+    override fun init(bind: ItemNonResidentListBinding, bean: ModuleFloorBean, pos: Int) {
+        bind.floorName.getEditText().hint = bean.name
         bind.floorName.setTextCallback(object :TagEditView.ITextChanged{
             override fun onTextChange(s: Editable?) {
                 if (s!=null&&s.toString()!=""){
-                   bean.name = s.toString()
+                    bean.name = s.toString()
                 }
 
             }
 
         })
 
-
-        var adapter = ShowFloorPictureAdapter()
+        var adapter = ShowModuleFloorPictureAdapter()
         if (bean.pictureList==null|| bean.pictureList!!.size==0){
         }else{
             bind.recyclerView.layoutManager = LinearLayoutManager(context)
@@ -50,28 +56,26 @@ class CreateFloorAdapter(var iCallback: ICallback?,var context: Context?):BaseLi
                 adapter.setData(bean.pictureList!!)
                 bind.recyclerView.adapter = adapter
                 bind.recyclerView.visibility = View.VISIBLE
-
             }
         }
-        bind.delete.setOnClickListener {
+       /* bind.delete.setOnClickListener {
             bean.pictureList!!.clear()
             adapter.notifyDataSetChanged()
-
-   /*         mList?.remove(bean)
-            notifyDataSetChanged()*/
-
-            iCallback?.deleteBuildingFloor(bean,pos)
-        }
+            *//* mList?.remove(bean)
+             notifyDataSetChanged()*//*
+            iCallback?.deleteModuleFloor(bean,pos)
+        }*/
 
         bind.chosePic.setOnClickListener {
-            iCallback?.chosePic(bean)
+            iCallback?.choseNonResidentPic(bean)
 
         }
 
         bind.takePhoto.setOnClickListener {
-            iCallback?.takePhoto(bean)
+            iCallback?.takeNonResidentPhoto(bean)
 
-          /*  if (bind.recyclerView.visibility==View.VISIBLE){
+
+           /* if (bind.recyclerView.visibility==View.VISIBLE){
                 bind.recyclerView.visibility = View.GONE
             }else{
                 if (bean.pictureList==null|| bean.pictureList!!.size==0){
@@ -86,16 +90,15 @@ class CreateFloorAdapter(var iCallback: ICallback?,var context: Context?):BaseLi
         }
 
         bind.choseWhite.setOnClickListener {
-            iCallback?.showWiite(bean)
+            iCallback?.showNonResidentWhite(bean)
         }
     }
-
-    fun setData(li:ArrayList<BuildingFloorBean>){
-        mList = li
+    fun setData(list:ArrayList<ModuleFloorBean>){
+        mList = list
         notifyDataSetChanged()
     }
 
-    override fun onBindViewHolder(holder: BindingViewHolder<ItemFloorListBinding>, position: Int) {
+    override fun onBindViewHolder(holder: BindingViewHolder<ItemNonResidentListBinding>, position: Int) {
         super.onBindViewHolder(holder, position)
         holder.setIsRecyclable(false)
     }
@@ -103,13 +106,11 @@ class CreateFloorAdapter(var iCallback: ICallback?,var context: Context?):BaseLi
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): BindingViewHolder<ItemFloorListBinding> = newBindingViewHolder(parent)
+    ): BindingViewHolder<ItemNonResidentListBinding> = newBindingViewHolder(parent)
 
     interface ICallback{
-        fun chosePic(bean: BuildingFloorBean)
-        fun takePhoto(bean: BuildingFloorBean)
-        fun showWiite(bean: BuildingFloorBean)
-        fun deleteBuildingFloor(bean: BuildingFloorBean, position:Int)
+        fun choseNonResidentPic(bean: ModuleFloorBean)
+        fun takeNonResidentPhoto(bean: ModuleFloorBean)
+        fun showNonResidentWhite(bean: ModuleFloorBean)
     }
-
 }

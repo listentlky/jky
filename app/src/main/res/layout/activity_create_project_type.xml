@@ -211,6 +211,7 @@
                     android:insetBottom="0dp" />
             </LinearLayout>
             <androidx.appcompat.widget.LinearLayoutCompat
+
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
                 android:layout_width="match_parent"
@@ -242,7 +243,44 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
+            <View
+                android:layout_marginTop="@dimen/_10sdp"
+                android:background="@color/text_black"
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"/>
 
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:paddingTop="@dimen/_10sdp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <Button
+                    android:layout_weight="1"
+                    android:gravity="left|center_vertical"
+                    android:textSize="@dimen/_9ssp"
+                    android:text="非居民立面/总平面图纸"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_29sdp"
+                    app:backgroundTint="@color/blue_800"
+                    android:textColor="@color/white" />
+
+                <Button
+                    android:layout_marginLeft="@dimen/_1sdp"
+                    android:gravity="center"
+                    android:textSize="@dimen/_9ssp"
+                    android:text="操作"
+                    android:layout_width="@dimen/_60sdp"
+                    android:layout_height="@dimen/_29sdp"
+                    app:backgroundTint="@color/blue_800"
+                    android:textColor="@color/white" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/nonResident_recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
 
         </LinearLayout>
 

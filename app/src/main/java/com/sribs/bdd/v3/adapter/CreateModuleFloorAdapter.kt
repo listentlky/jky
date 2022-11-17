@@ -74,7 +74,8 @@ class CreateModuleFloorAdapter(var iCallback: ICallback?,var context: Context?):
         bind.takePhoto.setOnClickListener {
             iCallback?.takePhoto(bean)
 
-            if (bind.recyclerView.visibility==View.VISIBLE){
+
+           /* if (bind.recyclerView.visibility==View.VISIBLE){
                 bind.recyclerView.visibility = View.GONE
             }else{
                 if (bean.pictureList==null|| bean.pictureList!!.size==0){
@@ -84,7 +85,7 @@ class CreateModuleFloorAdapter(var iCallback: ICallback?,var context: Context?):
                 adapter.setData(bean.pictureList!!)
                 bind.recyclerView.adapter = adapter
                 bind.recyclerView.visibility = View.VISIBLE
-            }
+            }*/
 
         }
 

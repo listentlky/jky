@@ -8,6 +8,7 @@ import android.os.Build
 import android.text.Editable
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
+import cc.shinichi.library.tool.ui.ToastUtil
 import com.alibaba.android.arouter.facade.annotation.Autowired
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
@@ -75,6 +76,10 @@ class ProjectCreateByTypeActivity : BaseActivity(), IProjectContrast.IProjectCre
     private val REQUEST_CODE_PIC_BUIlDING = 15 //基于楼拍照
 
     private val REQUEST_CODE_WHITE_BUILDING = 16 //基于楼的白板
+
+    private val REQUEST_CODE_NON_RESIDENT_PIC_FLOOR = 17 //基于非居民楼层拍照
+
+    private val REQUEST_CODE_NON_RESIDENT_WHITE_BUILDING = 18 //基于非居民楼层白板
 
     private var isDeleteBuildingFloor = false
     override fun deinitView() {
@@ -291,15 +296,46 @@ class ProjectCreateByTypeActivity : BaseActivity(), IProjectContrast.IProjectCre
                 currentBean?.pictureList?.add(BuildingFloorPictureBean(name!!, null, file))
                 projectCreateTypePresenter.refeshData()
             }
+        } else if (requestCode == REQUEST_CODE_NON_RESIDENT_PIC_FLOOR && data != null) {
+            var isCameraImage = data.getBooleanExtra(ImageSelector.IS_CAMERA_IMAGE, false)
+            if (isCameraImage) {
+                var images = data.getStringArrayListExtra(ImageSelector.SELECT_RESULT)
+                if (images != null && images.size > 0) {
+                    var name = FileUtil.getFileName(images[0])
+                    name = name ?: images[0]
+                    LogUtils.d("基于非居民楼选择图片返回: " + images[0])
+                    currentBean?.pictureList?.add(
+                        BuildingFloorPictureBean(
+                            name!!,
+                            null,
+                            images[0]
+                        ).also {
+                        })
+                    projectCreateTypePresenter.refeshNonResidentListData()
+                }
+            }
+        } else if (requestCode == REQUEST_CODE_NON_RESIDENT_WHITE_BUILDING && data != null) {
+            var file = data.getStringExtra("File")
+            LogUtils.d("基于非居民楼白板：" + file)
+            if (file != null) {
+                var name = FileUtil.getFileName(file)
+                name = name ?: file
+                currentBean?.pictureList?.add(BuildingFloorPictureBean(name!!, null, file))
+                projectCreateTypePresenter.refeshNonResidentListData()
+            }
         }
 
     }
 
+    override fun getNonResidentRecycleView(): RecyclerView  = mBinding.nonResidentRecyclerView
+
     override fun getFlourRecycleView(): RecyclerView = mBinding.flourRecycleview
 
     override fun getPicRecycleView(): RecyclerView = mBinding.picRecycleview
+
     override fun chosePic(bean: BuildingFloorBean) {
         if (selected.size == 0) {
+            ToastUtil.getInstance()._short(getContext(),"请先上传图纸")
             return
         }
         selectedPic.clear()
@@ -311,6 +347,7 @@ class ProjectCreateByTypeActivity : BaseActivity(), IProjectContrast.IProjectCre
 
         var dialog = ChosePicDialog(this, selectedPic) {
             bean.pictureList?.addAll(it)
+            projectCreateTypePresenter.refeshData()
         }
         dialog.show()
 
@@ -332,6 +369,40 @@ class ProjectCreateByTypeActivity : BaseActivity(), IProjectContrast.IProjectCre
             .navigation(this, REQUEST_CODE_BEAN_WHITE_FLLOR)
         currentBean = bean
 
+    }
+
+    override fun choseNonResidentPic(bean: BuildingFloorBean) {
+        if (selected.size == 0) {
+            ToastUtil.getInstance()._short(getContext(),"请先上传图纸")
+            return
+        }
+        selectedPic.clear()
+        selected.forEach {
+            var name = FileUtil.uriToFileName(Uri.parse(it), this)
+            name = name ?: it
+            selectedPic.add(BuildingFloorPictureBean(name, it, null))
+        }
+
+        var dialog = ChosePicDialog(this, selectedPic) {
+            bean.pictureList?.addAll(it)
+            projectCreateTypePresenter.refeshNonResidentListData()
+        }
+        dialog.show()
+    }
+
+    override fun takeNonResidentPhoto(bean: BuildingFloorBean) {
+        //仅拍照
+        ImageSelector
+            .builder()
+            .onlyTakePhoto(true)  // 仅拍照，不打开相册
+            .start(this, REQUEST_CODE_NON_RESIDENT_PIC_FLOOR)
+        currentBean = bean
+    }
+
+    override fun choseNonResidentWhite(bean: BuildingFloorBean) {
+        ARouter.getInstance().build(com.sribs.common.ARouterPath.DRAW_WHITE)
+            .navigation(this, REQUEST_CODE_NON_RESIDENT_WHITE_BUILDING)
+        currentBean = bean
     }
 
     override fun deleteBuildingFloor(floorType: String, adboveSize: Int, beforeSize: Int) {

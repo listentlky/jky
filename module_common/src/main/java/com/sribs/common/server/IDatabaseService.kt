@@ -60,6 +60,12 @@ interface IDatabaseService:IProvider {
         moduleId: Long
     ): Single<List<v3BuildingModuleDbBean>>
 
+    fun getv3BuildingModuleOnce(
+        projectId: Long,
+        buildingId: Long,
+        moduleName: String
+    ): Single<List<v3BuildingModuleDbBean>>
+
     fun getv3BuildingModuleOnce(moduleId: Long): Single<List<v3BuildingModuleDbBean>>
 
     fun updatev3BuildingModule(b: v3BuildingModuleDbBean): Observable<Long>

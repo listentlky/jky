@@ -270,7 +270,9 @@ class ModuleConfigCreateTypePresenter : BasePresenter(), IBasePresenter {
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    it.drawings?.forEach { b ->
+
+                  var list =   it.drawings?.filter {it.drawingType=="overall" }
+                    list?.forEach { b ->
                         var bean = ModuleFloorPictureBean(
                             drawingId = b.drawingID,
                             name = b.fileName!!,

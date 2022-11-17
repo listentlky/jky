@@ -14,7 +14,6 @@ import com.sribs.common.bean.db.ConfigBean
 import com.sribs.common.bean.db.ProjectBean
 import com.sribs.common.bean.db.UnitBean
 import com.sribs.common.bean.v3.v3ModuleFloorDbBean
-import java.text.FieldPosition
 
 /**
  * @date 2021/7/13
@@ -78,9 +77,13 @@ interface IProjectContrast {
     interface IProjectCreateTypeView:IView{
         fun getFlourRecycleView():RecyclerView
         fun getPicRecycleView():RecyclerView
+        fun getNonResidentRecycleView():RecyclerView
         fun chosePic(bean: BuildingFloorBean)
         fun takePhone(bean: BuildingFloorBean)
         fun choseWhite(bean: BuildingFloorBean)
+        fun choseNonResidentPic(bean: BuildingFloorBean)
+        fun takeNonResidentPhoto(bean: BuildingFloorBean)
+        fun choseNonResidentWhite(bean: BuildingFloorBean)
         fun deleteBuildingFloor(floorType:String ,aboveSize: Int,beforeSize:Int)
         fun createBuildingSuccess()
     }
@@ -89,9 +92,13 @@ interface IProjectContrast {
     interface IModuleCreateTypeView:IView{
         fun initLocalData(beanList:List<v3ModuleFloorDbBean> )
         fun getFloorRecycleView():RecyclerView
+        fun getNonResidentRecycleView():RecyclerView
         fun chosePic(bean: ModuleFloorBean)
         fun takePhoto(bean: ModuleFloorBean)
         fun choseWhite(bean: ModuleFloorBean)
+        fun choseNonResidentPic(bean: ModuleFloorBean)
+        fun takeNonResidentPhoto(bean: ModuleFloorBean)
+        fun choseNonResidentWhite(bean: ModuleFloorBean)
         fun deleteModuleFloor(floorType:Int ,aboveSize: Int,beforeSize:Int)
         fun createModuleConfigSuccess()
     }

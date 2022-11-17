@@ -120,7 +120,8 @@ class ProjectFloorItemActivity : BaseActivity(), IProjectContrast.IProjectFloorD
                 moduleName: String,
                 routing: String,
                 moduleId: Long,
-                isRemote: Boolean
+                isRemote: Boolean,
+                isNonResident:Boolean
             ) {
                 if (isRemote) {
                     showToast(getString(R.string.error_no_local))
@@ -161,7 +162,7 @@ class ProjectFloorItemActivity : BaseActivity(), IProjectContrast.IProjectFloorD
                     ).withString(
                         com.sribs.common.ARouterPath.VAL_BUILDING_NAME,
                         mBldName
-                    )
+                    ).withBoolean(com.sribs.common.ARouterPath.VAL_NON_RESIDENT,isNonResident)
                     .navigation()
             }
 
@@ -169,7 +170,8 @@ class ProjectFloorItemActivity : BaseActivity(), IProjectContrast.IProjectFloorD
                 moduleName: String,
                 routing: String,
                 moduleId: Long,
-                isRemote: Boolean
+                isRemote: Boolean,
+                isNonResident:Boolean
             ) {
                 if (isRemote) {
                     showToast(getString(R.string.error_no_local))
@@ -204,7 +206,7 @@ class ProjectFloorItemActivity : BaseActivity(), IProjectContrast.IProjectFloorD
                     ).withString(
                         com.sribs.common.ARouterPath.VAL_COMMON_LEADER,
                         mLeaderName
-                    )
+                    ).withBoolean(com.sribs.common.ARouterPath.VAL_NON_RESIDENT,isNonResident)
                     .navigation()
 
             }

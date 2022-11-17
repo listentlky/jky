@@ -33,6 +33,9 @@ interface v3BuildingModuleDao {
     @Query("Select * from v3_building_module where project_id = :projectId and building_id = :buildingId and id = :moduleId")
     fun getBuildingModuleOnce(projectId: Long, buildingId: Long, moduleId:Long): Single<List<v3BuildingModuleRoom>>
 
+    @Query("Select * from v3_building_module where project_id = :projectId and building_id = :buildingId and module_name = :moduleName")
+    fun getBuildingModuleOnce(projectId: Long, buildingId: Long, moduleName:String): Single<List<v3BuildingModuleRoom>>
+
     @Insert(onConflict = REPLACE)
     fun insertBuildingModule(bean: v3BuildingModuleRoom): Long
 

@@ -71,6 +71,10 @@ class ModuleCreateByTypeFloorActivity : BaseActivity(), IProjectContrast.IModule
     @Autowired(name = com.sribs.common.ARouterPath.VAL_COMMON_TITLE)
     var mTitle = ""
 
+    @JvmField
+    @Autowired(name = com.sribs.common.ARouterPath.VAL_NON_RESIDENT)
+    var mIsNonResident = false
+
     private val mBinding: ActivityCreateModuleTypeFloorBinding by inflate()
 
     private val moduleFloorConfigCreateTypePresenter by lazy { ModuleFloorConfigCreateTypePresenter() }
@@ -84,6 +88,10 @@ class ModuleCreateByTypeFloorActivity : BaseActivity(), IProjectContrast.IModule
     private val REQUEST_CODE_PIC_FLOOR = 13 //基于楼层拍照
 
     private val REQUEST_CODE_BEAN_WHITE_FLLOR = 14 //基于楼层的白板
+
+    private val REQUEST_CODE_NON_RESIDENT_PIC_FLOOR = 15 //基于非居民楼层拍照
+
+    private val REQUEST_CODE_NON_RESIDENT_BEAN_WHITE_FLLOR = 16 //基于非居民楼层的白板
 
     private var aboveNumber = 0
 
@@ -100,12 +108,21 @@ class ModuleCreateByTypeFloorActivity : BaseActivity(), IProjectContrast.IModule
     override fun getView(): View = mBinding.root
 
     override fun initView() {
+        if (mIsNonResident){
+            mBinding.nonResidentRecyclerView.visibility = View.VISIBLE
+            mBinding.nonResidentLinearLayout.visibility = View.VISIBLE
+            moduleFloorConfigCreateTypePresenter.setIsNonResident(true)
+        }else{
+            mBinding.nonResidentRecyclerView.visibility = View.GONE
+            mBinding.nonResidentLinearLayout.visibility = View.GONE
+            moduleFloorConfigCreateTypePresenter.setIsNonResident(false)
+        }
         bindPresenter()
         initToolbar()
         if (mLocalProjectId == -1L) {
             ToastUtil.getInstance()._short(this, "网络请求module图纸")
         } else {
-            moduleFloorConfigCreateTypePresenter.initLocalData(mLocalProjectId, mBuildingId, mModuleId)
+            moduleFloorConfigCreateTypePresenter.initLocalData(mLocalProjectId, mBuildingId, mModuleId,mIsNonResident)
         }
         mBinding.aboveNumber.setTextCallback(object : TagEditView.ITextChanged {
             override fun onTextChange(s: Editable?) {
@@ -230,6 +247,34 @@ class ModuleCreateByTypeFloorActivity : BaseActivity(), IProjectContrast.IModule
                 currentBean?.pictureList?.add(ModuleFloorPictureBean(UUIDUtil.getUUID(),name!!, null, file))
                 moduleFloorConfigCreateTypePresenter.refeshData()
             }
+        } else if (requestCode == REQUEST_CODE_NON_RESIDENT_PIC_FLOOR && data != null) {
+            var isCameraImage = data.getBooleanExtra(ImageSelector.IS_CAMERA_IMAGE, false)
+            if (isCameraImage) {
+                var images = data.getStringArrayListExtra(ImageSelector.SELECT_RESULT)
+                if (images != null && images.size > 0) {
+                    var name = FileUtil.getFileName(images[0])
+                    name = name ?: images[0]
+                    LogUtils.d("基于非居民楼层选择图片返回: " + images[0])
+                    currentBean?.pictureList?.add(
+                        ModuleFloorPictureBean(
+                            UUIDUtil.getUUID(),
+                            name!!,
+                            null,
+                            images[0]
+                        ).also {
+                        })
+                    moduleFloorConfigCreateTypePresenter.refeshNonResidentData()
+                }
+            }
+        } else if (requestCode == REQUEST_CODE_NON_RESIDENT_BEAN_WHITE_FLLOR && data != null) {
+            var file = data.getStringExtra("File")
+            LogUtils.d("基于非居民楼层白板：" + file)
+            if (file != null) {
+                var name = FileUtil.getFileName(file)
+                name = name ?: file
+                currentBean?.pictureList?.add(ModuleFloorPictureBean(UUIDUtil.getUUID(),name!!, null, file))
+                moduleFloorConfigCreateTypePresenter.refeshNonResidentData()
+            }
         }
     }
 
@@ -270,15 +315,28 @@ class ModuleCreateByTypeFloorActivity : BaseActivity(), IProjectContrast.IModule
     }
 
     override fun initLocalData(beanList: List<v3ModuleFloorDbBean>) {
-        mBinding.aboveNumber.setEditText(""+beanList.get(0).aboveNumber)
-        mBinding.afterNumber.setEditText(""+beanList.get(0).afterNumber)
+        if (mIsNonResident){
+            mBinding.aboveNumber.setEditText(""+beanList.get(1).aboveNumber)
+            mBinding.afterNumber.setEditText(""+beanList.get(1).afterNumber)
+        }else{
+            mBinding.aboveNumber.setEditText(""+beanList.get(0).aboveNumber)
+            mBinding.afterNumber.setEditText(""+beanList.get(0).afterNumber)
+        }
+
         moduleFloorConfigCreateTypePresenter.setData(beanList)
+        if (mIsNonResident){
+            moduleFloorConfigCreateTypePresenter.setNonResidentData(beanList)
+
+        }
+
         moduleFloorConfigCreateTypePresenter.mBeforeOldIndex = afterNumber
         moduleFloorConfigCreateTypePresenter.mAboveOldIndex = aboveNumber
 
     }
 
     override fun getFloorRecycleView(): RecyclerView = mBinding.flourRecycleview
+
+    override fun getNonResidentRecycleView(): RecyclerView =mBinding.nonResidentRecyclerView
 
 
     override fun chosePic(bean: ModuleFloorBean) {
@@ -295,6 +353,7 @@ class ModuleCreateByTypeFloorActivity : BaseActivity(), IProjectContrast.IModule
 
         var dialog = ChoseModulePicDialog(this, selectedPic) {
             bean.pictureList?.addAll(it)
+            moduleFloorConfigCreateTypePresenter.refeshData()
         }
         dialog.show()
 
@@ -313,6 +372,39 @@ class ModuleCreateByTypeFloorActivity : BaseActivity(), IProjectContrast.IModule
         ARouter.getInstance().build(com.sribs.common.ARouterPath.DRAW_WHITE)
             .navigation(this, REQUEST_CODE_BEAN_WHITE_FLLOR)
 
+    }
+
+    override fun choseNonResidentPic(bean: ModuleFloorBean) {
+        if (selected.size == 0) {
+            ToastUtil.getInstance()._short(getContext(), "请先上传图纸")
+            return
+        }
+        selectedPic.clear()
+        selected.forEach {
+            var name = FileUtil.uriToFileName(Uri.parse(it), this)
+            name = name ?: it
+            selectedPic.add(ModuleFloorPictureBean(UUIDUtil.getUUID(name),name, it, null))
+        }
+
+        var dialog = ChoseModulePicDialog(this, selectedPic) {
+            bean.pictureList?.addAll(it)
+            moduleFloorConfigCreateTypePresenter.refeshNonResidentData()
+        }
+        dialog.show()
+    }
+
+    override fun takeNonResidentPhoto(bean: ModuleFloorBean) {
+        currentBean = bean
+        ImageSelector
+            .builder()
+            .onlyTakePhoto(true)  // 仅拍照，不打开相册
+            .start(this, REQUEST_CODE_NON_RESIDENT_PIC_FLOOR)
+    }
+
+    override fun choseNonResidentWhite(bean: ModuleFloorBean) {
+        currentBean = bean
+        ARouter.getInstance().build(com.sribs.common.ARouterPath.DRAW_WHITE)
+            .navigation(this, REQUEST_CODE_NON_RESIDENT_BEAN_WHITE_FLLOR)
     }
 
     override fun deleteModuleFloor(floorType: Int, aboveSize: Int, beforeSize: Int) {

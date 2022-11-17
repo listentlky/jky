@@ -166,6 +166,17 @@ class DatabaseSrv : IDatabaseService {
         }
     }
 
+    override fun getv3BuildingModuleOnce(
+        projectId: Long,
+        buildingId: Long,
+        moduleName: String
+    ): Single<List<v3BuildingModuleDbBean>> {
+        var dao = mDb!!.v3BuildingModuleDao()
+        return dao.getBuildingModuleOnce(projectId, buildingId,moduleName).run {
+            ConverterHelper.convertOnlyv3BuildingModuleBean(this)
+        }
+    }
+
     override fun getv3BuildingModuleOnce(moduleId: Long): Single<List<v3BuildingModuleDbBean>> {
         var dao = mDb!!.v3BuildingModuleDao()
         return dao.getBuildingModuleOnce(moduleId).run {

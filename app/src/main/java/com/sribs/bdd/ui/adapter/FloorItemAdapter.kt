@@ -8,7 +8,6 @@ import com.cbj.sdk.libui.mvp.newBindingViewHolder
 import com.sribs.bdd.R
 import com.sribs.bdd.bean.BuildingModule
 import com.sribs.bdd.databinding.ItemFloorDetailBinding
-import com.sribs.bdd.v3.util.LogUtils
 
 
 class FloorItemAdapter : BaseListAdapter<BuildingModule, ItemFloorDetailBinding>() {
@@ -27,6 +26,7 @@ class FloorItemAdapter : BaseListAdapter<BuildingModule, ItemFloorDetailBinding>
         var configRouting: String =
             com.sribs.common.ARouterPath.CHECK_MODULE_CONFIG_TYPE_BUILDING_ACTIVITY
         var text: String
+        var isNonResident =false
         when (bean.moduleName) {
             "建筑结构复核" -> {
                 text = "建筑结构复核"
@@ -53,6 +53,8 @@ class FloorItemAdapter : BaseListAdapter<BuildingModule, ItemFloorDetailBinding>
             "非居民类检测" -> {
                 text = "非居民类检测"
                 routing = com.sribs.common.ARouterPath.CHECK_NON_RESIDENTS_ACTIVITY
+                configRouting = com.sribs.common.ARouterPath.CHECK_MODULE_CONFIG_TYPE_FLOOR_ACTIVITY
+                isNonResident = true
             }
             else -> {
                 text = ""
@@ -68,13 +70,13 @@ class FloorItemAdapter : BaseListAdapter<BuildingModule, ItemFloorDetailBinding>
         }
         bind.edit.setOnClickListener {
             if (routing != null && mItemClickCallback != null) {
-                mItemClickCallback?.onEdit(text, routing, bean.moduleid!!,bean.status == 2)
+                mItemClickCallback?.onEdit(text, routing, bean.moduleid!!,bean.status == 2,isNonResident)
             }
         }
         bind.config.setOnClickListener {
             //todo 跳转对应配置页面
             if (routing != null && mItemClickCallback != null) {
-                mItemClickCallback?.onConfig(text, configRouting, bean.moduleid!!,bean.status==2)
+                mItemClickCallback?.onConfig(text, configRouting, bean.moduleid!!,bean.status==2,isNonResident)
             }
         }
 
@@ -127,9 +129,9 @@ class FloorItemAdapter : BaseListAdapter<BuildingModule, ItemFloorDetailBinding>
     }
 
     interface ItemClickCallback {
-        fun onEdit(moduleName: String, routing: String, moduleId: Long,isLocal:Boolean);
+        fun onEdit(moduleName: String, routing: String, moduleId: Long,isLocal:Boolean,isNonResident: Boolean);
 
-        fun onConfig(moduleName: String, routing: String, moduleId: Long,isLocal:Boolean);
+        fun onConfig(moduleName: String, routing: String, moduleId: Long,isLocal:Boolean,isNonResident:Boolean);
 
         fun onMore(bean: BuildingModule);
     }

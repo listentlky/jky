@@ -22,14 +22,15 @@ import com.sribs.bdd.module.project.IProjectContrast
 import com.sribs.bdd.v3.adapter.CreateModuleFloorAdapter
 import com.sribs.bdd.utils.ModuleHelper
 import com.sribs.bdd.utils.UUIDUtil
+import com.sribs.bdd.v3.adapter.CreateNonResidentModuleAdapter
 import com.sribs.bdd.v3.util.LogUtils
 import com.sribs.common.bean.db.DamageV3Bean
 import com.sribs.common.bean.db.DrawingV3Bean
+import com.sribs.common.bean.db.v3.project.v3BuildingModuleDbBean
 import com.sribs.common.bean.v3.v3ModuleFloorDbBean
 import com.sribs.common.server.IDatabaseService
 import com.sribs.common.utils.FileUtil
 import com.sribs.common.utils.TimeUtil
-import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import java.io.File
@@ -37,10 +38,12 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 class ModuleFloorConfigCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCreateTypePresenter,
-    CreateModuleFloorAdapter.ICallback {
+    CreateModuleFloorAdapter.ICallback,CreateNonResidentModuleAdapter.ICallback {
     private var mView: IProjectContrast.IModuleCreateTypeView? = null
 
     private var array: ArrayList<ModuleFloorBean>? = null
+
+    private var nonResidentList: ArrayList<ModuleFloorBean>? = null
 
     private var above = ArrayList<ModuleFloorBean>()
     private var before = ArrayList<ModuleFloorBean>()
@@ -54,9 +57,13 @@ class ModuleFloorConfigCreateTypePresenter : BasePresenter(), IProjectContrast.I
     var isFirstCome :Boolean = true //首次进入设置楼层数量时 不该进行新建楼层操作
     var isFirstCome2 :Boolean = true //首次进入设置楼层数量时 不该进行新建楼层操作
 
+    var finalNonResidentDrawingList = arrayListOf<DrawingV3Bean>()
+
 
 
     var beanList: ArrayList<ModuleFloorBean>? = ArrayList()
+
+    var isNonResident =false
 
     private var oldAboveList = ArrayList<ModuleFloorBean>()
     private var oldBeforeList = ArrayList<ModuleFloorBean>()
@@ -65,6 +72,9 @@ class ModuleFloorConfigCreateTypePresenter : BasePresenter(), IProjectContrast.I
         CreateModuleFloorAdapter(this,mView?.getContext())
     }
 
+    private val nonResidentAdapter by lazy {
+        CreateNonResidentModuleAdapter(this,mView?.getContext())
+    }
 
     private val mDb by lazy {
         ARouter.getInstance().build(com.sribs.common.ARouterPath.SRV_DB)
@@ -154,6 +164,9 @@ class ModuleFloorConfigCreateTypePresenter : BasePresenter(), IProjectContrast.I
         }
     }
 
+    fun setIsNonResident(isNonResident:Boolean ){
+        this.isNonResident = isNonResident
+    }
 
     fun initFlourLits() {
         var manager = LinearLayoutManager(mView?.getContext())
@@ -167,11 +180,144 @@ class ModuleFloorConfigCreateTypePresenter : BasePresenter(), IProjectContrast.I
 
     }
 
+    private fun initNonResidentPicList() {
+        var manager = LinearLayoutManager(mView?.getContext())
+        mView?.getNonResidentRecycleView()?.layoutManager = manager
+        nonResidentList = ArrayList()
+
+        nonResidentAdapter.setData(nonResidentList!!)
+        mView?.getNonResidentRecycleView()?.adapter = nonResidentAdapter
+
+    }
+
+    fun setNonResidentData(list: List<v3ModuleFloorDbBean>){
+        nonResidentList!!.clear()
+        list.forEachIndexed { index, it ->
+            if (index==0){
+
+
+            var beanPicList: ArrayList<ModuleFloorPictureBean>? = ArrayList()
+            it.drawingsList?.filter { "east".equals(it.drawingType) }?.forEach { b ->
+                beanPicList!!.add(
+                    ModuleFloorPictureBean(
+                        drawingId = b.drawingID,
+                        name = b.fileName!!,
+                        uri = "",
+                        url = b.localAbsPath,
+                    )
+                )
+            }
+            nonResidentList!!.add(
+                ModuleFloorBean(
+                    floorId = it.floorId!!,
+                    name = "东立面",
+                    pictureList = beanPicList,
+                    floor = "",
+                    floorType = it.floorType,
+                    floorIndex = it.floorIndex
+                )
+            )
+            beanPicList = arrayListOf()
+            beanPicList!!.clear()
+            it.drawingsList?.filter { "west".equals(it.drawingType) }?.forEach { b ->
+                beanPicList!!.add(
+                    ModuleFloorPictureBean(
+                        drawingId = b.drawingID,
+                        name = b.fileName!!,
+                        uri = "",
+                        url = b.localAbsPath,
+                    )
+                )
+            }
+            nonResidentList!!.add(
+                ModuleFloorBean(
+                    floorId = it.floorId!!,
+                    name = "西立面",
+                    pictureList = beanPicList,
+                    floor = "",
+                    floorType = it.floorType,
+                    floorIndex = it.floorIndex
+                )
+            )
+
+            beanPicList = arrayListOf()
+            beanPicList!!.clear()
+            it.drawingsList?.filter { "south".equals(it.drawingType) }?.forEach { b ->
+                beanPicList!!.add(
+                    ModuleFloorPictureBean(
+                        drawingId = b.drawingID,
+                        name = b.fileName!!,
+                        uri = "",
+                        url = b.localAbsPath,
+                    )
+                )
+            }
+            nonResidentList!!.add(
+                ModuleFloorBean(
+                    floorId = it.floorId!!,
+                    name = "南立面",
+                    pictureList = beanPicList,
+                    floor = "",
+                    floorType = it.floorType,
+                    floorIndex = it.floorIndex
+                )
+            )
+            beanPicList = arrayListOf()
+            beanPicList!!.clear()
+            it.drawingsList?.filter { "north".equals(it.drawingType) }?.forEach { b ->
+                beanPicList!!.add(
+                    ModuleFloorPictureBean(
+                        drawingId = b.drawingID,
+                        name = b.fileName!!,
+                        uri = "",
+                        url = b.localAbsPath,
+                    )
+                )
+            }
+            nonResidentList!!.add(
+                ModuleFloorBean(
+                    floorId = it.floorId!!,
+                    name = "北立面",
+                    pictureList = beanPicList,
+                    floor = "",
+                    floorType = it.floorType,
+                    floorIndex = it.floorIndex
+                )
+            )
+
+            beanPicList = arrayListOf()
+            beanPicList!!.clear()
+            it.drawingsList?.filter { "plane".equals(it.drawingType) }?.forEach { b ->
+                beanPicList!!.add(
+                    ModuleFloorPictureBean(
+                        drawingId = b.drawingID,
+                        name = b.fileName!!,
+                        uri = "",
+                        url = b.localAbsPath,
+                    )
+                )
+            }
+            nonResidentList!!.add(
+                ModuleFloorBean(
+                    floorId = it.floorId!!,
+                    name = "总立面",
+                    pictureList = beanPicList,
+                    floor = "",
+                    floorType = it.floorType,
+                    floorIndex = it.floorIndex
+                )
+            )
+        }
+        }
+        refeshNonResidentData()
+
+    }
+
     fun setData(list: List<v3ModuleFloorDbBean>) {
         beanList!!.clear()
         list.forEach {
             var beanPicList: ArrayList<ModuleFloorPictureBean>? = ArrayList()
-            it.drawingsList?.forEach { b ->
+            it.drawingsList?.filter { "floor".equals(it.drawingType)}?.forEach { b ->
                 beanPicList!!.add(
                     ModuleFloorPictureBean(
                         drawingId = b.drawingID,
@@ -220,21 +366,88 @@ class ModuleFloorConfigCreateTypePresenter : BasePresenter(), IProjectContrast.I
         floorAdapter.notifyDataSetChanged()
     }
 
+    fun refeshNonResidentData() {
+        nonResidentAdapter.notifyDataSetChanged()
+    }
 
-    fun initLocalData(projectId: Long, buildingId: Long, moduleId: Long) {
+   private fun initLocalData(projectId: Long, buildingId: Long, moduleId: Long) {
         addDisposable(
             mDb.getv3ModuleFloor(projectId, buildingId, moduleId)
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
+                    LogUtils.d("caocaocaocao1111")
                     if (it != null)
-
                         mView?.initLocalData(it)
+
                 }, {
+
                     it.printStackTrace()
                 })
         )
     }
+
+    fun initLocalData(projectId: Long, buildingId: Long, moduleId: Long,isNonResident:Boolean){
+        if (isNonResident){
+            addDisposable(
+                mDb.getv3BuildingModuleOnce(projectId, buildingId, "非居民类检测")
+                    .subscribeOn(Schedulers.computation())
+                    .observeOn(Schedulers.computation())
+                    .subscribe({
+
+                        var list = arrayListOf<v3ModuleFloorDbBean>()
+                        it.forEach {
+                            var v3ModuleFloorDbBean = v3ModuleFloorDbBean(
+                                floorId ="null",
+                                floorName = "null",
+                                floorType = -1,
+                                floorIndex = -1,
+                                drawingsList = it.drawings
+                            )
+                            list.add(v3ModuleFloorDbBean)
+                        }
+                        LogUtils.d("caocaocaocao3333")
+                        LogUtils.d("获取到该模块下基于楼所有数据11111 " + it.toString())
+                        LogUtils.d("获取到该模块下基于楼所有数据22222 " + list.toString())
+                        getModuleFloorInfo(projectId,buildingId,moduleId,list)
+
+                    }, {
+                        getModuleFloorInfo(projectId,buildingId,moduleId,ArrayList())
+                        LogUtils.d("获取到该模块下基于楼数据失败 ${it}")
+
+                    })
+            )
+        }
+        else {
+        initLocalData(projectId, buildingId, moduleId)
+             }
+        }
+
+     fun getModuleFloorInfo(
+        localProjectId: Long,
+        localBuildingId: Long,
+        localModuleId: Long,
+        localList:ArrayList<v3ModuleFloorDbBean>
+    ) {
+        LogUtils.d("getModuleFloorInfo ${localProjectId}  ${localBuildingId}   ${localModuleId}")
+        addDisposable(mDb.getv3ModuleFloor(localProjectId,localBuildingId,localModuleId)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                localList.addAll(it)
+                LogUtils.d("caocaocaocao22222")
+                LogUtils.d("获取到该楼下所有数据 "+localList.toString())
+
+                mView?.initLocalData(localList)
+                LogUtils.d("caocaocaocao44444")
+                dispose()
+            },{
+                dispose()
+                mView?.onMsg(it.toString())
+                LogUtils.d("获取到该楼下所有楼层失败 ${it}")
+            }))
+    }
+
 
     fun createLocalModule(
         activity: Activity,
@@ -256,13 +469,23 @@ class ModuleFloorConfigCreateTypePresenter : BasePresenter(), IProjectContrast.I
             }
         }
 
+        if (isNonResident) {
+            nonResidentList!!.forEach {
+                if (it.pictureList == null || it.pictureList!!.size == 0) {
+                    mView?.onMsg("非居民立面/总平面图纸不能为空")
+                    return
+                }
+            }
+        }
+
         //赋值模块名作为图纸上级目录
-        mCurDrawingsDir = "/" + ModuleHelper.DRAWING_CACHE_FOLDER + "/" + mProName + "/" + moduleName + "/"
+        mCurDrawingsDir =
+            "/" + ModuleHelper.DRAWING_CACHE_FOLDER + "/" + mProName + "/" + moduleName + "/"
 
         addDisposable(mDb.getModuleFloorByModule(mModuleId)
             .subscribeOn(Schedulers.computation())
             .observeOn(Schedulers.computation())
-            .subscribe({ moduleFloorList->
+            .subscribe({ moduleFloorList ->
                 dispose()
                 getFloorList(
                     activity,
@@ -273,28 +496,47 @@ class ModuleFloorConfigCreateTypePresenter : BasePresenter(), IProjectContrast.I
                     before.size,
                     moduleFloorList
                 )
-                mDb.deletev3ModuleFloor(mLocalProjectId.toLong(), mBuildingId, mModuleId)
+            if (isNonResident) {
+                mDb.getv3BuildingModule(mModuleId)
                     .subscribeOn(Schedulers.computation())
                     .observeOn(Schedulers.computation())
                     .subscribe({
+                        LogUtils.d("数据库返回" + it.toString())
+                        getNonResidentDrawingList(activity, it)
+                        LogUtils.d(""+finalNonResidentDrawingList.hashCode()+"封装数据"+finalNonResidentDrawingList.toString())
                         dispose()
-                        LogUtils.d("createLocalModule new building id=${mModuleId}")
-                        createLocalFloorsInTheModule(
-                            mBuildingId,
-                            mModuleId,
-                        )
-                    },{
-
+                        mDb.deletev3ModuleFloor(mLocalProjectId.toLong(), mBuildingId, mModuleId)
+                            .subscribeOn(Schedulers.computation())
+                            .observeOn(Schedulers.computation())
+                            .subscribe({
+                                LogUtils.d(""+finalNonResidentDrawingList.hashCode()+"封装数据333"+finalNonResidentDrawingList.toString())
+                                LogUtils.d("createLocalModule new building id=${mModuleId}")
+                                createLocalFloorsInTheModule(
+                                    mBuildingId,
+                                    mModuleId,
+                                    moduleName
+                                )
+                                dispose()
+                            }, {
+                                dispose()
+                            })
+                    }, {
+                        dispose()
                     })
+            }
             },{
-
+                dispose()
             })
         )
+
+
+
     }
 
     private fun createLocalFloorsInTheModule(
         mBuildingId: Long,
         moduleId: Long,
+        moduleName:String
     ) {
         println("createLocalFloorsInTheBuilding mBldId=${mBuildingId}")
 
@@ -316,6 +558,7 @@ class ModuleFloorConfigCreateTypePresenter : BasePresenter(), IProjectContrast.I
                 updateTime = TimeUtil.YMD_HMS.format(Date()),
                 status = 0,
             )
+
             mDb.updatev3ModuleFloor(bean)
                 .subscribeOn(Schedulers.computation())
                 .observeOn(Schedulers.computation())
@@ -324,13 +567,36 @@ class ModuleFloorConfigCreateTypePresenter : BasePresenter(), IProjectContrast.I
                     index++
                     if(index == floorList.size){
                         mDb.updateBuildingModule(moduleId,1)
-                        mView?.createModuleConfigSuccess()
+                        if (isNonResident){
+                            dispose()
+                            updateNonResidentBuildingModule(moduleId)
+                        }else{
+                            mView?.createModuleConfigSuccess()
+                            dispose()
+                        }
                     }
                 },{
                     mView?.onMsg("保存到本地楼层表失败: "+it)
+                    dispose()
                     it.printStackTrace()
                 })
         }
+    }
+
+
+    private fun updateNonResidentBuildingModule(moduleId: Long){
+        LogUtils.d("updateNonResidentBuildingModule:"+finalNonResidentDrawingList!!.toString())
+        mDb.updateBuildingModule(moduleId,finalNonResidentDrawingList!!,1)
+            .subscribeOn(Schedulers.computation())
+            .observeOn(Schedulers.computation())
+            .subscribe({
+                    mView?.createModuleConfigSuccess()
+                dispose()
+                },{
+                dispose()
+                mView?.onMsg("保存到本地楼层表失败: "+it)
+                it.printStackTrace()
+            })
     }
 
     var floorList: ArrayList<ModuleFloor> = ArrayList<ModuleFloor>()
@@ -433,6 +699,63 @@ class ModuleFloorConfigCreateTypePresenter : BasePresenter(), IProjectContrast.I
         return ArrayList()
     }
 
+
+
+    fun getNonResidentDrawingList( activity: Activity,v3BuildingModuleDbBean: v3BuildingModuleDbBean){
+        finalNonResidentDrawingList!!.clear()
+        var cacheRootDir: String = FileUtil.getDrawingCacheRootDir(mView!!.getContext()!!)
+        nonResidentList!!.forEach {
+            copyDrawingsToLocalCache(activity,it.pictureList!!,null,cacheRootDir)
+        }
+
+        nonResidentList!!.forEachIndexed { index, moduleFloorBean ->
+            moduleFloorBean.pictureList!!.forEachIndexed { picIndex,it->
+                var name =""
+                if(!it.name.endsWith("pdf")){
+                    name = it.name.replace(".","")+".pdf"
+                }else{
+                    name = it.name
+                }
+                var cacheFilePath = File(cacheRootDir + mCurDrawingsDir,name)
+                var drawingType = ""
+                when (index){
+                    0-> drawingType = "east"
+                    1-> drawingType = "west"
+                    2-> drawingType = "south"
+                    3-> drawingType = "north"
+                    4-> drawingType = "plane"
+                }
+
+                var damageList = ArrayList<DamageV3Bean>()
+
+                v3BuildingModuleDbBean.drawings!!.forEach {
+                    if (it.drawingID!!.equals(moduleFloorBean.pictureList!!.get(picIndex))){
+                        damageList = it.damage?:ArrayList()
+                    }
+                }
+
+                var drawingV3ToBuilding = DrawingV3Bean(
+                    it.drawingId!!,
+                    name,
+                    FileUtil.getFileExtension(name),
+                    drawingType,
+                    cacheFilePath.absolutePath,
+                    "",
+                    "",
+                    damageList
+                )
+                finalNonResidentDrawingList!!.add(drawingV3ToBuilding)
+             //   mAppFacadeDrawingList!!.add(drawingV3ToBuild)
+            }
+        }
+    }
+
+
+
+
+
+
+
     @RequiresApi(Build.VERSION_CODES.O)
     private fun copyDrawingsToLocalCache(
         activity: Activity,
@@ -511,13 +834,29 @@ class ModuleFloorConfigCreateTypePresenter : BasePresenter(), IProjectContrast.I
         mCurDrawingsDir =
             "/" + ModuleHelper.DRAWING_CACHE_FOLDER + "/" + mProName + "/" + mBldNo + "/"
         initFlourLits()
+
+        if (isNonResident) {
+            initNonResidentPicList()
+        }
         //   initPicLits()
     }
+
 
     override fun unbindView() {
         mView = null
     }
 
+    override fun choseNonResidentPic(bean: ModuleFloorBean) {
+        mView?.choseNonResidentPic(bean)
+    }
+
+    override fun takeNonResidentPhoto(bean: ModuleFloorBean) {
+        mView?.takeNonResidentPhoto(bean)
+    }
+
+    override fun showNonResidentWhite(bean: ModuleFloorBean) {
+        mView?.choseNonResidentWhite(bean)
+    }
 
     override fun chosePic(bean: ModuleFloorBean) {
         mView?.chosePic(bean)
@@ -530,6 +869,7 @@ class ModuleFloorConfigCreateTypePresenter : BasePresenter(), IProjectContrast.I
     override fun showWhite(bean: ModuleFloorBean) {
         mView?.choseWhite(bean)
     }
+
 
     override fun deleteModuleFloor(bean: ModuleFloorBean, position: Int) {
 
@@ -549,5 +889,8 @@ class ModuleFloorConfigCreateTypePresenter : BasePresenter(), IProjectContrast.I
         Log.e("TAG", "deleteBuildingFloor: "+array )
         mView?.deleteModuleFloor(bean.floorType, above.size, before.size)
     }
+
+
+
 
 }
