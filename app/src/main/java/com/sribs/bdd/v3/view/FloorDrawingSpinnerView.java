@@ -86,41 +86,37 @@ public class FloorDrawingSpinnerView extends LinearLayout {
 
             FloorDrawingModule menuData = mData.get(i);
 
-            if (!TextUtils.isEmpty(menuData.getMFloorName())) {
-
-                View menuLayout = View.inflate(mContext, R.layout.floor_drawing_spinner_item, null);
-                mView.add(menuLayout);
-                TextView menuName = menuLayout.findViewById(R.id.spinner_name);
-                mTextViews.add(menuName);
-                ImageView menuImg = menuLayout.findViewById(R.id.spinner_img);
-                menuName.setText(menuData.getMFloorName());
-                if (i > 0) {
-                    mSpinnerLayout.setVisibility(GONE);
-                    menuImg.setRotation(-90);
-                }
-
-                menuLayout.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        resetSpinnerItemBg();
-                        menuLayout.setBackgroundColor(Color.parseColor("#FF005B82"));
-                        menuName.setTextColor(Color.WHITE);
-                        if (mSpinnerLayout.getVisibility() == VISIBLE) {
-                            menuImg.setRotation(-90);
-                            mSpinnerLayout.setVisibility(GONE);
-                        } else {
-                            menuImg.setRotation(0);
-                            mSpinnerLayout.setVisibility(VISIBLE);
-                        }
-                        if (mFloorDrawItemClickCallback != null) {
-                            mFloorDrawItemClickCallback.onClick(null);
-                        }
-                    }
-                });
-
-                addView(menuLayout, layoutParams);
-
+            View menuLayout = View.inflate(mContext, R.layout.floor_drawing_spinner_item, null);
+            mView.add(menuLayout);
+            TextView menuName = menuLayout.findViewById(R.id.spinner_name);
+            mTextViews.add(menuName);
+            ImageView menuImg = menuLayout.findViewById(R.id.spinner_img);
+            menuName.setText(menuData.getMFloorName());
+            if (i > 0) {
+                mSpinnerLayout.setVisibility(GONE);
+                menuImg.setRotation(-90);
             }
+
+            menuLayout.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    resetSpinnerItemBg();
+                    menuLayout.setBackgroundColor(Color.parseColor("#FF005B82"));
+                    menuName.setTextColor(Color.WHITE);
+                    if (mSpinnerLayout.getVisibility() == VISIBLE) {
+                        menuImg.setRotation(-90);
+                        mSpinnerLayout.setVisibility(GONE);
+                    } else {
+                        menuImg.setRotation(0);
+                        mSpinnerLayout.setVisibility(VISIBLE);
+                    }
+                    if (mFloorDrawItemClickCallback != null) {
+                        mFloorDrawItemClickCallback.onClick(null);
+                    }
+                }
+            });
+
+            addView(menuLayout, layoutParams);
 
             for (int k = 0; k < menuData.getMNameList().size(); k++) {
                 DrawingV3Bean drawingV3Bean = menuData.getMNameList().get(k);

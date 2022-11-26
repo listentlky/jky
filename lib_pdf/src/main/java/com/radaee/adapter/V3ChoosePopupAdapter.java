@@ -2,6 +2,7 @@ package com.radaee.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -33,11 +34,17 @@ public class V3ChoosePopupAdapter  extends RecyclerView.Adapter<V3ChoosePopupAda
 
     private int color = 0;
 
+    private int mGravity = Gravity.CENTER;
+
     private V3ChoosePopupAdapter.ItemClickCallback mItemClickCallback;
 
     public V3ChoosePopupAdapter(Context mContext, List<String> datas) {
         this.mContext = mContext;
         this.datas = datas;
+    }
+
+    public void setGravity(int mGravity) {
+        this.mGravity = mGravity;
     }
 
     public V3ChoosePopupAdapter setmItemClickCallback(V3ChoosePopupAdapter.ItemClickCallback mItemClickCallback) {
@@ -56,6 +63,10 @@ public class V3ChoosePopupAdapter  extends RecyclerView.Adapter<V3ChoosePopupAda
         if (holder instanceof V3ChoosePopupAdapter.ItemViewHolder) {
             String s = datas.get(position);
             holder.text.setText(s);
+            holder.layout.setGravity(mGravity);
+            if(mGravity == Gravity.CENTER_VERTICAL){
+                holder.layout.setPadding(dp2px(mContext,10),0,0,0);
+            }
             if (select != -1 && select == position) {
                 holder.text.setSelected(true);
                /* switch (s){
@@ -138,6 +149,18 @@ public class V3ChoosePopupAdapter  extends RecyclerView.Adapter<V3ChoosePopupAda
             choose = itemView.findViewById(R.id.popup_choose);
             text = itemView.findViewById(R.id.popup_item_text);
         }
+    }
+
+    /**
+     * dp 2 px
+     *
+     * @param context
+     * @param dpVal
+     * @return
+     */
+    public static int dp2px(Context context, int dpVal) {
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                dpVal, context.getResources().getDisplayMetrics());
     }
 
     public interface ItemClickCallback {

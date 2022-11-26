@@ -3,17 +3,18 @@ package com.sribs.bdd.v3.ui.check.nres
 import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.Canvas
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
+import android.view.*
+import android.widget.ImageView
 import android.widget.RelativeLayout
 import com.alibaba.android.arouter.facade.annotation.Autowired
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
+import com.cbj.sdk.libbase.rxbus.RxBus
 import com.cbj.sdk.libui.mvp.BaseActivity
 import com.cbj.sdk.libui.mvp.BaseFragment
 import com.cbj.sdk.libui.mvp.adapter.BasePagerAdapter
 import com.cbj.sdk.libui.mvp.inflate
+import com.donkingliang.imageselector.utils.ImageSelector
 import com.google.gson.Gson
 import com.hjq.permissions.Permission
 import com.hjq.permissions.XXPermissions
@@ -32,7 +33,7 @@ import com.radaee.view.ILayoutView
 import com.sribs.bdd.R
 import com.sribs.bdd.databinding.ActivityCheckNonResidentsBinding
 import com.sribs.bdd.v3.bean.CheckNResMainBean
-import com.sribs.bdd.v3.ui.check.bs.fm.CheckBSFragment
+import com.sribs.bdd.v3.event.RefreshPDFEvent
 import com.sribs.bdd.v3.ui.check.nres.fm.CheckNResEditFragment
 import com.sribs.bdd.v3.ui.check.nres.fm.CheckNResFragment
 import com.sribs.bdd.v3.util.LogUtils
@@ -76,6 +77,10 @@ class CheckNonResidentsActivity : BaseActivity(), ICheckNResContrast.ICheckNonRe
 
     private val mPresenter by lazy { CheckNResPresenter() }
 
+    val ADD_PHOTO_CODE = 9999
+
+    val ADD_LFJCD_PHOTO_CODE = 8888
+
     var mCurrentDamageType =
         Arrays.asList("结构构件损伤", "耐久性损伤", "渗漏水", "填充墙斜裂缝", "高坠隐患", "附属构件损坏", "其它/不稳定", "裂缝监测点")
 
@@ -107,6 +112,12 @@ class CheckNonResidentsActivity : BaseActivity(), ICheckNResContrast.ICheckNonRe
         initViewPager()
         Global.Init(this)
         mPresenter.getModuleInfo(mLocalProjectId, mBuildingId, mModuleId)
+        RxBus.getDefault().toObservable<RefreshPDFEvent>(RefreshPDFEvent::class.java)
+            .subscribe {
+                if (it.isRefresh) {
+                    openPDF(mCurrentDrawing!!)
+                }
+            }
     }
 
     /**
@@ -121,9 +132,9 @@ class CheckNonResidentsActivity : BaseActivity(), ICheckNResContrast.ICheckNonRe
         mBinding.toolbar.setNavigationOnClickListener {
             if (mBinding.checkVp.currentItem != 0) {
                 mBinding.checkVp.currentItem = 0
-                //    cancelDamageMark()
+                cancelDamageMark()
             } else {
-                //   exitToSave()
+                exitToSave()
             }
         }
     }
@@ -274,7 +285,7 @@ class CheckNonResidentsActivity : BaseActivity(), ICheckNResContrast.ICheckNonRe
         if (mBinding.checkMenuLayout.root.visibility == View.VISIBLE) {
             mBinding.checkMenuLayout.root.visibility = View.GONE
         }
-        (mFragments[1] as CheckNResEditFragment).resetView(damageV3Bean)
+        (mFragments[1] as CheckNResEditFragment).resetView(damageV3Bean, type)
         mBinding.checkVp.currentItem = 1
         addPDFDamageMark = isAddDamageMark
         isEditDamage = isEditDamageMark
@@ -432,7 +443,9 @@ class CheckNonResidentsActivity : BaseActivity(), ICheckNResContrast.ICheckNonRe
                 mView?.setReadOnly(false)
                 mView?.setAnnotMenu(UIAnnotMenu(mViewParent))
                 mView?.setV3SelectDamageCallback(this)
+                mView?.setV3Gravity(Gravity.CENTER_VERTICAL)
                 mView?.setV3Version(true)
+                mView!!.setCurrentModuleType(mView!!.mModuleType.get(4))
                 mView?.setV3DamageType(mCurrentDamageType)
                 if (mController == null) {
                     mController = PDFViewController(
@@ -515,7 +528,39 @@ class CheckNonResidentsActivity : BaseActivity(), ICheckNResContrast.ICheckNonRe
      * 添加mark标记
      */
     fun addDamageMark(damageInfo: DamageV3Bean) {
-
+        val view: View =
+            LayoutInflater.from(this).inflate(R.layout.damage_check_nr_mark_layout, null)
+        val damageTypeImg = view.findViewById<ImageView>(R.id.damage_type_img)
+        when (damageInfo.type) {
+            "结构构件损伤" -> {
+                damageTypeImg.setImageResource(R.mipmap.damage_icon_jgss)
+            }
+            "耐久性损伤" -> {
+                damageTypeImg.setImageResource(R.mipmap.damage_icon_njxss)
+            }
+            "渗漏水" -> {
+                damageTypeImg.setImageResource(R.mipmap.damage_icon_sls)
+            }
+            "填充墙斜裂缝" -> {
+                damageTypeImg.setImageResource(R.mipmap.damage_icon_tcqxlf)
+            }
+            "高坠隐患" -> {
+                  damageTypeImg.setImageResource(R.mipmap.damage_icon_gzyh)
+            }
+            "附属构件损坏" -> {
+                damageTypeImg.setImageResource(R.mipmap.damage_icon_fsgjsh)
+            }
+            "其它/不稳定" -> {
+                damageTypeImg.setImageResource(R.mipmap.damage_icon_other)
+            }
+            "裂缝监测点" -> {
+                damageTypeImg.setImageResource(R.mipmap.damage_icon_lfjcd)
+            }
+        }
+        var size = (resources.getDimensionPixelSize(R.dimen._25sdp)*mView?.PDFGetZoom()!!).toInt()
+        mView!!.layoutView(view, size, size/2)
+        var bitmap = PDFLayoutView.getViewBitmap(view)
+        mView!!.PDFSetStamp(1,bitmap,size.toFloat(),(size/2).toFloat(),damageInfo.type+damageInfo.createTime)
     }
 
     /**
@@ -711,5 +756,29 @@ class CheckNonResidentsActivity : BaseActivity(), ICheckNResContrast.ICheckNonRe
 
     override fun onButtonNextPressed() {
         LogUtils.d("onButtonNextPressed")
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == ADD_PHOTO_CODE && data != null) {
+
+            var images = data.getStringArrayListExtra(ImageSelector.SELECT_RESULT)
+            if (images != null && images.size > 0) {
+                LogUtils.d("损伤图片: " + images[0])
+                (mFragments[1] as CheckNResEditFragment).setImageBitmap(
+                    images[0],
+                    ADD_PHOTO_CODE
+                )
+            }
+        } else if (requestCode == ADD_LFJCD_PHOTO_CODE && data != null) {
+            var images = data.getStringArrayListExtra(ImageSelector.SELECT_RESULT)
+            if (images != null && images.size > 0) {
+                LogUtils.d("损伤监测点图片: " + images[0])
+                (mFragments[1] as CheckNResEditFragment).setImageBitmap(
+                    images[0],
+                    ADD_LFJCD_PHOTO_CODE
+                )
+            }
+        }
     }
 }

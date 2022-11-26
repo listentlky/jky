@@ -66,19 +66,39 @@ class CheckNResFragment : BaseFragment(R.layout.fragment_check_non_res),
      * 初始化选择窗口图纸数据
      */
     fun initFloorDrawData(checkMainBean: List<CheckNResMainBean>){
-        mFloorDrawModule!!.clear()
-        checkMainBean.forEach {
-            mFloorDrawModule!!.add(FloorDrawingModule().also { b->
-                b.mId = it.id
-                b.mFloorName = it.floorName
-                it.drawing!!.forEach { c->
-                    b.mNameList!!.add(c)
+        mFloorDrawModule?.clear()
+        checkMainBean.forEach { mainBean->
+            if(mainBean.floorName.isNullOrEmpty()){
+                mainBean.drawing?.forEach { drawing->
+                    var isDefault = true
+                    mFloorDrawModule?.forEach { drawingModule->
+                        if(drawing.floorName == drawingModule.mFloorName){
+                            isDefault = false
+                            drawingModule.mNameList?.add(drawing)
+                        }
+                    }
+                    if(isDefault){
+                        mFloorDrawModule!!.add(FloorDrawingModule().also { b->
+                            b.mId = mainBean.id
+                            b.mFloorName = drawing.floorName
+                            b.mNameList!!.add(drawing)
+                        })
+                    }
                 }
-            })
+            }else{
+                mFloorDrawModule!!.add(FloorDrawingModule().also { b->
+                    b.mId = mainBean.id
+                    b.mFloorName = mainBean.floorName
+                    mainBean.drawing!!.forEach { c->
+                        b.mNameList!!.add(c)
+                    }
+                })
+            }
         }
         if(mFloorDrawModule != null && mFloorDrawModule!!.size>0) {
             mBinding.checkSelectIndex.text = mFloorDrawModule!![0].mNameList!![0].fileName
         }
+        LogUtils.d("生成的图纸分组数据: "+mFloorDrawModule)
     }
 
     /**
@@ -103,18 +123,30 @@ class CheckNResFragment : BaseFragment(R.layout.fragment_check_non_res),
                         itemDmage.item.add(CheckMenuModule.Item.Mark().also { b->
                             var nameText:String?=""
 
-                            if(damage.axisNote.isNullOrEmpty()){
-                                damage.axisNoteList?.forEachIndexed { index, s ->
-                                    if(index == 0){
-                                        nameText+=s
-                                    }else if(index == 2){
-                                        nameText+="/"+s
-                                    }else{
-                                        nameText+="-"+s
-                                    }
+                            nameText = "轴线: "+damage.noResAxisNote
+
+                            if(damage.noResCrackBox == true) {
+                                if (!damage.noResCrackWidth.isNullOrEmpty()) {
+                                    nameText += "; 裂缝宽度: " + damage.noResCrackWidth + "mm"
                                 }
-                            }else{
-                                nameText = damage.axisNote
+                                if (!damage.noResCrackHeight.isNullOrEmpty()) {
+                                    nameText += "; 裂缝长度: " + damage.noResCrackHeight + "m"
+                                }
+                            }
+
+                            if(damage.noResCrackPointBox == true) {
+                                if(!damage.noResCrackPointId.isNullOrEmpty()){
+                                    nameText+="; 监测编号: "+damage.noResCrackPointId
+                                }
+                                if (!damage.noResCrackPointMethod.isNullOrEmpty()) {
+                                    nameText += "; 检测方法: " + damage.noResCrackPointMethod
+                                }
+                                if (!damage.noResCrackPointNickHeight.isNullOrEmpty()) {
+                                    nameText += "; 刻痕长度: " + damage.noResCrackPointNickHeight + "mm"
+                                }
+                                if (!damage.noResCrackPointNickWidth.isNullOrEmpty()) {
+                                    nameText += "; 刻痕宽度: " + damage.noResCrackPointNickWidth + "mm"
+                                }
                             }
                             b.name = nameText
                             b.damage = damage

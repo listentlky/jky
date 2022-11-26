@@ -87,6 +87,15 @@ public class OneChooseSpinnerView extends LinearLayout {
         return this;
     }
 
+    public void setIsEnable(boolean mIsEnable) {
+        if(inflate != null){
+            inflate.setEnabled(mIsEnable);
+        }
+        if(mSpinnerText != null){
+            mSpinnerText.setEnabled(mIsEnable);
+        }
+    }
+
     private void init(Context context){
         this.mContext = context;
         layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
@@ -130,6 +139,7 @@ public class OneChooseSpinnerView extends LinearLayout {
             }
         });
         mSpinnerText = (TextView)inflate.findViewById(R.id.spinner_Text);
+        mSpinnerText.setEnabled(true);
         LogUtils.INSTANCE.d("mTypeface: "+mTypeface);
         if(mTypeface != null){
             mSpinnerText.setTypeface(mTypeface);

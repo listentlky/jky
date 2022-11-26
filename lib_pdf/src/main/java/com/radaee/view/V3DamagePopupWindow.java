@@ -2,6 +2,7 @@ package com.radaee.view;
 
 import android.content.Context;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,7 +39,8 @@ public class V3DamagePopupWindow extends android.widget.PopupWindow {
 
     private List<String> datas = new ArrayList<>();
 
-    public V3DamagePopupWindow(Context context, int width, List<String> list, V3DamagePopupWindow.PopupCallback popupCallback) {
+    public V3DamagePopupWindow(Context context, int width, List<String> list,int gravity,
+                               V3DamagePopupWindow.PopupCallback popupCallback) {
         super(context);
         this.mContext = context;
         this.mPopupCallback = popupCallback;
@@ -63,6 +65,7 @@ public class V3DamagePopupWindow extends android.widget.PopupWindow {
                 mChooseColor = color;
             }
         });
+        mChoosePicPopupAdapter.setGravity(gravity);
         mRecyclerView.setAdapter(mChoosePicPopupAdapter);
         view.findViewById(R.id.popup_cancel).setOnClickListener(new View.OnClickListener() {
             @Override

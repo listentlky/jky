@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
@@ -13,16 +12,16 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent">
 
-        <TextView
+     <!--   <TextView
             android:id="@+id/check_current"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:includeFontPadding="false"
-            android:text="当前:一层"
+            android:text="当前 :"
             android:textColor="@color/black"
             android:textSize="@dimen/_7ssp"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent" />-->
 
         <TextView
             android:id="@+id/check_zx"
@@ -33,7 +32,7 @@
             android:textColor="@color/black"
             android:textSize="@dimen/_7ssp"
             app:layout_constraintBottom_toBottomOf="@id/check_zx_edit"
-            app:layout_constraintLeft_toLeftOf="@id/check_current"
+            app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="@id/check_zx_edit" />
 
         <EditText
@@ -46,15 +45,14 @@
             android:hint="请输入轴线"
             android:inputType="text"
             android:layout_marginLeft="@dimen/_6sdp"
-            android:layout_marginTop="@dimen/_10sdp"
             android:paddingLeft="@dimen/_4sdp"
             android:paddingRight="@dimen/_4sdp"
             android:textColor="@color/black"
             android:textColorHint="@color/gray_600"
             app:layout_constraintLeft_toRightOf="@id/check_zx"
-            app:layout_constraintTop_toBottomOf="@id/check_current"
+            app:layout_constraintTop_toTopOf="parent"
             android:lines="1"
-            android:textSize="@dimen/_6ssp" />
+            android:textSize="@dimen/_7ssp" />
 
         <TextView
             android:id="@+id/check_note"
@@ -78,7 +76,7 @@
             android:padding="@dimen/_4sdp"
             android:textColor="@color/black"
             android:textColorHint="@color/gray_600"
-            android:textSize="@dimen/_6ssp"
+            android:textSize="@dimen/_7ssp"
             app:layout_constraintTop_toTopOf="@id/check_note"
             app:layout_constraintDimensionRatio="2:1"
             app:layout_constraintRight_toRightOf="@id/check_zx_edit"
@@ -116,7 +114,7 @@
             android:textColor="@color/blue_800"
             android:text="取消"
             android:textSize="@dimen/_7ssp"
-            android:layout_marginTop="@dimen/_20sdp"
+            android:layout_marginTop="@dimen/_10sdp"
             android:paddingBottom="0dp"
             android:insetTop="0dp"
             android:insetBottom="0dp"
@@ -148,15 +146,111 @@
             android:id="@+id/check_box_lf"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/_20sdp"
+            android:layout_marginLeft="@dimen/_30sdp"
             android:text="裂缝信息"
             android:textColor="@color/black"
             android:textSize="@dimen/_7ssp"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintLeft_toRightOf="@+id/check_zx_edit" />
 
+      <include
+          android:id="@+id/check_crack_w_layout"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          app:layout_constraintLeft_toLeftOf="@id/check_box_lf"
+          app:layout_constraintTop_toBottomOf="@id/check_box_lf"
+          android:layout_marginLeft="@dimen/_20sdp"
+          layout="@layout/check_edit_crack_item"/>
+
+        <include
+            android:id="@+id/check_crack_h_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_6sdp"
+            app:layout_constraintLeft_toLeftOf="@id/check_crack_w_layout"
+            app:layout_constraintTop_toBottomOf="@id/check_crack_w_layout"
+            layout="@layout/check_edit_crack_item"/>
+
+        <androidx.appcompat.widget.AppCompatCheckBox
+            android:id="@+id/check_box_lfjcd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="裂缝监测点信息"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_7ssp"
+            app:layout_constraintLeft_toLeftOf="@id/check_box_lf"
+            app:layout_constraintTop_toBottomOf="@id/check_crack_h_layout"
+            />
+
+        <include
+            android:id="@+id/check_crack_jcbh_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="@id/check_crack_w_layout"
+            app:layout_constraintTop_toBottomOf="@id/check_box_lfjcd"
+            layout="@layout/check_edit_crack_item"/>
 
 
+        <TextView
+            android:id="@+id/check_jcff_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:includeFontPadding="false"
+            android:text="监测方法"
+            android:textColor="@drawable/text_gray_black_selector"
+            android:textSize="@dimen/_7ssp"
+            app:layout_constraintBottom_toBottomOf="@id/check_spinner"
+            app:layout_constraintLeft_toLeftOf="@id/check_crack_w_layout"
+            app:layout_constraintTop_toTopOf="@id/check_spinner" />
+
+        <com.sribs.bdd.v3.view.OneChooseSpinnerView
+            android:id="@+id/check_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minWidth="@dimen/_120sdp"
+            android:minHeight="@dimen/_14sdp"
+            android:layout_marginLeft="@dimen/_6sdp"
+            android:layout_marginTop="@dimen/_6sdp"
+            app:layout_constraintLeft_toRightOf="@id/check_jcff_hint"
+            app:layout_constraintTop_toBottomOf="@id/check_crack_jcbh_layout" />
+
+        <include
+            android:id="@+id/check_crack_jccd_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_6sdp"
+            app:layout_constraintLeft_toLeftOf="@id/check_crack_w_layout"
+            app:layout_constraintTop_toBottomOf="@id/check_spinner"
+            layout="@layout/check_edit_crack_item"/>
+
+        <include
+            android:id="@+id/check_crack_jckd_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_6sdp"
+            app:layout_constraintLeft_toLeftOf="@id/check_crack_w_layout"
+            app:layout_constraintTop_toBottomOf="@id/check_crack_jccd_layout"
+            layout="@layout/check_edit_crack_item"/>
+
+        <TextView
+            android:id="@+id/check_jcd_pic_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="裂痕监测点照片"
+            android:textColor="@drawable/text_gray_black_selector"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:textSize="@dimen/_7ssp"
+            app:layout_constraintLeft_toLeftOf="@id/check_crack_w_layout"
+            app:layout_constraintTop_toBottomOf="@+id/check_crack_jckd_layout" />
+
+        <include
+            android:id="@+id/check_jcd_photo_layout"
+            layout="@layout/add_photo_layout"
+            android:layout_width="@dimen/_50sdp"
+            android:layout_height="@dimen/_50sdp"
+            app:layout_constraintTop_toTopOf="@id/check_jcd_pic_hint"
+            app:layout_constraintLeft_toRightOf="@id/check_jcd_pic_hint"
+            android:layout_marginLeft="@dimen/_10sdp" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

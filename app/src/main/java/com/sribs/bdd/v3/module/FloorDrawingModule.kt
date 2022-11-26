@@ -14,4 +14,7 @@ class FloorDrawingModule : Serializable{
     var mFloorName:String?=""
     var mNameList:ArrayList<DrawingV3Bean>?=ArrayList()
 
+    override fun toString(): String {
+        return "FloorDrawingModule(mId=$mId, mFloorName=$mFloorName, mNameList=$mNameList)"
+    }
 }

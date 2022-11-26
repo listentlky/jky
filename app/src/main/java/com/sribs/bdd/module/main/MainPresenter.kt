@@ -386,6 +386,19 @@ class MainPresenter : BaseUnitConfigPresenter(), IMainListContrast.IMainPresente
                                 }
                             }
                         }
+                    } else if (buildingModule.moduleName == "非居民类检测") {
+                        buildingModule.drawings?.forEach { drawing ->
+                            drawing.damage?.forEach { damage ->
+                                if(mCurrentDamageType.contains(damage.type)){
+                                    if (damage.noResDamagePicList?.size!! > 0) {
+                                        drawingList.add(damage.noResDamagePicList!!.get(1))
+                                    }
+                                    if (damage.noResCrackPointPicList?.size!! > 0) {
+                                        drawingList.add(damage.noResCrackPointPicList!!.get(1))
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
 
@@ -426,6 +439,9 @@ class MainPresenter : BaseUnitConfigPresenter(), IMainListContrast.IMainPresente
             })
         )
     }
+
+    var mCurrentDamageType =
+        Arrays.asList("结构构件损伤", "耐久性损伤", "渗漏水", "填充墙斜裂缝", "高坠隐患", "附属构件损坏", "其它/不稳定", "裂缝监测点")
 
     fun isCopyAllDrawing(moduleName: String?): Boolean {
         if (moduleName == "非居民类检测"
@@ -495,6 +511,22 @@ class MainPresenter : BaseUnitConfigPresenter(), IMainListContrast.IMainPresente
                                     }
                                     d.scalePath?.add(resId1?.get(0)?.resId ?: "")
                                 }
+                            }
+                        }
+
+                        if(mCurrentDamageType.contains(d.type)){
+
+                            if (d.noResDamagePicList?.size!! > 0) {
+                                var resId1 = res?.filter {
+                                    it.fileName.equals(d.noResDamagePicList?.get(1))
+                                }
+                                d.noResDamagePicList?.add(resId1?.get(0)?.resId ?: "")
+                            }
+                            if (d.noResCrackPointPicList?.size!! > 0) {
+                                var resId1 = res?.filter {
+                                    it.fileName.equals(d.noResCrackPointPicList?.get(1))
+                                }
+                                d.noResCrackPointPicList?.add(resId1?.get(0)?.resId ?: "")
                             }
                         }
 
@@ -646,6 +678,24 @@ class MainPresenter : BaseUnitConfigPresenter(), IMainListContrast.IMainPresente
                                         ddd.designPicture?.add(resId4?.get(0)?.resId ?: "")
                                     }
 
+                                }
+
+                            }
+
+                            if(mCurrentDamageType.contains(ddd.type)){ //非居民类损伤
+
+                                if (ddd.noResDamagePicList?.size!! > 0) {
+                                    var resId5 = res?.filter {
+                                        it.fileName.equals(ddd.noResDamagePicList?.get(1))
+                                    }
+                                    ddd.noResDamagePicList?.add(resId5?.get(0)?.resId ?: "")
+                                }
+
+                                if (ddd.noResCrackPointPicList?.size!! > 0) {
+                                    var resId6 = res?.filter {
+                                        it.fileName.equals(ddd.noResCrackPointPicList?.get(1))
+                                    }
+                                    ddd.noResCrackPointPicList?.add(resId6?.get(0)?.resId ?: "")
                                 }
 
                             }
@@ -981,7 +1031,7 @@ class MainPresenter : BaseUnitConfigPresenter(), IMainListContrast.IMainPresente
                             dd.drawingId,
                             dd.drawingName,
                             dd.fileType,
-                            "overall",
+                            dd.drawingType,
                             drawingLocalPath,
                             dd.resId,
                             dd.sort,
@@ -1257,6 +1307,23 @@ class MainPresenter : BaseUnitConfigPresenter(), IMainListContrast.IMainPresente
                                                     ).absolutePath
                                                 )
                                             }
+                                        } else if(mm.moduleName == "非居民类检测"){
+                                            if (damageV3Bean?.noResDamagePicList?.size!! > 1) {
+                                                damageV3Bean?.noResDamagePicList?.set(
+                                                    1, File(
+                                                        cacheRootDir + mCurDrawingsDir + "/damage/" + damageV3Bean?.type,
+                                                        damageV3Bean?.noResDamagePicList?.get(0)
+                                                    ).absolutePath
+                                                )
+                                            }
+                                            if (damageV3Bean?.noResCrackPointPicList?.size!! > 1) {
+                                                damageV3Bean?.noResCrackPointPicList?.set(
+                                                    1, File(
+                                                        cacheRootDir + mCurDrawingsDir + "/damage/" + damageV3Bean?.type,
+                                                        damageV3Bean?.noResCrackPointPicList?.get(0)
+                                                    ).absolutePath
+                                                )
+                                            }
                                         }
                                         damageV3List?.add(damageV3Bean)
                                     }
@@ -1266,7 +1333,7 @@ class MainPresenter : BaseUnitConfigPresenter(), IMainListContrast.IMainPresente
                                         dd.drawingId,
                                         dd.drawingName,
                                         dd.fileType,
-                                        "overall",
+                                        dd.drawingType,
                                         drawingLocalPath,
                                         dd.resId,
                                         dd.sort,
@@ -1680,6 +1747,40 @@ class MainPresenter : BaseUnitConfigPresenter(), IMainListContrast.IMainPresente
                                                         )
                                                     )
                                                 }
+                                            }
+                                        }
+                                    }
+                                }else if(mm.moduleName == "非居民类检测"){
+                                    dd.damageMixes?.forEach { damage ->
+                                        var damageV3Bean =
+                                            Gson().fromJson(damage.desc, DamageV3Bean::class.java)
+                                        if(mCurrentDamageType.contains(damageV3Bean.type)){
+
+                                            if (damageV3Bean.noResDamagePicList?.size!! > 0) {
+                                                drawingLocalPath = File(
+                                                    cacheRootDir + mCurDrawingsDir + "/damage/" + damageV3Bean?.type,
+                                                    damageV3Bean?.noResDamagePicList?.get(0)
+                                                ).absolutePath
+
+                                                needDownloadDrawingList.add(
+                                                    V3UploadDrawingRes(
+                                                        damageV3Bean?.noResDamagePicList?.get(2)!!,
+                                                        drawingLocalPath
+                                                    )
+                                                )
+                                            }
+                                            if (damageV3Bean.noResCrackPointPicList?.size!! > 0) {
+                                                drawingLocalPath = File(
+                                                    cacheRootDir + mCurDrawingsDir + "/damage/" + damageV3Bean?.type,
+                                                    damageV3Bean?.noResCrackPointPicList?.get(0)
+                                                ).absolutePath
+
+                                                needDownloadDrawingList.add(
+                                                    V3UploadDrawingRes(
+                                                        damageV3Bean?.noResCrackPointPicList?.get(2)!!,
+                                                        drawingLocalPath
+                                                    )
+                                                )
                                             }
                                         }
                                     }

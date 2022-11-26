@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/check_edit_name"
+        android:textColor="@drawable/text_gray_black_selector"
+        android:text="裂缝宽度"
+        android:includeFontPadding="false"
+        android:layout_width="wrap_content"
+        android:textSize="@dimen/_7ssp"
+        android:layout_height="wrap_content"/>
+
+    <EditText
+        android:id="@+id/check_edit"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:textColorHint="@color/gray_600"
+        android:textColor="@drawable/text_gray_black_selector"
+        android:textSize="@dimen/_6ssp"
+        android:layout_marginLeft="@dimen/_6sdp"
+        android:lines="1"
+        android:digits="0123456789."
+        android:inputType="number"
+        android:minWidth="@dimen/_120sdp"
+        android:paddingLeft="@dimen/_4sdp"
+        android:paddingRight="@dimen/_4sdp"
+        android:hint="请输入裂缝宽度"
+        android:minHeight="@dimen/_14sdp"
+        android:background="@drawable/check_gray_is_edit_selector"
+        android:gravity="center_vertical"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:id="@+id/check_edit_fh"
+        android:textColor="@drawable/text_gray_black_selector"
+        android:text="mm"
+        android:layout_marginLeft="@dimen/_4sdp"
+        android:includeFontPadding="false"
+        android:layout_width="wrap_content"
+        android:textSize="@dimen/_7ssp"
+        android:layout_height="wrap_content"/>
+
+</LinearLayout>

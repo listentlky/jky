@@ -155,29 +155,8 @@ class CheckMenuView2 : LinearLayout {
                 return itemLayout
             }
             MARK_TYPE -> {
-             /*   val tv4 = TextView(mContext)
-                tv4.text = name
-                tv4.gravity = Gravity.CENTER_VERTICAL
-                tv4.setTextSize(
-                    TypedValue.COMPLEX_UNIT_PX,
-                    mContext!!.resources.getDimension(R.dimen._8ssp)
-                )
-                tv4.setTextColor(Color.parseColor("#FFFFFF"))
-                val tv4Params = LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    mContext!!.resources.getDimensionPixelOffset(R.dimen._22sdp)
-                )
-                tv4Params.leftMargin = mContext!!.resources.getDimensionPixelOffset(R.dimen._18sdp)
-                tv4.layoutParams = tv4Params
-                tv4.setOnClickListener { v ->
-                    if (mCheckMenuCallback != null)
-                        mCheckMenuCallback!!.onMarkClick(v, damage, damageType)
-                }
-                return tv4
-                */
-
                 val itemLayout = RelativeLayout(mContext)
-                val padding = context.resources.getDimensionPixelOffset(R.dimen._18sdp)
+                val padding = context.resources.getDimensionPixelOffset(R.dimen._16sdp)
                 itemLayout.setPadding(padding, 0, 0, 0)
                 val itemLayoutParams = LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
@@ -209,7 +188,7 @@ class CheckMenuView2 : LinearLayout {
                     TypedValue.COMPLEX_UNIT_PX,
                     mContext!!.resources.getDimension(R.dimen._8ssp)
                 )
-                tv3.setPadding(padding, 0, padding / 2, 0)
+                tv3.setPadding(padding/2, 0, padding / 2, 0)
                 tv3.setTextColor(Color.parseColor("#FFFFFF"))
                 val tv3Params = RelativeLayout.LayoutParams(
                     ViewGroup.LayoutParams.WRAP_CONTENT,

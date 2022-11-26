@@ -386,7 +386,7 @@ class ProjectCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCre
                         drawingType,
                         cacheFilePath.absolutePath,
                         "",
-                        "",
+                        buildingFloorBean.name,
                         ArrayList()
                     )
                     mAppFacadeDrawingList!!.add(drawingV3ToBuild)

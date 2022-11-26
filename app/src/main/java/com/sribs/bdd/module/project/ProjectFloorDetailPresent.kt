@@ -373,6 +373,19 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
                                 }
                             }
                         }
+                    } else if (bean.moduleName == "非居民类检测") {
+                        bean.drawings?.forEach { drawing ->
+                            drawing.damage?.forEach { damage ->
+                                if(mCurrentDamageType.contains(damage.type)){
+                                    if (damage.noResDamagePicList?.size!! > 0) {
+                                        drawingList.add(damage.noResDamagePicList!!.get(1))
+                                    }
+                                    if (damage.noResCrackPointPicList?.size!! > 0) {
+                                        drawingList.add(damage.noResCrackPointPicList!!.get(1))
+                                    }
+                                }
+                            }
+                        }
                     }
 
                     var parts = ArrayList<MultipartBody.Part>()
@@ -408,6 +421,9 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
         )
 
     }
+
+    var mCurrentDamageType =
+        Arrays.asList("结构构件损伤", "耐久性损伤", "渗漏水", "填充墙斜裂缝", "高坠隐患", "附属构件损坏", "其它/不稳定", "裂缝监测点")
 
     private fun makeUploadProject(
         buildingModuleFloorList: java.util.ArrayList<v3ModuleFloorDbBean>,
@@ -446,6 +462,21 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
                                 }
                                 d.scalePath?.add(resId1?.get(0)?.resId ?: "")
                             }
+                        }
+                    }
+                    if(mCurrentDamageType.contains(d.type)){
+
+                        if (d.noResDamagePicList?.size!! > 0) {
+                            var resId1 = res?.filter {
+                                it.fileName.equals(d.noResDamagePicList?.get(1))
+                            }
+                            d.noResDamagePicList?.add(resId1?.get(0)?.resId ?: "")
+                        }
+                        if (d.noResCrackPointPicList?.size!! > 0) {
+                            var resId1 = res?.filter {
+                                it.fileName.equals(d.noResCrackPointPicList?.get(1))
+                            }
+                            d.noResCrackPointPicList?.add(resId1?.get(0)?.resId ?: "")
                         }
                     }
 
@@ -596,6 +627,23 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
                                     ddd.designPicture?.add(resId4?.get(0)?.resId ?: "")
                                 }
 
+                            }
+                        }
+
+                        if(mCurrentDamageType.contains(ddd.type)){ //非居民类损伤
+
+                            if (ddd.noResDamagePicList?.size!! > 0) {
+                                var resId5 = res?.filter {
+                                    it.fileName.equals(ddd.noResDamagePicList?.get(1))
+                                }
+                                ddd.noResDamagePicList?.add(resId5?.get(0)?.resId ?: "")
+                            }
+
+                            if (ddd.noResCrackPointPicList?.size!! > 0) {
+                                var resId6 = res?.filter {
+                                    it.fileName.equals(ddd.noResCrackPointPicList?.get(1))
+                                }
+                                ddd.noResCrackPointPicList?.add(resId6?.get(0)?.resId ?: "")
                             }
 
                         }
@@ -953,6 +1001,40 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
                                     }
                                 }
                             }
+                        }else if(a?.moduleName == "非居民类检测"){
+                            dd.damageMixes?.forEach { damage ->
+                                var damageV3Bean =
+                                    Gson().fromJson(damage.desc, DamageV3Bean::class.java)
+                                if(mCurrentDamageType.contains(damageV3Bean.type)){
+
+                                    if (damageV3Bean.noResDamagePicList?.size!! > 0) {
+                                        drawingLocalPath = File(
+                                            cacheRootDir + mCurDrawingsDir + "/damage/" + damageV3Bean?.type,
+                                            damageV3Bean?.noResDamagePicList?.get(0)
+                                        ).absolutePath
+
+                                        needDownloadDrawingList.add(
+                                            V3UploadDrawingRes(
+                                                damageV3Bean?.noResDamagePicList?.get(2)!!,
+                                                drawingLocalPath
+                                            )
+                                        )
+                                    }
+                                    if (damageV3Bean.noResCrackPointPicList?.size!! > 0) {
+                                        drawingLocalPath = File(
+                                            cacheRootDir + mCurDrawingsDir + "/damage/" + damageV3Bean?.type,
+                                            damageV3Bean?.noResCrackPointPicList?.get(0)
+                                        ).absolutePath
+
+                                        needDownloadDrawingList.add(
+                                            V3UploadDrawingRes(
+                                                damageV3Bean?.noResCrackPointPicList?.get(2)!!,
+                                                drawingLocalPath
+                                            )
+                                        )
+                                    }
+                                }
+                            }
                         }
                     }
 
@@ -1191,6 +1273,23 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
                                     ).absolutePath
                                 )
                             }
+                        } else if(a?.moduleName == "非居民类检测"){
+                            if (damageV3Bean?.noResDamagePicList?.size!! > 1) {
+                                damageV3Bean?.noResDamagePicList?.set(
+                                    1, File(
+                                        cacheRootDir + mCurDrawingsDir + "/damage/" + damageV3Bean?.type,
+                                        damageV3Bean?.noResDamagePicList?.get(0)
+                                    ).absolutePath
+                                )
+                            }
+                            if (damageV3Bean?.noResCrackPointPicList?.size!! > 1) {
+                                damageV3Bean?.noResCrackPointPicList?.set(
+                                    1, File(
+                                        cacheRootDir + mCurDrawingsDir + "/damage/" + damageV3Bean?.type,
+                                        damageV3Bean?.noResCrackPointPicList?.get(0)
+                                    ).absolutePath
+                                )
+                            }
                         }
                         damageV3List?.add(damageV3Bean)
                     }
@@ -1199,7 +1298,7 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
                         dd.drawingId,
                         dd.drawingName,
                         dd.fileType,
-                        "overall",
+                        dd.drawingType,
                         drawingLocalPath,
                         dd.resId,
                         dd.sort,
@@ -1366,19 +1465,22 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
                                 FileUtil.getDrawingCacheRootDir(mView!!.getContext()!!)
                             var mCurDrawingsDir =
                                 "/" + ModuleHelper.DRAWING_CACHE_FOLDER + "/" + projectName + "/" + buildingName + "/" + moduleName + "/"
+
+                            var drawingList = ArrayList<DrawingV3Bean>()
+
                             if (isCopyAllDrawing(moduleName)) {
-                                it[0]?.drawing = it[0].drawing?.filter { drawing ->
+                                var list = it[0].drawing?.filter { drawing ->
                                     drawing.drawingType != "overall"
                                 }
+                                drawingList.addAll(list?:ArrayList())
                             } else if (!isCopyFloorDrawing(moduleName)) {
-                                it[0]?.drawing = it[0].drawing?.filter { drawing ->
+                                var list2 = it[0].drawing?.filter { drawing ->
                                     drawing.drawingType == "overall"
                                 }
-                            } else {
-                                it[0]?.drawing = ArrayList()
+                                drawingList.addAll(list2?:ArrayList())
                             }
 
-                            it[0].drawing?.forEachIndexed { index, item ->
+                            drawingList?.forEachIndexed { index, item ->
                                 item.drawingID = UUIDUtil.getUUID(item.fileName!!)
                                 var cacheFileParent = File(cacheRootDir + mCurDrawingsDir + index)
                                 cacheFileParent.mkdirs()
@@ -1404,7 +1506,7 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
                             cc.buildingId = buildingId
                             cc.remoteId = remoteId
                             cc.moduleName = moduleName
-                            cc.drawings = it[0].drawing
+                            cc.drawings = drawingList
                             cc.inspectors = mInspectors
                             cc.leaderId = Dict.getLeaderId(mLeader!!)
                             cc.leaderName = mLeader

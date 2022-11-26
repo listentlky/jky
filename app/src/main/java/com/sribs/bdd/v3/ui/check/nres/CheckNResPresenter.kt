@@ -91,8 +91,7 @@ class CheckNResPresenter : BasePresenter(), ICheckNResContrast.ICheckNonResident
 
                 localList.addAll(list)
                 LogUtils.d("获取到该楼下所有数据 "+localList.toString())
-             //   mView?.onModuleInfo(localList)
-                mView?.onModuleInfo(list)
+                mView?.onModuleInfo(localList)
                 dispose()
             },{
                 dispose()
@@ -106,18 +105,29 @@ class CheckNResPresenter : BasePresenter(), ICheckNResContrast.ICheckNonResident
 
     override fun saveDamageToDb(bean: CheckNResMainBean) {
 
-       /* addDisposable(mDb.updateModuleFloorDrawing(bean.drawing!!,bean.id!!)
-            .flatMap {
-                mDb.updateBuildingModule(bean.moduleId!!,1)
-            }
-            .subscribeOn(Schedulers.computation())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-                LogUtils.d("更新图纸损伤信息成功")
-            },{
-                LogUtils.d("更新图纸损伤信息失败: "+it)
-            })
-        )*/
+        if(bean.floorName.isNullOrEmpty()){
+            addDisposable(mDb.updatev3BuildingModuleDrawing(bean.id!!,bean.drawing!!)
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    LogUtils.d("更新图纸损伤信息成功")
+                },{
+                    LogUtils.d("更新图纸损伤信息失败: "+it)
+                }))
+        }else{
+            addDisposable(mDb.updateModuleFloorDrawing(bean.drawing!!,bean.id!!)
+                .flatMap {
+                    mDb.updateBuildingModule(bean.moduleId!!,1)
+                }
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    LogUtils.d("更新图纸损伤信息成功")
+                },{
+                    LogUtils.d("更新图纸损伤信息失败: "+it)
+                })
+            )
+        }
     }
 
     override fun bindView(v: IBaseView) {

@@ -133,7 +133,7 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
     //是否展示损伤
     private boolean isShowDamage = true;
 
-    public List<String> mModuleType = Arrays.asList("建筑结构复核", "倾斜测量", "相对高差测量", "构件检测");
+    public List<String> mModuleType = Arrays.asList("建筑结构复核", "倾斜测量", "相对高差测量", "构件检测","非居民类检测");
 
     private String mCurrentModuleType = "建筑结构复核"; //默认模块
 
@@ -144,6 +144,8 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
     public PDFPos mMarkPDFPos;
     private boolean mIsIntercept;
     private int layoutWidth,layoutHieght;
+
+    private int mV3Gravity = Gravity.CENTER;
 
     public int getLayoutWidth() {
         return layoutWidth;
@@ -175,6 +177,10 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
 
     public void setV3Version(boolean isV3) {
         mIsV3 = isV3;
+    }
+
+    public void setV3Gravity(int gravity) {
+        mV3Gravity = gravity;
     }
 
     public void setV3DamageType(List<String> damageType) {
@@ -2472,6 +2478,7 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
         m_icon = bitmap;
         if (code == 0)//start
         {
+            mIsIntercept = true;
             m_status = STA_STAMP;
             if(m_icon == null) {
                 m_icon = BitmapFactory.decodeResource(this.getResources(), R.drawable.ic_custom_stamp).copy(Bitmap.Config.ARGB_8888, true);
@@ -2552,6 +2559,7 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
                 }
             }
             invalidate();
+            mIsIntercept = false;
             m_status = STA_NONE;
             m_rects = null;
             if (m_icon != null)
@@ -2559,6 +2567,7 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
             m_icon = null;
         } else//cancel
         {
+            mIsIntercept = false;
             m_status = STA_NONE;
             m_rects = null;
             invalidate();
@@ -2639,6 +2648,7 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
             m_icon = null;
         } else//cancel
         {
+            mIsIntercept = false;
             m_status = STA_NONE;
             m_rects = null;
             invalidate();
@@ -2854,12 +2864,11 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
      */
     private void showV3DamagePopupWindow() {
         if (v3DamagePopupWindow == null) {
-            v3DamagePopupWindow = new V3DamagePopupWindow(getContext(), dp2px(getContext(), 90), mV3DamageType
-                    , popupCallback);
+            v3DamagePopupWindow = new V3DamagePopupWindow(getContext(), mCurrentModuleType.equals(mModuleType.get(4))?dp2px(getContext(), 120):dp2px(getContext(), 90), mV3DamageType
+                    ,mV3Gravity, popupCallback);
             v3DamagePopupWindow.initFirstColor(mV3DefaultColor);
         }
         v3DamagePopupWindow.showAtLocation(this, Gravity.NO_GRAVITY, (int) calculateDamageTypeX(dp2px(getContext(), 90)), (int) mMarkY);
-        //   v3DamagePopupWindow.showAsDropDown(this,(int)(Math.round(m_annot_note_x0)),(Math.round(m_annot_note_x0)));
     }
 
     /**
