@@ -81,8 +81,11 @@ class CheckNonResidentsActivity : BaseActivity(), ICheckNResContrast.ICheckNonRe
 
     val ADD_LFJCD_PHOTO_CODE = 8888
 
+ /*   var mCurrentDamageType =
+        Arrays.asList("结构构件损伤", "耐久性损伤", "渗漏水", "填充墙斜裂缝", "高坠隐患", "附属构件损坏", "其它/不稳定", "裂缝监测点")*/
+
     var mCurrentDamageType =
-        Arrays.asList("结构构件损伤", "耐久性损伤", "渗漏水", "填充墙斜裂缝", "高坠隐患", "附属构件损坏", "其它/不稳定", "裂缝监测点")
+        Arrays.asList("裂缝", "渗漏", "变形", "高坠", "其他")
 
     /**
      * 数据是否更新
@@ -443,7 +446,7 @@ class CheckNonResidentsActivity : BaseActivity(), ICheckNResContrast.ICheckNonRe
                 mView?.setReadOnly(false)
                 mView?.setAnnotMenu(UIAnnotMenu(mViewParent))
                 mView?.setV3SelectDamageCallback(this)
-                mView?.setV3Gravity(Gravity.CENTER_VERTICAL)
+                mView?.setV3Gravity(Gravity.CENTER)
                 mView?.setV3Version(true)
                 mView!!.setCurrentModuleType(mView!!.mModuleType.get(4))
                 mView?.setV3DamageType(mCurrentDamageType)
@@ -532,25 +535,25 @@ class CheckNonResidentsActivity : BaseActivity(), ICheckNResContrast.ICheckNonRe
             LayoutInflater.from(this).inflate(R.layout.damage_check_nr_mark_layout, null)
         val damageTypeImg = view.findViewById<ImageView>(R.id.damage_type_img)
         when (damageInfo.type) {
-            "结构构件损伤" -> {
+            "变形" -> {
                 damageTypeImg.setImageResource(R.mipmap.damage_icon_jgss)
             }
             "耐久性损伤" -> {
                 damageTypeImg.setImageResource(R.mipmap.damage_icon_njxss)
             }
-            "渗漏水" -> {
+            "渗漏" -> {
                 damageTypeImg.setImageResource(R.mipmap.damage_icon_sls)
             }
-            "填充墙斜裂缝" -> {
+            "裂缝" -> {
                 damageTypeImg.setImageResource(R.mipmap.damage_icon_tcqxlf)
             }
-            "高坠隐患" -> {
+            "高坠" -> {
                   damageTypeImg.setImageResource(R.mipmap.damage_icon_gzyh)
             }
             "附属构件损坏" -> {
                 damageTypeImg.setImageResource(R.mipmap.damage_icon_fsgjsh)
             }
-            "其它/不稳定" -> {
+            "其它" -> {
                 damageTypeImg.setImageResource(R.mipmap.damage_icon_other)
             }
             "裂缝监测点" -> {

@@ -2864,7 +2864,7 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
      */
     private void showV3DamagePopupWindow() {
         if (v3DamagePopupWindow == null) {
-            v3DamagePopupWindow = new V3DamagePopupWindow(getContext(), mCurrentModuleType.equals(mModuleType.get(4))?dp2px(getContext(), 120):dp2px(getContext(), 90), mV3DamageType
+            v3DamagePopupWindow = new V3DamagePopupWindow(getContext(), mCurrentModuleType.equals(mModuleType.get(4))?dp2px(getContext(), 90):dp2px(getContext(), 90), mV3DamageType
                     ,mV3Gravity, popupCallback);
             v3DamagePopupWindow.initFirstColor(mV3DefaultColor);
         }
@@ -2955,7 +2955,7 @@ public class PDFLayoutView extends View implements ILayoutView, LayoutListener {
     private DamageTypeSelectDialog.IClickCallback dialogClick = new DamageTypeSelectDialog.IClickCallback() {
         @Override
         public void onViewClicked(int selectIndex, boolean checked, int color) {
-            String[] items = {"结构构件损伤", "耐久性损伤", "渗漏水", "填充墙斜裂缝", "高坠隐患", "附属构件损坏", "其它/不稳定", "裂缝监测点"};
+            String[] items = {"裂缝", "渗漏", "变形", "高坠", "其他"};
 //            long ref = m_annot.GetRef();
             Log.i("leon", "dialogClick item index=" + selectIndex + ", isCheck=" + checked);
             if (selectIndex >= 0 && checked) {

@@ -1,5 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
-    <string name="app_name">建筑损伤记录</string>
+    <string name="app_name">房屋检测助手</string>
     <string name="app_name_test">SRIBS</string>
     <string name="login_title">上海建科房屋检测记录数字化协同工作平台</string>
     <string name="upload_overall_drawing">上传底层/总平面图纸</string>

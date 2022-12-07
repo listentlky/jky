@@ -423,7 +423,7 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
     }
 
     var mCurrentDamageType =
-        Arrays.asList("结构构件损伤", "耐久性损伤", "渗漏水", "填充墙斜裂缝", "高坠隐患", "附属构件损坏", "其它/不稳定", "裂缝监测点")
+        Arrays.asList("裂缝", "渗漏", "变形", "高坠", "其他")
 
     private fun makeUploadProject(
         buildingModuleFloorList: java.util.ArrayList<v3ModuleFloorDbBean>,

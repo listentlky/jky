@@ -89,9 +89,9 @@ class CheckNResPresenter : BasePresenter(), ICheckNResContrast.ICheckNonResident
                 })
                 LogUtils.d("获取到该楼下基于楼层数据 "+list.toString())
 
-                localList.addAll(list)
-                LogUtils.d("获取到该楼下所有数据 "+localList.toString())
-                mView?.onModuleInfo(localList)
+                list.addAll(localList)
+                LogUtils.d("获取到该楼下所有数据 "+list.toString())
+                mView?.onModuleInfo(list)
                 dispose()
             },{
                 dispose()
