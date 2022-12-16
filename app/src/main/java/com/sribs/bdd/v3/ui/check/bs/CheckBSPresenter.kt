@@ -39,6 +39,7 @@ class CheckBSPresenter : BasePresenter(),ICheckBSContrast.ICheckBSPresenter{
                     moduleId = b.moduleId,
                     floorId = b.floorId,
                     floorName = b.floorName,
+                    floorIndex = b.floorIndex,
                     remoteId = b.remoteId,
                     drawing = b.drawingsList,
                     createTime = b.createTime,
@@ -49,7 +50,7 @@ class CheckBSPresenter : BasePresenter(),ICheckBSContrast.ICheckBSPresenter{
                 )
                 })
                 LogUtils.d("获取到该楼下所有楼层数据 "+list.toString())
-                mView?.onModuleInfo(list)
+                mView?.onModuleInfo(list.sortedBy { a->a.floorIndex })
                 dispose()
             },{
                 dispose()

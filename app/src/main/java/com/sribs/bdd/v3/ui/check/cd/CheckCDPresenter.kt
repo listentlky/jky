@@ -43,6 +43,7 @@ class CheckCDPresenter : BasePresenter(),ICheckCDContrast.ICheckCDPresenter{
                     floorId = b.floorId,
                     floorName = b.floorName,
                     floorType = b.floorType,
+                    floorIndex = b.floorIndex,
                     remoteId = b.remoteId,
                     drawing = b.drawingsList,
                     createTime = b.createTime,
@@ -53,7 +54,7 @@ class CheckCDPresenter : BasePresenter(),ICheckCDContrast.ICheckCDPresenter{
                 )
                 })
                 LogUtils.d("获取到该楼下所有楼层数据 "+list.toString())
-                mView?.onModuleInfo(list)
+                mView?.onModuleInfo(list.sortedBy { a->a.floorIndex })
                 dispose()
             },{
                 dispose()

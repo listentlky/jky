@@ -378,7 +378,7 @@ class ModuleFloorConfigCreateTypePresenter : BasePresenter(), IProjectContrast.I
                 .subscribe({
                     LogUtils.d("caocaocaocao1111")
                     if (it != null)
-                        mView?.initLocalData(it)
+                        mView?.initLocalData(it.sortedBy {a-> a.floorIndex })
 
                 }, {
 
@@ -436,10 +436,8 @@ class ModuleFloorConfigCreateTypePresenter : BasePresenter(), IProjectContrast.I
             .subscribe({
                 localList.addAll(it)
                 LogUtils.d("caocaocaocao22222")
-                LogUtils.d("获取到该楼下所有数据 "+localList.toString())
 
-                mView?.initLocalData(localList)
-                LogUtils.d("caocaocaocao44444")
+                mView?.initLocalData(localList.sortedBy { a->a.floorIndex })
                 dispose()
             },{
                 dispose()
@@ -523,6 +521,21 @@ class ModuleFloorConfigCreateTypePresenter : BasePresenter(), IProjectContrast.I
                     }, {
                         dispose()
                     })
+            }else{
+                mDb.deletev3ModuleFloor(mLocalProjectId.toLong(), mBuildingId, mModuleId)
+                    .subscribeOn(Schedulers.computation())
+                    .observeOn(Schedulers.computation())
+                    .subscribe({
+                        dispose()
+                        LogUtils.d("createLocalModule new building id=${mModuleId}")
+                        createLocalFloorsInTheModule(
+                            mBuildingId,
+                            mModuleId,
+                            moduleName
+                        )
+                    },{
+
+                    })
             }
             },{
                 dispose()
@@ -538,7 +551,6 @@ class ModuleFloorConfigCreateTypePresenter : BasePresenter(), IProjectContrast.I
         moduleId: Long,
         moduleName:String
     ) {
-        println("createLocalFloorsInTheBuilding mBldId=${mBuildingId}")
 
         var index = 0
         floorList.forEach {
@@ -558,7 +570,7 @@ class ModuleFloorConfigCreateTypePresenter : BasePresenter(), IProjectContrast.I
                 updateTime = TimeUtil.YMD_HMS.format(Date()),
                 status = 0,
             )
-
+            LogUtils.d("更新模块当前实体类"+bean.toString())
             mDb.updatev3ModuleFloor(bean)
                 .subscribeOn(Schedulers.computation())
                 .observeOn(Schedulers.computation())
@@ -729,7 +741,7 @@ class ModuleFloorConfigCreateTypePresenter : BasePresenter(), IProjectContrast.I
                 var damageList = ArrayList<DamageV3Bean>()
 
                 v3BuildingModuleDbBean.drawings!!.forEach {
-                    if (it.drawingID!!.equals(moduleFloorBean.pictureList!!.get(picIndex))){
+                    if (it.drawingID!! == moduleFloorBean.pictureList!![picIndex].drawingId){
                         damageList = it.damage?:ArrayList()
                     }
                 }
@@ -741,7 +753,7 @@ class ModuleFloorConfigCreateTypePresenter : BasePresenter(), IProjectContrast.I
                     drawingType,
                     cacheFilePath.absolutePath,
                     "",
-                    "",
+                    moduleFloorBean.name,
                     damageList
                 )
                 finalNonResidentDrawingList!!.add(drawingV3ToBuilding)

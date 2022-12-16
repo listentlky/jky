@@ -15,6 +15,7 @@ data class CheckCDMainBean (
     var floorId:String?,
     var floorName:String?,
     var floorType:Int,
+    var floorIndex:Int,
     var remoteId:String?=null,
     var inspectorName:String?="",
     var drawing:List<DrawingV3Bean>?=ArrayList(),
@@ -25,6 +26,6 @@ data class CheckCDMainBean (
     var status:Int?=0
 ){
     override fun toString(): String {
-        return "CheckCDFMainBean(projectId=$projectId, bldId=$bldId, moduleId=$moduleId, floorId=$floorId, floorName=$floorName,, floorType=$floorType, remoteId=$remoteId, inspectorName=$inspectorName, drawing=$drawing, createTime=$createTime, updateTime=$updateTime, deleteTime=$deleteTime, version=$version, status=$status)"
+        return "CheckCDFMainBean(projectId=$projectId, bldId=$bldId, moduleId=$moduleId, floorId=$floorId, floorName=$floorName, floorType=$floorType,floorIndex=$floorIndex, remoteId=$remoteId, inspectorName=$inspectorName, drawing=$drawing, createTime=$createTime, updateTime=$updateTime, deleteTime=$deleteTime, version=$version, status=$status)"
     }
 }

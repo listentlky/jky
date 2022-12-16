@@ -78,6 +78,7 @@ class CheckNResPresenter : BasePresenter(), ICheckNResContrast.ICheckNonResident
                     moduleId = b.moduleId,
                     floorId = b.floorId,
                     floorName = b.floorName,
+                    floorIndex = b.floorIndex,
                     remoteId = b.remoteId,
                     drawing = b.drawingsList,
                     createTime = b.createTime,
@@ -88,10 +89,10 @@ class CheckNResPresenter : BasePresenter(), ICheckNResContrast.ICheckNonResident
                 )
                 })
                 LogUtils.d("获取到该楼下基于楼层数据 "+list.toString())
-
-                list.addAll(localList)
-                LogUtils.d("获取到该楼下所有数据 "+list.toString())
-                mView?.onModuleInfo(list)
+                var sortList = ArrayList(list.sortedBy { a->a.floorIndex })
+                sortList.addAll(localList)
+                LogUtils.d("获取到该楼下所有数据 "+sortList.toString())
+                mView?.onModuleInfo(sortList)
                 dispose()
             },{
                 dispose()

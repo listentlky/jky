@@ -14,6 +14,7 @@ data class CheckBSMainBean (
     var moduleId:Long?,
     var floorId:String?,
     var floorName:String?,
+    var floorIndex:Int?,
     var remoteId:String?=null,
     var inspectorName:String?="",
     var drawing:List<DrawingV3Bean>?=ArrayList(),
@@ -25,6 +26,6 @@ data class CheckBSMainBean (
     var isChanged:Int?=0
 ){
     override fun toString(): String {
-        return "CheckBSMainBean(projectId=$projectId, bldId=$bldId, moduleId=$moduleId, floorId=$floorId, floorName=$floorName, remoteId=$remoteId, inspectorName=$inspectorName, drawing=$drawing, createTime=$createTime, updateTime=$updateTime, deleteTime=$deleteTime, version=$version, status=$status)"
+        return "CheckBSMainBean(projectId=$projectId, bldId=$bldId, moduleId=$moduleId, floorId=$floorId, floorName=$floorName,floorIndex=$floorIndex, remoteId=$remoteId, inspectorName=$inspectorName, drawing=$drawing, createTime=$createTime, updateTime=$updateTime, deleteTime=$deleteTime, version=$version, status=$status)"
     }
 }

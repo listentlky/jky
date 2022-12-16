@@ -14,6 +14,7 @@ data class CheckNResMainBean (
     var moduleId:Long?,
     var floorId:String?=null,
     var floorName:String?=null,
+    var floorIndex:Int?=0,
     var remoteId:String?=null,
     var inspectorName:String?="",
     var drawing:List<DrawingV3Bean>?=ArrayList(),
@@ -25,6 +26,6 @@ data class CheckNResMainBean (
     var isChanged:Int?=0
 ){
     override fun toString(): String {
-        return "CheckNResMainBean(id=$id, projectId=$projectId, bldId=$bldId, moduleId=$moduleId, floorId=$floorId, floorName=$floorName, remoteId=$remoteId, inspectorName=$inspectorName, drawing=$drawing, createTime=$createTime, updateTime=$updateTime, deleteTime=$deleteTime, version=$version, status=$status, isChanged=$isChanged)"
+        return "CheckNResMainBean(id=$id, projectId=$projectId, bldId=$bldId, moduleId=$moduleId, floorId=$floorId, floorName=$floorName, floorIndex=$floorIndex, remoteId=$remoteId, inspectorName=$inspectorName, drawing=$drawing, createTime=$createTime, updateTime=$updateTime, deleteTime=$deleteTime, version=$version, status=$status, isChanged=$isChanged)"
     }
 }

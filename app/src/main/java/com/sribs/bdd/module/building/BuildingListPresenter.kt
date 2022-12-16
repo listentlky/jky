@@ -307,106 +307,113 @@ class BuildingListPresenter : BasePresenter(), IBuildingContrast.IBuildingListPr
 
                 buildingModuleList?.forEach { buildingModule ->
 
-                    if (buildingModule.moduleName.equals("构件检测")) {
-                        buildingModuleFloorList?.forEach { buildingModuleFloor ->
-                            if (buildingModuleFloor.moduleId!!.equals(buildingModule.moduleid)) {
-                                buildingModuleFloor.drawingsList?.forEach { drawing ->
-                                    drawing?.damage?.forEach { damage ->
-                                        when (damage.type) {
-                                            "梁" -> {
-                                                if (damage.beamLeftRealPicList?.size!! > 0) {
-                                                    drawingList.add(
-                                                        damage.beamLeftRealPicList!!.get(
-                                                            1
-                                                        )
-                                                    )
-                                                }
-                                                if (damage.beamLeftDesignPicList?.size!! > 0) {
-                                                    drawingList.add(
-                                                        damage.beamLeftDesignPicList!!.get(
-                                                            1
-                                                        )
-                                                    )
-                                                }
-                                                if (damage.beamRightRealPic?.size!! > 0) {
-                                                    drawingList.add(
-                                                        damage.beamRightRealPic!!.get(
-                                                            1
-                                                        )
-                                                    )
-                                                }
-                                                if (damage.beamRightDesignPic?.size!! > 0) {
-                                                    drawingList.add(
-                                                        damage.beamRightDesignPic!!.get(
-                                                            1
-                                                        )
-                                                    )
-                                                }
-                                            }
-                                            "柱" -> {
-                                                if (damage.columnLeftRealPicList?.size!! > 0) {
-                                                    drawingList.add(
-                                                        damage.columnLeftRealPicList!!.get(
-                                                            1
-                                                        )
-                                                    )
-                                                }
-                                                if (damage.columnLeftDesignPicList?.size!! > 0) {
-                                                    drawingList.add(
-                                                        damage.columnLeftDesignPicList!!.get(
-                                                            1
-                                                        )
-                                                    )
-                                                }
-                                                if (damage.columnRightRealPic?.size!! > 0) {
-                                                    drawingList.add(
-                                                        damage.columnRightRealPic!!.get(
-                                                            1
-                                                        )
-                                                    )
-                                                }
-                                                if (damage.columnRightDesignPic?.size!! > 0) {
-                                                    drawingList.add(
-                                                        damage.columnRightDesignPic!!.get(
-                                                            1
-                                                        )
-                                                    )
-                                                }
-                                            }
-                                            "墙", "板" -> {
-                                                if (damage.realPicture?.size!! > 0) {
-                                                    drawingList.add(damage.realPicture!!.get(1))
-                                                }
-                                                if (damage.designPicture?.size!! > 0) {
-                                                    drawingList.add(damage.designPicture!!.get(1))
-                                                }
-                                            }
-                                        }
+                    buildingModule.drawings?.forEach { drawing ->
+                        drawing.damage?.forEach { damage ->
+                            when (damage.type) {
+                                "点位" -> {
+                                    if (damage.scalePath?.size!! > 0) {
+                                        drawingList.add(damage.scalePath!!.get(1))
                                     }
                                 }
                             }
-                        }
-                    } else if (buildingModule.moduleName == "倾斜测量") {
-                        buildingModule.drawings?.forEach { drawing ->
-                            drawing.damage?.forEach { damage ->
-                                when (damage.type) {
-                                    "点位" -> {
-                                        if (damage.scalePath?.size!! > 0) {
-                                            drawingList.add(damage.scalePath!!.get(1))
-                                        }
-                                    }
+                            // 非居民损伤
+                            if (mCurrentDamageType.contains(damage.type)) {
+                                if (damage.noResDamagePicList?.size!! > 0) {
+                                    drawingList.add(damage.noResDamagePicList!!.get(1))
+                                }
+                                if (damage.noResCrackPointPicList?.size!! > 0) {
+                                    drawingList.add(damage.noResCrackPointPicList!!.get(1))
                                 }
                             }
                         }
-                    } else if (buildingModule.moduleName == "非居民类检测") {
-                        buildingModule.drawings?.forEach { drawing ->
-                            drawing.damage?.forEach { damage ->
-                                if(mCurrentDamageType.contains(damage.type)){
-                                    if (damage.noResDamagePicList?.size!! > 0) {
-                                        drawingList.add(damage.noResDamagePicList!!.get(1))
+                    }
+
+                    buildingModuleFloorList?.forEach { buildingModuleFloor ->
+                        if (buildingModuleFloor.moduleId!!.equals(buildingModule.moduleid)) {
+                            buildingModuleFloor.drawingsList?.forEach { drawing ->
+                                drawing?.damage?.forEach { damage ->
+                                    when (damage.type) {
+                                        "梁" -> {
+                                            if (damage.beamLeftRealPicList?.size!! > 0) {
+                                                drawingList.add(
+                                                    damage.beamLeftRealPicList!!.get(
+                                                        1
+                                                    )
+                                                )
+                                            }
+                                            if (damage.beamLeftDesignPicList?.size!! > 0) {
+                                                drawingList.add(
+                                                    damage.beamLeftDesignPicList!!.get(
+                                                        1
+                                                    )
+                                                )
+                                            }
+                                            if (damage.beamRightRealPic?.size!! > 0) {
+                                                drawingList.add(
+                                                    damage.beamRightRealPic!!.get(
+                                                        1
+                                                    )
+                                                )
+                                            }
+                                            if (damage.beamRightDesignPic?.size!! > 0) {
+                                                drawingList.add(
+                                                    damage.beamRightDesignPic!!.get(
+                                                        1
+                                                    )
+                                                )
+                                            }
+                                        }
+                                        "柱" -> {
+                                            if (damage.columnLeftRealPicList?.size!! > 0) {
+                                                drawingList.add(
+                                                    damage.columnLeftRealPicList!!.get(
+                                                        1
+                                                    )
+                                                )
+                                            }
+                                            if (damage.columnLeftDesignPicList?.size!! > 0) {
+                                                drawingList.add(
+                                                    damage.columnLeftDesignPicList!!.get(
+                                                        1
+                                                    )
+                                                )
+                                            }
+                                            if (damage.columnRightRealPic?.size!! > 0) {
+                                                drawingList.add(
+                                                    damage.columnRightRealPic!!.get(
+                                                        1
+                                                    )
+                                                )
+                                            }
+                                            if (damage.columnRightDesignPic?.size!! > 0) {
+                                                drawingList.add(
+                                                    damage.columnRightDesignPic!!.get(
+                                                        1
+                                                    )
+                                                )
+                                            }
+                                        }
+                                        "墙", "板" -> {
+                                            if (damage.realPicture?.size!! > 0) {
+                                                drawingList.add(damage.realPicture!!.get(1))
+                                            }
+                                            if (damage.designPicture?.size!! > 0) {
+                                                drawingList.add(damage.designPicture!!.get(1))
+                                            }
+                                        }
                                     }
-                                    if (damage.noResCrackPointPicList?.size!! > 0) {
-                                        drawingList.add(damage.noResCrackPointPicList!!.get(1))
+
+                                    if (mCurrentDamageType.contains(damage.type)) {
+                                        if (damage.noResDamagePicList?.size!! > 0) {
+                                            drawingList.add(damage.noResDamagePicList!!.get(1))
+                                        }
+                                        if (damage.noResCrackPointPicList?.size!! > 0) {
+                                            drawingList.add(
+                                                damage.noResCrackPointPicList!!.get(
+                                                    1
+                                                )
+                                            )
+                                        }
                                     }
                                 }
                             }
@@ -436,7 +443,7 @@ class BuildingListPresenter : BasePresenter(), IBuildingContrast.IBuildingListPr
                                 buildingModuleFloorList, res.data, bean, cb
                             )
                         }, {
-                            LogUtils.d("文件上传失败: ${it}")
+                            mView?.onMsg("文件上传失败: ${it}")
                             cb(false)
                         })
                 } else {
@@ -506,7 +513,7 @@ class BuildingListPresenter : BasePresenter(), IBuildingContrast.IBuildingListPr
                             }
                         }
 
-                        if(mCurrentDamageType.contains(d.type)){
+                        if (mCurrentDamageType.contains(d.type)) {
 
                             if (d.noResDamagePicList?.size!! > 0) {
                                 var resId1 = res?.filter {
@@ -561,7 +568,7 @@ class BuildingListPresenter : BasePresenter(), IBuildingContrast.IBuildingListPr
                 }
             }
 
-            if(isCopyAllDrawing(it.moduleName) || isCopyFloorDrawing(it.moduleName)){ //层概念下的图纸
+            if (isCopyAllDrawing(it.moduleName) || isCopyFloorDrawing(it.moduleName)) { //层概念下的图纸
 
                 var currentModuleFloorList = buildingModuleFloorList.filter { bb ->
                     it.moduleid == bb.moduleId
@@ -673,7 +680,7 @@ class BuildingListPresenter : BasePresenter(), IBuildingContrast.IBuildingListPr
 
                             }
 
-                            if(mCurrentDamageType.contains(ddd.type)){ //非居民类损伤
+                            if (mCurrentDamageType.contains(ddd.type)) { //非居民类损伤
 
                                 if (ddd.noResDamagePicList?.size!! > 0) {
                                     var resId5 = res?.filter {
@@ -804,7 +811,7 @@ class BuildingListPresenter : BasePresenter(), IBuildingContrast.IBuildingListPr
                         dd.fileType!!,
                         floorBean.floorId!!,
                         floorBean.floorName ?: "",
-                        floorBean.floorIndex?:0,
+                        floorBean.floorIndex ?: 0,
                         floorBean.floorType ?: 0,
                         index,
                         inspectorList,
@@ -1228,11 +1235,11 @@ class BuildingListPresenter : BasePresenter(), IBuildingContrast.IBuildingListPr
                                         }
                                     }
                                 }
-                            }else if(mm.moduleName == "非居民类检测"){
+                            } else if (mm.moduleName == "非居民类检测") {
                                 dd.damageMixes?.forEach { damage ->
                                     var damageV3Bean =
                                         Gson().fromJson(damage.desc, DamageV3Bean::class.java)
-                                    if(mCurrentDamageType.contains(damageV3Bean.type)){
+                                    if (mCurrentDamageType.contains(damageV3Bean.type)) {
 
                                         if (damageV3Bean.noResDamagePicList?.size!! > 0) {
                                             drawingLocalPath = File(
@@ -1637,7 +1644,7 @@ class BuildingListPresenter : BasePresenter(), IBuildingContrast.IBuildingListPr
                                                 ).absolutePath
                                             )
                                         }
-                                    } else if(mm.moduleName == "非居民类检测"){
+                                    } else if (mm.moduleName == "非居民类检测") {
                                         if (damageV3Bean?.noResDamagePicList?.size!! > 1) {
                                             damageV3Bean?.noResDamagePicList?.set(
                                                 1, File(

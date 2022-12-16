@@ -553,7 +553,7 @@ class CheckNonResidentsActivity : BaseActivity(), ICheckNResContrast.ICheckNonRe
             "附属构件损坏" -> {
                 damageTypeImg.setImageResource(R.mipmap.damage_icon_fsgjsh)
             }
-            "其它" -> {
+            "其他" -> {
                 damageTypeImg.setImageResource(R.mipmap.damage_icon_other)
             }
             "裂缝监测点" -> {

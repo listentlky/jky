@@ -386,6 +386,23 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
                                 }
                             }
                         }
+
+                        buildingModuleFloorList?.forEach { buildingModuleFloor ->
+                            if (buildingModuleFloor.moduleId!!.equals(bean.moduleid)) {
+                                buildingModuleFloor.drawingsList?.forEach { drawing ->
+                                    drawing?.damage?.forEach { damage ->
+                                        if(mCurrentDamageType.contains(damage.type)){
+                                            if (damage.noResDamagePicList?.size!! > 0) {
+                                                drawingList.add(damage.noResDamagePicList!!.get(1))
+                                            }
+                                            if (damage.noResCrackPointPicList?.size!! > 0) {
+                                                drawingList.add(damage.noResCrackPointPicList!!.get(1))
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
 
                     var parts = ArrayList<MultipartBody.Part>()
@@ -407,7 +424,7 @@ class ProjectFloorDetailPresent : BasePresenter(), IProjectContrast.IProjectFloo
                                     buildingModuleFloorList, res.data, bean, cb
                                 )
                             }, {
-                                LogUtils.d("文件上传失败: ${it}")
+                                mView?.onMsg("文件上传失败: ${it}")
                                 cb(false)
                             })
                     } else {
