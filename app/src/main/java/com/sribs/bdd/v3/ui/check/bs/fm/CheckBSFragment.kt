@@ -112,7 +112,7 @@ class CheckBSFragment : BaseFragment(R.layout.fragment_check_build_structure),
                                     if(index == 0){
                                         nameText+=s
                                     }else if(index == 2){
-                                        nameText+="/"+s
+                                        nameText+=" / "+s
                                     }else{
                                         nameText+="-"+s
                                     }
@@ -132,7 +132,7 @@ class CheckBSFragment : BaseFragment(R.layout.fragment_check_build_structure),
                                     if(index == 0){
                                         nameText+=s
                                     }else if(index == 1){
-                                        nameText+="/"+s
+                                        nameText+=" / "+s
                                     }else{
                                         nameText+="-"+s
                                     }

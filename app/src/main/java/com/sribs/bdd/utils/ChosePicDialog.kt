@@ -7,10 +7,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.cbj.sdk.libui.mvp.inflate
 import com.sribs.bdd.bean.BuildingFloorPictureBean
 import com.sribs.bdd.databinding.DialogChosePicBinding
-import com.sribs.bdd.databinding.DialogCreateProjectBinding
 import com.sribs.bdd.ui.adapter.CreateChoseFloorPicAdapter
 
-class ChosePicDialog(context:Context,var list:ArrayList<BuildingFloorPictureBean>,
+class ChosePicDialog(context:Context,var list:ArrayList<BuildingFloorPictureBean>,var selected:ArrayList<String>,
                      var onResult: (chosedLisr: ArrayList<BuildingFloorPictureBean>) -> Unit): Dialog(context) {
 
 
@@ -29,7 +28,7 @@ class ChosePicDialog(context:Context,var list:ArrayList<BuildingFloorPictureBean
         }
 
         mBinding.confirmBtn.setOnClickListener {
-            onResult.invoke(adapter.getChosedList())
+            onResult.invoke(adapter.getChooseList())
             dismiss()
         }
 
@@ -40,7 +39,9 @@ class ChosePicDialog(context:Context,var list:ArrayList<BuildingFloorPictureBean
                 adapter.choseNone()
             }
         }
+        adapter.setContext(context)
         adapter.setData(list)
+        adapter.setSelected(selected)
         mBinding.picRecycleview.layoutManager = LinearLayoutManager(context)
         mBinding.picRecycleview.adapter = adapter
 

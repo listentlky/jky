@@ -16,4 +16,8 @@ object UUIDUtil {
     fun getUUID():String{
         return UUID.randomUUID().toString().replace("-","")
     }
+
+    fun getUUID(length:Int):String{
+        return UUID.randomUUID().toString().replace("-","").substring(0,length)
+    }
 }

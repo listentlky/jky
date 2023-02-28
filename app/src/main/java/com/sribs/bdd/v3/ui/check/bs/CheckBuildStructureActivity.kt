@@ -64,6 +64,10 @@ class CheckBuildStructureActivity : BaseActivity(), ICheckBSContrast.ICheckBSVie
     var mTitle = ""
 
     @JvmField
+    @Autowired(name = com.sribs.common.ARouterPath.VAL_BUILDING_NAME)
+    var mBldName = ""
+
+    @JvmField
     @Autowired(name = com.sribs.common.ARouterPath.VAL_PROJECT_ID)
     var mLocalProjectId = -1L
 
@@ -151,7 +155,7 @@ class CheckBuildStructureActivity : BaseActivity(), ICheckBSContrast.ICheckBSVie
      * @Description 初始化toolbar
      */
     private fun initToolbar() {
-        mBinding.toolbarTitle.text = mTitle
+        mBinding.toolbarTitle.text = mTitle+"/"+mBldName
         mBinding.toolbar.setNavigationIcon(R.mipmap.icon_back)
         mBinding.toolbar.showOverflowMenu()
         setSupportActionBar(mBinding.toolbar)
@@ -182,14 +186,14 @@ class CheckBuildStructureActivity : BaseActivity(), ICheckBSContrast.ICheckBSVie
                     mPDFNoteModified = false
                     ARouter.getInstance().build(ARouterPath.DRAW_PDF_ACTIVITY)
                         .withString(ARouterPath.VAL_COMMON_LOCAL_CURRENT_PDF, mCurrentLocalPDF)
-                        .withString(ARouterPath.VAL_COMMON_TITLE, mTitle)
+                        .withString(ARouterPath.VAL_COMMON_TITLE, mBinding.toolbarTitle.text.toString())
                         .navigation()
                 }.setNegativeButton(
                     R.string.dialog_cancel
                 ) { dialog, which ->
                     ARouter.getInstance().build(ARouterPath.DRAW_PDF_ACTIVITY)
                         .withString(ARouterPath.VAL_COMMON_LOCAL_CURRENT_PDF, mCurrentLocalPDF)
-                        .withString(ARouterPath.VAL_COMMON_TITLE, mTitle)
+                        .withString(ARouterPath.VAL_COMMON_TITLE, mBinding.toolbarTitle.text.toString())
                         .navigation()
                 }
                 .show()
@@ -268,6 +272,9 @@ class CheckBuildStructureActivity : BaseActivity(), ICheckBSContrast.ICheckBSVie
             showToast("该图纸类型不是pdf，无法加载")
             return
         }
+        if(!drawingV3Bean.floorName.isNullOrEmpty()){
+            mBinding.toolbarTitle.text = mTitle+"/"+mBldName+"/"+drawingV3Bean.floorName
+        }
         this.mView = (mFragments[0] as CheckBSFragment).getPDFView()
         mView!!.setV3Version(true)
         this.mViewParent = (mFragments[0] as CheckBSFragment).getPDFParentView()
@@ -341,14 +348,17 @@ class CheckBuildStructureActivity : BaseActivity(), ICheckBSContrast.ICheckBSVie
         if(mIsUpdateData) {
             AlertDialog.Builder(this).setTitle(getString(R.string.drawing_edit_exit_dialog_title))
                 .setMessage(R.string.is_save_hint)
-                .setPositiveButton(R.string.dialog_ok) { dialog, which ->
+                .setPositiveButton("保存") { dialog, which ->
                     mController?.savePDF()
                     saveDamageDrawingToDb();
                     finish()
-                }.setNegativeButton(
+                }.setNegativeButton("不保存"){ dialog, which ->
+                    finish()
+                }
+                .setNeutralButton(
                     R.string.dialog_cancel
                 ) { dialog, which ->
-                    finish()
+                    dialog.dismiss()
                 }
                 .show()
         }else{

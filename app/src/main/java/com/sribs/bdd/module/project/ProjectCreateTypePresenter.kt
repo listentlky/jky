@@ -29,8 +29,9 @@ import com.sribs.common.utils.TimeUtil
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 import java.io.File
-import java.util.*
-import kotlin.collections.ArrayList
+import java.nio.file.CopyOption
+import java.nio.file.Files
+import java.nio.file.StandardCopyOption
 
 class ProjectCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCreateTypePresenter,
     CreateFloorAdapter.ICallback,CreateNonResidentBuildingAdapter.ICallback {
@@ -205,6 +206,19 @@ class ProjectCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCre
     fun createLocalBuilding(activity: Activity, mLocalProjectId:Int,mLocalProjectUUID:String,mProjectRemoteId:String,
                             mBuildingId:Long, name:String,leader:String,inspector:String,version:Long): Long? {
 
+        if(name.isNullOrEmpty()){
+            mView?.onMsg("请输入楼名称")
+            return -1
+        }
+
+        //赋值楼层名作为图纸上级目录
+
+        mCurDrawingsDir = "/" + ModuleHelper.DRAWING_CACHE_FOLDER + "/" + mProName + "/" + name + "/"
+
+        var defWhitePDF = File(FileUtil.getDrawingCacheRootDir(activity) + mCurDrawingsDir+"def_white.png")
+        defWhitePDF.mkdirs()
+        Files.copy(activity.assets.open("def_white.png"),defWhitePDF.toPath(), StandardCopyOption.REPLACE_EXISTING)
+
         if (array==null||array?.size==0){
             mView?.onMsg("楼层不能为空")
             return -1
@@ -212,26 +226,37 @@ class ProjectCreateTypePresenter : BasePresenter(), IProjectContrast.IProjectCre
 
         array!!.forEach {
             if (it.pictureList==null||it.pictureList!!.size==0){
-                mView?.onMsg("楼层图纸不能为空")
-                return -1
+                it.pictureList =  arrayListOf(
+                    BuildingFloorPictureBean(
+                        UUIDUtil.getUUID(10)+".png",
+                        null,
+                        defWhitePDF.absolutePath
+                    )
+                )
             }
         }
 
         if (picList==null||picList?.size==0){
-            mView?.onMsg("图纸不能为空")
-            return -1
+            picList =  arrayListOf(
+                BuildingFloorPictureBean(
+                    UUIDUtil.getUUID(10)+".png",
+                    null,
+                    defWhitePDF.absolutePath
+                )
+            )
         }
 
         nonResidentpicList!!.forEach {
-            if (it.pictureList ==null || it.pictureList!!.size==0){
-                mView?.onMsg("非居民立面/总平面图纸不能为空")
-                return -1
+            if (it.pictureList==null||it.pictureList!!.size==0){
+                it.pictureList =  arrayListOf(
+                    BuildingFloorPictureBean(
+                        UUIDUtil.getUUID(10)+".png",
+                        null,
+                        defWhitePDF.absolutePath
+                    )
+                )
             }
         }
-
-        //赋值楼层名作为图纸上级目录
-
-        mCurDrawingsDir = "/" + ModuleHelper.DRAWING_CACHE_FOLDER + "/" + mProName + "/" + name + "/"
 
         createLocalFacadesDrawingInTheBuilding(activity,mLocalProjectId, mBldId!!)
 

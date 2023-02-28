@@ -94,7 +94,7 @@ class ProjectFloorItemActivity : BaseActivity(), IProjectContrast.IProjectFloorD
 
     override fun initView() {
         bindPresenter()
-        mBinding.toolbar.tbTitle.text = mTitle
+        mBinding.toolbar.tbTitle.text = mTitle+"/"+mBldName
         mBinding.toolbar.tb.setNavigationIcon(R.mipmap.icon_back)
         mBinding.toolbar.tb.showOverflowMenu()
         setSupportActionBar(mBinding.toolbar.tb)
@@ -559,6 +559,11 @@ class ProjectFloorItemActivity : BaseActivity(), IProjectContrast.IProjectFloorD
         mPresenter.unbindView()
     }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+        showPb(false)
+    }
+
     private var alertDialog3: AlertDialog? = null
     private val checkedItems = booleanArrayOf(
         false, false, false, false, false, false
@@ -599,6 +604,7 @@ class ProjectFloorItemActivity : BaseActivity(), IProjectContrast.IProjectFloorD
                     alertList?.forEachIndexed { index, view ->
                         alertList?.setItemChecked(index, true)
                     }
+                    checkedList.clear()
                     checkedList.addAll(items.filter {
                         !it.equals("全选")
                     })
@@ -610,9 +616,13 @@ class ProjectFloorItemActivity : BaseActivity(), IProjectContrast.IProjectFloorD
                 }
             } else {
                 if (isChecked) {
-                    checkedList.add(items[which])
+                    if(!checkedList.contains(items[which])){
+                        checkedList.add(items[which])
+                    }
                 } else {
-                    checkedList.remove(items[which])
+                    if(checkedList.contains(items[which])){
+                        checkedList.remove(items[which])
+                    }
                 }
             }
         }

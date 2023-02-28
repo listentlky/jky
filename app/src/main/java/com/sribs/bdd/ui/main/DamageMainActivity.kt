@@ -2,10 +2,16 @@ package com.sribs.bdd.ui.main
 
 import android.app.Dialog
 import android.content.Context
+import android.content.DialogInterface
+import android.content.Intent
+import android.content.SharedPreferences
 import android.view.*
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SearchView
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.drawerlayout.widget.DrawerLayout
+import cc.shinichi.library.tool.ui.ToastUtil
 import com.alibaba.android.arouter.facade.annotation.Autowired
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
@@ -26,6 +32,7 @@ import com.sribs.bdd.databinding.ActivityDamageMainBinding
 import com.sribs.bdd.module.main.IMainListContrast
 import com.sribs.bdd.module.main.MainPresenter
 import com.sribs.bdd.utils.CreateDialog
+import com.sribs.bdd.utils.ModuleHelper
 import com.sribs.bdd.v3.util.LogUtils
 import com.sribs.common.bean.CommonBtnBean
 import com.sribs.common.utils.DialogUtil
@@ -66,8 +73,8 @@ class DamageMainActivity :BaseActivity(),IMainListContrast.IMainView{
     var mBottomDialog: Dialog?=null
 
 
-    private fun initCreateDialog() {
-        var createDialog = CreateDialog(this, -1) {
+    private fun initCreateDialog(localProjectId:Int) {
+        var createDialog = CreateDialog(this, localProjectId) {
 
         }
         createDialog.show()
@@ -95,7 +102,13 @@ class DamageMainActivity :BaseActivity(),IMainListContrast.IMainView{
                     .withInt("y",event.y.toInt())
                     .withString("from",mFrom)
                     .navigation()*/
-                initCreateDialog()
+                var mPrefs:SharedPreferences = getContext().getSharedPreferences("createProject", Context.MODE_PRIVATE)
+                var editor = mPrefs.edit()
+                editor.putString(ModuleHelper.CUR_PRO_NAME, "")
+                editor.putString(ModuleHelper.CUR_BLD_INS, "")
+                editor.putString(ModuleHelper.CUR_PRO_LEADER, "")
+                editor.commit()
+                initCreateDialog(-1)
             }
 
             false
@@ -125,13 +138,32 @@ class DamageMainActivity :BaseActivity(),IMainListContrast.IMainView{
                 }
 
                 override fun onDenied(permissions: MutableList<String>, never: Boolean) {
-                    if (never) {
-                        println("leon 被永久拒绝读写外部存储权限") // 如果是被永久拒绝就跳转到应用权限系统设置页面
-                    } else {
-                        println("leon 获取读写外部存储权限失败")
-                    }
+                    showStorageDialog()
                 }
             })
+    }
+
+    fun showStorageDialog(){
+        val alertBuilder = AlertDialog.Builder(getContext())
+        alertBuilder.setTitle("提示")
+        alertBuilder.setMessage("存储权限为必须权限，请前往授予")
+        alertBuilder.setPositiveButton("去授予",object :DialogInterface.OnClickListener{
+            override fun onClick(dialog: DialogInterface?, which: Int) {
+                dialog?.dismiss()
+                XXPermissions.startPermissionActivity(getContext(),Permission.MANAGE_EXTERNAL_STORAGE)
+            }
+
+        })
+        alertBuilder.show()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if(requestCode == XXPermissions.REQUEST_CODE){
+            if(!XXPermissions.isGranted(getContext(),Permission.MANAGE_EXTERNAL_STORAGE)){
+                showStorageDialog()
+            }
+        }
     }
 
     /**
@@ -204,7 +236,16 @@ class DamageMainActivity :BaseActivity(),IMainListContrast.IMainView{
             if (mBottomDialog?.isShowing == true)return
             mBottomDialog = DialogUtil.showBottomDialog(this,R.layout.dialog_common_bottom_select,true){
                 when(it){
-                    0->{ // 上传配置
+                    0->{
+                        var mPrefs:SharedPreferences = getContext().getSharedPreferences("createProject", Context.MODE_PRIVATE)
+                        var editor = mPrefs.edit()
+                        editor.putString(ModuleHelper.CUR_PRO_NAME, beanMain.address)
+                        editor.putString(ModuleHelper.CUR_BLD_INS, beanMain.inspector)
+                        editor.putString(ModuleHelper.CUR_PRO_LEADER, beanMain.leader)
+                        editor.commit()
+                        initCreateDialog(beanMain.localId.toInt())
+                    }
+                    1->{ // 上传配置
                         if(beanMain.localId < 0){
                             showToast(getString(R.string.error_no_local))
                             return@showBottomDialog
@@ -247,13 +288,13 @@ class DamageMainActivity :BaseActivity(),IMainListContrast.IMainView{
                             }
                         }
                     }*/
-                    1->{
+                    2->{
                         doDownload(beanMain,false)
                     }
                    /* 2-> {
                         doDownload(beanMain,true)
                     }*/
-                    2->{
+                    3->{
                         DialogUtil.showMsgDialog(this,"是否确认删除项目?",{
                             //TODO del project
                             /*  if (beanMain.localId>0){
@@ -474,6 +515,11 @@ class DamageMainActivity :BaseActivity(),IMainListContrast.IMainView{
             mBinding.matchMainVp.currentItem = 0
             return
         }
+        if(mBinding.pb.visibility == View.VISIBLE){
+            showPb(false)
+            return
+        }
+
         var cur = System.currentTimeMillis()
         if (cur - mLastClick < 2000) {
             super.onBackPressed()

@@ -347,7 +347,7 @@
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/activity_check_build_structure.xml" value="0.22" />
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/activity_check_non_residents.xml" value="0.27692307692307694" />
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/activity_check_oblique_deformation.xml" value="0.33958333333333335" />
-        <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/activity_create_project_type.xml" value="0.27355072463768115" />
+        <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/activity_create_project_type.xml" value="0.33" />
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/activity_damage_description.xml" value="0.3375" />
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/activity_damage_detail_record.xml" value="0.3619791666666667" />
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/activity_damage_main.xml" value="0.271286231884058" />
@@ -420,6 +420,7 @@
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/item_component_detection_beam_left_another_item.xml" value="0.67" />
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/item_component_detection_beam_right_real_measured_stirrups_edit.xml" value="0.67" />
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/item_component_detection_beam_right_real_protect_edit.xml" value="0.5" />
+        <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/item_component_detection_beam_right_real_row_steel.xml" value="0.33697916666666666" />
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/item_component_detection_beam_right_real_single_row_steel.xml" value="0.67" />
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/item_component_detection_beam_right_real_single_row_steel_2.xml" value="0.67" />
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/item_component_detection_column_right_real_row_steel.xml" value="0.67" />
@@ -431,6 +432,7 @@
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/item_floor_list.xml" value="0.33" />
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/item_floor_pic.xml" value="0.271286231884058" />
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/item_main_list.xml" value="0.26766304347826086" />
+        <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/item_pic_select.xml" value="0.33697916666666666" />
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/item_room_list.xml" value="0.271286231884058" />
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/item_room_list_tag.xml" value="0.271286231884058" />
         <entry key="..\:/jiankeyuan/2022915/app/src/main/res/layout/popup_choose_pic_item.xml" value="0.3120471014492754" />

@@ -220,7 +220,7 @@ interface HttpApi {
      */
 
     @Multipart
-    @POST("api/v3/app/file/upload")
+    @POST("api/v3/app/file/uploadToMinio")
     fun uploadFile(
         @Part @NonNull file: List<MultipartBody.Part>
     ): Observable<ResultBean<List<V3UploadDrawingRes>>>
@@ -228,8 +228,11 @@ interface HttpApi {
     /**
      * 文件下载
      */
+    @GET("api/v3/res/getRes/{resId}")
+    fun downloadFile(@Query("resId") resId:String):Observable<ResultBean<V3GetResBean>>
+
     @Streaming
-    @GET("api/v3/res/selsect/{resId}")
-    fun downloadFile(@Path("resId") resId:String):Observable<ResponseBody>
+    @GET
+    fun downloadMinioFile(@Url url:String):Observable<ResponseBody>
 
 }

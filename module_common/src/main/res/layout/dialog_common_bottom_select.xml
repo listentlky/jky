@@ -12,6 +12,22 @@
         >
 
         <TextView
+            android:id="@+id/bottom_config_btn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/common_bottom_btn_bk"
+            android:text="修改配置"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_7sdp"
+            android:gravity="center"
+            android:drawableTop="@mipmap/ic_common_config"
+            android:drawablePadding="@dimen/_2sdp"
+            android:includeFontPadding="false"
+            android:layout_gravity="center"
+            />
+
+        <TextView
             android:id="@+id/bottom_upload_config"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -27,21 +43,7 @@
             android:layout_gravity="center"
             />
 
-     <!--   <TextView
-            android:id="@+id/bottom_config_btn"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/common_bottom_btn_bk"
-            android:text="修改配置"
-            android:textColor="@color/white"
-            android:textSize="@dimen/_7sdp"
-            android:gravity="center"
-            android:drawableTop="@mipmap/ic_common_config"
-            android:drawablePadding="@dimen/_2sdp"
-            android:includeFontPadding="false"
-            android:layout_gravity="center"
-            />-->
+
     <!--    <TextView
             android:id="@+id/bottom_record_btn"
             android:layout_width="0dp"

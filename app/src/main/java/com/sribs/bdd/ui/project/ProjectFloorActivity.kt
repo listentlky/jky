@@ -410,6 +410,11 @@ class ProjectFloorActivity : BaseActivity(), IBuildingContrast.IBuildingListView
         }
     }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+        showPb(false)
+    }
+
     private fun showPb(b:Boolean){
         runOnUiThread(object :Runnable{
             override fun run() {

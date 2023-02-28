@@ -429,8 +429,7 @@ class CheckEditOBDFragment : BaseFragment(R.layout.fragment_check_obliquedeforma
      * 保留两位小数
      */
     fun getNoMoreThanTwoDigits(number: Double): String {
-        val format = DecimalFormat("0.#")
-        format.roundingMode = RoundingMode.FLOOR
+        val format = DecimalFormat("######0.00")
         return format.format(number)
     }
 

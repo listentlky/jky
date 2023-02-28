@@ -1283,6 +1283,11 @@ class BuildingListPresenter : BasePresenter(), IBuildingContrast.IBuildingListPr
                             .downloadFile(res.resId)
                             .subscribeOn(Schedulers.computation())
                             .observeOn(Schedulers.computation())
+                            .flatMap {
+                                HttpManager.instance.getHttpService<HttpApi>().downloadMinioFile(it.data!!.resPath)
+                            }
+                            .subscribeOn(Schedulers.computation())
+                            .observeOn(Schedulers.computation())
                             .subscribe({
                                 LogUtils.d("图纸下载本地成功")
                                 var file = File(res.fileName)

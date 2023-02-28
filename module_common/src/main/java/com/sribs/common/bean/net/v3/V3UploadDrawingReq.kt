@@ -11,7 +11,7 @@ data class V3UploadDrawingReq (
         var drawingName:String,
         var drawingType:String,
         var fileType:String,
-        var floorId:String,
+        var floorId:String?,
         var floorNo:String,
         var floorIndex:Int,
         var direction:Int,

@@ -37,6 +37,14 @@ class CreateDialog(context:Context,var mLocalProjectId:Int = -1,var onResult: (p
             .bindTagEditView(mData::leader,mBinding.projectManager)
             .bindTagEditView(mData::inspector,mBinding.projectBuilderNumber)
 
+        //cache current project name and building
+        mPrefs = context.getSharedPreferences("createProject", Context.MODE_PRIVATE)
+        mBinding.projectName.setEditText(mPrefs.getString(ModuleHelper.CUR_PRO_NAME,"")!!)
+        mBinding.projectManager.setEditText(mPrefs.getString(ModuleHelper.CUR_PRO_LEADER,"")!!)
+        mBinding.projectBuilderNumber.setEditText(mPrefs.getString(ModuleHelper.CUR_BLD_INS,"")!!)
+
+        println("leon cache project name:${mData.name}")
+
         mBinding.projectManager.setSpinnerEntries(Dict.getLeaders())
 
         mBinding.confirmBtn.setOnClickListener {
@@ -54,7 +62,6 @@ class CreateDialog(context:Context,var mLocalProjectId:Int = -1,var onResult: (p
             }
 
             //cache current project name and building
-            mPrefs = context.getSharedPreferences("createProject", Context.MODE_PRIVATE)
             var editor = mPrefs.edit()
             editor.putString(ModuleHelper.CUR_PRO_NAME, mData.name)
             editor.putString(ModuleHelper.CUR_BLD_INS, mData.inspector)

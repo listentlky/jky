@@ -145,7 +145,7 @@ class CheckObliqueDeformationActivity : BaseActivity(), ICheckOBDContrast.ICheck
      * @Description 初始化toolbar
      */
     private fun initToolbar() {
-        mBinding.toolbarTitle.text = mTitle
+        mBinding.toolbarTitle.text = mTitle+"/"+mBldName
         mBinding.toolbar.setNavigationIcon(R.mipmap.icon_back)
         mBinding.toolbar.showOverflowMenu()
         setSupportActionBar(mBinding.toolbar)
@@ -176,14 +176,14 @@ class CheckObliqueDeformationActivity : BaseActivity(), ICheckOBDContrast.ICheck
                     mPDFNoteModified = false
                     ARouter.getInstance().build(ARouterPath.DRAW_PDF_ACTIVITY)
                         .withString(ARouterPath.VAL_COMMON_LOCAL_CURRENT_PDF, mCurrentLocalPDF)
-                        .withString(ARouterPath.VAL_COMMON_TITLE, mTitle)
+                        .withString(ARouterPath.VAL_COMMON_TITLE, mBinding.toolbarTitle.text.toString())
                         .navigation()
                 }.setNegativeButton(
                     R.string.dialog_cancel
                 ) { dialog, which ->
                     ARouter.getInstance().build(ARouterPath.DRAW_PDF_ACTIVITY)
                         .withString(ARouterPath.VAL_COMMON_LOCAL_CURRENT_PDF, mCurrentLocalPDF)
-                        .withString(ARouterPath.VAL_COMMON_TITLE, mTitle)
+                        .withString(ARouterPath.VAL_COMMON_TITLE, mBinding.toolbarTitle.text.toString())
                         .navigation()
                 }
                 .show()
@@ -620,15 +620,17 @@ class CheckObliqueDeformationActivity : BaseActivity(), ICheckOBDContrast.ICheck
         if(mIsUpdateData) {
             AlertDialog.Builder(this).setTitle(getString(R.string.drawing_edit_exit_dialog_title))
                 .setMessage(R.string.is_save_hint)
-                .setPositiveButton(R.string.dialog_ok) { dialog, which ->
+                .setPositiveButton("保存") { dialog, which ->
                     mController?.savePDF()
-                    savePDFGuide()
                     saveDamageDrawingToDb();
                     finish()
-                }.setNegativeButton(
+                }.setNegativeButton("不保存"){ dialog, which ->
+                    finish()
+                }
+                .setNeutralButton(
                     R.string.dialog_cancel
                 ) { dialog, which ->
-                    finish()
+                    dialog.dismiss()
                 }
                 .show()
         }else{
@@ -668,6 +670,9 @@ class CheckObliqueDeformationActivity : BaseActivity(), ICheckOBDContrast.ICheck
         ) {
             showToast("该图纸类型不是pdf，无法加载")
             return
+        }
+        if(!drawingV3Bean.floorName.isNullOrEmpty()){
+            mBinding.toolbarTitle.text = mTitle+"/"+mBldName+"/"+drawingV3Bean.floorName
         }
         this.mView = (mFragments[0] as CheckOBDFragment).getPDFView()
         mView!!.setV3Version(true)

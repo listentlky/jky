@@ -157,11 +157,26 @@ class ProjectCreateByTypeActivity : BaseActivity(), IProjectContrast.IProjectCre
                    .start(this, REQUEST_CODE) // 打开相册*/
             openPdfOrImgSelector()
         }
-
+        mBinding.choseList.setOnClickListener {
+            if (selected.size == 0) {
+                ToastUtil.getInstance()._short(getContext(), "请先加载图纸")
+                return@setOnClickListener
+            }
+            selectedPic.clear()
+            selected.forEach {
+                var name = FileUtil.uriToFileName(Uri.parse(it), this)
+                name = name ?: it
+                selectedPic.add(BuildingFloorPictureBean(name, it, null))
+            }
+            var dialog = ChosePicDialog(this, selectedPic,selected) {
+            }
+            dialog.show()
+        }
 
         mBinding.chosePicList.setOnClickListener {
 
             if (selected.size == 0) {
+                ToastUtil.getInstance()._short(getContext(), "请先加载图纸")
                 return@setOnClickListener
             }
             selectedPic.clear()
@@ -171,7 +186,7 @@ class ProjectCreateByTypeActivity : BaseActivity(), IProjectContrast.IProjectCre
                 selectedPic.add(BuildingFloorPictureBean(name, it, null))
             }
 
-            var dialog = ChosePicDialog(this, selectedPic) {
+            var dialog = ChosePicDialog(this, selectedPic,selected) {
                 projectCreateTypePresenter.refreshPicList(it)
             }
             dialog.show()
@@ -191,20 +206,15 @@ class ProjectCreateByTypeActivity : BaseActivity(), IProjectContrast.IProjectCre
         }
 
         mBinding.createComplete.setOnClickListener {//保存到数据库中Building
-            if (mBinding.builderName.getEditText().text != null) {
-                projectCreateTypePresenter.createLocalBuilding(
-                    this,
-                    mLocalProjectId.toInt(),
-                    mLocalProjectUUID,
-                    mRemoteId,
-                    mBuildingId,
-                    mBinding.builderName.getEditText().text.toString(), mLeader!!, mInspector!!,
-                    mVersion
-                )
-            } else {
-                showToast("请输入楼名称")
-            }
-
+            projectCreateTypePresenter.createLocalBuilding(
+                this,
+                mLocalProjectId.toInt(),
+                mLocalProjectUUID,
+                mRemoteId,
+                mBuildingId,
+                mBinding.builderName.getEditText().text.toString(), mLeader!!, mInspector!!,
+                mVersion
+            )
         }
     }
 
@@ -233,7 +243,9 @@ class ProjectCreateByTypeActivity : BaseActivity(), IProjectContrast.IProjectCre
         LogUtils.d("onActivityResult：requestCode=${requestCode}  data=${data}")
         if (requestCode == REQUEST_CODE && data != null) { //上传图片
             var uri = data.data
-            selected.add(uri.toString())
+            if(!selected.contains(uri.toString())){
+                selected.add(uri.toString())
+            }
         } else if (requestCode == REQUEST_CODE_PIC_FLOOR && data != null) {
             var isCameraImage = data.getBooleanExtra(ImageSelector.IS_CAMERA_IMAGE, false)
             if (isCameraImage) {
@@ -327,7 +339,7 @@ class ProjectCreateByTypeActivity : BaseActivity(), IProjectContrast.IProjectCre
 
     }
 
-    override fun getNonResidentRecycleView(): RecyclerView  = mBinding.nonResidentRecyclerView
+    override fun getNonResidentRecycleView(): RecyclerView = mBinding.nonResidentRecyclerView
 
     override fun getFlourRecycleView(): RecyclerView = mBinding.flourRecycleview
 
@@ -335,7 +347,7 @@ class ProjectCreateByTypeActivity : BaseActivity(), IProjectContrast.IProjectCre
 
     override fun chosePic(bean: BuildingFloorBean) {
         if (selected.size == 0) {
-            ToastUtil.getInstance()._short(getContext(),"请先上传图纸")
+            ToastUtil.getInstance()._short(getContext(), "请先加载图纸")
             return
         }
         selectedPic.clear()
@@ -345,7 +357,7 @@ class ProjectCreateByTypeActivity : BaseActivity(), IProjectContrast.IProjectCre
             selectedPic.add(BuildingFloorPictureBean(name, it, null))
         }
 
-        var dialog = ChosePicDialog(this, selectedPic) {
+        var dialog = ChosePicDialog(this, selectedPic,selected) {
             bean.pictureList?.addAll(it)
             projectCreateTypePresenter.refeshData()
         }
@@ -373,7 +385,7 @@ class ProjectCreateByTypeActivity : BaseActivity(), IProjectContrast.IProjectCre
 
     override fun choseNonResidentPic(bean: BuildingFloorBean) {
         if (selected.size == 0) {
-            ToastUtil.getInstance()._short(getContext(),"请先上传图纸")
+            ToastUtil.getInstance()._short(getContext(), "请先加载图纸")
             return
         }
         selectedPic.clear()
@@ -383,7 +395,7 @@ class ProjectCreateByTypeActivity : BaseActivity(), IProjectContrast.IProjectCre
             selectedPic.add(BuildingFloorPictureBean(name, it, null))
         }
 
-        var dialog = ChosePicDialog(this, selectedPic) {
+        var dialog = ChosePicDialog(this, selectedPic,selected) {
             bean.pictureList?.addAll(it)
             projectCreateTypePresenter.refeshNonResidentListData()
         }
