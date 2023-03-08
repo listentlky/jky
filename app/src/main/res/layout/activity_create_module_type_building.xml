@@ -43,7 +43,7 @@
                     android:layout_height="@dimen/login_input_height"
                     android:layout_marginTop="@dimen/_10sdp"
                     app:backgroundTint="@color/blue_800"
-                    android:text="上传图纸"
+                    android:text="加载图纸"
                     android:textColor="@color/white"
                     android:textSize="@dimen/common_text_title"
                     app:cornerRadius="@dimen/_2sdp"
@@ -52,6 +52,24 @@
                     android:padding="0dp"
                     android:insetTop="0dp"
                     android:insetBottom="0dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/chose_List"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/login_input_height"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:layout_marginLeft="@dimen/_10sdp"
+                    app:backgroundTint="@color/blue_800"
+                    android:text="加载列表"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/common_text_title"
+                    app:cornerRadius="@dimen/_2sdp"
+                    app:rippleColor="@color/rippleColor"
+                    android:theme="@style/Theme.MaterialComponents.Light"
+                    android:padding="0dp"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp" />
+
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/create_complete"
                     android:layout_marginLeft="@dimen/_10sdp"
@@ -134,7 +152,7 @@
                     android:layout_weight="1"
                     android:gravity="left|center_vertical"
                     android:textSize="@dimen/_9ssp"
-                    android:text="图纸名"
+                    android:text="非楼层图纸"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_29sdp"
                     app:backgroundTint="@color/blue_800"

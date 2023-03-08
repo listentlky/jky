@@ -71,4 +71,7 @@ interface v3BuildingModuleDao {
 
     @Query("Delete from v3_building_module where building_id = :buildingId")
     fun deleteBuildingModuleByBuildingId(buildingId: Long)
+
+    @Query("UPDATE v3_building_module SET leader_name = :leader,inspectors = :inspectorName WHERE project_id = :projectId")
+    fun updateLeaderByProjectId(projectId:Long,leader:String,inspectorName:String): Int
 }

@@ -119,10 +119,11 @@ class ProjectProjectPresenter : BasePresenter(), IProjectContrast.IProjectPresen
             it.updateTime = TimeUtil.stampToDate(""+System.currentTimeMillis())
             it.isChanged = 1
         }
+
         mDb.getProjectOnce(name).toObservable()
             .subscribeOn(Schedulers.computation())
             .observeOn(Schedulers.computation())
-            .flatMap {
+           /* .flatMap {
                 Observable.create<ProjectBean> { o ->
                     if (it.isEmpty()) {
                     } else {
@@ -134,10 +135,20 @@ class ProjectProjectPresenter : BasePresenter(), IProjectContrast.IProjectPresen
                     o.onNext(mBean)
                 }
             }
-            .observeOn(Schedulers.computation())
+            .observeOn(Schedulers.computation())*/
             .flatMap {
                 LogUtils.d("本地创建项目")
-                mDb.updateProject(it)
+                mDb.updateProject(mBean)
+            }
+            .flatMap {
+                mBean.id = it
+                mDb.updateBuildingLeaderByProjectId(mBean.id!!,mBean.leader!!,mBean.inspector!!)
+            }
+            .flatMap {
+                mDb.updateBuildingFloorLeaderByProjectId(mBean.id!!,mBean.leader!!,mBean.inspector!!)
+            }
+            .flatMap {
+                mDb.updateBuildingModuleLeaderByProjectId(mBean.id!!,mBean.leader!!,mBean.inspector!!)
             }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({

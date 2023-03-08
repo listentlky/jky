@@ -9,7 +9,7 @@ import com.sribs.bdd.bean.data.ModuleFloorPictureBean
 import com.sribs.bdd.databinding.DialogChosePicBinding
 import com.sribs.bdd.v3.adapter.CreateChoseModuleFloorPicAdapter
 
-class ChoseModulePicDialog(context:Context, var list:ArrayList<ModuleFloorPictureBean>,
+class ChoseModulePicDialog(context:Context, var list:ArrayList<ModuleFloorPictureBean>,var selected:ArrayList<String>,
                            var onResult: (chosedLisr: ArrayList<ModuleFloorPictureBean>) -> Unit): Dialog(context) {
 
 
@@ -39,7 +39,9 @@ class ChoseModulePicDialog(context:Context, var list:ArrayList<ModuleFloorPictur
                 adapter.choseNone()
             }
         }
+        adapter.setContext(context)
         adapter.setData(list)
+        adapter.setSelected(selected)
         mBinding.picRecycleview.layoutManager = LinearLayoutManager(context)
         mBinding.picRecycleview.adapter = adapter
 

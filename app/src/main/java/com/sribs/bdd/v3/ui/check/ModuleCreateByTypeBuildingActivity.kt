@@ -109,7 +109,7 @@ class ModuleCreateByTypeBuildingActivity : BaseActivity(),
         mBinding.chosePicList.setOnClickListener {
 
             if (selected.size == 0) {
-                ToastUtil.getInstance()._short(getContext(), "请先上传图纸")
+                ToastUtil.getInstance()._short(getContext(), "请先加载图纸")
                 return@setOnClickListener
             }
             selectedPic.clear()
@@ -119,8 +119,27 @@ class ModuleCreateByTypeBuildingActivity : BaseActivity(),
                 selectedPic.add(ModuleFloorPictureBean(UUIDUtil.getUUID(name),name, it, null))
             }
 
-            var dialog = ChoseModulePicDialog(this, selectedPic) {
+            var dialog = ChoseModulePicDialog(this, selectedPic,selected) {
                 moduleCreateTypeBuildingPresenter.refreshPicList(it)
+            }
+            dialog.show()
+        }
+
+        mBinding.choseList.setOnClickListener {
+            if (selected.size == 0) {
+                ToastUtil.getInstance()._short(getContext(), "请先加载图纸")
+                return@setOnClickListener
+            }
+
+            selectedPic.clear()
+            selected.forEach {
+                var name = FileUtil.uriToFileName(Uri.parse(it), this)
+                name = name ?: it
+                selectedPic.add(ModuleFloorPictureBean(UUIDUtil.getUUID(name),name, it, null))
+            }
+
+            var dialog = ChoseModulePicDialog(this, selectedPic,selected) {
+
             }
             dialog.show()
         }

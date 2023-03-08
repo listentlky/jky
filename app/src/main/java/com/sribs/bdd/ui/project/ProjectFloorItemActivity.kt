@@ -202,7 +202,7 @@ class ProjectFloorItemActivity : BaseActivity(), IProjectContrast.IProjectFloorD
                         mInspector
                     ).withString(
                         com.sribs.common.ARouterPath.VAL_COMMON_TITLE,
-                        mTitle
+                        mProjectName+"/"+mBldName
                     ).withString(
                         com.sribs.common.ARouterPath.VAL_COMMON_LEADER,
                         mLeaderName

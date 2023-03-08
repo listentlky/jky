@@ -383,6 +383,7 @@ class RelativeHDiffActivity : BaseActivity() ,ICheckRHDiffContrast.ICheckRHDiffV
             AlertDialog.Builder(this).setTitle(getString(R.string.drawing_edit_exit_dialog_title))
                 .setMessage(R.string.is_save_hint)
                 .setPositiveButton("保存") { dialog, which ->
+                    saveDamage()
                     mController?.savePDF()
                     saveDamageDrawingToDb();
                     finish()

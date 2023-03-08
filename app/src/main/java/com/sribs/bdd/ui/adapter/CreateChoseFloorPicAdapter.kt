@@ -10,7 +10,7 @@ import com.sribs.bdd.bean.BuildingFloorPictureBean
 import com.sribs.bdd.databinding.ItemPicSelectBinding
 import com.sribs.common.utils.FileUtil
 
-class CreateChoseFloorPicAdapter() :
+class CreateChoseFloorPicAdapter:
 
     BaseListAdapter<BuildingFloorPictureBean, ItemPicSelectBinding>() {
 

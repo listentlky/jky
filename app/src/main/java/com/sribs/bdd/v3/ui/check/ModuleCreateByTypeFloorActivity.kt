@@ -17,11 +17,13 @@ import com.cbj.sdk.libui.mvp.BaseActivity
 import com.cbj.sdk.libui.mvp.inflate
 import com.donkingliang.imageselector.utils.ImageSelector
 import com.sribs.bdd.R
+import com.sribs.bdd.bean.BuildingFloorPictureBean
 import com.sribs.bdd.bean.data.ModuleFloorBean
 import com.sribs.bdd.bean.data.ModuleFloorPictureBean
 import com.sribs.bdd.databinding.ActivityCreateModuleTypeFloorBinding
 import com.sribs.bdd.module.project.IProjectContrast
 import com.sribs.bdd.utils.ChoseModulePicDialog
+import com.sribs.bdd.utils.ChosePicDialog
 import com.sribs.bdd.utils.UUIDUtil
 import com.sribs.bdd.v3.util.LogUtils
 import com.sribs.common.bean.v3.v3ModuleFloorDbBean
@@ -184,6 +186,27 @@ class ModuleCreateByTypeFloorActivity : BaseActivity(), IProjectContrast.IModule
             openPdfOrImgSelector()
         }
 
+
+        mBinding.choseList.setOnClickListener {
+            if (selected.size == 0) {
+                ToastUtil.getInstance()._short(getContext(), "请先加载图纸")
+                return@setOnClickListener
+            }
+
+            selectedPic.clear()
+            selected.forEach {
+                var name = FileUtil.uriToFileName(Uri.parse(it), this)
+                name = name ?: it
+                selectedPic.add(ModuleFloorPictureBean(UUIDUtil.getUUID(name),name, it, null))
+            }
+
+            var dialog = ChoseModulePicDialog(this, selectedPic,selected) {
+
+            }
+            dialog.show()
+        }
+
+
         mBinding.createComplete.setOnClickListener {
 
             moduleFloorConfigCreateTypePresenter.createLocalModule(
@@ -341,7 +364,7 @@ class ModuleCreateByTypeFloorActivity : BaseActivity(), IProjectContrast.IModule
 
     override fun chosePic(bean: ModuleFloorBean) {
         if (selected.size == 0) {
-            ToastUtil.getInstance()._short(getContext(), "请先上传图纸")
+            ToastUtil.getInstance()._short(getContext(), "请先加载图纸")
             return
         }
         selectedPic.clear()
@@ -351,7 +374,7 @@ class ModuleCreateByTypeFloorActivity : BaseActivity(), IProjectContrast.IModule
             selectedPic.add(ModuleFloorPictureBean(UUIDUtil.getUUID(name),name, it, null))
         }
 
-        var dialog = ChoseModulePicDialog(this, selectedPic) {
+        var dialog = ChoseModulePicDialog(this, selectedPic,selected) {
             bean.pictureList?.addAll(it)
             moduleFloorConfigCreateTypePresenter.refeshData()
         }
@@ -376,7 +399,7 @@ class ModuleCreateByTypeFloorActivity : BaseActivity(), IProjectContrast.IModule
 
     override fun choseNonResidentPic(bean: ModuleFloorBean) {
         if (selected.size == 0) {
-            ToastUtil.getInstance()._short(getContext(), "请先上传图纸")
+            ToastUtil.getInstance()._short(getContext(), "请先加载图纸")
             return
         }
         selectedPic.clear()
@@ -386,7 +409,7 @@ class ModuleCreateByTypeFloorActivity : BaseActivity(), IProjectContrast.IModule
             selectedPic.add(ModuleFloorPictureBean(UUIDUtil.getUUID(name),name, it, null))
         }
 
-        var dialog = ChoseModulePicDialog(this, selectedPic) {
+        var dialog = ChoseModulePicDialog(this, selectedPic,selected) {
             bean.pictureList?.addAll(it)
             moduleFloorConfigCreateTypePresenter.refeshNonResidentData()
         }

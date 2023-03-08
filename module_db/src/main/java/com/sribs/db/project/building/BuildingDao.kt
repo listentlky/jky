@@ -49,6 +49,9 @@ interface BuildingDao {
     @Query("UPDATE project_building SET isChanged = :isChanged,status = :status WHERE project_id = :projectId")
     fun updateBuildingByProjectId(projectId:Long,isChanged:Int,status:Int): Int
 
+    @Query("UPDATE project_building SET leader = :leader,inspector_name = :inspectorName WHERE project_id = :projectId")
+    fun updateLeaderByProjectId(projectId:Long,leader:String,inspectorName:String): Int
+
     @Delete
     fun deleteBuilding(bean:BuildingBean):Int
 

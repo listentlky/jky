@@ -53,4 +53,7 @@ interface FloorDao {
 
     @Query("Delete from project_floor where bld_id = :bldId")
     fun deleteFloorByBuildingId(bldId: Long)
+
+    @Query("UPDATE project_floor SET inspector_name = :inspectorName WHERE project_id = :projectId")
+    fun updateLeaderByProjectId(projectId:Long,inspectorName:String): Int
 }

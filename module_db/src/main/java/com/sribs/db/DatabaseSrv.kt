@@ -900,6 +900,27 @@ class DatabaseSrv : IDatabaseService {
         return dao.getModuleFloor(id).run { ConverterHelper.convertv3ModuleFloorBean(this) }
     }
 
+    override fun updateBuildingLeaderByProjectId(projectId: Long,
+                                                 leader: String,
+                                                 inspectorName: String):Observable<Long> = Observable.create{
+        var dao = mDb!!.buildingDao()
+        it.onNext(dao.updateLeaderByProjectId(projectId,leader,inspectorName).toLong())
+    }
+
+    override fun updateBuildingFloorLeaderByProjectId(projectId: Long,
+                                                      leader: String,
+                                                      inspectorName: String):Observable<Long> = Observable.create{
+        var dao = mDb!!.floorDao()
+        it.onNext(dao.updateLeaderByProjectId(projectId,inspectorName).toLong())
+    }
+
+    override fun updateBuildingModuleLeaderByProjectId(projectId: Long,
+                                                       leader: String,
+                                                       inspectorName: String):Observable<Long> = Observable.create{
+        var dao = mDb!!.v3BuildingModuleDao()
+        it.onNext(dao.updateLeaderByProjectId(projectId,leader,inspectorName).toLong())
+    }
+
     override fun getBuildingIdByProjectId(proId: Long): Observable<Long> = Observable.create {
         var dao = mDb!!.buildingDao()
         var bldId: Long = dao.getBuildingIdByProjectId(proId)

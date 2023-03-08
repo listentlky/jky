@@ -39,6 +39,10 @@ class CreateDialog(context:Context,var mLocalProjectId:Int = -1,var onResult: (p
 
         //cache current project name and building
         mPrefs = context.getSharedPreferences("createProject", Context.MODE_PRIVATE)
+
+        mData.name = mPrefs.getString(ModuleHelper.CUR_PRO_NAME,"")!!
+        mData.leader = mPrefs.getString(ModuleHelper.CUR_PRO_LEADER,"")!!
+        mData.inspector = mPrefs.getString(ModuleHelper.CUR_BLD_INS,"")!!
         mBinding.projectName.setEditText(mPrefs.getString(ModuleHelper.CUR_PRO_NAME,"")!!)
         mBinding.projectManager.setEditText(mPrefs.getString(ModuleHelper.CUR_PRO_LEADER,"")!!)
         mBinding.projectBuilderNumber.setEditText(mPrefs.getString(ModuleHelper.CUR_BLD_INS,"")!!)

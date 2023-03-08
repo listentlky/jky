@@ -317,4 +317,10 @@ interface IDatabaseService:IProvider {
 
     fun getModuleFloor(id: Long):Flowable<List<v3ModuleFloorDbBean>>
 
+    fun updateBuildingLeaderByProjectId(projectId:Long,leader:String,inspectorName:String): Observable<Long>
+
+    fun updateBuildingFloorLeaderByProjectId(projectId:Long,leader:String,inspectorName:String): Observable<Long>
+
+    fun updateBuildingModuleLeaderByProjectId(projectId:Long,leader:String,inspectorName:String): Observable<Long>
+
 }
